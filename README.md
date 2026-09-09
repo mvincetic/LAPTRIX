@@ -47,6 +47,7 @@ the last completed result remains visible if a solve fails.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 - Import simulation or aligned external timing references with explicit source/units checks.
 - Portable project import/export with name, setup, custom source and reference restoration.
+- Bounded aero comparison with numerical eligibility, progress and deliberate result application.
 
 ## Checks
 
@@ -60,6 +61,7 @@ node scripts/visual-qa.mjs --gt
 node scripts/visual-qa.mjs --gt --reference
 node scripts/visual-qa.mjs --gt --reference --delta
 node scripts/visual-qa.mjs --gt --reference --delta --project
+node scripts/visual-qa.mjs --sweep
 npm run study:solver
 npm run study:sampling
 ```

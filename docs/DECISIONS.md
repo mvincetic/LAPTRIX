@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-09 — Bounded aero study with deliberate activation
+
+**Decision:** Compare five or six aero values sequentially using the selected
+solver and fixed remaining inputs. Require affirmative convergence and force
+checks before selection, then apply the exact chosen Lap only on user action.
+**Alternatives:** Changing the workspace after every run or labelling a small
+candidate search globally optimal. **Reasoning:** A useful setup comparison must
+preserve the working lap and expose its evidence. **Consequences:** Runs are
+temporary until applied, references remain unchanged, and Stop cancels queued
+work plus the active browser request. An already executing server solve may finish.
+
 ## 2026-09-09 — Transactional portable project activation
 
 **Decision:** Export names in v2 bundles, read v1/v2, validate installed vehicle

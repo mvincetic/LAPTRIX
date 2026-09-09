@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 36 tests pass.
+- Vitest: 38 tests pass.
 - Python numerical/API tests: 69 tests pass.
-- Playwright: fifteen browser journeys pass against running local services.
-- Vite production build: pass; approximately 1.29 MB JavaScript / 356 kB gzip.
+- Playwright: eighteen browser journeys pass against running local services.
+- Vite production build: pass; approximately 1.30 MB JavaScript / 358 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `2323844`; each following milestone reruns CI on push.
+- GitHub Actions passed through `c371dfd`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -89,6 +89,18 @@ and Formula reference; invalid version and failed API cases preserve prior work.
 horizontal overflow at the four standard widths. Desktop/mobile actions-menu
 images were opened and reviewed; the restored project name and all three import
 actions remain accessible. Evidence is in `artifacts/project-delta-reference-gt-*.png`.
+
+The aero-comparison milestone passes lint, typecheck, build and the complete 69
+Python / 38 TypeScript / 18 browser suite. Its browser journeys verify five real
+solver calls with fixed other inputs, fastest checked selection, deliberate
+application, reference retention and save/reload. Injected service failure and
+failed speed checks prevent selection; stopping aborts the active request and
+prevents queued calls. The default Formula study's fastest checked candidate is
+aero -5 at 71.430 seconds, approximately 0.102 seconds below the starting aero 0.
+`--sweep` QA reports zero runtime errors and no horizontal overflow. Opened and
+reviewed `artifacts/sweep-desktop.png` and `artifacts/sweep-mobile.png` confirm
+readable signed deltas, check states, selection and footer controls at 1600 and
+390 px. The narrow dialog has equal client/scroll widths of 356 px.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

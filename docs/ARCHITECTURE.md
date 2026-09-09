@@ -71,6 +71,12 @@ The app recalculates it before committing any project state. File and API failur
 therefore preserve the prior workspace. Archived laps remain artifacts rather
 than an alternative source for active simulation output.
 
+Aero comparison is a local modal workflow over sequential calls to the existing
+simulation endpoint. Full Lap results stay temporary until explicit application;
+eligibility uses returned convergence and force diagnostics. Abort signals combine
+user cancellation with the existing request timeout. No new backend job system or
+alternative lap computation is introduced.
+
 Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
 may decorate the scene without defining track or physics. Neither track-specific
 coordinates nor vehicle performance conditionals belong in React components.

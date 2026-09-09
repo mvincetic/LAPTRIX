@@ -41,22 +41,25 @@ either horizontal axis, shared seeking, playback and reference changes.
 Portable v2 project files now preserve names, selected setup, custom source and
 references; the v1 reader remains supported. Imports validate and recalculate
 before activating state, and track-ID collisions preserve existing geometry.
+A bounded aero study now compares five or six settings through the existing
+solver, exposes progress and numerical eligibility, and applies only a selected
+checked result. Stopping retains completed rows; references survive application.
 
 ## Next highest-value work
 
-1. Add a bounded aero-setup comparison using the existing solver, with progress,
-   checked result ranking and deliberate application of a selected run.
-2. Evaluate measured calibration data and reusable 3D track geometry; add transient
+1. Evaluate measured calibration data and reusable 3D track geometry; add transient
    dynamics only with independent benchmarks and suitable parameter sources.
+2. Improve reproducibility of setup studies with portable comparison reports and
+   complete input provenance before expanding the search dimensions.
 
 ## Stabilization evidence
 
 The local numerical suite contains 69 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Thirty-six TypeScript tests cover
-geometry, alignment, project/reference validation, vehicle contracts and clock/data invariants. Fifteen browser journeys cover the
+extremes and analytical work/grip benchmarks. Thirty-eight TypeScript tests cover
+geometry, alignment, project/reference validation, comparison eligibility, vehicle contracts and clock/data invariants. Eighteen browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
-audio and the optional structured-tool contract. See VALIDATION.md
+audio, aero comparison application/failure/cancellation and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy

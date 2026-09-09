@@ -5,6 +5,9 @@
   shape. Neither profile is an official lap prediction for a real vehicle.
 - Minimum curvature is a small-offset approximation. Optional lap-time refinement
   searches 78 local candidates, not all trajectories or a global minimum.
+- Aero studies compare five or six fixed settings and rank only checked runs.
+  They do not establish a globally optimal setup. Stop cancels the browser request
+  and queued candidates; an already running synchronous server solve may finish.
 - Grid density changes calculated lap time. The measured 720-to-1,440 point change
   is larger than the default refinement gain; milliseconds are numerical display
   resolution, not a statement of real-world prediction accuracy. See SOLVER_STUDY.md.

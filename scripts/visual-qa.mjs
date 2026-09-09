@@ -25,6 +25,7 @@ const gt = process.argv.includes("--gt");
 const imported = process.argv.includes("--reference");
 const delta = process.argv.includes("--delta");
 const project = process.argv.includes("--project");
+const sweep = process.argv.includes("--sweep");
 const prefix = `${project ? "project-" : ""}${delta ? "delta-" : ""}${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
 if (gt) {
   await page
@@ -112,6 +113,32 @@ if (project) {
     .waitFor({ timeout: 60000 });
 }
 await page.waitForTimeout(2500);
+if (sweep) {
+  await page.getByRole("button", { name: "Additional actions" }).click();
+  await page
+    .getByRole("button", { name: "Compare aero settings", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Compare aero settings" });
+  await dialog
+    .getByRole("button", { name: "Run comparison", exact: true })
+    .click();
+  await dialog
+    .getByTestId("aero-status")
+    .filter({ hasText: "Comparison complete" })
+    .waitFor({ timeout: 60000 });
+  await page.screenshot({ path: `artifacts/sweep-${prefix}desktop.png` });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: `artifacts/sweep-${prefix}mobile.png` });
+  console.log(
+    "Sweep dialog width",
+    await dialog.evaluate((element) => ({
+      width: element.clientWidth,
+      scroll: element.scrollWidth,
+    })),
+  );
+  await dialog.getByRole("button", { name: "Apply selected result" }).click();
+  await page.setViewportSize({ width: 1600, height: 1000 });
+}
 if (delta)
   await page.getByRole("tab", { name: "Time Delta", exact: true }).click();
 await page.screenshot({

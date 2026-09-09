@@ -62,3 +62,10 @@ its own labelled file input and retry action. Loading pauses playback and disabl
 project-name editing with other configuration controls. The old workspace stays
 visible during validation and calculation, and success identifies any locally
 renamed track ID. The project name is preserved in new portable exports.
+
+Aero comparison uses a native modal with fixed-context summary, progress and a
+compact four-column result table. Radio selection, signed deltas and explicit
+Passed/Excluded/Failed states supplement color. Starting and fastest checked rows
+are labelled. Apply is deliberate and unavailable while running or without an
+eligible result. The footer remains reachable on short screens; narrow layouts
+retain all columns. Escape closes the study and returns focus to Additional actions.

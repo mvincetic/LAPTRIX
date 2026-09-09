@@ -9,9 +9,12 @@ async function request(url: string, init?: RequestInit) {
   try {
     response = await fetch(url, {
       ...init,
-      signal: AbortSignal.timeout(60000),
+      signal: init?.signal
+        ? AbortSignal.any([init.signal, AbortSignal.timeout(60000)])
+        : AbortSignal.timeout(60000),
     });
   } catch {
+    if (init?.signal?.aborted) throw init.signal.reason;
     throw new Error(
       "The simulation service could not be reached. Start the project with npm run dev, then retry.",
     );
@@ -37,10 +40,12 @@ export async function runSimulation(
   vehicleId: string,
   setup: Setup,
   custom = false,
+  signal?: AbortSignal,
 ) {
   return lapSchema.parse(
     await request("/api/simulate", {
       method: "POST",
+      signal,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         trackId: track.id,

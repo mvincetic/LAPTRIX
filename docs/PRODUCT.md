@@ -16,6 +16,9 @@ missing measured channels or replace the simulation's playback.
 Portable project files restore names, selected setup, custom source geometry and
 references on a fresh workspace. The app validates the bundle and recalculates
 before activation, preserving the previous workspace on any file or API failure.
+An aero study compares five or six settings through the selected solver while
+keeping other inputs fixed. Only checked runs can be applied, and the existing
+reference remains available. See AERO_COMPARISON.md for its bounded scope.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized
@@ -29,6 +32,6 @@ visible in the interface and exported data. Precision in formatting is useful fo
 repeatable comparisons, not evidence of real-world accuracy.
 
 Future work may add independently sourced circuits, additional vehicle generations,
-validated tyre and transient dynamics, user telemetry comparison, setup sweeps,
+validated tyre and transient dynamics, measured channel comparison, broader setup studies,
 more cameras and licensed audio. Prefer correctness and workflow quality over a
 large catalog of weakly supported features.

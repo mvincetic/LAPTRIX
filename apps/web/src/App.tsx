@@ -4,6 +4,7 @@ import {
   Check,
   Download,
   Flag,
+  FlaskConical,
   LoaderCircle,
   MoreHorizontal,
   Play,
@@ -40,6 +41,7 @@ import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
 import { restoreReference } from "./reference";
 import { prepareProject } from "./project";
+import { AeroSweepDialog } from "./components/AeroSweepDialog";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
@@ -75,6 +77,12 @@ export function App() {
     projectInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
+  const [aeroComparison, setAeroComparison] = useState(false);
+  const actionsButton = useRef<HTMLButtonElement>(null);
+  const closeAeroComparison = () => {
+    setAeroComparison(false);
+    actionsButton.current?.focus();
+  };
   useLapTools(lap, clock);
   const run = useCallback(
     async (
@@ -485,6 +493,7 @@ export function App() {
             <button
               className="icon-button"
               aria-label="Additional actions"
+              ref={actionsButton}
               aria-expanded={menu}
               onClick={() => setMenu(!menu)}
             >
@@ -498,6 +507,17 @@ export function App() {
                   onClick={() => setMenu(false)}
                 />
                 <div className="actions-menu">
+                  <button
+                    disabled={busy || !track || !vehicle}
+                    onClick={() => {
+                      clock.play(false);
+                      setMenu(false);
+                      setAeroComparison(true);
+                    }}
+                  >
+                    <FlaskConical size={14} />
+                    Compare aero settings
+                  </button>
                   <button
                     disabled={!catalog || busy}
                     onClick={() => projectInput.current?.click()}
@@ -771,6 +791,25 @@ export function App() {
             : "LAPTRIX v0.1"}
         </span>
       </footer>
+      {aeroComparison && track && vehicle && (
+        <AeroSweepDialog
+          track={track}
+          vehicleId={vehicleId}
+          vehicleName={vehicle.name}
+          setup={setup}
+          custom={customTracks.current.has(track.id)}
+          onClose={closeAeroComparison}
+          onApply={(result) => {
+            setSetup(result.setup);
+            setLap(result);
+            setSelectedCorner(null);
+            setError("");
+            clock.configure(result.lapTime);
+            closeAeroComparison();
+            setNotice("Aero comparison result applied · reference retained");
+          }}
+        />
+      )}
       {notice && (
         <div className="toast" role="status">
           <Check size={16} />
