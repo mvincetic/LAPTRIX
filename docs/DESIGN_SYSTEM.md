@@ -152,3 +152,10 @@ field is hidden. Its native modal uses the existing light-panel and blue-action
 styling, focuses/selects the current name, and bounds its width/height to the viewport.
 Rename applies the draft; Escape, Cancel and Close discard it. All return focus to
 Additional actions. The helper explains the 80-character limit and explicit Save.
+GPX import uses a scrollable native review dialog bounded to the viewport. A north-up
+line preview marks the start in dark blue and the closing segment in dashed orange.
+Editable fields distinguish assumed half-widths from supplied geometry. A compact
+summary shows retained points, closed length and elevation bounds; explicit text
+describes the model-centerline, zero-banking and equal-sector assumptions. Invalid
+input is shown inside the dialog, leaving the workspace available after cancellation.
+Mobile fields and preview stack, and the footer remains reachable by modal scrolling.

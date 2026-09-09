@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 70 tests pass.
+- Vitest: 77 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 51 development browser journeys pass; two viewer journeys also run
+- Playwright: 57 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 379 kB initial JavaScript / 115 kB
+- Vite production build: pass; approximately 390 kB initial JavaScript / 119 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `5a3bed4`; each following milestone reruns CI on push.
+- GitHub Actions passed through `059e153`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -347,6 +347,27 @@ were opened and reviewed. The final QA report records zero runtime/console error
 exact document widths, positive footer gaps and zero-label alignment errors below
 0.1 px. A full-page screenshot initially timed out at 30 seconds; a 60-second capture
 timeout completed the final review. Gate logs are `artifacts/channel-scales-*.log`.
+
+Reviewed GPX import passes lint, typecheck, build, all 77 TypeScript / 96 Python
+tests, 57 development browser journeys and both production viewer journeys.
+Seven geographic tests cover independent ellipsoid dimensions, orientation,
+antimeridian handling, extent rejection and JSON-stable source identity. A new
+regression exposed signed zero changing the binary source fingerprint after JSON
+serialization; geographic output now normalizes zero before becoming track data.
+The six import journeys cover malformed/unsupported sources, assumption review,
+either failed solve, retry, cancellation, desktop/mobile activation, native-reference
+re-import before Save, local restoration and portable projects. Reference-import
+expectations explicitly retain the existing filename metadata. Final gate logs are
+`artifacts/gpx-check-final.log`, `gpx-e2e-final.log` and `gpx-production-final.log`.
+
+GPX visual QA covers empty, error, reviewed and applied states at 1600×1000,
+1280×900, 390×844 and 780×390. Initial review found a native file input displaying
+"No file chosen" beside a loaded draft; an explicit chooser with retained filename
+fixes that inconsistency. Refreshed desktop, phone and landscape dialog captures
+were opened and reviewed. `artifacts/gpx-qa.json` records bounded dialog geometry,
+exact document widths, zero runtime errors, no simulation requests during review
+and exactly two after Apply. The following signed-zero normalization changes no
+visible geometry; final browser gates reran on that exact source revision.
 
 ## Scope of the evidence
 

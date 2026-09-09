@@ -23,7 +23,8 @@ Optional controlled resampling can normalize spacing without changing the import
 source. It retains narrow widths conservatively and rejects excessive interpolation
 displacement. Its effective grid and source alignment are separate Lap metadata;
 see SAMPLING.md.
-This is not yet a general geospatial import format or a validated road survey.
+This is the local geometry contract, not a validated road survey. The reviewed
+GPX 1.1 subset converts into this contract; see GPX_IMPORT.md.
 
 `sectorFractions` has 2–6 strictly increasing fractions above zero, ending at 1.
 Example: `[0.32, 0.67, 1]`. In **v2**, they locate fixed gates along the original
@@ -55,7 +56,9 @@ The API supports custom tracks per request; imports do not modify repository fil
 Save persists the selected custom track on this device. Expand Track geometry for
 source segment contacts and height gaps, with a selectable diagram and local report.
 This diagnostic does not change track acceptance or certify road surface clearance
-at bridges. Geodetic coordinate conversion remains unimplemented. See
+at bridges. GPX import adds bounded WGS84 surface conversion with supplied elevations
+and explicit width/closure assumptions; GeoJSON and general GIS conversion remain
+unimplemented. See
 TRACK_DIAGNOSTICS.md for tolerance, pair counts and the bounded-detail contract.
 
 Import validates the file and calculates the selected setup and centerline

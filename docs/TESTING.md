@@ -1,5 +1,17 @@
 # Testing and validation
 
+GPX conversion tests check equatorial and meridional geometry, southern-hemisphere
+rotation, antimeridian continuity, unchanged elevations and full-chord extent bounds
+including antipodal rejection. Signed-zero fixtures verify identical fingerprints
+through JSON transport and native-reference re-import on the active southern-
+hemisphere source. Six browser journeys exercise native XML parsing,
+invalid/missing/ambiguous data, width/name limits, inert markup-like names, review
+cancellation, either failed solve, retry, request cancellation, Save and portable
+restoration. `node --experimental-strip-types scripts/gpx-qa.mjs` uses the original
+TypeScript fixture to capture the review at 1600/1280/390/780 px and record errors,
+dialog bounds, overflow and API request counts. Node 22.17 supports this explicit
+type-stripping flag; it adds no browser or production dependency.
+
 Channel-scale tests check signed and asymmetric zero positions against explicit
 row coordinates. Real-browser comparison/range journeys verify all seven domains,
 units, visible limits and text-to-guide alignment on both axes and sector ranges.

@@ -24,6 +24,11 @@ copied. The source document itself is linked, not redistributed.
 
 ## External research, inspected 2026-09-09
 
+The GPX reader follows primary format/geodesy documentation from Topografix, ESA
+Navipedia and NGA, linked with conversion assumptions in [GPX_IMPORT](GPX_IMPORT.md).
+Tests use an original analytic GPX fixture, with no recorded trajectory or external
+track copied. User-supplied GPX remains unverified and retains declared provenance.
+
 - [TUMFTM global racetrajectory optimization](https://github.com/TUMFTM/global_racetrajectory_optimization)
   declares **LGPL-3.0**. Its research pipeline offers curvature and minimum-time
   approaches but documents an older Python/Ubuntu environment and native dependency

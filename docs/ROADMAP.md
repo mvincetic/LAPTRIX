@@ -82,9 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Add a reviewed GPX centerline import with bounded coordinate conversion,
-   explicit width/elevation assumptions and transactional activation. Preserve
-   normalized source geometry in the existing project format.
+1. Improve source-geometry inspection with elevation and gradient profiles mapped
+   to original source samples, making imported geometry easier to assess before
+   interpreting simulation results.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -107,19 +107,24 @@ new results reset the selection. Desktop content sizing keeps playback reachable
 Channel scale limits and signed zero guides now expose the full-lap display domains
 for current/native curves. Shared row geometry keeps labels aligned at desktop and
 mobile widths, including sector windows and wrapped captions.
+Reviewed GPX 1.1 import now converts one bounded circuit with complete elevations.
+Users inspect its start, closure, dimensions and width assumptions before the
+existing transactional pair solve. Failed runs retain the reviewed draft for retry;
+local Save and portable projects preserve converted geometry and provenance.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Seventy TypeScript tests cover
+extremes and analytical work/grip benchmarks. Seventy-seven TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
-ghost poses and clock/data invariants. Fifty-one browser journeys cover the
+ghost poses, local geographic conversion and clock/data invariants. Fifty-seven browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming, native channel overlays, sector graph inspection and the
+precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
+native channel overlays, sector graph inspection, reviewed GPX import and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

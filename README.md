@@ -108,6 +108,9 @@ anchors. Both bundled vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_M
 Use **Export vehicle JSON** as an editable template and **Import vehicle JSON** to
 calculate user-supplied inputs. Parameters and declared sources remain unverified,
 visible and saved with the project. See [VEHICLE_PROFILES](docs/VEHICLE_PROFILES.md).
+**Import track GPX** opens a review of one closed GPX 1.1 circuit with supplied
+elevations. Inspect the geometry and assumed half-widths before calculating; Save
+and portable projects retain its converted source. See [GPX_IMPORT](docs/GPX_IMPORT.md).
 **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.

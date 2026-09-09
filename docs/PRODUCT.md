@@ -69,6 +69,11 @@ playback explicit. A new completed calculation resets the view range.
 Each channel row exposes its display bounds alongside the live values. Current and
 reference curves share those bounds; signed channels include a zero guide. Bounds
 retain their units and remain fixed when inspecting a sector.
+GPX circuit import reviews one continuous source before calculation. The dialog
+shows a projected centerline, closure and supplied elevation bounds, with editable
+width assumptions. Both new laps must succeed before replacing the active track
+and reference. Converted geometry and declared assumptions survive local Save and
+portable projects; source accuracy remains unverified. See GPX_IMPORT.md.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

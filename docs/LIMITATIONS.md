@@ -23,10 +23,14 @@
   affects gradient forces, not suspension compression or vertical road curvature.
 - Detected corners use curvature prominence; gradual turns may be combined.
   Seam-adjacent event windows are clipped to the canonical lap interval.
-- Track imports accept local JSON only. Source-centerline diagnostics report
-  projected contacts and height gaps, but do not validate road-width/surface
-  intersections, bridge clearance or trajectory topology. GPX/GeoJSON conversion,
-  bridge structures and surveyed terrain are not implemented.
+- Track imports accept local JSON and a reviewed GPX 1.1 geometry subset. GPX
+  requires one segment with complete elevations, a bounded closure and points
+  within 10 km of its origin. Widths, zero banking and equal sectors are assumptions;
+  elevation datum, source accuracy and ground-scale corrections are unverified.
+  There is no noise filtering, missing-data filling, multi-lap selection or GeoJSON
+  conversion. Source-centerline diagnostics report projected contacts and height
+  gaps, but do not validate road-width/surface intersections, bridge clearance or
+  trajectory topology. Bridge structures and surveyed terrain are not implemented.
 - Reference imports accept native simulation JSON or explicitly source-aligned
   timing JSON. GPS alignment and generic logger CSV conversion are not implemented.
   Imported timing origin is declared by its file and is not independently verified;

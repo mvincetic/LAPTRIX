@@ -1,5 +1,24 @@
 # Decision log
 
+## 2026-09-09 — Review bounded GPX geometry before transactional activation
+
+**Decision:** Accept one continuous GPX 1.1 circuit with complete elevations through
+a local review dialog. Project WGS84 surface coordinates into the first point's
+east/north frame, retain provided elevations independently, and expose width,
+banking, sector and closure assumptions. Share JSON import's validated calculation
+and activation path. **Alternatives:** Guess missing elevations, join arbitrary
+segments, infer a road centerline from driving data, or persist a second GPX-based
+runtime geometry. **Reasoning:** A useful geospatial entry point needs visible
+assumptions and bounded behavior before the model can consume it. **Consequences:**
+The subset excludes logger timing, multi-lap selection, geoid/ground-scale correction
+and noise filtering. Imported source accuracy remains unverified. Projects keep
+normalized Track geometry and provenance; the original file is retained separately
+by its owner. Independent math and real-browser tests protect conversion, review,
+failure/cancellation and persistence. See GPX_IMPORT.md for bounds and primary sources.
+Geographic outputs canonicalize signed zero before becoming a Track. A southern-
+hemisphere fixture exposed different local/server fingerprints when JSON converted
+`-0` to `0`; normalization preserves source identity without changing numeric geometry.
+
 ## 2026-09-09 — Visible channel domains and shared zero guides
 
 **Decision:** Add a compact scale column with rounded display-domain bounds and

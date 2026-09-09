@@ -102,6 +102,16 @@ reference availability, while timing-only references remain analytical data. The
 pose helper clamps at a lap's finish and keeps the same seam-aware orientation as
 time advances beyond it. Viewer preferences add no stored lap or second clock.
 There is no account system or database.
+`gpx.ts` reads a bounded geometry subset through native `DOMParser`; `geographic.ts`
+converts WGS84 surface coordinates into a local east/north frame while retaining
+supplied elevation separately. Canonical JSON zeros keep its local fingerprints
+consistent with server results. `GpxImportDialog` holds file/assumption drafts and
+performs no simulation during review. Its lifecycle and read generation ignore
+late file completions. Applying closes the modal before returning focus, then
+shares the existing track schema, normalization and generation-checked pair solve
+with JSON import. A failed GPX calculation can reopen the submitted draft. The
+converted Track uses existing catalog, API, Save and portable-project contracts;
+raw GPX metadata is not another source of runtime geometry.
 `prepareTelemetryComparison` uses the same native-reference eligibility boundary,
 merges source-progress knots and separates current-lap plot coordinates from each
 interpolated native sample. `telemetryPlot.ts` owns channel units, combined ranges

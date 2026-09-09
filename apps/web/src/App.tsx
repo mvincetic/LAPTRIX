@@ -45,6 +45,7 @@ import { prepareProject, prepareSavedProject } from "./project";
 import { prepareVehicleProfile } from "../../../packages/shared/vehicle-profile";
 import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { RenameProjectDialog } from "./components/RenameProjectDialog";
+import { GpxImportDialog, type GpxDraft } from "./components/GpxImportDialog";
 import { download } from "./download";
 
 const clock = new PlaybackClock();
@@ -70,6 +71,7 @@ export function App() {
     | "import-reference"
     | "import-project"
     | "import-track"
+    | "import-gpx"
     | "import-vehicle"
   >("retry");
   const fileInput = useRef<HTMLInputElement>(null),
@@ -115,6 +117,8 @@ export function App() {
   };
   const [aeroComparison, setAeroComparison] = useState(false);
   const [projectNaming, setProjectNaming] = useState(false);
+  const [gpxImport, setGpxImport] = useState(false);
+  const [gpxDraft, setGpxDraft] = useState<GpxDraft | null>(null);
   const actionsButton = useRef<HTMLButtonElement>(null);
   const closeActions = () => {
     setMenu(false);
@@ -126,6 +130,10 @@ export function App() {
   };
   const closeProjectNaming = () => {
     setProjectNaming(false);
+    actionsButton.current?.focus();
+  };
+  const closeGpxImport = () => {
+    setGpxImport(false);
     actionsButton.current?.focus();
   };
   useLapTools(lap, clock);
@@ -310,18 +318,24 @@ export function App() {
       );
     }
   };
-  const importTrack = async (file: File) => {
+  const importTrack = async (
+    source: { format: "json"; file: File } | { format: "gpx"; track: Track },
+  ) => {
     if (!catalog) return;
     const { id, signal } = beginCalculation();
     setNotice("");
     setMenu(false);
     try {
-      if (file.size > 1_500_000)
-        throw new Error("Track file must be smaller than 1.5 MB.");
-      const validation = trackSchema.safeParse(JSON.parse(await file.text()));
+      let value: unknown;
+      if (source.format === "json") {
+        if (source.file.size > 1_500_000)
+          throw new Error("Track file must be smaller than 1.5 MB.");
+        value = JSON.parse(await source.file.text());
+      } else value = source.track;
+      const validation = trackSchema.safeParse(value);
       if (!validation.success)
         throw new Error(
-          "Track JSON is invalid: " +
+          "Track data is invalid: " +
             validation.error.issues
               .slice(0, 2)
               .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
@@ -363,9 +377,9 @@ export function App() {
       setNotice("Track imported and simulated");
     } catch (e) {
       if (id === generation.current) {
-        setErrorAction("import-track");
+        setErrorAction(source.format === "gpx" ? "import-gpx" : "import-track");
         setError(
-          `Track import failed: ${e instanceof Error ? e.message : "Invalid track JSON"}. Current workspace kept.`,
+          `Track import failed: ${e instanceof Error ? e.message : "Invalid track data"}. Current workspace kept.`,
         );
       }
     } finally {
@@ -744,6 +758,16 @@ export function App() {
                     Import track JSON
                   </button>
                   <button
+                    disabled={!catalog || busy}
+                    onClick={() => {
+                      setMenu(false);
+                      setGpxDraft(null);
+                      setGpxImport(true);
+                    }}
+                  >
+                    <Upload size={14} /> Import track GPX
+                  </button>
+                  <button
                     disabled={!track || !catalog || busy}
                     onClick={() => vehicleInput.current?.click()}
                   >
@@ -879,7 +903,7 @@ export function App() {
           aria-label="Import track file"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void importTrack(file);
+            if (file) void importTrack({ format: "json", file });
             e.target.value = "";
           }}
         />
@@ -942,6 +966,7 @@ export function App() {
                 projectInput.current?.click();
               else if (errorAction === "import-track")
                 fileInput.current?.click();
+              else if (errorAction === "import-gpx") setGpxImport(true);
               else if (errorAction === "import-vehicle")
                 vehicleInput.current?.click();
               else if (track)
@@ -962,7 +987,9 @@ export function App() {
                   ? "Import project again"
                   : errorAction === "import-vehicle"
                     ? "Import vehicle again"
-                    : "Import track again"}
+                    : errorAction === "import-gpx"
+                      ? "Review GPX again"
+                      : "Import track again"}
           </button>
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={15} />
@@ -1051,6 +1078,17 @@ export function App() {
             : "LAPTRIX v0.1"}
         </span>
       </footer>
+      {gpxImport && (
+        <GpxImportDialog
+          initial={gpxDraft}
+          onClose={closeGpxImport}
+          onImport={(track, draft) => {
+            setGpxDraft(draft);
+            closeGpxImport();
+            void importTrack({ format: "gpx", track });
+          }}
+        />
+      )}
       {projectNaming && (
         <RenameProjectDialog
           name={projectName}
