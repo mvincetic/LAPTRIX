@@ -42,4 +42,7 @@
   it does not promise numerical reproduction across future solver revisions.
 - The API cache is bounded and process-local. This is a trusted local development
   service, not a hardened multi-user compute system.
+- Cancel closes active browser calculation requests and discards their results.
+  An already executing synchronous server solve may still finish; no backend job
+  cancellation or worker preemption is claimed.
 - Browser numerical/visual checks do not substitute for real-world model validation.

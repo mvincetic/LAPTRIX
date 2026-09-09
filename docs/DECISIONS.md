@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-09 — Cancel browser calculations while retaining completed work
+
+**Decision:** Share a request controller across a run/import's selected lap and
+baseline. Use the primary action for Cancel while pending, invalidate its
+generation before aborting, and retain current data and pending setup edits.
+**Alternative:** Keep controls locked until timeout or add backend jobs solely for
+UI cancellation. **Reasoning:** Existing fetch signals and transactional activation
+can release the workspace immediately without another service or alternate data
+path. **Consequences:** Playback stays paused and later results are ignored. The
+server may finish already executing work; cancellation does not claim to stop it.
+
 ## 2026-09-09 — Activate track changes after successful calculation
 
 **Decision:** Commit an imported source, current lap and new reference together

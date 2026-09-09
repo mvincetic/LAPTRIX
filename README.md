@@ -51,6 +51,7 @@ the last completed result remains visible if a solve fails.
 - Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
 - Fixed source-sector gates, with legacy track files and reference comparisons preserved.
 - Source geometry contact inspection with height gaps, a diagram and local report export.
+- Cancel pending calculations/imports while retaining the completed workspace and setup edits.
 
 ## Checks
 
@@ -69,6 +70,7 @@ node scripts/visual-qa.mjs --sweep
 node scripts/viewer-load-qa.mjs
 node scripts/geometry-qa.mjs
 node scripts/track-failure-qa.mjs
+node scripts/cancellation-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```

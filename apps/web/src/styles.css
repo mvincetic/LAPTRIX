@@ -1619,12 +1619,15 @@ select {
   background: white;
   box-shadow: 0 4px 24px #20324b1a;
   font-size: 12px;
+  width: max-content;
   max-width: 90vw;
 }
 .toast > svg {
   color: var(--green);
+  flex-shrink: 0;
 }
 .toast button {
+  flex-shrink: 0;
   border: 0;
   padding: 1px;
   margin-left: 10px;

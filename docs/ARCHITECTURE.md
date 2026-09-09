@@ -49,6 +49,12 @@ requirement for Retry. Track-file imports reserve a request generation before fi
 reading and calculate both laps before adding a source to the local catalog; stale
 completions cannot add tracks or show success. This mirrors portable-project
 activation and prevents partial workspaces when either solve fails.
+The shared calculation lifecycle creates one AbortController for each ordinary
+run or track/project import; both selected-lap and baseline requests receive its
+signal. Cancel invalidates the request generation before aborting and re-enables
+controls without replacing completed workspace data. File preparation checks its
+generation before sending requests. Unmount aborts the current calculation too.
+Cancellation closes browser requests; the synchronous server worker may finish.
 
 `apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
 and solves its box constraints. `solver.py` owns geometry, the speed envelope,

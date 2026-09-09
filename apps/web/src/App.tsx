@@ -73,6 +73,37 @@ export function App() {
   const retryTarget = useRef<{ track: Track; makeReference: boolean } | null>(
     null,
   );
+  const activeCalculation = useRef<AbortController | null>(null);
+  const [cancellable, setCancellable] = useState(false);
+  const beginCalculation = useCallback(() => {
+    const id = ++generation.current;
+    const controller = new AbortController();
+    activeCalculation.current = controller;
+    retryTarget.current = null;
+    setCancellable(true);
+    setBusy(true);
+    setError("");
+    clock.play(false);
+    return { id, signal: controller.signal };
+  }, []);
+  const finishCalculation = useCallback((id: number) => {
+    if (id === generation.current) {
+      activeCalculation.current = null;
+      setCancellable(false);
+      setBusy(false);
+    }
+  }, []);
+  const cancelCalculation = () => {
+    if (!activeCalculation.current) return;
+    generation.current++;
+    activeCalculation.current.abort();
+    activeCalculation.current = null;
+    retryTarget.current = null;
+    setCancellable(false);
+    setBusy(false);
+    setError("");
+    setNotice("Calculation cancelled. Workspace kept; server work may finish.");
+  };
   const [aeroComparison, setAeroComparison] = useState(false);
   const actionsButton = useRef<HTMLButtonElement>(null);
   const closeAeroComparison = () => {
@@ -87,22 +118,25 @@ export function App() {
       selectedSetup: Setup,
       makeReference = false,
     ) => {
-      const id = ++generation.current;
-      retryTarget.current = null;
-      setBusy(true);
-      setError("");
+      const { id, signal } = beginCalculation();
       setErrorAction("retry");
-      clock.play(false);
       try {
         const custom = customTracks.current.has(selectedTrack.id);
         const [result, baseline] = await Promise.all([
-          runSimulation(selectedTrack, selectedVehicle, selectedSetup, custom),
+          runSimulation(
+            selectedTrack,
+            selectedVehicle,
+            selectedSetup,
+            custom,
+            signal,
+          ),
           makeReference
             ? runSimulation(
                 selectedTrack,
                 selectedVehicle,
                 { ...selectedSetup, solver: "centerline" },
                 custom,
+                signal,
               )
             : Promise.resolve(null),
         ]);
@@ -120,10 +154,10 @@ export function App() {
           );
         }
       } finally {
-        if (id === generation.current) setBusy(false);
+        finishCalculation(id);
       }
     },
-    [],
+    [beginCalculation, finishCalculation],
   );
   useEffect(() => clock.start(), []);
   useEffect(() => {
@@ -214,6 +248,7 @@ export function App() {
       // This numeric ref is a request generation counter, not a DOM ref.
       // eslint-disable-next-line react-hooks/exhaustive-deps
       generation.current++;
+      activeCalculation.current?.abort();
     };
   }, [run]);
   useEffect(() => {
@@ -257,13 +292,9 @@ export function App() {
   };
   const importTrack = async (file: File) => {
     if (!catalog) return;
-    const id = ++generation.current;
-    retryTarget.current = null;
-    setBusy(true);
-    setError("");
+    const { id, signal } = beginCalculation();
     setNotice("");
     setMenu(false);
-    clock.play(false);
     try {
       if (file.size > 1_500_000)
         throw new Error("Track file must be smaller than 1.5 MB.");
@@ -284,12 +315,13 @@ export function App() {
         );
       if (id !== generation.current) return;
       const [result, baseline] = await Promise.all([
-        runSimulation(imported, vehicleId, setup, true),
+        runSimulation(imported, vehicleId, setup, true, signal),
         runSimulation(
           imported,
           vehicleId,
           { ...setup, solver: "centerline" },
           true,
+          signal,
         ),
       ]);
       if (id !== generation.current) return;
@@ -309,17 +341,14 @@ export function App() {
         );
       }
     } finally {
-      if (id === generation.current) setBusy(false);
+      finishCalculation(id);
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
   const importProject = async (file: File) => {
     if (!catalog) return;
-    const id = ++generation.current;
-    setBusy(true);
-    setError("");
+    const { id, signal } = beginCalculation();
     setMenu(false);
-    clock.play(false);
     try {
       if (file.size > 10_000_000)
         throw new Error("Project file must be smaller than 10 MB.");
@@ -327,6 +356,7 @@ export function App() {
         JSON.parse(await file.text()),
         catalog,
       );
+      if (id !== generation.current) return;
       const custom =
         prepared.addTrack || customTracks.current.has(prepared.track.id);
       const [result, baseline] = await Promise.all([
@@ -335,6 +365,7 @@ export function App() {
           prepared.vehicle.id,
           prepared.setup,
           custom,
+          signal,
         ),
         prepared.reference
           ? Promise.resolve(null)
@@ -343,6 +374,7 @@ export function App() {
               prepared.vehicle.id,
               { ...prepared.setup, solver: "centerline" },
               custom,
+              signal,
             ),
       ]);
       if (id !== generation.current) return;
@@ -373,7 +405,7 @@ export function App() {
         );
       }
     } finally {
-      if (id === generation.current) setBusy(false);
+      finishCalculation(id);
     }
   };
   const importReference = async (file: File) => {
@@ -495,15 +527,30 @@ export function App() {
         <div className="topbar-actions">
           <button
             className="primary-button"
-            disabled={busy || !track}
-            onClick={() => track && void run(track, vehicleId, setup)}
+            disabled={busy ? !cancellable : !track}
+            aria-label={busy && cancellable ? "Cancel calculation" : undefined}
+            title={
+              busy && cancellable
+                ? "Cancel this request. Server work may still finish."
+                : undefined
+            }
+            onClick={() => {
+              if (busy && cancellable) cancelCalculation();
+              else if (track) void run(track, vehicleId, setup, !reference);
+            }}
           >
             {busy ? (
               <LoaderCircle size={16} className="spin" />
             ) : (
               <Play size={15} />
             )}
-            <span>{busy ? "Calculating…" : "Run Simulation"}</span>
+            <span>
+              {busy
+                ? cancellable
+                  ? "Cancel"
+                  : "Connecting…"
+                : "Run Simulation"}
+            </span>
           </button>
           <button
             className="save-button"

@@ -91,3 +91,11 @@ During track selection/import, controls show the pending calculation while the
 last complete source and analysis remain visible. Import errors explicitly state
 that the workspace was kept and offer Import track again; ordinary run errors
 identify the attempted track. Retry carries the failed track target internally.
+The existing primary button changes to Cancel with a pending spinner during active
+calculations, retaining its compact footprint on mobile. Its accessible name is
+Cancel calculation. Before catalog loading finishes, Connecting remains disabled.
+Cancellation returns the Run Simulation action and shows a brief notice that work
+was kept and server work may finish. Pending setup edits remain visibly unapplied.
+Notifications use their content width capped at 90% of the viewport; icons and the
+dismiss button retain their size so longer mobile notices wrap across a usable
+text area rather than a narrow column.

@@ -64,12 +64,14 @@ of resampled lap geometry; complete counts survive a 100-pair detail cap.
 Track imports and loaded-track selection now activate source/current/reference
 together after successful calculation. Failures preserve complete exported project
 contents; retries retain the intended target, and stale imports cannot add sources.
+Ordinary runs and track/project imports now share explicit browser cancellation.
+Cancel preserves completed data and pending setup edits, aborts active requests and
+ignores late results. It does not claim to stop an already executing server worker.
 
 ## Next highest-value work
 
-1. Add explicit cancellation for ordinary calculations and file-import solves.
-   Reuse request abort signals and generation guards to retain the last completed
-   workspace; distinguish browser cancellation from stopping a server-side solve.
+1. Audit keyboard navigation, focus recovery and accessible labels across compact
+   controls and the actions menu, building on the mobile Save-label correction.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -79,10 +81,10 @@ The local numerical/API suite contains 86 passing tests, including coupled quadr
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Forty-seven TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts and clock/data invariants. Twenty-six browser journeys cover the
+eligibility, vehicle contracts and clock/data invariants. Twenty-nine browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
-reports, failed/superseded track activation and the
+reports, failed/superseded track activation, calculation cancellation and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

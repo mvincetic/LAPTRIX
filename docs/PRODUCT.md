@@ -32,6 +32,9 @@ without implying surveyed road accuracy or validated bridge clearance.
 Track imports and selection retain the current source, lap and reference until
 both new calculations succeed. Failed imports preserve the workspace and expose
 an import retry; failed selection retries the intended track with its new baseline.
+The primary action becomes Cancel during calculations and track/project imports.
+Cancellation preserves the completed workspace and edited setup, pauses playback,
+and permits a new run or import. Already executing server work may still finish.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

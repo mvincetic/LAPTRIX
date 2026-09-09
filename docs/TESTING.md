@@ -1,5 +1,12 @@
 # Testing and validation
 
+Cancellation journeys hold real browser requests and verify requestfailed events
+arrive from Cancel before the test releases its network gate. Normal runs and
+both track/project import requests are covered. Complete project exports remain
+identical, edited fuel remains pending, and a subsequent run/import succeeds.
+Cancel is exercised at 390 px width. `scripts/cancellation-qa.mjs` captures pending
+and cancelled states at desktop/mobile widths and checks retained lap data.
+
 Track activation journeys inject separate selected-lap and baseline failures,
 compare complete exported projects before/after, and retry the same source ID.
 A failed selector change keeps its prior source and Retry activates the intended

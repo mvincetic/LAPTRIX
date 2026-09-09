@@ -8,12 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 39 tests pass.
-- Python numerical/API tests: 82 tests pass.
-- Playwright: nineteen browser journeys pass against running local services.
-- Vite production build: pass; approximately 1.30 MB JavaScript / 359 kB gzip.
-- Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `1c273dc`; each following milestone reruns CI on push.
+- Vitest: 47 tests pass.
+- Python numerical/API tests: 86 tests pass.
+- Playwright: 29 development browser journeys pass; two viewer journeys also run
+  against built production assets.
+- Vite production build: pass; approximately 360 kB initial JavaScript / 110 kB
+  gzip, plus a separate 950 kB viewer / 253 kB gzip.
+- Initial runtime npm dependency audit: zero reported vulnerabilities; no package
+  changes were made in the following viewer/geometry/workspace milestones.
+- GitHub Actions passed through `12add6e`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -206,6 +209,18 @@ Save/reload retains the old source after failure. Opened desktop/mobile screensh
 in `artifacts/track-failure-*.png` show readable error and retry controls, no
 horizontal overflow, and no runtime errors. The preceding geometry commit's
 remote CI passed on the working branch.
+
+Calculation cancellation passes the complete 86 Python / 47 TypeScript / 29
+development browser suite, lint, typecheck and build, plus both production viewer
+journeys. Three new tests verify actual browser abort events for normal runs and
+both track/project import requests before releasing a held network gate. Complete
+project exports remain unchanged, selected fuel stays pending, and repeating the
+operation succeeds. Four pending/cancelled desktop/mobile screenshots in
+`artifacts/calculation-*.png` were opened and reviewed. QA reports retained lap
+data, no runtime errors and no overflow at 1600 and 390 px. Visual review found
+narrow mobile notifications; content-based width with a viewport cap and fixed
+icon sizing fixes the wrapping. Lint, build and production checks pass after that
+CSS polish, and the refreshed cancelled-state images were reviewed again.
 
 ## Scope of the evidence
 
