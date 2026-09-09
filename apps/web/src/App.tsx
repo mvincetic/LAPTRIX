@@ -7,6 +7,7 @@ import {
   FlaskConical,
   LoaderCircle,
   MoreHorizontal,
+  Pencil,
   Play,
   Save,
   Sun,
@@ -43,6 +44,7 @@ import { restoreReference } from "./reference";
 import { prepareProject, prepareSavedProject } from "./project";
 import { prepareVehicleProfile } from "../../../packages/shared/vehicle-profile";
 import { AeroSweepDialog } from "./components/AeroSweepDialog";
+import { RenameProjectDialog } from "./components/RenameProjectDialog";
 import { download } from "./download";
 
 const clock = new PlaybackClock();
@@ -112,6 +114,7 @@ export function App() {
     setNotice("Calculation cancelled. Workspace kept; server work may finish.");
   };
   const [aeroComparison, setAeroComparison] = useState(false);
+  const [projectNaming, setProjectNaming] = useState(false);
   const actionsButton = useRef<HTMLButtonElement>(null);
   const closeActions = () => {
     setMenu(false);
@@ -119,6 +122,10 @@ export function App() {
   };
   const closeAeroComparison = () => {
     setAeroComparison(false);
+    actionsButton.current?.focus();
+  };
+  const closeProjectNaming = () => {
+    setProjectNaming(false);
     actionsButton.current?.focus();
   };
   useLapTools(lap, clock);
@@ -721,6 +728,15 @@ export function App() {
                     <Upload size={14} /> Import project JSON
                   </button>
                   <button
+                    disabled={!track || busy}
+                    onClick={() => {
+                      setMenu(false);
+                      setProjectNaming(true);
+                    }}
+                  >
+                    <Pencil size={14} /> Rename project
+                  </button>
+                  <button
                     disabled={!catalog || busy}
                     onClick={() => fileInput.current?.click()}
                   >
@@ -1035,6 +1051,17 @@ export function App() {
             : "LAPTRIX v0.1"}
         </span>
       </footer>
+      {projectNaming && (
+        <RenameProjectDialog
+          name={projectName}
+          onClose={closeProjectNaming}
+          onRename={(name) => {
+            setProjectName(name);
+            closeProjectNaming();
+            setNotice("Project renamed");
+          }}
+        />
+      )}
       {aeroComparison && track && vehicle && (
         <AeroSweepDialog
           track={track}

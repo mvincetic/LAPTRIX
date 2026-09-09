@@ -140,6 +140,11 @@ mobile sizes.
 Keep application source unchanged during browser gates. A watched-module edit can
 trigger a Vite reload and invalidate an otherwise valid response/interaction; rerun
 the affected gate with source fixed rather than weakening its assertions.
+Project naming compares complete exported bundles before/after edits at desktop
+and phone widths, including pending setup, references and an exact playback position.
+It asserts zero simulation requests, all native dismissal paths and outside focus,
+the existing name limit, Unicode/blank names and Save/reload restoration. Visual QA
+in `scripts/project-name-qa.mjs` also covers 1280 px and a short landscape viewport.
 Run visual QA separately from the browser regression suite on machines using
 software WebGL. Simultaneous renderers can consume enough CPU to delay ordinary
 API/UI assertions. Aero-study completion waits allow 30 seconds for five sequential

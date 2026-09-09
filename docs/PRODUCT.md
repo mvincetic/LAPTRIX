@@ -54,6 +54,10 @@ same solver. Imports activate after successful calculation, retain references an
 declared sources/assumptions, and resolve occupied IDs without replacing built-in
 profiles. Imported inputs are visibly unverified. Save and portable v3 projects
 preserve the selected embedded profile; older files retain their original rules.
+Project naming is available from Additional actions at all widths. A native dialog
+keeps drafts separate until Rename; cancellation restores focus without changing
+the workspace. Naming makes no simulation request and retains pending setup edits,
+references and playback. Saved and exported names follow the existing contract.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

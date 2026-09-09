@@ -126,3 +126,8 @@ Import vehicle again. Collision notices explain local renaming.
 Long unbroken profile text wraps in the data panel, lap labels, reference footer,
 ghost tools and aero context. Accepted metadata must remain readable without
 horizontal scrolling inside those panels.
+Rename project is available in Additional actions even where the desktop project
+field is hidden. Its native modal uses the existing light-panel and blue-action
+styling, focuses/selects the current name, and bounds its width/height to the viewport.
+Rename applies the draft; Escape, Cancel and Close discard it. All return focus to
+Additional actions. The helper explains the 80-character limit and explicit Save.

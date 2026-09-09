@@ -10,13 +10,13 @@ and no main merge, force-push or repository-settings change was made.
 - TypeScript strict typecheck: pass.
 - Vitest: 59 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 45 development browser journeys pass; two viewer journeys also run
+- Playwright: 47 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 371 kB initial JavaScript / 113 kB
+- Vite production build: pass; approximately 372 kB initial JavaScript / 113 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `3dc6575`; each following milestone reruns CI on push.
+- GitHub Actions passed through `6a5550b`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -293,6 +293,18 @@ widths and matching content/scroll widths for the inspected panels. The initial
 browser run was interrupted by a watched-source edit during refinement; the clean
 source-frozen rerun passes all 45 journeys. Logs remain in local
 `artifacts/vehicle-profile-*.log`.
+
+Project naming passes the complete 96 Python / 59 TypeScript / 47 development
+browser gates, lint, typecheck and build, plus both production viewer journeys.
+Two new journeys compare full exported projects and the current cursor, assert no
+simulation requests, exercise Escape/Cancel/Close and name limits, and restore a
+saved Unicode name at desktop/phone widths. Initial tests caught outside focus
+being attempted while the modal still blocked background controls. Closing the
+native dialog before the callback fixes every dismissal and submission path.
+Action, modal and applied-state captures are in `artifacts/project-name-*.png`;
+the four modal screenshots at 1600×1000, 1280×900, 390×844 and 780×390 were opened
+and reviewed. The QA report shows no runtime errors or horizontal overflow, with
+the complete dialog inside every viewport. Logs are in `artifacts/project-name-*.log`.
 
 ## Scope of the evidence
 

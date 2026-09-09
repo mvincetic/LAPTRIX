@@ -56,6 +56,11 @@ reachable by keyboard; mobile content expands into the document.
 Ghost visibility uses independent labelled native checkboxes. The reference option
 is disabled with an explanation when positions are unavailable. Optional CURRENT
 and REF labels expose vehicle names and do not intercept viewer pointer gestures.
+Project naming is available through the actions disclosure at all screen widths.
+Its labelled native dialog focuses/selects the current name, uses a separate draft
+and supports Enter, Escape, Cancel and Close. Closing releases the modal before
+restoring focus to Additional actions. Tests verify every dismissal path, current
+workspace/cursor retention, name limits, blank names and save/reload.
 
 Remaining review includes broader expanded/error states, contrast, zoom, screen
 readers and representative browsers.

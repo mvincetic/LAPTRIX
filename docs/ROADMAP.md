@@ -82,8 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Make project naming accessible on narrow screens, where the desktop header
-   currently hides that field. Preserve keyboard focus and save/export behavior.
+1. Add optional source-aligned telemetry traces from native references. Preserve
+   units, both sampling grids and current-lap axes; timing-only references must not
+   acquire invented channels.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -92,6 +93,9 @@ cache. Activation is transactional; metadata, references, built-ins and pending 
 survive failures/cancellation. Local saves and portable v3 retain embedded profiles,
 resolve collisions and preserve v1/v2 installed-profile rules. Declared parameters
 and sources remain visibly unverified; see VEHICLE_PROFILES.md.
+Project naming now works at every width through a native dialog with separate
+drafts, explicit application and reliable return focus. It preserves simulation,
+pending setup and playback, and uses the existing Save/export name contract.
 
 ## Stabilization evidence
 
@@ -99,11 +103,11 @@ The local numerical/API suite contains 96 passing tests, including coupled quadr
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Fifty-nine TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts, ghost poses and clock/data invariants. Forty-five browser journeys cover the
+eligibility, vehicle contracts, ghost poses and clock/data invariants. Forty-seven browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection, reference ghosts, embedded vehicle profiles and the
+precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

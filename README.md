@@ -56,6 +56,7 @@ the last completed result remains visible if a solve fails.
 - Exact time/distance cursor entry with numerical telemetry and explicit model limits.
 - Optional native-reference ghost with independent vehicle styling and shared-time playback.
 - Bounded vehicle JSON import/export, preserved profile provenance and portable restoration.
+- Project naming at every screen width, with draft cancellation and explicit local saving.
 
 ## Checks
 
@@ -80,6 +81,7 @@ node scripts/tabs-qa.mjs
 node scripts/cursor-qa.mjs
 node scripts/reference-ghost-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
+node scripts/project-name-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -118,6 +120,9 @@ option disabled; see [GHOST_PLAYBACK](docs/GHOST_PLAYBACK.md).
 **Export project** and **Import project JSON** move the whole setup and reference
 between workspaces. Import recalculates with its catalog or embedded vehicle and retains the
 prior workspace if validation or calculation fails. See [PROJECT_FILES](docs/PROJECT_FILES.md).
+Use **Additional actions → Rename project** when the desktop name field is hidden,
+or to edit a name as a draft. Rename applies it; Escape, Cancel or Close discards the
+draft. Use Save explicitly to keep the name on this device.
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

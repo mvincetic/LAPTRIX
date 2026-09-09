@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-09 — Project naming beyond the desktop header
+
+**Context:** The project-name field is hidden below 1,350 px, leaving smaller-screen
+users without a naming control. **Decision:** Add a native dialog in the existing
+actions disclosure. Keep its draft separate, preserve the existing 80-character and
+blank-name contract, and apply only metadata without recalculation. Close the native
+modal before restoring outside focus. **Consequences:** Cancel/Close/Escape discard
+drafts, Save stays explicit, and portable names use the same field. Desktop direct
+editing remains available. Browser tests compare complete exports and playback
+before/after naming, and verify keyboard return, limits and save restoration.
+
 ## 2026-09-09 — Bounded inline vehicles and explicit portable provenance
 
 **Decision:** Accept strict bounded vehicle JSON through the existing endpoint and

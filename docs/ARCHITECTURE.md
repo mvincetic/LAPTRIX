@@ -102,6 +102,10 @@ reference availability, while timing-only references remain analytical data. The
 pose helper clamps at a lap's finish and keeps the same seam-aware orientation as
 time advances beyond it. Viewer preferences add no stored lap or second clock.
 There is no account system or database.
+`RenameProjectDialog` holds only a local name draft. It closes the native modal
+before callbacks restore focus outside it. Applying a name changes project metadata
+without touching calculation generations, source/vehicle state or the shared clock.
+The existing name field, local Save and portable export consume that same value.
 
 Portable project bundles use a separate versioned reader in `apps/web/src/project.ts`.
 It validates source/reference identity and catalog or embedded vehicle inputs,

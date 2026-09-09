@@ -7,6 +7,9 @@ and the selected reference. New exports use `version: 3` with `vehicleSource` se
 to `catalog` or `embedded`. The reader also accepts prior v1/v2 exports, using
 "Imported workspace" when the name was absent. Device-local Save retains its
 separate v1 format and adds the selected `customVehicle` when applicable.
+The name can be edited directly in the desktop header or through **Additional
+actions → Rename project** at every width. The dialog preserves draft cancellation,
+the 80-character limit and intentionally blank names; use Save explicitly to persist it.
 
 Imports are limited to 10 MB. The complete bundle, track geometry, archived lap
 identity and reference alignment are validated before activation. The selected
