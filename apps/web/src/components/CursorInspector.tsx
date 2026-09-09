@@ -62,10 +62,9 @@ export function CursorInspector({
       </div>
     );
   const limit = axis === "time" ? lap.lapTime : lap.length;
+  const cursorValue = String(Math.min(limit, Number(sample[axis].toFixed(3))));
   const editing = draft?.lap === lap;
-  const value = editing
-    ? draft.value
-    : String(Math.min(limit, Number(sample[axis].toFixed(3))));
+  const value = editing ? draft.value : cursorValue;
   return (
     <div className="cursor-inspector">
       <form
@@ -95,11 +94,14 @@ export function CursorInspector({
           required
           value={value}
           aria-describedby={`${id}-help`}
+          onFocus={(event) => {
+            if (!editing) setDraft({ lap, value: event.currentTarget.value });
+          }}
           onChange={(event) => setDraft({ lap, value: event.target.value })}
           onKeyDown={(event) => {
             if (event.key === "Escape") {
               event.preventDefault();
-              setDraft(null);
+              setDraft({ lap, value: cursorValue });
             }
           }}
         />

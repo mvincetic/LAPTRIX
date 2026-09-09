@@ -76,6 +76,13 @@ for (const width of [1600, 390]) {
     });
     const beforePlaying = await page.getByTestId("playback-time").textContent();
     await page.getByRole("button", { name: "Play playback" }).click();
+    await atTime.focus();
+    const focusedValue = await atTime.inputValue();
+    const focusedTime = await page.getByTestId("playback-time").textContent();
+    await expect(page.getByTestId("playback-time")).not.toHaveText(
+      focusedTime!,
+    );
+    await expect(atTime).toHaveValue(focusedValue);
     await atTime.fill("10.123");
     await expect(page.getByTestId("playback-time")).not.toHaveText(
       beforePlaying!,
