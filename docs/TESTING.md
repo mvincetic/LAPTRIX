@@ -1,5 +1,11 @@
 # Testing and validation
 
+Portable-project tests verify v1/v2 bundles, names, installed vehicle physics,
+reference identity, source-ID collisions and repeated imports without mutation.
+Browser coverage opens a custom-track GT study with a Formula reference on a fresh
+page, then saves/reloads it. Separate invalid-file and unavailable-API cases retain
+the previous project/lap and exercise the import-specific retry action.
+
 Delta-plot tests use hand-calculated unequal grids to verify retained breakpoints,
 positive/negative deltas, boundary clamps and cursor interpolation. A real browser
 journey imports a known timing relationship, checks corner/chart seeking, switches

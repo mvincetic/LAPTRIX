@@ -39,6 +39,7 @@ import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
 import { restoreReference } from "./reference";
+import { prepareProject } from "./project";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
@@ -66,11 +67,12 @@ export function App() {
     [selectedCorner, setSelectedCorner] = useState<number | null>(null),
     [menu, setMenu] = useState(false),
     [audio, setAudio] = useState(false);
-  const [errorAction, setErrorAction] = useState<"retry" | "import-reference">(
-    "retry",
-  );
+  const [errorAction, setErrorAction] = useState<
+    "retry" | "import-reference" | "import-project" | "import-track"
+  >("retry");
   const fileInput = useRef<HTMLInputElement>(null),
     referenceInput = useRef<HTMLInputElement>(null),
+    projectInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
   useLapTools(lap, clock);
@@ -273,10 +275,74 @@ export function App() {
       await run(imported, vehicleId, setup, true);
       setNotice("Track imported and simulated");
     } catch (e) {
+      setErrorAction("import-track");
       setError(e instanceof Error ? e.message : "Invalid track JSON");
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const importProject = async (file: File) => {
+    if (!catalog) return;
+    const id = ++generation.current;
+    setBusy(true);
+    setError("");
+    setMenu(false);
+    clock.play(false);
+    try {
+      if (file.size > 10_000_000)
+        throw new Error("Project file must be smaller than 10 MB.");
+      const prepared = await prepareProject(
+        JSON.parse(await file.text()),
+        catalog,
+      );
+      const custom =
+        prepared.addTrack || customTracks.current.has(prepared.track.id);
+      const [result, baseline] = await Promise.all([
+        runSimulation(
+          prepared.track,
+          prepared.vehicle.id,
+          prepared.setup,
+          custom,
+        ),
+        prepared.reference
+          ? Promise.resolve(null)
+          : runSimulation(
+              prepared.track,
+              prepared.vehicle.id,
+              { ...prepared.setup, solver: "centerline" },
+              custom,
+            ),
+      ]);
+      if (id !== generation.current) return;
+      if (prepared.addTrack) {
+        customTracks.current.add(prepared.track.id);
+        setCatalog((c) =>
+          c ? { ...c, tracks: [...c.tracks, prepared.track] } : c,
+        );
+      }
+      setProjectName(prepared.projectName);
+      setTrack(prepared.track);
+      setVehicleId(prepared.vehicle.id);
+      setSetup(prepared.setup);
+      setReference(prepared.reference ?? baseline);
+      setLap(result);
+      setSelectedCorner(null);
+      clock.configure(result.lapTime);
+      setNotice(
+        prepared.renamedTrack
+          ? "Project imported · colliding track ID renamed locally"
+          : "Project imported and recalculated",
+      );
+    } catch (e) {
+      if (id === generation.current) {
+        setErrorAction("import-project");
+        setError(
+          `Project import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current workspace kept.`,
+        );
+      }
+    } finally {
+      if (id === generation.current) setBusy(false);
+    }
+  };
   const importReference = async (file: File) => {
     if (!track) return;
     const currentGeneration = generation.current;
@@ -341,6 +407,7 @@ export function App() {
             <i className="project-dot" />
             <input
               aria-label="Project name"
+              disabled={busy}
               value={projectName}
               maxLength={80}
               onChange={(e) => setProjectName(e.target.value)}
@@ -433,6 +500,12 @@ export function App() {
                 <div className="actions-menu">
                   <button
                     disabled={!catalog || busy}
+                    onClick={() => projectInput.current?.click()}
+                  >
+                    <Upload size={14} /> Import project JSON
+                  </button>
+                  <button
+                    disabled={!catalog || busy}
                     onClick={() => fileInput.current?.click()}
                   >
                     <Upload size={14} />
@@ -520,7 +593,15 @@ export function App() {
                       download(
                         "laptrix-project.json",
                         JSON.stringify(
-                          { version: 1, track, vehicle, setup, lap, reference },
+                          {
+                            version: 2,
+                            projectName,
+                            track,
+                            vehicle,
+                            setup,
+                            lap,
+                            reference,
+                          },
                           null,
                           2,
                         ),
@@ -560,6 +641,18 @@ export function App() {
             e.target.value = "";
           }}
         />
+        <input
+          ref={projectInput}
+          type="file"
+          accept=".json,application/json"
+          hidden
+          aria-label="Import project file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void importProject(file);
+            e.target.value = "";
+          }}
+        />
       </header>
       <div className="workspace-bar">
         <div>
@@ -579,13 +672,21 @@ export function App() {
             onClick={() => {
               if (errorAction === "import-reference")
                 referenceInput.current?.click();
+              else if (errorAction === "import-project")
+                projectInput.current?.click();
+              else if (errorAction === "import-track")
+                fileInput.current?.click();
               else if (track) void run(track, vehicleId, setup);
               else window.location.reload();
             }}
           >
-            {errorAction === "import-reference"
-              ? "Import reference again"
-              : "Retry"}
+            {errorAction === "retry"
+              ? "Retry"
+              : errorAction === "import-reference"
+                ? "Import reference again"
+                : errorAction === "import-project"
+                  ? "Import project again"
+                  : "Import track again"}
           </button>
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={15} />

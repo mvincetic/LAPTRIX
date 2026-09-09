@@ -46,6 +46,7 @@ the last completed result remains visible if a solve fails.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 - Import simulation or aligned external timing references with explicit source/units checks.
+- Portable project import/export with name, setup, custom source and reference restoration.
 
 ## Checks
 
@@ -58,6 +59,7 @@ node scripts/visual-qa.mjs --refinement
 node scripts/visual-qa.mjs --gt
 node scripts/visual-qa.mjs --gt --reference
 node scripts/visual-qa.mjs --gt --reference --delta
+node scripts/visual-qa.mjs --gt --reference --delta --project
 npm run study:solver
 npm run study:sampling
 ```
@@ -80,6 +82,9 @@ format. **Export timing reference** provides a working format example. See
 Select **Time Delta** under Telemetry graphs to inspect where the current lap gains
 or loses time. Negative values are faster; positive values are slower. Clicking,
 dragging, corner selection and playback all use the existing shared cursor.
+**Export project** and **Import project JSON** move the whole setup and reference
+between workspaces. Import recalculates with the installed vehicle and retains the
+prior workspace if validation or calculation fails. See [PROJECT_FILES](docs/PROJECT_FILES.md).
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

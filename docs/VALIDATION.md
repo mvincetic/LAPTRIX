@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 33 tests pass.
+- Vitest: 36 tests pass.
 - Python numerical/API tests: 69 tests pass.
-- Playwright: thirteen browser journeys pass against running local services.
+- Playwright: fifteen browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.29 MB JavaScript / 356 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `6792ab3`; each following milestone reruns CI on push.
+- GitHub Actions passed through `2323844`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -80,6 +80,15 @@ corner/chart seeking, axis switching, playback and reference replacement. Visual
 QA with `--gt --reference --delta` has no runtime errors or horizontal overflow
 at 1600, 1280, 900 and 390 px. Desktop, mobile and selected-corner delta screenshots
 were opened and reviewed in `artifacts/delta-reference-gt-*.png`.
+
+Portable project validation adds three TypeScript cases and two browser journeys.
+The full 69 Python / 36 TypeScript / 15 browser suite passes with lint, typecheck
+and build. A fresh-page custom-track GT round trip retains its name, fuel setting
+and Formula reference; invalid version and failed API cases preserve prior work.
+`--gt --reference --delta --project` visual QA reports zero runtime errors and
+horizontal overflow at the four standard widths. Desktop/mobile actions-menu
+images were opened and reviewed; the restored project name and all three import
+actions remain accessible. Evidence is in `artifacts/project-delta-reference-gt-*.png`.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

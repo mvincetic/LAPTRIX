@@ -56,3 +56,9 @@ trace and text legend distinguish slower/faster intervals. Both horizontal axes
 and existing playback controls remain available. Numeric axis labels use ordinary
 layout text so they remain legible on narrow screens. Provenance stays in the
 comparison panel, and the trace footer identifies the active reference.
+
+Project import uses Additional actions alongside reference/track imports. Each has
+its own labelled file input and retry action. Loading pauses playback and disables
+project-name editing with other configuration controls. The old workspace stays
+visible during validation and calculation, and success identifies any locally
+renamed track ID. The project name is preserved in new portable exports.

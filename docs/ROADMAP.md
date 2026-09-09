@@ -38,11 +38,14 @@ use matched physical intervals. Measured channel overlays and automatic logger
 alignment remain separate future work; imported timing never fabricates channels.
 A synchronized Time Delta view now retains both grids' breakpoints and supports
 either horizontal axis, shared seeking, playback and reference changes.
+Portable v2 project files now preserve names, selected setup, custom source and
+references; the v1 reader remains supported. Imports validate and recalculate
+before activating state, and track-ID collisions preserve existing geometry.
 
 ## Next highest-value work
 
-1. Complete portable project round trips, including project names, setup, custom
-   track geometry and verified references, with recovery when import or solving fails.
+1. Add a bounded aero-setup comparison using the existing solver, with progress,
+   checked result ranking and deliberate application of a selected run.
 2. Evaluate measured calibration data and reusable 3D track geometry; add transient
    dynamics only with independent benchmarks and suitable parameter sources.
 
@@ -50,8 +53,8 @@ either horizontal axis, shared seeking, playback and reference changes.
 
 The local numerical suite contains 69 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Thirty-three TypeScript tests cover
-geometry, alignment, reference validation, vehicle contracts and clock/data invariants. Thirteen browser journeys cover the
+extremes and analytical work/grip benchmarks. Thirty-six TypeScript tests cover
+geometry, alignment, project/reference validation, vehicle contracts and clock/data invariants. Fifteen browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

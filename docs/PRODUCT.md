@@ -13,6 +13,9 @@ the same generic pipeline rather than adding track-specific UI logic.
 References can also come from a LAPTRIX export or explicitly aligned external
 timing JSON. Imported timing keeps its declared provenance and does not invent
 missing measured channels or replace the simulation's playback.
+Portable project files restore names, selected setup, custom source geometry and
+references on a fresh workspace. The app validates the bundle and recalculates
+before activation, preserving the previous workspace on any file or API failure.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

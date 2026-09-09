@@ -13,8 +13,9 @@ the vehicle snapshot and identifies the imported filename. Current v1 exports
 carry their source fingerprint/progress. Older exports can be restored only when
 their sample positions and offsets verify against the original source grid.
 The reader accepts 41–2,001 simulation samples, including the closed endpoint.
-A project export is a bundle; import its `lap` object as a separate JSON file,
-or use Export telemetry JSON directly.
+A project export is a bundle; use **Import project JSON** to restore and recalculate
+that workspace. To use only its archived lap as a comparison, import its `lap`
+object as a separate JSON file, or use Export telemetry JSON directly.
 
 ## External timing data
 

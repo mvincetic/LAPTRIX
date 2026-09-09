@@ -64,6 +64,13 @@ Common comparison functions interpolate their time arrays against source progres
 Neither imported references nor metadata drive the canonical playback clock.
 There is no account system or database.
 
+Portable project bundles use a separate versioned reader in `apps/web/src/project.ts`.
+It validates source/reference identity and installed vehicle physics, resolves
+local track-ID collisions, and returns a prepared workspace without mutation.
+The app recalculates it before committing any project state. File and API failures
+therefore preserve the prior workspace. Archived laps remain artifacts rather
+than an alternative source for active simulation output.
+
 Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
 may decorate the scene without defining track or physics. Neither track-specific
 coordinates nor vehicle performance conditionals belong in React components.

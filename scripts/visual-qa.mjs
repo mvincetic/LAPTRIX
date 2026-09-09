@@ -24,7 +24,8 @@ const sampled = process.argv.includes("--sampling");
 const gt = process.argv.includes("--gt");
 const imported = process.argv.includes("--reference");
 const delta = process.argv.includes("--delta");
-const prefix = `${delta ? "delta-" : ""}${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+const project = process.argv.includes("--project");
+const prefix = `${project ? "project-" : ""}${delta ? "delta-" : ""}${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
 if (gt) {
   await page
     .getByRole("button", { name: "Set reference", exact: true })
@@ -89,6 +90,27 @@ if (imported) {
     .filter({ hasText: "Formula baseline · imported" })
     .waitFor();
 }
+if (project) {
+  await page.getByLabel("Project name").fill("Portable development study");
+  await page.getByRole("button", { name: "Additional actions" }).click();
+  const downloading = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export project", exact: true })
+    .click();
+  const stream = await (await downloading).createReadStream();
+  const chunks = [];
+  for await (const chunk of stream) chunks.push(chunk);
+  await page.reload();
+  await page.getByTestId("lap-time").waitFor({ timeout: 60000 });
+  await page.getByLabel("Import project file", { exact: true }).setInputFiles({
+    name: "portable-study.json",
+    mimeType: "application/json",
+    buffer: Buffer.concat(chunks),
+  });
+  await page
+    .getByText("Project imported and recalculated", { exact: true })
+    .waitFor({ timeout: 60000 });
+}
 await page.waitForTimeout(2500);
 if (delta)
   await page.getByRole("tab", { name: "Time Delta", exact: true }).click();
@@ -103,6 +125,16 @@ if (imported) {
     fullPage: true,
   });
   await page.locator("details.reference-provenance summary").click();
+}
+if (project) {
+  await page.getByRole("button", { name: "Additional actions" }).click();
+  await page.screenshot({
+    path: `artifacts/${prefix}desktop-actions.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Close actions", exact: true })
+    .click();
 }
 for (const width of [1280, 900]) {
   await page.setViewportSize({ width, height: 900 });
@@ -134,6 +166,16 @@ console.log(
   "Mobile width",
   await page.evaluate(() => document.body.scrollWidth),
 );
+if (project) {
+  await page.getByRole("button", { name: "Additional actions" }).click();
+  await page.screenshot({
+    path: `artifacts/${prefix}mobile-actions.png`,
+    fullPage: true,
+  });
+  await page
+    .getByRole("button", { name: "Close actions", exact: true })
+    .click();
+}
 if (gt) {
   await page.locator(".vehicle-details summary").click();
   await page.screenshot({

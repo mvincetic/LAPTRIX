@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Transactional portable project activation
+
+**Decision:** Export names in v2 bundles, read v1/v2, validate installed vehicle
+physics and source alignment, then recalculate before activating imported state.
+**Alternatives:** Partially replacing the workspace before the API succeeds, or
+silently running different parameters than those in the exported vehicle.
+**Reasoning:** Portable setup restoration must preserve prior work on failure and
+keep active telemetry sourced from the current solver. **Consequences:** Imports
+require the local API and matching installed physics. Old reference values remain
+literal. Colliding track IDs are isolated locally and repeat imports reuse them.
+The existing explicit device-local Save behavior remains unchanged.
+
 ## 2026-09-09 — Source-aligned delta trace
 
 **Decision:** Add a dedicated Time Delta view that merges both timing grids before
