@@ -1,0 +1,31 @@
+# Development
+
+Run all commands from the repository root. Install with `npm ci`, create `.venv`
+with Python 3.12, and install `requirements.txt` using that environment's Python.
+The launcher selects `.venv/Scripts/python.exe` on Windows or `.venv/bin/python`
+on Unix; it falls back to `python` only when no local environment exists.
+
+`npm run dev` supervises Vite at 127.0.0.1:5173 and Uvicorn at 127.0.0.1:8000.
+Vite proxies `/api`; the frontend uses relative URLs. There are no secrets or
+environment variables required for this development setup. Do not bind the Python
+service publicly without an explicit deployment/authentication design.
+
+The backend does not hot-reload by default: restart the dev process after Python
+changes. Frontend edits use Vite HMR. Individual commands `npm run dev:web` and
+`npm run dev:api` are available when debugging process startup.
+
+Quality gate: `npm run check`. Browser regression: `npm run test:e2e` after
+`npx playwright install chromium`. `node scripts/visual-qa.mjs` captures desktop
+and mobile screenshots and reports browser runtime errors. Open the actual PNGs
+to evaluate composition; a passing screenshot command is not visual inspection.
+
+Use `npx prettier --write <files>` and `npm run format:python` for formatting.
+Changes to data or numerical logic need focused tests. Keep expensive Three.js
+resources memoized, dispose them on replacement, and avoid allocating mesh geometry
+inside animation loops. Update architecture, schema, model and roadmap docs when
+contracts change. Keep normal debug output free of imported proprietary data.
+
+`npm run build` emits the static frontend. Local use continues to require the API;
+the Vite development proxy is not a production reverse proxy. No deployment has
+been configured. CI runs lint, typecheck, unit/API tests, production build and
+Chromium journey tests without paid services.

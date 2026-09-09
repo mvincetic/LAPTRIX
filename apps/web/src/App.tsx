@@ -1,0 +1,554 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Activity,
+  Check,
+  Download,
+  Flag,
+  LoaderCircle,
+  MoreHorizontal,
+  Play,
+  Save,
+  Sun,
+  Upload,
+  X,
+} from "lucide-react";
+import {
+  catalogSchema,
+  defaultSetup,
+  lapSchema,
+  setupSchema,
+  trackSchema,
+  type Catalog,
+  type Lap,
+  type Setup,
+  type Track,
+} from "../../../packages/shared/schema";
+import { normalizeTrack } from "../../../packages/track-engine";
+import { PlaybackClock, interpolate } from "../../../packages/telemetry";
+import { TelemetryAudioEngine } from "../../../packages/audio-engine";
+import { getCatalog, runSimulation } from "./api";
+import { TrackView } from "./components/TrackView";
+import { Settings } from "./components/Settings";
+import { Analysis } from "./components/Analysis";
+import { Telemetry } from "./components/Telemetry";
+
+const clock = new PlaybackClock();
+const audioEngine = new TelemetryAudioEngine();
+const storageKey = "laptrix.project.v1";
+function download(name: string, content: string, type = "application/json") {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = name;
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export function App() {
+  const [projectName, setProjectName] = useState("Development workspace");
+  const [catalog, setCatalog] = useState<Catalog | null>(null),
+    [track, setTrack] = useState<Track | null>(null),
+    [vehicleId, setVehicleId] = useState("formula-development");
+  const [setup, setSetup] = useState<Setup>(defaultSetup),
+    [lap, setLap] = useState<Lap | null>(null),
+    [reference, setReference] = useState<Lap | null>(null);
+  const [busy, setBusy] = useState(true),
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState(""),
+    [selectedCorner, setSelectedCorner] = useState<number | null>(null),
+    [menu, setMenu] = useState(false),
+    [audio, setAudio] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null),
+    generation = useRef(0);
+  const customTracks = useRef(new Set<string>());
+  const run = useCallback(
+    async (
+      selectedTrack: Track,
+      selectedVehicle: string,
+      selectedSetup: Setup,
+      makeReference = false,
+    ) => {
+      const id = ++generation.current;
+      setBusy(true);
+      setError("");
+      clock.play(false);
+      try {
+        const custom = customTracks.current.has(selectedTrack.id);
+        const [result, baseline] = await Promise.all([
+          runSimulation(selectedTrack, selectedVehicle, selectedSetup, custom),
+          makeReference
+            ? runSimulation(
+                selectedTrack,
+                selectedVehicle,
+                { ...selectedSetup, solver: "centerline" },
+                custom,
+              )
+            : Promise.resolve(null),
+        ]);
+        if (id !== generation.current) return;
+        setLap(result);
+        if (baseline) setReference(baseline);
+        setSelectedCorner(null);
+        clock.configure(result.lapTime);
+      } catch (e) {
+        if (id === generation.current)
+          setError(
+            e instanceof Error ? e.message : "Simulation failed. Please retry.",
+          );
+      } finally {
+        if (id === generation.current) setBusy(false);
+      }
+    },
+    [],
+  );
+  useEffect(() => clock.start(), []);
+  useEffect(() => {
+    if (!lap || !audio) return;
+    const update = () => {
+      const state = clock.getSnapshot();
+      audioEngine.update(interpolate(lap.samples, state.time), state.playing);
+    };
+    update();
+    return clock.subscribe(update);
+  }, [lap, audio]);
+  useEffect(() => () => audioEngine.dispose(), []);
+  const toggleAudio = async () => {
+    if (audio) {
+      audioEngine.mute();
+      setAudio(false);
+      return;
+    }
+    try {
+      await audioEngine.enable();
+      setAudio(true);
+      setNotice("Procedural engine audio enabled · play the lap to listen");
+    } catch {
+      setError(
+        "Audio could not start in this browser. Try enabling audio again.",
+      );
+    }
+  };
+  useEffect(() => {
+    let active = true;
+    getCatalog()
+      .then(async (data) => {
+        if (!active) return;
+        const parsed = catalogSchema.parse(data);
+        let chosen = parsed.tracks[0],
+          initialSetup = defaultSetup,
+          chosenVehicle = parsed.vehicles[0].id;
+        let restoredReference: Lap | null = null;
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (raw) {
+            const saved = JSON.parse(raw);
+            if (saved.version !== 1)
+              throw new Error("Unsupported saved project");
+            if (typeof saved.projectName === "string")
+              setProjectName(saved.projectName.slice(0, 80));
+            initialSetup = setupSchema.parse(saved.setup);
+            chosen =
+              parsed.tracks.find((t) => t.id === saved.trackId) ?? chosen;
+            chosenVehicle =
+              parsed.vehicles.find((v) => v.id === saved.vehicleId)?.id ??
+              chosenVehicle;
+            if (saved.customTrack) {
+              const imported = trackSchema.parse(saved.customTrack);
+              customTracks.current.add(imported.id);
+              parsed.tracks.push(imported);
+              chosen = imported;
+            }
+            if (saved.reference) {
+              const ref = lapSchema.parse(saved.reference);
+              if (
+                ref.trackId === chosen.id &&
+                ref.vehicleId === chosenVehicle &&
+                ref.samples.length === chosen.points.length + 1 &&
+                ref.sectors.length === chosen.sectorFractions.length
+              ) {
+                restoredReference = ref;
+                setReference(ref);
+              }
+            }
+            setNotice("Saved local project restored");
+          }
+        } catch {
+          chosen = parsed.tracks[0];
+          initialSetup = defaultSetup;
+          chosenVehicle = parsed.vehicles[0].id;
+          restoredReference = null;
+          setNotice("Saved project could not be read. Default setup loaded.");
+        }
+        setCatalog(parsed);
+        setTrack(chosen);
+        setVehicleId(chosenVehicle);
+        setSetup(initialSetup);
+        await run(chosen, chosenVehicle, initialSetup, !restoredReference);
+      })
+      .catch((e) => {
+        if (active) {
+          setError(e.message);
+          setBusy(false);
+        }
+      });
+    return () => {
+      active = false;
+      // This numeric ref is a request generation counter, not a DOM ref.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      generation.current++;
+    };
+  }, [run]);
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(""), 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+  const dirty = !!lap && JSON.stringify(setup) !== JSON.stringify(lap.setup);
+  const onCorner = (id: number) => {
+    setSelectedCorner(id);
+    const c = lap?.corners.find((c) => c.id === id);
+    if (c && lap) {
+      clock.play(false);
+      clock.seek(lap.samples[c.apexIndex].time);
+    }
+  };
+  const save = () => {
+    if (!track) return;
+    try {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          version: 1,
+          projectName,
+          trackId: track.id,
+          vehicleId,
+          setup,
+          reference,
+          customTrack: customTracks.current.has(track.id) ? track : undefined,
+        }),
+      );
+      setNotice("Project saved on this device");
+    } catch {
+      setError(
+        "Local storage is unavailable or full. Export the project from the actions menu.",
+      );
+    }
+  };
+  const importTrack = async (file: File) => {
+    try {
+      if (file.size > 1_500_000)
+        throw new Error("Track file must be smaller than 1.5 MB.");
+      const imported = trackSchema.parse(JSON.parse(await file.text()));
+      normalizeTrack(imported);
+      if (catalog?.tracks.some((t) => t.id === imported.id))
+        throw new Error(
+          "A track with this ID is already loaded. Use a unique ID.",
+        );
+      customTracks.current.add(imported.id);
+      setCatalog((c) => (c ? { ...c, tracks: [...c.tracks, imported] } : c));
+      setTrack(imported);
+      setLap(null);
+      setReference(null);
+      setMenu(false);
+      await run(imported, vehicleId, setup, true);
+      setNotice("Track imported and simulated");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Invalid track JSON");
+    }
+  };
+  const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  return (
+    <div className="application">
+      <header className="topbar">
+        <a className="brand" href="/" aria-label="LAPTRIX home">
+          <span className="brand-word">
+            LAPTR<span>I</span>X
+          </span>
+          <span className="brand-subtitle">RACING ENGINEERING</span>
+        </a>
+        <div className="topbar-field project-field">
+          <span>Project</span>
+          <div className="project-name">
+            <i className="project-dot" />
+            <input
+              aria-label="Project name"
+              value={projectName}
+              maxLength={80}
+              onChange={(e) => setProjectName(e.target.value)}
+            />
+          </div>
+        </div>
+        <label className="topbar-field track-field">
+          <span>Track</span>
+          <select
+            aria-label="Track"
+            disabled={busy || !catalog}
+            value={track?.id ?? ""}
+            onChange={(e) => {
+              const next = catalog?.tracks.find((t) => t.id === e.target.value);
+              if (next) {
+                setTrack(next);
+                setLap(null);
+                setReference(null);
+                void run(next, vehicleId, setup, true);
+              }
+            }}
+          >
+            {catalog?.tracks.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="topbar-field vehicle-field">
+          <span>Car profile</span>
+          <select
+            aria-label="Car profile"
+            disabled={busy || !catalog}
+            value={vehicleId}
+            onChange={(e) => {
+              setVehicleId(e.target.value);
+              if (track) void run(track, e.target.value, setup, true);
+            }}
+          >
+            {catalog?.vehicles.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="conditions">
+          <span>Conditions</span>
+          <div>
+            <Sun size={20} strokeWidth={1.3} />
+            <strong>{setup.temperature}°C</strong>
+            <span>Dry</span>
+            <span>{setup.trackState === "optimum" ? "Optimum" : "Green"}</span>
+          </div>
+        </div>
+        <div className="topbar-actions">
+          <button
+            className="primary-button"
+            disabled={busy || !track}
+            onClick={() => track && void run(track, vehicleId, setup)}
+          >
+            {busy ? (
+              <LoaderCircle size={16} className="spin" />
+            ) : (
+              <Play size={15} />
+            )}
+            <span>{busy ? "Calculating…" : "Run Simulation"}</span>
+          </button>
+          <button className="save-button" onClick={save} disabled={!track}>
+            <Save size={16} />
+            <span>Save</span>
+          </button>
+          <div className="menu-wrap">
+            <button
+              className="icon-button"
+              aria-label="Additional actions"
+              aria-expanded={menu}
+              onClick={() => setMenu(!menu)}
+            >
+              <MoreHorizontal size={19} />
+            </button>
+            {menu && (
+              <>
+                <button
+                  className="menu-dismiss"
+                  aria-label="Close actions"
+                  onClick={() => setMenu(false)}
+                />
+                <div className="actions-menu">
+                  <button
+                    disabled={!catalog || busy}
+                    onClick={() => fileInput.current?.click()}
+                  >
+                    <Upload size={14} />
+                    Import track JSON
+                  </button>
+                  <button
+                    disabled={!lap}
+                    onClick={() => {
+                      if (lap)
+                        download(
+                          "laptrix-telemetry.json",
+                          JSON.stringify(lap, null, 2),
+                        );
+                      setMenu(false);
+                    }}
+                  >
+                    <Download size={14} />
+                    Export telemetry JSON
+                  </button>
+                  <button
+                    disabled={!lap}
+                    onClick={() => {
+                      if (lap) {
+                        const keys = Object.keys(
+                          lap.samples[0],
+                        ) as (keyof (typeof lap.samples)[0])[];
+                        download(
+                          "laptrix-telemetry-si.csv",
+                          [
+                            keys.join(","),
+                            ...lap.samples.map((s) =>
+                              keys.map((k) => s[k]).join(","),
+                            ),
+                          ].join("\n"),
+                          "text/csv",
+                        );
+                      }
+                      setMenu(false);
+                    }}
+                  >
+                    <Download size={14} />
+                    Export telemetry CSV (SI)
+                  </button>
+                  <button
+                    disabled={!track}
+                    onClick={() => {
+                      download(
+                        "laptrix-project.json",
+                        JSON.stringify(
+                          { version: 1, track, vehicle, setup, lap, reference },
+                          null,
+                          2,
+                        ),
+                      );
+                      setMenu(false);
+                    }}
+                  >
+                    <Save size={14} />
+                    Export project
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".json,application/json"
+          hidden
+          aria-label="Import track file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void importTrack(file);
+            e.target.value = "";
+          }}
+        />
+      </header>
+      <div className="workspace-bar">
+        <div>
+          <Flag size={13} />
+          <strong>Lap engineering</strong>
+          <span>/</span>
+          <span>{track?.name ?? "Connecting to simulation service"}</span>
+        </div>
+        <span className="development-badge">
+          DEVELOPMENT MODEL <i>v0.1</i>
+        </span>
+      </div>
+      {error && (
+        <div className="error-banner" role="alert">
+          <span>{error}</span>
+          <button
+            onClick={() => {
+              if (track) void run(track, vehicleId, setup);
+              else window.location.reload();
+            }}
+          >
+            Retry
+          </button>
+          <button aria-label="Dismiss error" onClick={() => setError("")}>
+            <X size={15} />
+          </button>
+        </div>
+      )}
+      <main className="workspace">
+        <Settings
+          setup={setup}
+          onChange={setSetup}
+          onReset={() => setSetup({ ...defaultSetup })}
+          disabled={busy}
+          dirty={dirty}
+        />
+        <div className="center-column">
+          {track ? (
+            <TrackView
+              track={track}
+              lap={lap}
+              clock={clock}
+              onCorner={onCorner}
+              selectedCorner={selectedCorner}
+            />
+          ) : (
+            <section className="panel loading-scene">
+              <Activity size={28} />
+              <h2>
+                {error
+                  ? "Simulation service unavailable"
+                  : "Preparing your engineering workspace"}
+              </h2>
+              <p>
+                {error
+                  ? "Start both services with npm run dev, then retry."
+                  : "Loading procedural track geometry…"}
+              </p>
+            </section>
+          )}
+          <Telemetry
+            lap={lap}
+            clock={clock}
+            audio={audio}
+            onAudio={() => void toggleAudio()}
+          />
+        </div>
+        <Analysis
+          lap={lap}
+          reference={reference}
+          onReference={() => {
+            if (lap) {
+              setReference(lap);
+              setNotice("Current simulation set as reference");
+            }
+          }}
+          onCorner={onCorner}
+          selectedCorner={selectedCorner}
+        />
+      </main>
+      <footer className="statusbar">
+        <span>
+          <span className={`status-dot ${busy ? "working" : ""}`} />
+          {busy ? "Solving lap…" : lap ? "Simulation complete" : "Ready"}
+        </span>
+        <span>
+          {vehicle
+            ? `${vehicle.mass} kg dry · ${vehicle.powerKw} kW · synthetic vehicle`
+            : "Local simulation service"}
+        </span>
+        <span>
+          {lap
+            ? `${lap.computationMs.toFixed(0)} ms solve · ${lap.samples.length} telemetry samples`
+            : "LAPTRIX v0.1"}
+        </span>
+      </footer>
+      {notice && (
+        <div className="toast" role="status">
+          <Check size={16} />
+          {notice}
+          <button
+            aria-label="Dismiss notification"
+            onClick={() => setNotice("")}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

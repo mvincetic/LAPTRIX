@@ -1,0 +1,280 @@
+"""Independent, approximate quasi-steady point-mass lap solver. No external solver code."""
+
+import time
+
+import numpy as np
+from scipy.optimize import minimize
+from scipy.signal import find_peaks
+
+from .models import Setup, Track, Vehicle
+
+G = 9.80665
+
+
+def geometry(points: np.ndarray):
+    forward = np.roll(points, -1, axis=0) - points
+    ds = np.linalg.norm(forward, axis=1)
+    tangent = np.roll(points, -1, axis=0) - np.roll(points, 1, axis=0)
+    tangent /= np.linalg.norm(tangent, axis=1)[:, None]
+    normal = np.column_stack((tangent[:, 2], np.zeros(len(points)), -tangent[:, 0]))
+    normal /= np.linalg.norm(normal, axis=1)[:, None]
+    # Menger curvature of the horizontal projection, signed in the local lateral frame.
+    a = points[:, [0, 2]] - np.roll(points[:, [0, 2]], 1, axis=0)
+    b = np.roll(points[:, [0, 2]], -1, axis=0) - points[:, [0, 2]]
+    cross = a[:, 0] * b[:, 1] - a[:, 1] * b[:, 0]
+    denom = np.linalg.norm(a, axis=1) * np.linalg.norm(b, axis=1) * np.linalg.norm(a + b, axis=1)
+    curvature = -2 * cross / np.maximum(denom, 1e-10)
+    return ds, tangent, normal, curvature
+
+
+def optimize_line(track: Track, vehicle: Vehicle, enabled: bool):
+    center = np.array([[p.x, p.y, p.z] for p in track.points])
+    ds, _, normals, _ = geometry(center)
+    n = len(center)
+    margin = vehicle.width / 2 + 0.35
+    bounds = [(margin - p.widthRight, p.widthLeft - margin) for p in track.points]
+    if any(lo >= hi for lo, hi in bounds):
+        raise ValueError("Vehicle does not fit within track boundaries with safety clearance")
+    if not enabled:
+        return center, np.zeros(n), {"method": "Centerline baseline", "converged": True, "iterations": 0}
+
+    # A convex small-offset minimum-curvature surrogate with an analytic gradient.
+    # Weight each second spatial difference by its local mean sample spacing cubed.
+    weights = 1 / np.maximum((ds + np.roll(ds, 1)) / 2, 0.1) ** 3
+
+    def objective(offset):
+        p = center + normals * offset[:, None]
+        second = np.roll(p, 1, axis=0) - 2 * p + np.roll(p, -1, axis=0)
+        weighted = second * weights[:, None]
+        value = np.sum(second * weighted) + 1e-7 * np.sum(offset**2)
+        gradient_p = 2 * (np.roll(weighted, 1, axis=0) - 2 * weighted + np.roll(weighted, -1, axis=0))
+        gradient = np.sum(gradient_p * normals, axis=1) + 2e-7 * offset
+        return value, gradient
+
+    baseline = objective(np.zeros(n))[0]
+    result = minimize(
+        objective,
+        np.zeros(n),
+        jac=True,
+        method="L-BFGS-B",
+        bounds=bounds,
+        options={"maxiter": 1800, "ftol": 1e-9, "gtol": 1e-6, "maxcor": 20},
+    )
+    offsets = result.x if np.isfinite(result.fun) and result.fun <= baseline else np.zeros(n)
+    return (
+        center + normals * offsets[:, None],
+        offsets,
+        {
+            "method": "Bounded minimum-curvature approximation",
+            "converged": bool(result.success),
+            "iterations": int(result.nit),
+            "curvatureObjectiveReduction": float(1 - objective(offsets)[0] / max(baseline, 1e-12)),
+        },
+    )
+
+
+def vehicle_state(vehicle: Vehicle, speed):
+    """Select the gear with highest available power, respecting redline."""
+    ratios = np.array(vehicle.gearRatios) * vehicle.finalDrive
+    rpm = np.maximum(
+        np.asarray(speed)[..., None] / vehicle.wheelRadius * 60 / (2 * np.pi) * ratios, vehicle.idleRpm
+    )
+    curve_rpm = [p.rpm for p in vehicle.powerCurve]
+    curve_power = [p.powerKw * 1000 for p in vehicle.powerCurve]
+    power = np.interp(rpm, curve_rpm, curve_power)
+    power = np.where(rpm <= vehicle.maxRpm, power, -1)
+    idx = np.argmax(power, axis=-1)
+    selected_rpm = np.take_along_axis(rpm, np.expand_dims(idx, -1), axis=-1)[..., 0]
+    selected_power = np.take_along_axis(power, np.expand_dims(idx, -1), axis=-1)[..., 0]
+    return idx + 1, np.minimum(selected_rpm, vehicle.maxRpm), np.maximum(selected_power, 0)
+
+
+def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
+    ds, _, _, curvature = geometry(points)
+    mass = vehicle.mass + setup.fuel
+    mu = vehicle.friction * {"soft": 1.04, "medium": 1.0, "hard": 0.96}[setup.tire]
+    mu *= (1 if setup.trackState == "optimum" else 0.92) * (1 - 0.00018 * (setup.temperature - 28) ** 2)
+    rho = setup.airDensity
+    lift = vehicle.downforceArea * (1 + setup.aero * 0.055)
+    drag = vehicle.dragArea * (1 + setup.aero * 0.045)
+    grade = (np.roll(points[:, 1], -1) - points[:, 1]) / ds
+    k = np.abs(curvature)
+    max_speed = (
+        vehicle.maxRpm / (vehicle.gearRatios[-1] * vehicle.finalDrive) * 2 * np.pi / 60 * vehicle.wheelRadius
+    )
+    # Reserve 2% of lateral capacity for sustaining speed against resistance/gradient.
+    limit = np.minimum(
+        max_speed, np.sqrt(0.98 * mu * G / np.maximum(k - 0.98 * mu * rho * lift / (2 * mass), 1e-6))
+    )
+    speeds = limit.copy()
+    # Power table avoids expensive per-node drivetrain interpolation inside sweeps.
+    speed_axis = np.linspace(0, max_speed, 512)
+    power_axis = vehicle_state(vehicle, speed_axis)[2]
+    bias_efficiency = max(0.7, 1 - abs(setup.brakeBias - 56) * 0.012)
+
+    def capacities(v, i):
+        grip = mu * (G + rho * lift * v * v / (2 * mass))
+        lateral = v * v * k[i]
+        remaining = np.sqrt(max(0.0, grip * grip - lateral * lateral))
+        resistance = rho * drag * v * v / (2 * mass) + 0.015 * G
+        drive = min(np.interp(v, speed_axis, power_axis) * 0.94 / (mass * max(v, 4)), remaining)
+        brake = min(vehicle.maxBrakeG * G * bias_efficiency, remaining)
+        return drive - resistance - G * grade[i], brake + resistance + G * grade[i]
+
+    # Closed-loop sweeps propagate constraints through the start/finish seam.
+    for iteration in range(80):
+        before = speeds.copy()
+        for i in range(len(speeds) - 1, -1, -1):
+            j = (i + 1) % len(speeds)
+            available = max(0, capacities(speeds[j], j)[1])
+            speeds[i] = min(speeds[i], np.sqrt(max(1, speeds[j] ** 2 + 2 * available * ds[i])))
+        for i in range(len(speeds)):
+            j = (i + 1) % len(speeds)
+            available = capacities(speeds[i], i)[0]
+            speeds[j] = min(speeds[j], np.sqrt(max(1, speeds[i] ** 2 + 2 * available * ds[i])))
+        if np.max(np.abs(speeds - before)) < 1e-5:
+            break
+    next_speed = np.roll(speeds, -1)
+    dt = 2 * ds / (speeds + next_speed)
+    acceleration = (next_speed**2 - speeds**2) / (2 * ds)
+    gear, rpm, power = vehicle_state(vehicle, speeds)
+    resistance = rho * drag * speeds**2 / (2 * mass) + 0.015 * G
+    wheel_acc = acceleration + resistance + G * grade
+    grip = mu * (G + rho * lift * speeds**2 / (2 * mass))
+    remaining = np.sqrt(np.maximum(0, grip**2 - (speeds**2 * k) ** 2))
+    drive = np.minimum(power * 0.94 / (mass * np.maximum(speeds, 4)), remaining)
+    braking = np.minimum(vehicle.maxBrakeG * G * bias_efficiency, remaining)
+    throttle = np.clip(wheel_acc / np.maximum(drive, 1e-5), 0, 1)
+    brake = np.clip(-wheel_acc / np.maximum(braking, 1e-5), 0, 1)
+    return dict(
+        ds=ds,
+        dt=dt,
+        speed=speeds,
+        curvature=curvature,
+        grade=grade,
+        acceleration=acceleration,
+        gear=gear,
+        rpm=rpm,
+        throttle=throttle,
+        brake=brake,
+        iterations=iteration + 1,
+        converged=bool(np.max(np.abs(speeds - before)) < 1e-5),
+    )
+
+
+def solve(track: Track, vehicle: Vehicle, setup: Setup):
+    started = time.perf_counter()
+    points, offsets, optimization = optimize_line(track, vehicle, setup.solver == "optimized")
+    profile = speed_profile(points, vehicle, setup)
+    ds, dt = profile["ds"], profile["dt"]
+    distances = np.r_[0, np.cumsum(ds)]
+    times = np.r_[0, np.cumsum(dt)]
+    total_length, lap_time = float(distances[-1]), float(times[-1])
+    n = len(points)
+    corner_ids = np.zeros(n, dtype=int)
+    curvature = np.abs(profile["curvature"])
+    # Tile so peaks near the lap seam have the same detection behavior.
+    peaks, _ = find_peaks(
+        np.tile(curvature, 3),
+        distance=max(8, int(100 / np.mean(ds))),
+        prominence=max(0.0005, float(np.max(curvature)) * 0.08),
+    )
+    peaks = peaks[(peaks >= n) & (peaks < 2 * n)] - n
+    corners = []
+    for cid, apex in enumerate(sorted(peaks), 1):
+        lo, hi = int(apex), int(apex)
+        while lo > max(0, apex - n // 12) and curvature[lo] > curvature[apex] * 0.25:
+            lo -= 1
+        while hi < min(n - 1, apex + n // 12) and curvature[hi] > curvature[apex] * 0.25:
+            hi += 1
+        brake_start = lo
+        while brake_start > 0 and profile["brake"][brake_start - 1] > 0.05:
+            brake_start -= 1
+        pickup = next((i for i in range(apex, hi + 1) if profile["throttle"][i] > 0.3), hi)
+        minimum = lo + int(np.argmin(profile["speed"][lo : hi + 1]))
+        corner_ids[lo : hi + 1] = cid
+        corners.append(
+            dict(
+                id=cid,
+                direction="L" if profile["curvature"][apex] > 0 else "R",
+                apexIndex=int(apex),
+                entryIndex=lo,
+                exitIndex=hi,
+                brakingIndex=brake_start,
+                turnInIndex=lo,
+                throttleIndex=int(pickup),
+                distance=float(distances[apex]),
+                entrySpeed=float(profile["speed"][lo]),
+                minSpeed=float(profile["speed"][minimum]),
+                exitSpeed=float(profile["speed"][hi]),
+                lateralG=float(profile["speed"][apex] ** 2 * curvature[apex] / G),
+                brakingDistance=float(distances[apex] - distances[brake_start]),
+                time=float(times[hi] - times[lo]),
+            )
+        )
+    samples = []
+    for i in range(n + 1):
+        j = i % n
+        sector = min(
+            len(track.sectorFractions),
+            1 + int(np.searchsorted(track.sectorFractions, distances[i] / total_length, side="right")),
+        )
+        samples.append(
+            dict(
+                distance=float(distances[i]),
+                time=float(times[i]),
+                x=float(points[j, 0]),
+                y=float(points[j, 1]),
+                z=float(points[j, 2]),
+                speed=float(profile["speed"][j]),
+                rpm=float(profile["rpm"][j]),
+                gear=int(profile["gear"][j]),
+                throttle=float(profile["throttle"][j]),
+                brake=float(profile["brake"][j]),
+                steering=float(np.arctan(3.6 * profile["curvature"][j])),
+                longitudinalG=float(profile["acceleration"][j] / G),
+                lateralG=float(profile["speed"][j] ** 2 * profile["curvature"][j] / G),
+                verticalG=0.0,
+                trackGradient=float(profile["grade"][j]),
+                cornerId=int(corner_ids[j]),
+                sectorId=sector,
+                offset=float(offsets[j]),
+            )
+        )
+    splits = np.interp(np.array(track.sectorFractions) * total_length, distances, times)
+    sectors = [
+        dict(
+            id=i + 1,
+            time=float(t - (splits[i - 1] if i else 0)),
+            split=float(t),
+            startDistance=float((track.sectorFractions[i - 1] if i else 0) * total_length),
+            endDistance=float(track.sectorFractions[i] * total_length),
+        )
+        for i, t in enumerate(splits)
+    ]
+    warnings = [
+        "Synthetic circuit and vehicle. Approximate development physics; "
+        "not validated against real telemetry."
+    ]
+    if not optimization["converged"]:
+        warnings.append("Racing-line iteration limit reached; best feasible line retained.")
+    if not profile["converged"]:
+        warnings.append("Speed envelope iteration limit reached.")
+    return dict(
+        schemaVersion=1,
+        trackId=track.id,
+        vehicleId=vehicle.id,
+        setup=setup.model_dump(),
+        model="Development Physics Model",
+        lapTime=lap_time,
+        length=total_length,
+        maxSpeed=float(max(profile["speed"])),
+        averageSpeed=total_length / lap_time,
+        elevationRange=float(np.ptp(points[:, 1])),
+        samples=samples,
+        sectors=sectors,
+        corners=corners,
+        optimization=optimization,
+        warnings=warnings,
+        computationMs=round((time.perf_counter() - started) * 1000, 1),
+    )

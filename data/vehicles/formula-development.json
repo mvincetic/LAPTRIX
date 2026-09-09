@@ -1,0 +1,25 @@
+{
+  "id": "formula-development",
+  "name": "Formula Development 01",
+  "synthetic": true,
+  "mass": 790,
+  "powerKw": 610,
+  "powerCurve": [
+    {"rpm": 4000, "powerKw": 180},
+    {"rpm": 6500, "powerKw": 330},
+    {"rpm": 8500, "powerKw": 490},
+    {"rpm": 10500, "powerKw": 590},
+    {"rpm": 11500, "powerKw": 610},
+    {"rpm": 12500, "powerKw": 570}
+  ],
+  "dragArea": 1.12,
+  "downforceArea": 3.6,
+  "friction": 1.55,
+  "maxBrakeG": 4.8,
+  "gearRatios": [3.3, 2.7, 2.25, 1.92, 1.68, 1.49, 1.34, 1.22],
+  "finalDrive": 3.25,
+  "wheelRadius": 0.34,
+  "idleRpm": 4000,
+  "maxRpm": 12500,
+  "width": 2.0
+}

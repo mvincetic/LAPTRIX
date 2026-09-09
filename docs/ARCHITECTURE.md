@@ -1,0 +1,48 @@
+# Architecture
+
+The project is a small source monorepo with one npm dependency graph and a pinned
+Python environment. It deliberately avoids a workspace orchestrator: there are two
+processes and four small shared packages, with no independent package releases.
+
+```text
+data/tracks + data/vehicles
+         │
+         ▼
+FastAPI → validation → bounded line optimization → speed envelope → telemetry
+  ▲                                                               │
+  │               Vite /api development proxy                      ▼
+React setup ──────────────────────────────────────────────── validated Lap
+                                                             │  │  │  │
+                      procedural Three.js viewer ◀────────────┘  │  │  │
+                      corner/sector analysis ◀───────────────────┘  │  │
+                      shared PlaybackClock + interpolation ◀───────┘  │
+                          │              │                            │
+                          ▼              ▼                            ▼
+                       ghost          charts                      audio
+```
+
+Track geometry is data-driven and generated procedurally. `normalizeTrack` derives
+closed-loop distance, tangents, horizontal lateral normals and boundaries;
+`ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
+disposes GPU geometries when data changes, never on every playback frame. Terrain
+and synthetic tree placements are original contextual geometry, not surveyed data.
+
+Simulation telemetry is authoritative. The renderer draws solved positions and
+braking values. A single external playback clock exposes time, play/pause, rate and
+loop state; binary-search interpolation supplies ghost, plots and sound. React's
+high-level setup state does not rerender at playback frequency. The chart component
+subscribes to the clock, while the ghost reads it within the Three.js render loop.
+
+The backend validates all input with Pydantic. Zod validates catalog and simulation
+responses before they enter the UI. The API runs synchronous simulation functions
+in FastAPI's worker pool. A bounded 24-entry in-process cache avoids re-solving
+identical track/vehicle/setup requests. A generation counter prevents old responses
+from replacing a newer selected run. A failed run preserves the last completed lap.
+
+Device-local project state lives in versioned browser storage, with explicit Save.
+Telemetry exports remain on the user's device. Imports use the same validated
+custom-track contract. There is no account system, database or external telemetry.
+
+Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
+may decorate the scene without defining track or physics. Neither track-specific
+coordinates nor vehicle performance conditionals belong in React components.
