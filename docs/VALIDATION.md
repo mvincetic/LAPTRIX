@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 38 tests pass.
-- Python numerical/API tests: 77 tests pass.
-- Playwright: eighteen browser journeys pass against running local services.
+- Vitest: 39 tests pass.
+- Python numerical/API tests: 82 tests pass.
+- Playwright: nineteen browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.30 MB JavaScript / 359 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `cecee0b`; each following milestone reruns CI on push.
+- GitHub Actions passed through `1c273dc`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -125,6 +125,18 @@ software-rendered browser. Its multi-request completion wait is now 30 seconds;
 visual QA and the browser regression suite should run separately on this machine.
 The other 17 journeys passed in that run, and all three aero journeys passed on
 the isolated rerun with the corrected wait. Lint and typecheck also passed again.
+
+Fixed source gates pass 82 Python / 39 TypeScript / 19 browser tests, lint,
+typecheck and build. Four solver/grid combinations retain v2 source positions;
+legacy v1 leaves physics unchanged while retaining its old distance fractions.
+Project tests preserve v1 semantics against a v2 catalog entry. The browser imports
+a pre-metadata legacy reference, verifies zero deltas over matched physical
+intervals, resamples to 3 m, validates gate metadata and reloads the saved project.
+Visual QA with `--gt --reference --delta --sampling` reports no browser errors or
+horizontal overflow. Desktop/mobile images in
+`artifacts/delta-reference-gt-sampling-*.png` were opened and reviewed. The build
+entry reached 1,301 kB / 360 kB gzip and now emits its size warning; separating the
+viewer is the next performance task.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

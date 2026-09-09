@@ -80,6 +80,11 @@ export function Analysis({
             {currentVehicleName ?? lap.vehicleId}
           </small>
           <small>Approximate · {lap.optimization.method}</small>
+          <small data-testid="sector-basis">
+            {lap.sectorBasis === "source-progress"
+              ? "Fixed sector gates"
+              : "Legacy distance sectors"}
+          </small>
           {lap.sampling && (
             <small data-testid="sampling-summary">
               {lap.sampling.pointCount.toLocaleString()} samples ·{" "}

@@ -1,6 +1,6 @@
-# Track format v1
+# Track format v2, with v1 compatibility
 
-Track JSON contains `schemaVersion: 1`, a lowercase hyphenated `id`, `name`,
+Track JSON contains `schemaVersion: 2`, a lowercase hyphenated `id`, `name`,
 `country`, `provenance`, `synthetic`, `closed: true`, `sectorFractions`, and `points`.
 The checked-in development dataset is a complete example. The live JSON Schema is
 available at `GET /api/schema/track`.
@@ -26,7 +26,25 @@ see SAMPLING.md.
 This is not yet a general geospatial import format or a validated road survey.
 
 `sectorFractions` has 2–6 strictly increasing fractions above zero, ending at 1.
-Example: `[0.32, 0.67, 1]`. They partition the solved racing-line distance.
+Example: `[0.32, 0.67, 1]`. In **v2**, they locate fixed gates along the original
+source centerline's closed 3D chord length. The solver maps those source positions
+to each solved racing line before integrating sector times. Changing vehicle,
+offsets or sampling therefore does not move the gates to a different source
+position. The same interpolation defines sector telemetry, tables and graph axes.
+
+**Version 1 remains accepted** and retains its original meaning: fractions of the
+solved racing-line distance. Changing only `schemaVersion` from 1 to 2 explicitly
+changes sector interpretation; it does not change geometry, speed or total lap
+time. New Lap results identify `sectorBasis` and include each sector's actual
+`startProgress` / `endProgress`. Older native laps without these fields still load.
+The interface labels fixed gates or legacy distance sectors alongside the result.
+
+Source fingerprints remain identical across v1/v2 when coordinates, widths,
+banking and fraction values match. They identify source correspondence, not the
+whole serialized track or the historical interpretation of sector timing. This
+allows legacy references to compare against current physical intervals. Portable
+project import checks both fingerprint and track version before reusing a catalog
+track, preserving a legacy file's sector meaning under a separate local ID.
 
 Normalization derives cumulative distance, total length including the seam,
 tangents, horizontal lateral normals, boundaries, bounding box and elevation range.

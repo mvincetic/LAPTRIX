@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Version fixed source timing gates
+
+**Decision:** Track v2 places sector fractions on original source-centerline
+progress. Continue reading v1 with racing-line-distance fractions. Return explicit
+basis and actual source intervals in new laps, with optional fields for old readers.
+**Alternative:** Silently redefining existing v1 files or retaining moving gates
+when racing-line length changes. **Reasoning:** Comparison needs consistent track
+locations, while portable files must preserve their documented meaning.
+**Consequences:** The bundled track/generator use v2. Physical correspondence
+fingerprints remain compatible across versions, native references retain literal
+times, and project import considers version as well as geometry before reuse.
+
 ## 2026-09-09 — Exact per-gear power inside the speed envelope
 
 **Decision:** Replace the uniform maximum-power lookup with scalar evaluation of

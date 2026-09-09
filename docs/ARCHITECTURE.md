@@ -70,6 +70,11 @@ local track-ID collisions, and returns a prepared workspace without mutation.
 The app recalculates it before committing any project state. File and API failures
 therefore preserve the prior workspace. Archived laps remain artifacts rather
 than an alternative source for active simulation output.
+Track v2 fixes timing gates to source progress, while v1 remains distance-based.
+Project reuse checks track version in addition to geometry fingerprint. New laps
+report gate basis and source intervals; the reference comparison already evaluates
+the current physical intervals, so historical native sector totals are not reused
+as if they belonged to the new gates.
 
 Aero comparison is a local modal workflow over sequential calls to the existing
 simulation endpoint. Full Lap results stay temporary until explicit application;

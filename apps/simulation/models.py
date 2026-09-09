@@ -19,7 +19,7 @@ class TrackPoint(StrictModel):
 
 
 class Track(StrictModel):
-    schemaVersion: Literal[1] = 1
+    schemaVersion: Literal[1, 2] = 1
     id: str = Field(pattern=r"^[a-z0-9-]{1,64}$")
     name: str = Field(min_length=1, max_length=100)
     country: str = Field(max_length=100)
@@ -49,7 +49,7 @@ class Track(StrictModel):
         ):
             raise ValueError("Sector fractions must increase from above zero to exactly one")
         if any(abs(p.banking) > 1e-8 for p in self.points):
-            raise ValueError("Banking is reserved in v1; the development solver supports zero banking")
+            raise ValueError("Banking is reserved; the development solver supports zero banking")
         return self
 
 

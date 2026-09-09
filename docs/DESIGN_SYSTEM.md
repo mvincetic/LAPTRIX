@@ -73,3 +73,6 @@ After completion or Stop, a compact Export study JSON action appears below the
 result notes. It remains available for wholly failed or unfinished studies, since
 those states are part of the evidence. Technical source fingerprints stay in the
 exported artifact; the comparison table retains its readable engineering values.
+The lap result states Fixed sector gates or Legacy distance sectors. This explains
+the difference between track-format versions without changing sector table controls.
+All sector values, labels and plot boundaries consume the returned gate distances.

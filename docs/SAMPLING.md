@@ -39,7 +39,11 @@ distances. Saved references must match the source fingerprint. Legacy references
 can be migrated only after verifying their positions against source points and
 their recorded lateral offsets. Unrelated geometry with a reused ID is rejected.
 
-Sector fractions retain the v1 definition: fractions of each solved racing-line
-distance. Reference sectors are now interpolated at those same source positions,
-so comparisons use matching physical intervals. They are not surveyed timing gates. Sampling, alignment
-and better numerical consistency do not establish real-world physics accuracy.
+Track v2 interprets sector fractions at fixed source-centerline positions, then
+maps them through alignment to each solved line. Track v1 retains fractions of
+each solved racing-line distance. New laps record actual source gate intervals
+and their basis. Reference sectors interpolate at the current lap's source gates,
+including when the reference came from an older format. Source fingerprints remain
+compatible across versions with the same geometry and fractions; project reuse
+also checks track version to preserve semantics. These are not surveyed timing
+gates. Sampling and consistency do not establish real-world physics accuracy.

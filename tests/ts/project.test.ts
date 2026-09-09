@@ -21,6 +21,25 @@ const project = {
 };
 
 describe("portable project preparation", () => {
+  it("keeps legacy sector semantics when geometry matches a newer catalog track", async () => {
+    const legacy = {
+      ...project,
+      track: { ...project.track, schemaVersion: 1 as const },
+    };
+    const prepared = await prepareProject(legacy, catalog);
+    expect(prepared.track.schemaVersion).toBe(1);
+    expect(prepared.renamedTrack).toBe(true);
+    expect(prepared.addTrack).toBe(true);
+    expect(await trackFingerprint(prepared.track)).toBe(
+      await trackFingerprint(project.track),
+    );
+    const repeated = await prepareProject(legacy, {
+      ...catalog,
+      tracks: [...catalog.tracks, prepared.track],
+    });
+    expect(repeated.track.id).toBe(prepared.track.id);
+    expect(repeated.addTrack).toBe(false);
+  });
   it("accepts current exports and gives legacy unnamed bundles a default name", async () => {
     const parsed = await prepareProject(project, catalog);
     expect(parsed.projectName).toBe("Portable setup");

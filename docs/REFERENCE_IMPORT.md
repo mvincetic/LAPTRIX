@@ -67,9 +67,9 @@ Sparse samples can miss braking and corner detail.
 
 Corner reference times interpolate at the current corner's source entry/exit
 progress. Sector reference times now also interpolate at the current result's
-physical gates. The current solver still defines its sector gates by fractions
-of its racing-line distance (v1); the reference interval is mapped to the same
-source positions. This avoids comparing different physical intervals across cars
+physical gates. Track v2 defines fixed gates on original source progress; legacy
+track v1 retains racing-line-distance fractions. In both cases, the reference
+interval maps to the current gate's source positions. This avoids comparing different physical intervals across cars
 or grids and keeps the reference sector durations summing to its full lap time.
 Stored timing values are never recalculated by the simulation solver. Legacy
 references without alignment use their original sector durations until a valid

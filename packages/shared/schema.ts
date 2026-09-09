@@ -13,7 +13,7 @@ export const pointSchema = z
   .strict();
 export const trackSchema = z
   .object({
-    schemaVersion: z.literal(1),
+    schemaVersion: z.union([z.literal(1), z.literal(2)]),
     id: z.string().regex(/^[a-z0-9-]{1,64}$/),
     name: z.string().min(1).max(100),
     country: z.string().max(100),
@@ -164,6 +164,7 @@ export const lapSchema = z
     referenceImport: z.object({ fileName: z.string().max(255) }).optional(),
     setup: setupSchema,
     model: z.string(),
+    sectorBasis: z.enum(["source-progress", "racing-line-distance"]).optional(),
     solverProvenance: z
       .object({
         sourceFingerprint: z.string().regex(/^sha256:[0-9a-f]{64}$/),
@@ -234,6 +235,8 @@ export const lapSchema = z
         split: finite.positive(),
         startDistance: finite.nonnegative(),
         endDistance: finite.positive(),
+        startProgress: finite.min(0).max(1).optional(),
+        endProgress: finite.min(0).max(1).optional(),
       }),
     ),
     corners: z.array(
@@ -338,6 +341,54 @@ export const lapSchema = z
         code: "custom",
         message: "Sector times must partition the complete lap",
       });
+    if (
+      lap.sectorBasis ||
+      lap.sectors.some(
+        (s) => s.startProgress !== undefined || s.endProgress !== undefined,
+      )
+    ) {
+      const sourceAtDistance = (distance: number) => {
+        const end = lap.samples.findIndex(
+          (sample) => sample.distance >= distance,
+        );
+        if (end < 0 || !lap.alignment) return NaN;
+        if (end === 0) return lap.alignment.progress[0];
+        const fraction =
+          (distance - lap.samples[end - 1].distance) /
+          (lap.samples[end].distance - lap.samples[end - 1].distance);
+        return (
+          lap.alignment.progress[end - 1] +
+          fraction *
+            (lap.alignment.progress[end] - lap.alignment.progress[end - 1])
+        );
+      };
+      if (
+        !lap.alignment ||
+        lap.sectors.some(
+          (s, i) =>
+            s.startProgress === undefined ||
+            s.endProgress === undefined ||
+            s.startProgress >= s.endProgress ||
+            s.endDistance <= s.startDistance ||
+            s.endDistance > lap.length + 1e-8 ||
+            Math.abs(
+              s.startDistance - (i ? lap.sectors[i - 1].endDistance : 0),
+            ) > 1e-8 ||
+            Math.abs(s.startProgress - sourceAtDistance(s.startDistance)) >
+              1e-8 ||
+            Math.abs(s.endProgress - sourceAtDistance(s.endDistance)) > 1e-8 ||
+            Math.abs(
+              s.startProgress -
+                (i ? (lap.sectors[i - 1].endProgress ?? -1) : 0),
+            ) > 1e-8,
+        ) ||
+        Math.abs((lap.sectors.at(-1)?.endProgress ?? -1) - 1) > 1e-8
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Sector source gates must partition the aligned lap",
+        });
+    }
     for (const corner of lap.corners) {
       const indices = [
         corner.brakingIndex,

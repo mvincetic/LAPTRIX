@@ -78,8 +78,11 @@ checks the discrete model at samples, not continuous or transient feasibility.
 Corners are automatically detected as sufficiently prominent curvature peaks,
 including peaks around the seam. Entry/exit thresholds delimit each event, and
 braking/turn-in/throttle pickup indices reference canonical telemetry. Apex means
-the curvature peak, not a surveyed kerb apex. Sector times interpolate at the
-configured fractions and exactly sum to the lap time.
+the curvature peak, not a surveyed kerb apex. Track v2 sector fractions map to fixed
+source-centerline positions through the same alignment used for references. Their
+solved distances define sample sector IDs, interpolated splits and chart markers.
+Track v1 keeps legacy racing-line-distance fractions. Both modes exactly partition
+the lap, and explicit source intervals accompany new results. See TRACK_FORMAT.md.
 
 Tests check an analytical flat circle, combined grip, RPM/brake bounds, integration,
 closed seam, bounds, objective improvement, setup response and API contracts.

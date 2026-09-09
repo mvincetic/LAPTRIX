@@ -21,6 +21,9 @@ keeping other inputs fixed. Only checked runs can be applied, and the existing
 reference remains available. See AERO_COMPARISON.md for its bounded scope.
 Complete study reports preserve source inputs, all candidate outputs and failures,
 with solver implementation/runtime provenance on new laps.
+The bundled track uses fixed sector gates across racing lines and sampling grids.
+Older v1 track files retain their distance-based sectors and are labelled as such;
+historical references compare at the current lap's physical source intervals.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

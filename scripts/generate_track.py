@@ -55,7 +55,7 @@ points = [
     for p, h in zip(xz, heights)
 ]
 track = dict(
-    schemaVersion=1,
+    schemaVersion=2,
     id="ardennes-development",
     name="Ardennes Development Circuit",
     country="Synthetic · elevation study",

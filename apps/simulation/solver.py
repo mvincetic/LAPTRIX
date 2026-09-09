@@ -263,6 +263,16 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
     distances = np.r_[0, np.cumsum(ds)]
     times = np.r_[0, np.cumsum(dt)]
     total_length, lap_time = float(distances[-1]), float(times[-1])
+    progress = np.asarray(alignment["progress"])
+    if track.schemaVersion == 2:
+        gate_progress = np.r_[0.0, track.sectorFractions]
+        gate_distances = np.interp(gate_progress, progress, distances)
+        sector_basis = "source-progress"
+    else:
+        # Preserve the explicitly documented v1 racing-line-distance semantics.
+        gate_distances = np.r_[0.0, track.sectorFractions] * total_length
+        gate_progress = np.interp(gate_distances, distances, progress)
+        sector_basis = "racing-line-distance"
     n = len(points)
     corner_ids = np.zeros(n, dtype=int)
     curvature = np.abs(profile["curvature"])
@@ -310,7 +320,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         j = i % n
         sector = min(
             len(track.sectorFractions),
-            1 + int(np.searchsorted(track.sectorFractions, distances[i] / total_length, side="right")),
+            1 + int(np.searchsorted(gate_distances[1:], distances[i], side="right")),
         )
         samples.append(
             dict(
@@ -334,14 +344,16 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
                 offset=float(offsets[j]),
             )
         )
-    splits = np.interp(np.array(track.sectorFractions) * total_length, distances, times)
+    splits = np.interp(gate_distances[1:], distances, times)
     sectors = [
         dict(
             id=i + 1,
             time=float(t - (splits[i - 1] if i else 0)),
             split=float(t),
-            startDistance=float((track.sectorFractions[i - 1] if i else 0) * total_length),
-            endDistance=float(track.sectorFractions[i] * total_length),
+            startDistance=float(gate_distances[i]),
+            endDistance=float(gate_distances[i + 1]),
+            startProgress=float(gate_progress[i]),
+            endProgress=float(gate_progress[i + 1]),
         )
         for i, t in enumerate(splits)
     ]
@@ -365,6 +377,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         vehicle=vehicle.model_dump(mode="json"),
         setup=setup.model_dump(),
         model="Development Physics Model",
+        sectorBasis=sector_basis,
         solverProvenance=solver_provenance(),
         lapTime=lap_time,
         length=total_length,

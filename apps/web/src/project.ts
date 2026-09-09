@@ -75,13 +75,21 @@ export async function prepareProject(value: unknown, catalog: Catalog) {
   const fingerprint = await trackFingerprint(file.track);
   let track = file.track;
   let existing = catalog.tracks.find((t) => t.id === track.id);
-  if (existing && (await trackFingerprint(existing)) !== fingerprint) {
+  if (
+    existing &&
+    (existing.schemaVersion !== track.schemaVersion ||
+      (await trackFingerprint(existing)) !== fingerprint)
+  ) {
     const base = `${track.id.slice(0, 46)}-import-${fingerprint.slice(7, 15)}`;
     let id = base,
       suffix = 2;
     while (true) {
       existing = catalog.tracks.find((t) => t.id === id);
-      if (!existing || (await trackFingerprint(existing)) === fingerprint)
+      if (
+        !existing ||
+        (existing.schemaVersion === track.schemaVersion &&
+          (await trackFingerprint(existing)) === fingerprint)
+      )
         break;
       const tail = `-${suffix++}`;
       id = `${base.slice(0, 64 - tail.length)}${tail}`;

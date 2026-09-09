@@ -25,12 +25,17 @@ solve and any required baseline succeed. A failed file check or API request keep
 the prior workspace, with an import-specific retry. Playback pauses while loading.
 Imports are not automatically saved to browser storage; use Save explicitly.
 
-An existing track ID with the same physical fingerprint reuses that loaded track.
-If the ID points to different geometry, the imported track receives a local ID
+An existing track ID with the same physical fingerprint and track-format version
+reuses that loaded track. If the ID points to different geometry or sector
+semantics, the imported track receives a local ID
 derived from its fingerprint. Its reference ID is updated while physical alignment
 remains unchanged. Existing catalog tracks and the file on disk are not modified.
 Repeated imports reuse the same renamed source, and names remain within the ID
 length limit. Custom geometry uses the established custom-track simulation path.
+Track v1 preserves distance-based sectors; v2 uses fixed source gates. Track and
+project version numbers are independent. Identical geometry across track versions
+still supports reference correspondence, but does not justify replacing a file's
+sector interpretation during project restoration.
 
 Tests exercise current/legacy bundles, blank names, version/model failures,
 source-ID collisions, reference identity and repeat imports. Browser tests export

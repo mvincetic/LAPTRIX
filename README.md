@@ -49,6 +49,7 @@ the last completed result remains visible if a solve fails.
 - Portable project import/export with name, setup, custom source and reference restoration.
 - Bounded aero comparison with numerical eligibility, progress and deliberate result application.
 - Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
+- Fixed source-sector gates, with legacy track files and reference comparisons preserved.
 
 ## Checks
 

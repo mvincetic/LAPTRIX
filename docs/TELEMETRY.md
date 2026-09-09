@@ -84,3 +84,12 @@ reference time at the current cursor's source position. Negative means faster,
 positive means slower. Both horizontal axes, pointer seeking and the transport
 share the existing PlaybackClock. The seven physical channel graphs remain
 simulation telemetry; this separate view contains comparison values only.
+
+New results identify `sectorBasis` as `source-progress` for track v2 or
+`racing-line-distance` for legacy v1. Every sector also carries its actual source
+`startProgress` / `endProgress`, alongside solved distances. Validation requires
+these gates to be contiguous, span 0–1 and agree with distance-to-source alignment.
+The fields are optional only for older exported laps. Reference comparison still
+interpolates at current physical gates, preserving literal old times without
+assuming the old sector boundaries match. Track format and Lap schema versions
+are separate: the current Lap serialization remains schema version 1.
