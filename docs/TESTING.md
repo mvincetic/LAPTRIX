@@ -1,5 +1,15 @@
 # Testing and validation
 
+Sector viewport tests use unequal time/distance gates to verify mapped bounds,
+pointer fractions and outside-cursor positions. Browser journeys retain complete
+current/reference paths while zooming, inspect their actual projected cursor,
+compare timing-only deltas and preserve reference choice, pending setup and failed
+results. Successful calculations reset the range. Sector Analysis verifies exact
+gate seeking and focus on the graph tab. A regression exposed the footer covering
+desktop playback when a fixed-height workspace overflowed; content-based center
+sizing now keeps the transport reachable while side columns remain scrollable.
+`scripts/plot-range-qa.mjs` captures final range controls and plots at three widths.
+
 Native channel comparison tests use hand-calculated unequal grids, including a
 reference-only speed peak. They check merged knots, native sample/current-axis
 separation, boundary interpolation, discrete gear, units, shared ranges and input

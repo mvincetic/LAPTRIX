@@ -2280,9 +2280,13 @@ select {
 
 @media (min-width: 1101px) {
   .workspace {
-    height: calc(100vh - 137px);
-    min-height: 790px;
+    height: auto;
+    min-height: max(854px, calc(100vh - 137px));
     flex: none;
+  }
+  .settings-panel,
+  .analysis-column {
+    contain: size;
   }
   .analysis-column {
     min-height: 0;
@@ -2434,11 +2438,6 @@ select {
   }
 }
 
-@media (min-width: 1101px) {
-  .workspace {
-    min-height: 854px;
-  }
-}
 @media (min-width: 761px) and (max-width: 1350px) {
   .reset-label {
     display: none;

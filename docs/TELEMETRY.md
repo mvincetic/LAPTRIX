@@ -118,3 +118,9 @@ The fields are optional only for older exported laps. Reference comparison still
 interpolates at current physical gates, preserving literal old times without
 assuming the old sector boundaries match. Track format and Lap schema versions
 are separate: the current Lap serialization remains schema version 1.
+
+Sector-range inspection changes the plot viewport without replacing samples or
+resampling either reference. Time bounds use current sector splits; distance bounds
+use current gate distances. Both views map local pointer positions back to the
+full-lap clock. Outside cursors are labelled and hidden, and full-lap channel scales
+remain fixed across range changes. See PLOT_INSPECTION.md.

@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 66 tests pass.
+- Vitest: 69 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 49 development browser journeys pass; two viewer journeys also run
+- Playwright: 51 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 375 kB initial JavaScript / 114 kB
+- Vite production build: pass; approximately 377 kB initial JavaScript / 115 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `8ee419f`; each following milestone reruns CI on push.
+- GitHub Actions passed through `c99ac20`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -318,6 +318,21 @@ axis values, dashed reference curves, stepped gears and R cursor values. The fin
 `artifacts/telemetry-comparison-qa.json` records zero runtime errors, exact document
 widths and an unchanged 20-second cursor at each viewport. Both native grids retain
 their closing samples (721 reference / 1,122 current telemetry rows).
+
+Sector inspection visual QA covers current/native curves on different grids,
+after the complete 96 Python / 69 TypeScript / 51 development-browser suite,
+lint, typecheck, build and both production viewer journeys passed. Gate logs are
+retained as `artifacts/plot-range-*.log`. Visual coverage includes
+timing-only delta, selected-range axes and outside-cursor states at 1600/1280/390 px.
+Desktop and compact-desktop workspace images, desktop zoomed channels/delta, and
+mobile channel/outside/delta captures were opened and reviewed. The final
+`artifacts/plot-range-qa.json` reports no runtime errors or horizontal overflow,
+with consistent range bounds and unchanged cursor after full-lap reset.
+An initial browser regression found the fixed-height desktop grid let the footer
+cover playback. Content-based center sizing with constrained side columns fixes
+the interaction, and refreshed workspace images show the complete transport above
+the footer. Evidence remains in `artifacts/plot-range-footer-before.png` and
+`artifacts/plot-range-footer-failure.log`.
 
 ## Scope of the evidence
 

@@ -36,6 +36,8 @@
 - Native channel overlays compare declared source positions on current-lap axes.
   They preserve available samples, not missing measured detail or independently
   verified alignment. Timing-only files remain ineligible for channel overlays.
+- Plot zoom selects whole current sectors and retains full-lap scales and playback.
+  It adds no measured detail; arbitrary windows and sector-only loops are not implemented.
 - Reference ghosts share current-lap elapsed time and duration. Faster references
   hold the finish; slower ones may not finish before the current clock loops. This
   is visual telemetry interpolation and does not add transient vehicle dynamics.

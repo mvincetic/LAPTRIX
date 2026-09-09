@@ -62,6 +62,10 @@ Optional native-reference curves now compare all seven graph channels at matched
 source positions, preserving both grids' events and current-lap axes. Dashed curves
 and R readouts share channel units and ranges with the current lap. Timing-only
 references remain analytical timing data without invented telemetry channels.
+Sector-focused plotting shares one range across Lap Graphs and Time Delta. Range
+selection preserves the cursor; explicit inspection pauses at the sector start.
+Full lap restores the complete view, while outside-cursor text makes full-lap
+playback explicit. A new completed calculation resets the view range.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

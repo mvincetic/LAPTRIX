@@ -108,6 +108,15 @@ interpolated native sample. `telemetryPlot.ts` owns channel units, combined rang
 and stepped gear paths. React memoizes alignment, samples, ranges and SVG paths;
 clock updates interpolate cursor readings without rebuilding full paths. The view
 retains the same canonical Lap and clock. See TELEMETRY_COMPARISON.md.
+`plotViewport` derives current-sector bounds and maps local pointer fractions into
+full-lap coordinates. Both SVG plots retain canonical paths and use the viewport
+to clip their horizontal extent. The parent owns a Lap-bound selection shared by
+both panels; successful new results invalidate it, while failures keep it. Range
+controls live inside labelled panels and do not serialize another workspace state.
+Desktop grid height follows center content with a viewport minimum. Size containment
+on the side columns preserves their internal scrolling while preventing their
+expanded details from setting the grid's intrinsic height. The footer remains in
+normal flow after the complete workspace rather than covering overflowing controls.
 `RenameProjectDialog` holds only a local name draft. It closes the native modal
 before callbacks restore focus outside it. Applying a name changes project metadata
 without touching calculation generations, source/vehicle state or the shared clock.

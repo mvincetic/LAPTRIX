@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Inspect sectors by changing the plot viewport
+
+**Decision:** Share a current-lap sector selection between channel and time-delta
+views. Clip existing full-lap paths with an SVG viewport and map pointer positions
+back into the current clock. Preserve full-lap channel scales and playback duration.
+**Alternative:** Rebuild separately resampled sector laps or seek automatically on
+every range change. **Reasoning:** Inspection should preserve authoritative samples
+and the selected cursor. **Consequences:** Explicit Inspect start pauses and seeks;
+outside cursors are labelled and hidden rather than clamped to the visible edge.
+New completed laps reset the view. Sector Analysis opens the matching graph range
+and returns keyboard focus to its tab. See PLOT_INSPECTION.md.
+
 ## 2026-09-09 — Compare native channels at the same source position
 
 **Decision:** Add optional dashed native-reference traces on current-lap axes, with

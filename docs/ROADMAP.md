@@ -82,9 +82,8 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Add focused sector-range inspection to channel and time-delta plots. Preserve
-   physical alignment, clear axis bounds and the current playback clock, with an
-   explicit return to the full lap.
+1. Expose channel scale limits and zero baselines consistently across native
+   overlays and sector views, retaining readable labels on narrow screens.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -100,18 +99,22 @@ Native-reference channel overlays now preserve both sampling grids and source
 correspondence on current-lap axes. Optional dashed curves share channel scales
 and R cursor readings; timing-only imports cannot acquire channels. Horizontal
 tick and sector text retain their font size on narrow screens.
+Sector-focused inspection now shares one range across channel and time-delta
+plots, retaining canonical paths, scales and playback. Explicit actions inspect
+the first gate or reset the full view. Outside cursors are labelled; successful
+new results reset the selection. Desktop content sizing keeps playback reachable.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Sixty-six TypeScript tests cover
+extremes and analytical work/grip benchmarks. Sixty-nine TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, native channel plots, vehicle contracts, ghost poses and clock/data invariants. Forty-nine browser journeys cover the
+eligibility, native channel plots, sector viewport mapping, vehicle contracts, ghost poses and clock/data invariants. Fifty-one browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming, native channel overlays and the
+precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming, native channel overlays, sector graph inspection and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

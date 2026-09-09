@@ -57,6 +57,14 @@ numeric cursor readings with R. Timing-only/mismatched references disable the
 control with text. The compact control row wraps on mobile; both gear plots step.
 Horizontal ticks and sector labels use ordinary layout text so their font size
 does not shrink with the SVG on narrow screens.
+Plot range uses a compact native select inside the selected graph panel. A sector
+selection exposes Inspect start, Full lap and a short playback/outside-cursor note.
+Channel comparison controls share the same wrapping row where space permits.
+Horizontal ticks show the selected interval; strokes and labels retain their
+display size. Full-lap vertical scales stay consistent across sector changes.
+Sector time ticks show tenths of a second. The desktop workspace grows with its
+center content and keeps the status bar below the transport. Side columns retain
+internal scrolling instead of determining the entire workspace's height.
 
 Time Delta is a separate telemetry tab. A zero baseline, signed seconds, red/green
 trace and text legend distinguish slower/faster intervals. Both horizontal axes

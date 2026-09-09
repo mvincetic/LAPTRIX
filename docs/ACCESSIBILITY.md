@@ -61,6 +61,11 @@ Its labelled native dialog focuses/selects the current name, uses a separate dra
 and supports Enter, Escape, Cancel and Close. Closing releases the modal before
 restoring focus to Additional actions. Tests verify every dismissal path, current
 workspace/cursor retention, name limits, blank names and save/reload.
+Plot range is a labelled native select within each graph's tab panel. Explicit
+Inspect start and Full lap controls separate seeking from zooming. Sector Analysis
+focuses the graph tab after its source button is removed. Text identifies a cursor
+outside the selected sector; the full-lap transport remains reachable on desktop
+when additional controls increase content height.
 
 Remaining review includes broader expanded/error states, contrast, zoom, screen
 readers and representative browsers.

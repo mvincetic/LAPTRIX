@@ -20,6 +20,9 @@ being reduced to the simulation grid. Interpolation uses binary searches.
 Native channel overlays similarly memoize merged progress knots, native samples,
 shared channel ranges and both sets of paths. Playback maps only its current cursor
 through prepared axes; it does not remap the full reference array each frame.
+Sector inspection reuses the same paths and changes only SVG viewport bounds,
+constant-size grid/label elements and local pointer mapping. It adds no data-grid
+reconstruction, alternate lap or second playback clock.
 
 The supplied circuit has 720 unique samples and each lap returns 721 telemetry
 samples. The baseline optimizer uses a sparse quadratic and active-set linear solves

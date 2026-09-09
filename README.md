@@ -58,6 +58,7 @@ the last completed result remains visible if a solve fails.
 - Bounded vehicle JSON import/export, preserved profile provenance and portable restoration.
 - Project naming at every screen width, with draft cancellation and explicit local saving.
 - Optional native-reference channel overlays with shared units and source-position alignment.
+- Sector-focused graph inspection with shared seeking, clear range bounds and full-lap reset.
 
 ## Checks
 
@@ -84,6 +85,7 @@ node scripts/reference-ghost-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
 node scripts/project-name-qa.mjs
 node scripts/telemetry-comparison-qa.mjs
+node scripts/plot-range-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -119,6 +121,9 @@ Enable **Reference traces** in **Lap Graphs** to compare native reference channe
 the same source position. Grey dashed curves and R readings share the current lap's
 axes and channel scales. Timing-only files keep this control disabled. See
 [TELEMETRY_COMPARISON](docs/TELEMETRY_COMPARISON.md).
+Use **Plot range** to inspect one sector in either graph view. **Inspect start**
+pauses at its first gate; **Full lap** resets the view. Playback still follows the
+whole lap and an outside cursor is labelled. See [PLOT_INSPECTION](docs/PLOT_INSPECTION.md).
 In **Ghost Car**, enable **Show reference ghost** to compare a native lap in 3D.
 Both vehicles use elapsed seconds from the same start. The current lap sets playback
 duration, and a finished reference holds the line. Timing-only files keep this
