@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 69 tests pass.
+- Vitest: 70 tests pass.
 - Python numerical/API tests: 96 tests pass.
 - Playwright: 51 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 377 kB initial JavaScript / 115 kB
+- Vite production build: pass; approximately 379 kB initial JavaScript / 115 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `c99ac20`; each following milestone reruns CI on push.
+- GitHub Actions passed through `5a3bed4`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -319,10 +319,10 @@ axis values, dashed reference curves, stepped gears and R cursor values. The fin
 widths and an unchanged 20-second cursor at each viewport. Both native grids retain
 their closing samples (721 reference / 1,122 current telemetry rows).
 
-Sector inspection visual QA covers current/native curves on different grids,
-after the complete 96 Python / 69 TypeScript / 51 development-browser suite,
-lint, typecheck, build and both production viewer journeys passed. Gate logs are
-retained as `artifacts/plot-range-*.log`. Visual coverage includes
+Sector inspection passes the complete 96 Python / 69 TypeScript / 51 development-
+browser suite, lint, typecheck, build and both production viewer journeys. Gate logs
+are retained as `artifacts/plot-range-*.log`. Visual QA covers current/native curves
+on different grids and includes
 timing-only delta, selected-range axes and outside-cursor states at 1600/1280/390 px.
 Desktop and compact-desktop workspace images, desktop zoomed channels/delta, and
 mobile channel/outside/delta captures were opened and reviewed. The final
@@ -333,6 +333,20 @@ cover playback. Content-based center sizing with constrained side columns fixes
 the interaction, and refreshed workspace images show the complete transport above
 the footer. Evidence remains in `artifacts/plot-range-footer-before.png` and
 `artifacts/plot-range-footer-failure.log`.
+
+Channel scale limits and zero guides pass all 96 Python / 70 TypeScript tests,
+51 development browser journeys, lint, typecheck, build and both production viewer
+journeys. Independent row-coordinate checks and actual browser geometry verify
+signed-zero alignment on full-lap/sector views and both horizontal axes. An initial
+comparison assertion used the transport input's rounded value during a rapid channel
+transition; the oracle now uses the plotted cursor's full-precision time.
+Current-only, native-reference and sector captures at 1920/1600/1280/390 px, including
+a shifted-elevation synthetic source, are in `artifacts/channel-scales-*.png`.
+Desktop workspace, signed-elevation, compact-desktop and mobile channel captures
+were opened and reviewed. The final QA report records zero runtime/console errors,
+exact document widths, positive footer gaps and zero-label alignment errors below
+0.1 px. A full-page screenshot initially timed out at 30 seconds; a 60-second capture
+timeout completed the final review. Gate logs are `artifacts/channel-scales-*.log`.
 
 ## Scope of the evidence
 

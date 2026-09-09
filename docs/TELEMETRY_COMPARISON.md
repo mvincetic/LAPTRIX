@@ -26,6 +26,14 @@ retain their declared units. Both gear curves use horizontal/vertical steps, mat
 categorical playback interpolation. Other channels are linear between samples;
 extra plotting points do not imply extra measured resolution.
 
+The **Scale** column shows rounded display-domain bounds rather than observed
+minimum/maximum samples. Bounds use the row's units, apply to both visible laps
+and remain fixed during sector inspection. Signed ranges have a dashed zero guide;
+its text is omitted when it would crowd a bound. Elevation zero is the source's
+vertical origin, not an assertion of a verified sea-level datum. Very large bounds
+use compact scientific notation; hover titles and accessible scale-group labels
+retain the exact values. Current colored and **R** readings remain cursor values.
+
 ## Cursor and availability
 
 The existing clock supplies the current cursor time. Reference readouts map that

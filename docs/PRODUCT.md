@@ -66,6 +66,9 @@ Sector-focused plotting shares one range across Lap Graphs and Time Delta. Range
 selection preserves the cursor; explicit inspection pauses at the sector start.
 Full lap restores the complete view, while outside-cursor text makes full-lap
 playback explicit. A new completed calculation resets the view range.
+Each channel row exposes its display bounds alongside the live values. Current and
+reference curves share those bounds; signed channels include a zero guide. Bounds
+retain their units and remain fixed when inspecting a sector.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

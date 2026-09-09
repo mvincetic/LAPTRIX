@@ -133,6 +133,21 @@ for (const width of [1600, 390]) {
           10,
       ) * 10;
     const y = 27 - ((reference.samples[peak].speed * 3.6) / maximum) * 24;
+    await expect(page.locator('[data-testid^="channel-scale-"]')).toHaveCount(
+      7,
+    );
+    const speedScale = page.getByTestId("channel-scale-speed");
+    await expect(speedScale).toHaveAttribute(
+      "aria-label",
+      `Speed scale: 0 to ${maximum} km/h`,
+    );
+    await expect(speedScale.locator(".scale-max")).toHaveText(String(maximum));
+    await expect(speedScale.locator(".scale-min")).toHaveText("0");
+    await expect(page.getByTestId("channel-zero-speed")).toHaveCount(0);
+    await expect(page.getByTestId("channel-zero-lateralG")).toHaveAttribute(
+      "y1",
+      "180",
+    );
     for (const axis of ["distance", "time"] as const) {
       await page
         .getByRole("button", {
@@ -143,6 +158,22 @@ for (const width of [1600, 390]) {
       const path = await page
         .getByTestId("reference-trace-speed")
         .getAttribute("d");
+      const zeroText = await page
+        .getByTestId("channel-scale-lateralG")
+        .locator("span")
+        .filter({ hasText: /^0$/ })
+        .boundingBox();
+      const zeroLine = await page
+        .getByTestId("channel-zero-lateralG")
+        .boundingBox();
+      expect(
+        Math.abs(
+          zeroText!.y +
+            zeroText!.height / 2 -
+            zeroLine!.y -
+            zeroLine!.height / 2,
+        ),
+      ).toBeLessThan(0.6);
       const points = [...path!.matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)].map(
         (match) => [Number(match[1]), Number(match[2])],
       );
@@ -188,7 +219,13 @@ for (const width of [1600, 390]) {
     await page
       .getByRole("button", { name: "Pause playback", exact: true })
       .click();
-    await readouts(page, current, reference, Number(await cursor.inputValue()));
+    // The native range input rounds to 0.01 s; channel readouts follow the exact clock.
+    const cursorX = await page
+      .getByTestId("channel-cursor")
+      .locator("line")
+      .getAttribute("x1");
+    const exactPosition = (Number(cursorX) / 1000) * current.lapTime;
+    await readouts(page, current, reference, exactPosition);
     await expect(page.getByTestId("reference-trace-speed")).toHaveAttribute(
       "d",
       path!,
@@ -225,7 +262,10 @@ for (const width of [1600, 390]) {
     );
     await upload(reference);
     await expect(toggle).toBeChecked();
-    await readouts(page, current, reference, Number(position));
+    await readouts(page, current, reference, exactPosition);
+    await expect(
+      page.getByTestId("channel-cursor").locator("line"),
+    ).toHaveAttribute("x1", cursorX!);
     await toggle.uncheck();
     await expect(page.locator('[data-testid^="reference-trace-"]')).toHaveCount(
       0,

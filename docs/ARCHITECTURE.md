@@ -108,6 +108,11 @@ interpolated native sample. `telemetryPlot.ts` owns channel units, combined rang
 and stepped gear paths. React memoizes alignment, samples, ranges and SVG paths;
 clock updates interpolate cursor readings without rebuilding full paths. The view
 retains the same canonical Lap and clock. See TELEMETRY_COMPARISON.md.
+`ChannelPlot` owns channel presentation while `Telemetry` retains view state and
+playback controls. `ChannelScales` renders ordinary HTML scale text; a shared CSS
+height maps its rows to the SVG coordinates at each breakpoint. `channelFraction`
+provides the same finite-range normalization for paths and zero guides. Graphs can
+grow with wrapped captions without shrinking the SVG or shifting its scale labels.
 `plotViewport` derives current-sector bounds and maps local pointer fractions into
 full-lap coordinates. Both SVG plots retain canonical paths and use the viewport
 to clip their horizontal extent. The parent owns a Lap-bound selection shared by

@@ -110,6 +110,15 @@ export function telemetryChannels(samples: Sample[]): Channel[] {
   });
 }
 
+/** Shared display-unit mapping for curves, scale labels and zero guides. */
+export function channelFraction(value: number, channel: Channel) {
+  const magnitude = Math.max(Math.abs(channel.min), Math.abs(channel.max), 1);
+  const range = channel.max / magnitude - channel.min / magnitude;
+  return range > 0
+    ? (value / magnitude - channel.min / magnitude) / range
+    : 0.5;
+}
+
 /** Axes belong to the current lap; point.sample retains its original telemetry. */
 export function telemetryPath(
   points: PlotPoint[],
@@ -118,15 +127,11 @@ export function telemetryPath(
   axis: "time" | "distance",
   extent: number,
 ) {
-  // Normalize before subtracting so very large finite signed ranges cannot overflow.
-  const magnitude = Math.max(Math.abs(channel.min), Math.abs(channel.max), 1);
-  const range = channel.max / magnitude - channel.min / magnitude;
   return points
     .map((point, i) => {
       const x = ((point[axis] / extent) * 1000).toFixed(2);
       const value = point.sample[channel.key] * (channel.scale ?? 1);
-      const fraction =
-        range > 0 ? (value / magnitude - channel.min / magnitude) / range : 0.5;
+      const fraction = channelFraction(value, channel);
       const y = (row * 33 + 27 - fraction * 24).toFixed(2);
       return i === 0
         ? `M${x},${y}`

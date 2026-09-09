@@ -1,0 +1,33 @@
+.channel-scales {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: var(--telemetry-svg-height);
+  font-size: 9px;
+  color: #61758e;
+  font-variant-numeric: tabular-nums;
+}
+.scale-caption {
+  position: absolute;
+  top: -9px;
+  right: 0;
+  font-size: 7px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+.channel-scales > div {
+  position: relative;
+  height: calc(var(--telemetry-svg-height) * 33 / 251);
+}
+.channel-scales span {
+  position: absolute;
+  right: 0;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+.scale-max {
+  top: calc(var(--telemetry-svg-height) * 3 / 251);
+}
+.scale-min {
+  top: calc(var(--telemetry-svg-height) * 27 / 251);
+}

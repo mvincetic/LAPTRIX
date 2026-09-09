@@ -82,8 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Expose channel scale limits and zero baselines consistently across native
-   overlays and sector views, retaining readable labels on narrow screens.
+1. Add a reviewed GPX centerline import with bounded coordinate conversion,
+   explicit width/elevation assumptions and transactional activation. Preserve
+   normalized source geometry in the existing project format.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -103,14 +104,18 @@ Sector-focused inspection now shares one range across channel and time-delta
 plots, retaining canonical paths, scales and playback. Explicit actions inspect
 the first gate or reset the full view. Outside cursors are labelled; successful
 new results reset the selection. Desktop content sizing keeps playback reachable.
+Channel scale limits and signed zero guides now expose the full-lap display domains
+for current/native curves. Shared row geometry keeps labels aligned at desktop and
+mobile widths, including sector windows and wrapped captions.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Sixty-nine TypeScript tests cover
+extremes and analytical work/grip benchmarks. Seventy TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, native channel plots, sector viewport mapping, vehicle contracts, ghost poses and clock/data invariants. Fifty-one browser journeys cover the
+eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
+ghost poses and clock/data invariants. Fifty-one browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

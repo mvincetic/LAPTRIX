@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Visible channel domains and shared zero guides
+
+**Decision:** Add a compact scale column with rounded display-domain bounds and
+zero guides for signed channel ranges. Use the existing full-lap/shared-reference
+ranges and one value-to-row mapping. Keep scale text in HTML at a fixed readable
+font size, aligned with the SVG through a common responsive height.
+**Reasoning:** Moving cursor values alone do not explain the magnitude of a curve.
+Sector zoom must preserve vertical comparability. **Consequences:** These labels
+describe display bounds, not observed extrema. Large values use compact scientific
+text with exact accessible labels and hover titles. Elevation zero remains the
+source's vertical origin, whose datum may be unverified. Rendering moves into
+`ChannelPlot`; the existing clock and canonical data remain authoritative.
+
 ## 2026-09-09 — Inspect sectors by changing the plot viewport
 
 **Decision:** Share a current-lap sector selection between channel and time-delta

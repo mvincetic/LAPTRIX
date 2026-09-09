@@ -144,6 +144,22 @@ for (const width of [1600, 390]) {
         .getByTestId("channel-cursor")
         .locator("line")
         .boundingBox();
+      const zeroText = await page
+        .getByTestId("channel-scale-lateralG")
+        .locator("span")
+        .filter({ hasText: /^0$/ })
+        .boundingBox();
+      const zeroLine = await page
+        .getByTestId("channel-zero-lateralG")
+        .boundingBox();
+      expect(
+        Math.abs(
+          zeroText!.y +
+            zeroText!.height / 2 -
+            zeroLine!.y -
+            zeroLine!.height / 2,
+        ),
+      ).toBeLessThan(0.6);
       expect(projected!.x + projected!.width / 2 - box.x).toBeCloseTo(
         box.width / 2,
         0,

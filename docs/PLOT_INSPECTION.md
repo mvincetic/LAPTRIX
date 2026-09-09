@@ -25,6 +25,9 @@ gear steps and interpolated boundary segments without constructing another Lap.
 Native-reference source-position alignment and timing-reference delta calculations
 retain their existing semantics. Vertical scales remain those of the full lap and
 eligible reference, so changing sectors does not silently change channel scale.
+The Scale column exposes these full-lap display limits. Signed zero guides use the
+same vertical mapping as the curves and remain aligned while the horizontal view
+changes between full-lap/sector and time/distance axes.
 
 Horizontal tick labels and sector annotations use ordinary layout text; line
 strokes retain their display width under zoom. Controls belong to their labelled

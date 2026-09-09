@@ -25,6 +25,12 @@ Below 1100 px, the right column moves below the workspace. On narrow screens the
 track/telemetry appear first, settings become two columns and analysis stacks.
 Desktop visualization QA must include 1600, 1280 and 390 px widths and look for
 horizontal overflow, clipped controls, unreadable labels and unframed geometry.
+Channel plots reserve a 36 px scale column beside the live readings. Neutral 9 px
+HTML limits align with faint upper/lower row guides; signed ranges add a dashed
+zero guide. A zero label appears only where it fits between the bounds. Large
+limits use compact scientific notation with exact values in titles and accessible
+group labels. The shared SVG height keeps text aligned at every breakpoint;
+wrapped captions can grow the panel without squeezing the plot.
 
 Lap-time refinement uses the existing solver selector, with a short explanation
 only when selected. The result shows gain against the same-setup curvature seed

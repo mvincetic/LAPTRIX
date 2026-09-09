@@ -16,6 +16,7 @@
   --green: #079e71;
   --red: #f3424e;
   --surface: #fff;
+  --telemetry-svg-height: 246px;
 }
 * {
   box-sizing: border-box;
@@ -1052,7 +1053,7 @@ select {
   display: flex;
   padding: 10px 12px 4px 10px;
   gap: 9px;
-  height: 278px;
+  min-height: 278px;
 }
 .channel-labels {
   width: 96px;
@@ -1061,7 +1062,7 @@ select {
   flex-direction: column;
 }
 .channel-labels > div {
-  height: 32.4px;
+  height: calc(var(--telemetry-svg-height) * 33 / 251);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1086,7 +1087,8 @@ select {
   flex-direction: column;
 }
 .plot svg {
-  height: 246px;
+  height: var(--telemetry-svg-height);
+  flex-shrink: 0;
   width: 100%;
   cursor: crosshair;
   touch-action: none;
@@ -1712,6 +1714,7 @@ select {
 @media (min-width: 1700px) {
   :root {
     font-size: 14px;
+    --telemetry-svg-height: 253px;
   }
   .workspace {
     grid-template-columns: 250px minmax(550px, 1fr) 365px;
@@ -1743,13 +1746,7 @@ select {
     font-size: 10px;
   }
   .graph-area {
-    height: 285px;
-  }
-  .plot svg {
-    height: 253px;
-  }
-  .channel-labels > div {
-    height: 33.3px;
+    min-height: 285px;
   }
   .tabs button {
     font-size: 11px;
@@ -1921,6 +1918,9 @@ select {
   }
 }
 @media (max-width: 760px) {
+  :root {
+    --telemetry-svg-height: 236px;
+  }
   .topbar {
     gap: 12px;
     padding: 12px;
@@ -2063,20 +2063,16 @@ select {
     display: none;
   }
   .graph-area {
-    height: 268px;
+    min-height: 268px;
   }
   .channel-labels {
     width: 74px;
   }
   .channel-labels > div {
-    height: 31.1px;
     font-size: 8px;
   }
   .channel-labels b {
     font-size: 9px;
-  }
-  .plot svg {
-    height: 236px;
   }
   .telemetry-panel .panel-tabs {
     padding: 0 8px;

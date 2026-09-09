@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Sample } from "../../packages/shared/schema";
 import {
+  channelFraction,
   canPlotTelemetry,
   telemetryChannels,
   telemetryPath,
@@ -29,6 +30,27 @@ const sample = (change: Partial<Sample> = {}): Sample => ({
 });
 
 describe("telemetry plot units and interpolation", () => {
+  it("places signed zero guides on the same scale as the plotted channels", () => {
+    const channels = telemetryChannels([
+      sample({ lateralG: -6.2, y: -12 }),
+      sample(),
+    ]);
+    const lateral = channels.find((channel) => channel.key === "lateralG")!;
+    const elevation = channels.find((channel) => channel.key === "y")!;
+    expect(channelFraction(lateral.min, lateral)).toBe(0);
+    expect(channelFraction(lateral.max, lateral)).toBe(1);
+    expect(channelFraction(0, lateral)).toBe(0.5);
+    expect(channelFraction(0, elevation)).toBeCloseTo(2 / 3, 14);
+    expect(
+      telemetryPath(
+        [{ time: 0.5, distance: 0.5, sample: sample({ y: 0 }) }],
+        elevation,
+        6,
+        "time",
+        1,
+      ),
+    ).toBe("M500.00,209.00");
+  });
   it("uses common channel ranges for both laps after converting display units", () => {
     const samples = [
       sample(),

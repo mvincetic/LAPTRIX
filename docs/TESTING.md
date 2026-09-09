@@ -1,5 +1,14 @@
 # Testing and validation
 
+Channel-scale tests check signed and asymmetric zero positions against explicit
+row coordinates. Real-browser comparison/range journeys verify all seven domains,
+units, visible limits and text-to-guide alignment on both axes and sector ranges.
+`scripts/channel-scales-qa.mjs` captures current-only, shared-reference and sector
+plots at 1920/1600/1280/390 px, plus an original synthetic track with a shifted
+vertical origin. The exact comparison oracle reads the SVG cursor's full precision:
+the native transport range rounds its DOM value to its 0.01-second step and cannot
+serve as an exact-time oracle for rapidly changing channel values.
+
 Sector viewport tests use unequal time/distance gates to verify mapped bounds,
 pointer fractions and outside-cursor positions. Browser journeys retain complete
 current/reference paths while zooming, inspect their actual projected cursor,

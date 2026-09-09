@@ -120,7 +120,9 @@ Escape discards an unsent entry; switching axis or calculating a new lap resets 
 Enable **Reference traces** in **Lap Graphs** to compare native reference channels at
 the same source position. Grey dashed curves and R readings share the current lap's
 axes and channel scales. Timing-only files keep this control disabled. See
-[TELEMETRY_COMPARISON](docs/TELEMETRY_COMPARISON.md).
+[TELEMETRY_COMPARISON](docs/TELEMETRY_COMPARISON.md). The **Scale** column shows each
+row's display limits, separate from its live readings; signed channels have a zero
+guide. Sector inspection keeps these full-lap scales.
 Use **Plot range** to inspect one sector in either graph view. **Inspect start**
 pauses at its first gate; **Full lap** resets the view. Playback still follows the
 whole lap and an outside cursor is labelled. See [PLOT_INSPECTION](docs/PLOT_INSPECTION.md).
