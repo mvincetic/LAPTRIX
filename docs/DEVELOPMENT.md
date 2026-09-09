@@ -9,6 +9,8 @@ on Unix; it falls back to `python` only when no local environment exists.
 Vite proxies `/api`; the frontend uses relative URLs. There are no secrets or
 environment variables required for this development setup. Do not bind the Python
 service publicly without an explicit deployment/authentication design.
+The built-asset browser gate uses `npm run test:production`, which starts a local
+Vite preview at 127.0.0.1:5174 and the same API. That exact origin is allowed too.
 
 The backend does not hot-reload by default: restart the dev process after Python
 changes. Frontend edits use Vite HMR. Individual commands `npm run dev:web` and

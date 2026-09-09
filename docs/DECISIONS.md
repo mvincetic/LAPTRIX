@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-09 — Load the WebGL viewer independently
+
+**Decision:** Dynamically import the viewer, retain a loading/error panel, and
+keep settings, simulation and telemetry functional before 3D loads. Test built
+assets as well as development modules. **Alternative:** Raising the bundle-warning
+threshold or blocking the workspace on the viewer. **Reasoning:** The entry had
+grown above 1.3 MB and Three.js was its largest dependency. **Consequences:** The
+entry is about 353 kB, the complete viewer still downloads separately, and an
+explicit Save then page reload recovers from cached module-fetch failures.
+
 ## 2026-09-09 — Version fixed source timing gates
 
 **Decision:** Track v2 places sector fractions on original source-centerline

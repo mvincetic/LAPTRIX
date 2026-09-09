@@ -1,5 +1,13 @@
 # Performance
 
+The engineering UI loads independently of the WebGL viewer. The production entry
+is approximately 352.57 kB (107.31 kB gzip), down from 1,301.15 kB (359.50 kB gzip).
+A separate 950.27 kB viewer chunk (253.46 kB gzip) loads when its panel mounts.
+This is a smaller initial dependency, not a reduction of the full viewer download.
+The settings, solver calls and telemetry work while the viewer loads or fails.
+Both delayed and failed module delivery are exercised against development and
+production-preview servers. The chunk-size warning no longer fires.
+
 Time-delta comparison memoizes source/time axes and the union of source-progress
 knots when the current lap or reference changes. Its path is memoized separately
 for each selected horizontal axis; playback updates only the readout/cursor. A

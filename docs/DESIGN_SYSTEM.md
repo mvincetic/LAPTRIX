@@ -76,3 +76,8 @@ exported artifact; the comparison table retains its readable engineering values.
 The lap result states Fixed sector gates or Legacy distance sectors. This explains
 the difference between track-format versions without changing sector table controls.
 All sector values, labels and plot boundaries consume the returned gate distances.
+The deferred viewer preserves its panel with a restrained spinner and status text.
+If loading fails, the rest of the workspace stays available. The error state names
+the failed view and provides an explicit Reload page action with a reminder to
+Save first; it does not present an ineffective import retry. No loading overlay
+blocks settings or telemetry.

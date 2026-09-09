@@ -179,6 +179,20 @@ def test_api_custom_track_and_cross_origin_protection(source):
     assert client.post("/api/simulate", content=b" " * 1_500_001).status_code == 413
 
 
+@pytest.mark.parametrize(
+    ("origin", "expected"),
+    [
+        ("http://127.0.0.1:5174", 200),
+        ("http://localhost:5174", 200),
+        ("http://127.0.0.1:5175", 403),
+        ("http://localhost:5174.example.com", 403),
+    ],
+)
+def test_api_preview_origins_remain_exact(origin, expected):
+    client = TestClient(app)
+    assert client.post("/api/simulate", json={}, headers={"origin": origin}).status_code == expected
+
+
 def test_api_runs_are_deterministic():
     client = TestClient(app)
     a = client.post("/api/simulate", json={}).json()

@@ -1,8 +1,10 @@
 # Local security boundary
 
 The development servers bind only to 127.0.0.1. Vite proxies API requests; there is
-no wildcard CORS. Browser POST origins outside the fixed local development origins
-are rejected by the API. Track/vehicle/setup values are validated; requests over
+no wildcard CORS. Browser POST origins are restricted to HTTP localhost/127.0.0.1
+on development port 5173 or production-preview port 5174, plus 127.0.0.1:8000 for
+the API itself. Other ports, suffixes and origins are rejected.
+Track/vehicle/setup values are validated; requests over
 1.5 MB are rejected. Track IDs are catalog lookups, never filesystem paths.
 
 Track data is treated as data, never instructions or executable source. Names and

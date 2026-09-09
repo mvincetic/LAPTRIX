@@ -166,6 +166,20 @@ was available. Ordinary browser controls are independent of that optional API.
 - Kept slider-test expectations at the control's documented 0.01 s step while the
   canonical clock and displayed telemetry retain their original precision.
 
+Deferred viewer loading passes the complete 86 Python / 39 TypeScript / 21 browser
+suite, lint, typecheck and build. Both viewer journeys also pass against production
+assets, including mobile Save/reload recovery. The production gate initially
+exposed a rejected preview origin; the API now permits exact loopback port 5174
+origins with tests rejecting other ports and hostname suffixes. Visual QA found
+that mobile Save lost its accessible name when its text was hidden; an explicit
+label fixes it, and the recovery journey now exercises that narrow layout.
+The two affected development journeys and production gate pass again after this
+label fix. Final QA reports no runtime errors or horizontal overflow at 1600 and
+390 px, and successful recovery in both states. Loading/failure screenshots in
+`artifacts/viewer-*.png` were opened and reviewed. The entry is now 352.57 kB /
+107.31 kB gzip; the full viewer still downloads as a separate chunk. CI repeats
+the built-asset failure checks in addition to development browser journeys.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

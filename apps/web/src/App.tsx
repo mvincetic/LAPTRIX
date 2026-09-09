@@ -34,7 +34,7 @@ import {
 } from "../../../packages/telemetry";
 import { TelemetryAudioEngine } from "../../../packages/audio-engine";
 import { getCatalog, runSimulation } from "./api";
-import { TrackView } from "./components/TrackView";
+import { DeferredTrackView } from "./components/DeferredTrackView";
 import { Settings } from "./components/Settings";
 import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
@@ -478,7 +478,12 @@ export function App() {
             )}
             <span>{busy ? "Calculating…" : "Run Simulation"}</span>
           </button>
-          <button className="save-button" onClick={save} disabled={!track}>
+          <button
+            className="save-button"
+            aria-label="Save"
+            onClick={save}
+            disabled={!track}
+          >
             <Save size={16} />
             <span>Save</span>
           </button>
@@ -717,7 +722,7 @@ export function App() {
         />
         <div className="center-column">
           {simulationTrack ? (
-            <TrackView
+            <DeferredTrackView
               calculating={busy}
               track={simulationTrack}
               lap={lap}

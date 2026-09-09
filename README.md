@@ -57,6 +57,7 @@ the last completed result remains visible if a solve fails.
 npm run check
 npx playwright install chromium
 npm run test:e2e
+npm run test:production
 node scripts/visual-qa.mjs
 node scripts/visual-qa.mjs --refinement
 node scripts/visual-qa.mjs --gt
@@ -64,6 +65,7 @@ node scripts/visual-qa.mjs --gt --reference
 node scripts/visual-qa.mjs --gt --reference --delta
 node scripts/visual-qa.mjs --gt --reference --delta --project
 node scripts/visual-qa.mjs --sweep
+node scripts/viewer-load-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -71,6 +73,9 @@ npm run study:sampling
 `check` runs frontend and Python lint, TypeScript, unit/API tests and the production
 build. Browser tests start the app when needed. Screenshots and traces go into the
 ignored `artifacts/`, `test-results/` and `playwright-report/` directories.
+`test:production` rebuilds the frontend and checks delayed/failed viewer downloads
+against its hashed assets on local preview port 5174. Simulation and telemetry
+remain usable before 3D loads; Save then reload recovers a failed module download.
 The solver study compares five sampling resolutions and all three solver modes.
 See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Select
 **Lap-time refinement** in Solver mode, then run to compare against the curvature

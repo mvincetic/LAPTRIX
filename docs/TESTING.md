@@ -1,5 +1,13 @@
 # Testing and validation
 
+Viewer-loading journeys delay and abort the real module request while calculating
+laps, changing setup and using telemetry. Recovery explicitly saves and reloads,
+then checks the restored name, setup and lap. `npm run test:production` rebuilds and
+repeats these journeys against hashed assets on loopback preview port 5174; CI runs
+both development and production browser gates. API tests accept exact preview
+origins and reject other ports and hostname suffixes. `scripts/viewer-load-qa.mjs`
+captures both placeholder states at desktop/mobile widths and checks recovery.
+
 Portable-project tests verify v1/v2 bundles, names, installed vehicle physics,
 reference identity, source-ID collisions and repeated imports without mutation.
 Browser coverage opens a custom-track GT study with a Formula reference on a fresh

@@ -87,6 +87,13 @@ local. `apps/simulation/provenance.py` fingerprints normalized source text once
 per process and attaches numerical runtime versions to new outputs; the optional
 schema field preserves readers for older native references.
 
+`DeferredTrackView` loads the Three.js viewer as a separate module after its panel
+mounts. The application shell and analysis have no runtime import of that module.
+A loading/error placeholder preserves the panel, and the completed module receives
+the latest authoritative props. Browser module failures may be cached, so recovery
+uses an explicit page reload after Save rather than a misleading same-module retry.
+The existing in-viewer boundary still handles WebGL rendering failures separately.
+
 Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
 may decorate the scene without defining track or physics. Neither track-specific
 coordinates nor vehicle performance conditionals belong in React components.
