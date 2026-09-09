@@ -42,3 +42,13 @@ Chart domains derive from the current lap, including negative/high elevations an
 different RPM/gear limits. Sector markers use the selected time or distance axis.
 Stored references are validated for strict ordering, closed endpoints, sector
 partitioning and valid corner indices before use.
+
+Lap-time mode adds `optimization.refinement`: `seedLapTime`, `gainSeconds`,
+`evaluations`, `evaluationBudget`, `acceptedSteps`, `rejectedCandidates` and `status`
+(`completed` or `seed-infeasible`). Seed time minus final time must equal the gain;
+counts cannot exceed the budget. Curvature optimizer convergence and projected
+gradient refer to the seed solve; the lap and all telemetry describe the accepted
+final trajectory. `numericalChecks` reports speed convergence, maximum integrated
+force demand/capacity ratio and tolerance. Both diagnostic blocks are optional in
+the reader for compatibility with older saved references. Old saved numerical
+results remain literal references and are not silently recalculated.

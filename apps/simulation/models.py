@@ -95,7 +95,7 @@ class Setup(StrictModel):
     brakeBias: float = Field(default=56, ge=50, le=70)
     temperature: float = Field(default=26, ge=5, le=45)
     trackState: Literal["optimum", "green"] = "optimum"
-    solver: Literal["optimized", "centerline"] = "optimized"
+    solver: Literal["optimized", "centerline", "lap-time"] = "optimized"
     airDensity: float = Field(default=1.225, ge=0.9, le=1.4)
 
 

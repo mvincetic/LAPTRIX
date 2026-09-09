@@ -25,3 +25,12 @@ Below 1100 px, the right column moves below the workspace. On narrow screens the
 track/telemetry appear first, settings become two columns and analysis stacks.
 Desktop visualization QA must include 1600, 1280 and 390 px widths and look for
 horizontal overflow, clipped controls, unreadable labels and unframed geometry.
+
+Lap-time refinement uses the existing solver selector, with a short explanation
+only when selected. The result shows gain against the same-setup curvature seed
+and the candidate count beside the lap result. This stays separate from the saved
+reference delta. Key insights show accepted local changes, and failed numerical
+checks appear as text warnings; a completed candidate budget is not labelled a
+globally optimal setup.
+On desktop, long settings and expanded advanced controls scroll within the settings
+body; the pending-state indicator and model note remain visible below it.

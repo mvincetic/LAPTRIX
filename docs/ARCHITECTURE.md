@@ -39,6 +39,13 @@ in FastAPI's worker pool. A bounded 24-entry in-process cache avoids re-solving
 identical track/vehicle/setup requests. A generation counter prevents old responses
 from replacing a newer selected run. A failed run preserves the last completed lap.
 
+`apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
+and solves its box constraints. `solver.py` owns geometry, the speed envelope,
+optional local lap-time refinement and result assembly. Refinement repeatedly calls
+the same vehicle/setup speed envelope; accepted positions and the matching profile
+are returned together. No renderer or UI computes an independent optimized path.
+Numerical demand diagnostics and refinement accounting cross the existing Lap API.
+
 Device-local project state lives in versioned browser storage, with explicit Save.
 Telemetry exports remain on the user's device. Imports use the same validated
 custom-track contract. There is no account system, database or external telemetry.

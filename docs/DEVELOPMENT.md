@@ -22,6 +22,10 @@ Quality gate: `npm run check`. Browser regression: `npm run test:e2e` after
 `npx playwright install chromium`. `node scripts/visual-qa.mjs` captures desktop
 and mobile screenshots and reports browser runtime errors. Open the actual PNGs
 to evaluate composition; a passing screenshot command is not visual inspection.
+Add `--refinement` to that script for screenshots of the optional lap-time mode.
+`npm run study:solver` writes `artifacts/solver-study.json` and prints the grid study.
+Use `npm run study:solver -- --counts 360 720` for a shorter run. The script resamples
+the synthetic catalog input, changes no source data and does not start the servers.
 
 Use `npx prettier --write <files>` and `npm run format:python` for formatting.
 Changes to data or numerical logic need focused tests. Keep expensive Three.js

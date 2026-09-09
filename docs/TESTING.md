@@ -6,6 +6,11 @@ reduction, strict telemetry ordering, closing endpoint, sector partitioning, lap
 integration, the friction circle, braking/RPM/actuator bounds, mass/compound/track
 state response, corner indices, an analytical flat circle, drivetrain power,
 custom track API requests, invalid requests and cross-origin rejection.
+The sparse quadratic is checked against an exhaustive small coupled-bound oracle,
+its spatial objective on a nonuniform grid, and an explicit iteration-limit case.
+Refinement tests cover seed improvement/retention, deterministic replay, rotated
+start index, changed vehicle/setup, integrated telemetry and 720/1,440/2,000-point
+seed convergence. Grid-study results are documented in SOLVER_STUDY.md.
 
 Vitest covers frontend geometry winding and closure, schema failure cases,
 time/distance interpolation, stepped gear fields, boundary clamping, time display
@@ -16,6 +21,9 @@ Playwright runs real services and a WebGL Chromium context. It exercises setup
 changes, explicit simulation, reference comparison, play/pause/seek, corner
 inspection, save/restore, layers, camera modes, graph tabs, SI CSV export,
 responsive widths and recoverable backend errors. Failures retain traces/screenshots.
+The lap-time journey runs the real solver, verifies gain accounting and force
+diagnostics, seeks its actual corner sample, checks exported JSON and restores
+the saved mode and reference.
 
 Visual QA uses actual browser screenshots, reviewed by an agent, at desktop and
 mobile sizes. The initial pass found mobile topbar overflow and camera framing;

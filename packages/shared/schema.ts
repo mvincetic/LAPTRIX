@@ -64,7 +64,7 @@ export const setupSchema = z.object({
   brakeBias: finite.min(50).max(70),
   temperature: finite.min(5).max(45),
   trackState: z.enum(["optimum", "green"]),
-  solver: z.enum(["optimized", "centerline"]),
+  solver: z.enum(["optimized", "centerline", "lap-time"]),
   airDensity: finite.min(0.9).max(1.4),
 });
 export type Setup = z.infer<typeof setupSchema>;
@@ -140,7 +140,26 @@ export const lapSchema = z
       converged: z.boolean(),
       iterations: finite.int(),
       curvatureObjectiveReduction: finite.optional(),
+      projectedGradient: finite.nonnegative().optional(),
+      refinement: z
+        .object({
+          seedLapTime: finite.positive(),
+          gainSeconds: finite.nonnegative(),
+          evaluations: finite.int().nonnegative(),
+          evaluationBudget: finite.int().positive(),
+          acceptedSteps: finite.int().nonnegative(),
+          rejectedCandidates: finite.int().nonnegative(),
+          status: z.enum(["completed", "seed-infeasible"]),
+        })
+        .optional(),
     }),
+    numericalChecks: z
+      .object({
+        speedConverged: z.boolean(),
+        maxDemandRatio: finite.nonnegative(),
+        demandTolerance: finite.min(1),
+      })
+      .optional(),
     samples: z.array(sampleSchema).min(41),
     sectors: z.array(
       z.object({
@@ -172,6 +191,23 @@ export const lapSchema = z
     ),
   })
   .superRefine((lap, ctx) => {
+    const refinement = lap.optimization.refinement;
+    if (
+      refinement &&
+      (Math.abs(refinement.seedLapTime - lap.lapTime - refinement.gainSeconds) >
+        1e-5 ||
+        refinement.evaluations > refinement.evaluationBudget ||
+        refinement.acceptedSteps + refinement.rejectedCandidates >
+          refinement.evaluations ||
+        (refinement.status === "completed" &&
+          refinement.evaluations !== refinement.evaluationBudget) ||
+        (refinement.status === "seed-infeasible" &&
+          (refinement.evaluations !== 0 || refinement.gainSeconds !== 0)))
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Lap-time refinement diagnostics are inconsistent",
+      });
     const first = lap.samples[0],
       last = lap.samples.at(-1)!;
     if (

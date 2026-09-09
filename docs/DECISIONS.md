@@ -35,6 +35,27 @@ optimizer code, datasets or assets are copied. Evaluation is in DATA_SOURCES.md.
 **Consequence:** This is not a global minimum-time solution or validated tyre model.
 The method and convergence state are part of the returned result.
 
+## 2026-09-09 — Sparse curvature solve and bounded lap-time refinement
+
+**Context:** A resolution study found the 1,440-point L-BFGS-B solve exhausted its
+5,000-iteration budget; the old per-sample regularizer also changed strength with
+resolution. Curvature alone does not optimize lap time for a chosen vehicle.
+**Decision:** Express the existing small-offset objective as a sparse quadratic,
+use nonuniform spatial derivatives and distance-integrated regularization, and
+solve with an original feasible active-set method. Add an opt-in 78-candidate
+local search scored through the existing vehicle/setup envelope.
+**Alternatives:** Further increasing L-BFGS iterations, introducing a QP dependency,
+or replacing the whole model with an external optimal-control stack.
+**Reasoning:** The seed problem is already quadratic; sparse linear solves use the
+installed SciPy and make its residual directly checkable. A bounded search provides
+measurable vehicle-aware improvement while preserving the canonical telemetry API.
+The [SciPy sparse-solve contract](https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.spsolve.html)
+was checked; no external optimizer implementation was copied.
+**Consequences:** Numerical lap times change slightly. The default remains curvature
+mode. Candidate gains are model results, not accuracy claims, and fine-grid
+differences remain larger than some gains. Start-node braking checks now prevent
+an overestimate exposed by a zero-downforce vehicle test. See SOLVER_STUDY.md.
+
 ## 2026-09-09 — Shared telemetry and one playback clock
 
 **Decision:** Metres/seconds are canonical; samples include a closing endpoint.

@@ -321,6 +321,19 @@ small,
   padding: 12px 13px 0;
   min-width: 0;
 }
+@media (min-width: 1101px) {
+  .settings-fields {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .settings-panel > .panel-heading,
+  .settings-panel > .setup-state,
+  .settings-panel > .model-note {
+    flex-shrink: 0;
+  }
+}
 .setting {
   display: flex;
   flex-direction: column;
@@ -466,6 +479,17 @@ select {
 .solver-select select {
   padding-left: 31px;
   font-size: 10px;
+}
+.solver-hint {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.lap-result .refinement-summary {
+  color: #087c59;
+  margin-top: 6px;
 }
 .advanced {
   margin: 0 -13px;

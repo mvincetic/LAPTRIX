@@ -1,5 +1,86 @@
 import { test, expect } from "@playwright/test";
 
+test("lap-time refinement reports its real gain, persists and drives playback", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.getByTestId("lap-time")).toBeVisible();
+  const seed = await page.getByTestId("lap-time").textContent();
+  await page
+    .getByRole("button", { name: "Set reference", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Solver mode" })
+    .selectOption("lap-time");
+  await expect(
+    page.getByText(/Vehicle-aware search · 78 candidates/),
+  ).toBeVisible();
+  const response = page.waitForResponse(
+    (r) => r.url().endsWith("/api/simulate") && r.request().method() === "POST",
+  );
+  await page
+    .getByRole("button", { name: "Run Simulation", exact: true })
+    .click();
+  const data = await (await response).json();
+  expect(data.optimization.refinement.seedLapTime - data.lapTime).toBeCloseTo(
+    data.optimization.refinement.gainSeconds,
+    8,
+  );
+  expect(data.optimization.refinement.gainSeconds).toBeGreaterThan(0);
+  expect(data.numericalChecks.maxDemandRatio).toBeLessThanOrEqual(
+    data.numericalChecks.demandTolerance,
+  );
+  await expect(page.getByTestId("refinement-summary")).toContainText(
+    "78 candidates",
+  );
+  await expect(page.getByTestId("lap-time")).not.toHaveText(seed!);
+  await expect(
+    page.locator(".comparison-labels > div").last().locator("strong"),
+  ).toHaveText(seed!);
+  await page
+    .getByRole("button", { name: "Select corner 2", exact: true })
+    .click();
+  await expect(page.locator(".corner-detail")).toBeInViewport({ ratio: 1 });
+  expect(
+    Number(
+      await page
+        .getByRole("slider", { name: "Lap playback position" })
+        .inputValue(),
+    ),
+  ).toBeCloseTo(data.samples[data.corners[1].apexIndex].time, 1);
+  await page.getByRole("button", { name: "Additional actions" }).click();
+  const downloaded = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export telemetry JSON", exact: true })
+    .click();
+  const stream = await (await downloaded).createReadStream();
+  const chunks = [];
+  for await (const chunk of stream!) chunks.push(chunk);
+  const exported = JSON.parse(Buffer.concat(chunks).toString());
+  expect(exported.optimization.refinement).toEqual(
+    data.optimization.refinement,
+  );
+  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.reload();
+  await expect(page.getByRole("combobox", { name: "Solver mode" })).toHaveValue(
+    "lap-time",
+  );
+  await expect(page.getByTestId("refinement-summary")).toContainText(
+    "78 candidates",
+  );
+  await expect(
+    page.locator(".comparison-labels > div").last().locator("strong"),
+  ).toHaveText(seed!);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.locator(".advanced summary").click();
+  const density = page.getByRole("slider", { name: "Air density" });
+  await density.scrollIntoViewIfNeeded();
+  await expect(density).toBeInViewport();
+  const note = await page.locator(".model-note").boundingBox();
+  const panel = await page.locator(".settings-panel").boundingBox();
+  expect(note!.y + note!.height).toBeLessThanOrEqual(panel!.y + panel!.height);
+});
+
 test("real simulation, settings, comparison and playback stay synchronized", async ({
   page,
 }) => {

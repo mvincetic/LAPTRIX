@@ -38,6 +38,8 @@ export function Analysis({
     );
   const delta = reference ? lap.lapTime - reference.lapTime : null;
   const corner = lap.corners.find((c) => c.id === selectedCorner);
+  const refinement = lap.optimization.refinement;
+  const checks = lap.numericalChecks;
   return (
     <aside className="analysis-column">
       <section className="panel lap-analysis">
@@ -63,9 +65,26 @@ export function Analysis({
           <small>Approximate · {lap.optimization.method}</small>
           {!lap.optimization.converged && (
             <small className="solver-warning">
-              Iteration limit reached · best feasible line
+              Curvature iteration limit reached · best bounded line
             </small>
           )}
+          {refinement && (
+            <small
+              className="refinement-summary"
+              data-testid="refinement-summary"
+            >
+              {refinement.status === "completed"
+                ? `${refinement.gainSeconds > 0 ? "−" : ""}${refinement.gainSeconds.toFixed(3)} s vs curvature seed · ${refinement.evaluations} candidates`
+                : "Refinement skipped · seed failed numerical checks"}
+            </small>
+          )}
+          {checks &&
+            (!checks.speedConverged ||
+              checks.maxDemandRatio > checks.demandTolerance) && (
+              <small className="solver-warning">
+                Speed constraints need review · check track resolution
+              </small>
+            )}
         </div>
         <table className="sector-table">
           <thead>
@@ -298,12 +317,17 @@ export function Analysis({
         <div className="insight">
           <TrendingUp size={19} />
           <strong>
-            {(
-              (lap.optimization.curvatureObjectiveReduction ?? 0) * 100
-            ).toFixed(1)}
-            %
+            {refinement
+              ? `${refinement.acceptedSteps} / ${refinement.evaluations}`
+              : `${(
+                  (lap.optimization.curvatureObjectiveReduction ?? 0) * 100
+                ).toFixed(1)}%`}
           </strong>
-          <span>Curvature objective reduction</span>
+          <span>
+            {refinement
+              ? "Accepted local line changes"
+              : "Curvature objective reduction"}
+          </span>
         </div>
         <div className="insight">
           <ArrowDownRight size={19} />

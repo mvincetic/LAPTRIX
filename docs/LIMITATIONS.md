@@ -2,7 +2,14 @@
 
 - Geometry, vehicle and environmental responses are synthetic. The result is not
   an official lap prediction or calibration for a real Formula car.
-- Minimum curvature is an approximation, not a globally minimum-time solve.
+- Minimum curvature is a small-offset approximation. Optional lap-time refinement
+  searches 78 local candidates, not all trajectories or a global minimum.
+- Grid density changes calculated lap time. The measured 720-to-1,440 point change
+  is larger than the default refinement gain; milliseconds are numerical display
+  resolution, not a statement of real-world prediction accuracy. See SOLVER_STUDY.md.
+- Force-demand checks cover sampled discrete segments with a 1.5% tolerance, not
+  continuous trajectory feasibility. Imported geometry may fail these checks;
+  the UI flags the result and skips lap-time refinement when its seed fails.
 - The point-mass model omits transient yaw, axle load transfer, tyre temperature/
   wear, suspension, braking lockup, slip, shift delays, hybrid energy and fuel burn.
 - Banking is reserved but rejected; vertical G is a reserved zero field. Elevation

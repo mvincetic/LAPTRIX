@@ -176,9 +176,16 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
               }
             >
               <option value="optimized">Minimum curvature</option>
+              <option value="lap-time">Lap-time refinement</option>
               <option value="centerline">Centerline baseline</option>
             </select>
           </span>
+          {setup.solver === "lap-time" && (
+            <span className="solver-hint">
+              Vehicle-aware search · 78 candidates. Starts from the curvature
+              line; may retain it if no improvement is found.
+            </span>
+          )}
         </label>
         <details className="advanced">
           <summary>

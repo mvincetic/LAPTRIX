@@ -3,10 +3,10 @@
 import time
 
 import numpy as np
-from scipy.optimize import minimize
 from scipy.signal import find_peaks
 
 from .models import Setup, Track, Vehicle
+from .numerics import box_quadratic, curvature_quadratic
 
 G = 9.80665
 
@@ -36,39 +36,21 @@ def optimize_line(track: Track, vehicle: Vehicle, enabled: bool):
     if any(lo >= hi for lo, hi in bounds):
         raise ValueError("Vehicle does not fit within track boundaries with safety clearance")
     if not enabled:
+        if any(lo > 0 or hi < 0 for lo, hi in bounds):
+            raise ValueError("Vehicle does not fit on the centerline with safety clearance")
         return center, np.zeros(n), {"method": "Centerline baseline", "converged": True, "iterations": 0}
 
-    # A convex small-offset minimum-curvature surrogate with an analytic gradient.
-    # Weight each second spatial difference by its local mean sample spacing cubed.
-    weights = 1 / np.maximum((ds + np.roll(ds, 1)) / 2, 0.1) ** 3
-
-    def objective(offset):
-        p = center + normals * offset[:, None]
-        second = np.roll(p, 1, axis=0) - 2 * p + np.roll(p, -1, axis=0)
-        weighted = second * weights[:, None]
-        value = np.sum(second * weighted) + 1e-7 * np.sum(offset**2)
-        gradient_p = 2 * (np.roll(weighted, 1, axis=0) - 2 * weighted + np.roll(weighted, -1, axis=0))
-        gradient = np.sum(gradient_p * normals, axis=1) + 2e-7 * offset
-        return value, gradient
-
-    baseline = objective(np.zeros(n))[0]
-    result = minimize(
-        objective,
-        np.zeros(n),
-        jac=True,
-        method="L-BFGS-B",
-        bounds=bounds,
-        options={"maxiter": 5000, "ftol": 1e-12, "gtol": 1e-8, "maxcor": 20},
-    )
-    offsets = result.x if np.isfinite(result.fun) and result.fun <= baseline else np.zeros(n)
+    hessian, linear, baseline = curvature_quadratic(center, normals, ds)
+    lower, upper = np.array(bounds).T
+    offsets, info = box_quadratic(hessian, linear, lower, upper)
+    objective = float(0.5 * offsets @ (hessian @ offsets) + linear @ offsets + baseline)
     return (
         center + normals * offsets[:, None],
         offsets,
         {
             "method": "Bounded minimum-curvature approximation",
-            "converged": bool(result.success),
-            "iterations": int(result.nit),
-            "curvatureObjectiveReduction": float(1 - objective(offsets)[0] / max(baseline, 1e-12)),
+            **info,
+            "curvatureObjectiveReduction": float(1 - objective / max(baseline, 1e-12)),
         },
     )
 
@@ -127,7 +109,21 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         for i in range(len(speeds) - 1, -1, -1):
             j = (i + 1) % len(speeds)
             available = max(0, capacities(speeds[j], j)[1])
-            speeds[i] = min(speeds[i], np.sqrt(max(1, speeds[j] ** 2 + 2 * available * ds[i])))
+            candidate = min(speeds[i], np.sqrt(max(1, speeds[j] ** 2 + 2 * available * ds[i])))
+            # Downstream grip alone can overestimate braking at the segment's start.
+            # Enforce the integrated demand against its own start-node capacity too.
+            if candidate > speeds[j] and (
+                candidate**2 - speeds[j] ** 2 > 2 * capacities(candidate, i)[1] * ds[i]
+            ):
+                low, high = speeds[j], candidate
+                for _ in range(24):
+                    mid = (low + high) / 2
+                    if mid**2 - speeds[j] ** 2 > 2 * capacities(mid, i)[1] * ds[i]:
+                        high = mid
+                    else:
+                        low = mid
+                candidate = low
+            speeds[i] = candidate
         for i in range(len(speeds)):
             j = (i + 1) % len(speeds)
             available = capacities(speeds[i], i)[0]
@@ -146,6 +142,14 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     braking = np.minimum(vehicle.maxBrakeG * G * bias_efficiency, remaining)
     throttle = np.clip(wheel_acc / np.maximum(drive, 1e-5), 0, 1)
     brake = np.clip(-wheel_acc / np.maximum(braking, 1e-5), 0, 1)
+    # Check the actual integrated segment demand; clipped actuators alone hide infeasibility.
+    demand_ratio = float(
+        max(
+            np.max(np.hypot(speeds**2 * k, wheel_acc) / grip),
+            np.max(np.maximum(wheel_acc, 0) / np.maximum(drive, 1e-5)),
+            np.max(np.maximum(-wheel_acc, 0) / np.maximum(braking, 1e-5)),
+        )
+    )
     return dict(
         ds=ds,
         dt=dt,
@@ -159,13 +163,98 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         brake=brake,
         iterations=iteration + 1,
         converged=bool(np.max(np.abs(speeds - before)) < 1e-5),
+        maxDemandRatio=demand_ratio,
     )
+
+
+def refine_line(track: Track, vehicle: Vehicle, setup: Setup, offsets, profile):
+    """Deterministic local search scored with the selected vehicle's full speed envelope.
+
+    Three passes examine broad, periodic blends toward each safe boundary. This
+    fixed candidate budget is not a claim of minimum-time convergence. Keep the
+    seed unless a converged, numerically feasible candidate improves its lap time.
+    """
+    center = np.array([[p.x, p.y, p.z] for p in track.points])
+    ds, _, normals, _ = geometry(center)
+    distance = np.r_[0, np.cumsum(ds)[:-1]]
+    length = float(np.sum(ds))
+    margin = vehicle.width / 2 + 0.35
+    bounds = (
+        np.array([margin - p.widthRight for p in track.points]),
+        np.array([p.widthLeft - margin for p in track.points]),
+    )
+    baseline_time = float(np.sum(profile["dt"]))
+    best_time = baseline_time
+    info = dict(
+        seedLapTime=baseline_time,
+        gainSeconds=0.0,
+        evaluations=0,
+        evaluationBudget=78,
+        acceptedSteps=0,
+        rejectedCandidates=0,
+        status="completed",
+    )
+    if (
+        not profile["converged"]
+        or not np.isfinite(profile["maxDemandRatio"])
+        or profile["maxDemandRatio"] > 1.015
+    ):
+        info["status"] = "seed-infeasible"
+        return offsets, profile, info
+    # Physical anchor keeps candidate order independent of the start/finish index.
+    anchor = int(np.lexsort((center[:, 2], center[:, 0]))[0])
+    weights = [np.ones(len(center))]
+    for origin in (distance[anchor] + np.arange(12) * length / 12) % length:
+        separation = np.abs(distance - origin)
+        separation = np.minimum(separation, length - separation)
+        weights.append(0.5 + 0.5 * np.cos(np.minimum(separation / (length / 12), 1) * np.pi))
+    center_forward = np.roll(center, -1, axis=0) - center
+    for fraction in (0.3, 0.15, 0.075):
+        for weight in weights:
+            for bound in bounds:
+                candidate = offsets + fraction * weight * (bound - offsets)
+                points = center + normals * candidate[:, None]
+                forward = np.roll(points, -1, axis=0) - points
+                info["evaluations"] += 1
+                # Reject collapsed/reversed segments before attempting an envelope.
+                if np.any(np.sum(forward * center_forward, axis=1) / ds < 0.1) or np.any(
+                    np.abs(forward[:, 1]) / np.linalg.norm(forward, axis=1) > 0.3
+                ):
+                    info["rejectedCandidates"] += 1
+                    continue
+                trial = speed_profile(points, vehicle, setup)
+                lap_time = float(np.sum(trial["dt"]))
+                if (
+                    not np.isfinite(lap_time)
+                    or not np.isfinite(trial["maxDemandRatio"])
+                    or not trial["converged"]
+                    or trial["maxDemandRatio"] > 1.015
+                ):
+                    info["rejectedCandidates"] += 1
+                    continue
+                if lap_time < best_time - 1e-5:
+                    offsets, profile, best_time = candidate, trial, lap_time
+                    info["acceptedSteps"] += 1
+    info["gainSeconds"] = max(0.0, baseline_time - best_time)
+    return offsets, profile, info
 
 
 def solve(track: Track, vehicle: Vehicle, setup: Setup):
     started = time.perf_counter()
-    points, offsets, optimization = optimize_line(track, vehicle, setup.solver == "optimized")
+    points, offsets, optimization = optimize_line(track, vehicle, setup.solver != "centerline")
     profile = speed_profile(points, vehicle, setup)
+    if setup.solver == "lap-time":
+        offsets, profile, refinement = refine_line(track, vehicle, setup, offsets, profile)
+        center = np.array([[p.x, p.y, p.z] for p in track.points])
+        center_ds, _, normals, _ = geometry(center)
+        points = center + normals * offsets[:, None]
+        hessian, linear, baseline = curvature_quadratic(center, normals, center_ds)
+        objective = float(0.5 * offsets @ (hessian @ offsets) + linear @ offsets + baseline)
+        optimization.update(
+            method="Minimum curvature + lap-time search",
+            refinement=refinement,
+            curvatureObjectiveReduction=float(1 - objective / max(baseline, 1e-12)),
+        )
     ds, dt = profile["ds"], profile["dt"]
     distances = np.r_[0, np.cumsum(ds)]
     times = np.r_[0, np.cumsum(dt)]
@@ -253,13 +342,18 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         for i, t in enumerate(splits)
     ]
     warnings = [
-        "Input accuracy is unverified. Approximate development physics; "
-        "not validated against real telemetry."
+        "Input accuracy is unverified. Approximate development physics; not validated against real telemetry."
     ]
     if not optimization["converged"]:
         warnings.append("Racing-line iteration limit reached; best feasible line retained.")
     if not profile["converged"]:
         warnings.append("Speed envelope iteration limit reached.")
+    if profile["maxDemandRatio"] > 1.015:
+        warnings.append("Integrated force demand exceeds numerical tolerance; refine track resolution.")
+    if setup.solver == "lap-time":
+        warnings.append(
+            "Local lap-time search has a fixed candidate budget; no global optimum is established."
+        )
     return dict(
         schemaVersion=1,
         trackId=track.id,
@@ -275,6 +369,11 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         sectors=sectors,
         corners=corners,
         optimization=optimization,
+        numericalChecks=dict(
+            speedConverged=profile["converged"],
+            maxDemandRatio=profile["maxDemandRatio"],
+            demandTolerance=1.015,
+        ),
         warnings=warnings,
         computationMs=round((time.perf_counter() - started) * 1000, 1),
     )

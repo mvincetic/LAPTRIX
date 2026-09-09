@@ -9,11 +9,11 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 12 tests pass.
-- Python numerical/API tests: 26 tests pass.
-- Playwright: six browser journeys pass against running local services.
+- Python numerical/API tests: 41 tests pass.
+- Playwright: seven browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.27 MB JavaScript / 351 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- The first GitHub Actions run passed; subsequent working-branch pushes rerun CI.
+- GitHub Actions passed the prior MVP commits; the solver milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -30,6 +30,15 @@ layers/cameras, time/distance graph views, export, backend failure/retry, valid 
 invalid imports, and explicit audio activation. Numerical tests include the
 analytical circle, full lap seam and integration, grip/RPM/brake constraints,
 line bounds, setup extremes and changing the start/finish sample.
+
+The solver continuation adds a real lap-time refinement journey, including API
+gain accounting, authoritative corner seeking, JSON diagnostics export and saved
+mode/reference restoration. All seven journeys pass. Refinement screenshots were
+captured at 1600, 1280, 900 and 390 px widths with no runtime console errors or
+horizontal overflow. The desktop, mobile and corner-inspection images were opened
+and reviewed: the solver explanation, seed gain and selected corner remain visible.
+`artifacts/refinement-*.png` preserves local evidence. The five-resolution numerical
+study is summarized, including its accuracy caveat, in SOLVER_STUDY.md.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.
@@ -48,6 +57,11 @@ was available. Ordinary browser controls are independent of that optional API.
 - Kept temperature keyboard entry intact, applying allowed-range bounds on field exit.
 - Tightened optimizer convergence after an 87 ms start-location sensitivity;
   the checked rotated case now differs by less than 1 ms.
+- Replaced the curvature iteration heuristic with a sparse active-set solve after
+  a finer grid exhausted the old iteration budget. Distance-integrated
+  regularization and nonuniform derivatives make the objective consistent across grids.
+- Enforced braking capacity at the segment start after a zero-downforce test exposed
+  a force-demand overshoot. Local refinement accepts only checked improvements.
 - Kept slider-test expectations at the control's documented 0.01 s step while the
   canonical clock and displayed telemetry retain their original precision.
 
