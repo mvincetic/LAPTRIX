@@ -1,4 +1,8 @@
-import type { Lap, Track } from "../../../packages/shared/schema";
+import {
+  isTimingReference,
+  type Reference,
+  type Track,
+} from "../../../packages/shared/schema";
 import {
   normalizeTrack,
   trackFingerprint,
@@ -6,12 +10,13 @@ import {
 
 /** Restore only references of the same physical source, across arbitrary solver grids. */
 export async function restoreReference(
-  reference: Lap,
+  reference: Reference,
   track: Track,
-): Promise<Lap | null> {
+): Promise<Reference | null> {
   if (
     reference.trackId !== track.id ||
-    reference.sectors.length !== track.sectorFractions.length
+    (!isTimingReference(reference) &&
+      reference.sectors.length !== track.sectorFractions.length)
   )
     return null;
   const fingerprint = await trackFingerprint(track);
@@ -19,6 +24,7 @@ export async function restoreReference(
     return reference.alignment.trackFingerprint === fingerprint
       ? reference
       : null;
+  if (isTimingReference(reference)) return null;
   if (reference.samples.length !== track.points.length + 1) return null;
   const frame = normalizeTrack(track);
   // Old results used source indices. Verify their actual positions before attaching alignment.

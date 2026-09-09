@@ -1397,6 +1397,20 @@ select {
 .vehicle-source a {
   color: #0866ec;
 }
+.reference-provenance {
+  padding: 0 13px 10px;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #79869a;
+  overflow-wrap: anywhere;
+}
+.reference-provenance p {
+  margin: 4px 0 0;
+}
+.reference-provenance summary {
+  cursor: pointer;
+  color: #53647e;
+}
 @media (max-width: 650px) {
   .vehicle-details {
     grid-column: 1 / -1;

@@ -5,9 +5,14 @@ import {
   lapSchema,
   trackSchema,
   type Lap,
+  type TimingReference,
 } from "../../packages/shared/schema";
 import { trackFingerprint } from "../../packages/track-engine";
-import { cornerDelta, lapDeltaAt } from "../../packages/telemetry";
+import {
+  cornerDelta,
+  lapDeltaAt,
+  referenceSectorTimes,
+} from "../../packages/telemetry";
 import { restoreReference } from "../../apps/web/src/reference";
 
 const fingerprint =
@@ -70,6 +75,32 @@ function lap(progress: number[], times: number[]): Lap {
 }
 
 describe("physical track alignment across solver grids", () => {
+  it("uses current physical sector gates for timing-only references without inventing channels", () => {
+    const current = lap([0, 0.2, 0.6, 1], [0, 4, 8, 12]);
+    current.samples[1].distance = 10;
+    current.samples[2].distance = 80;
+    const reference: TimingReference = {
+      format: "laptrix-timing-reference-v1",
+      label: "Independent timing",
+      vehicleLabel: "Test",
+      origin: "external-simulation",
+      source: "Hand-calculated test data",
+      trackId: track.id,
+      lapTime: 15,
+      units: { time: "s", progress: "fraction" },
+      alignment: {
+        trackFingerprint: fingerprint,
+        progress: [0, 0.1, 0.5, 0.8, 1],
+      },
+      samples: [0, 1, 5, 11, 15].map((time) => ({ time })),
+    };
+    const sectors = referenceSectorTimes(current, reference);
+    expect(sectors[0]).toBeCloseTo(30 / 7, 10);
+    expect(sectors[0]! + sectors[1]!).toBeCloseTo(15, 10);
+    reference.alignment.trackFingerprint = `sha256:${"0".repeat(64)}`;
+    expect(referenceSectorTimes(current, reference)).toEqual([null, null]);
+    expect(lapDeltaAt(current, reference, 50)).toBeNull();
+  });
   it("matches the Python fingerprint byte layout and notices changed geometry", async () => {
     expect(await trackFingerprint(track)).toBe(fingerprint);
     expect(await trackFingerprint({ ...track, name: "Another name" })).toBe(

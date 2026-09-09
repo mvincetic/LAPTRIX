@@ -6,11 +6,16 @@ import {
   BookmarkPlus,
   ChevronRight,
 } from "lucide-react";
-import type { Lap } from "../../../../packages/shared/schema";
+import {
+  isTimingReference,
+  type Lap,
+  type Reference,
+} from "../../../../packages/shared/schema";
 import {
   cornerDelta,
   formatTime,
   signed,
+  referenceSectorTimes,
 } from "../../../../packages/telemetry";
 export function Analysis({
   lap,
@@ -23,7 +28,7 @@ export function Analysis({
   selectedCorner,
 }: {
   lap: Lap | null;
-  reference: Lap | null;
+  reference: Reference | null;
   currentVehicleName?: string;
   referenceVehicleName?: string;
   onReference: () => void;
@@ -45,6 +50,7 @@ export function Analysis({
       </aside>
     );
   const delta = reference ? lap.lapTime - reference.lapTime : null;
+  const referenceSectors = referenceSectorTimes(lap, reference);
   const corner = lap.corners.find((c) => c.id === selectedCorner);
   const refinement = lap.optimization.refinement;
   const checks = lap.numericalChecks;
@@ -115,7 +121,8 @@ export function Analysis({
           </thead>
           <tbody>
             {lap.sectors.map((s, i) => {
-              const d = reference ? s.time - reference.sectors[i].time : null;
+              const r = referenceSectors[i];
+              const d = r === null ? null : s.time - r;
               return (
                 <tr key={s.id}>
                   <td>S{s.id}</td>
@@ -267,7 +274,7 @@ export function Analysis({
         </div>
         <div className="sector-bars">
           {lap.sectors.map((s, i) => {
-            const r = reference?.sectors[i].time,
+            const r = referenceSectors[i],
               max = Math.max(s.time, r ?? 0) * 1.2,
               d = r ? s.time - r : null;
             return (
@@ -293,7 +300,9 @@ export function Analysis({
         <div className="comparison-foot">
           <span data-testid="reference-vehicle">
             {reference
-              ? `Reference: ${referenceVehicleName ?? reference.vehicleId} · ${reference.setup.solver === "centerline" ? "centerline" : reference.setup.solver === "lap-time" ? "lap-time refinement" : "minimum curvature"}`
+              ? isTimingReference(reference)
+                ? `Reference: ${reference.label} · ${reference.vehicleLabel}`
+                : `Reference: ${referenceVehicleName ?? reference.vehicleId} · ${reference.setup.solver === "centerline" ? "centerline" : reference.setup.solver === "lap-time" ? "lap-time refinement" : "minimum curvature"}`
               : "No reference selected"}
           </span>
           {delta !== null && (
@@ -302,6 +311,28 @@ export function Analysis({
             </strong>
           )}
         </div>
+        {reference && isTimingReference(reference) && (
+          <details className="reference-provenance">
+            <summary>
+              {reference.origin === "recorded"
+                ? "Imported recorded timing"
+                : "Imported simulation timing"}{" "}
+              · {reference.samples.length.toLocaleString()} points
+            </summary>
+            <p>Source declared by file: {reference.source}</p>
+            <p>
+              {reference.samples.length.toLocaleString()} timing points ·
+              seconds · linear interpolation along source progress
+            </p>
+          </details>
+        )}
+        {reference &&
+          !isTimingReference(reference) &&
+          reference.referenceImport && (
+            <div className="reference-provenance">
+              Imported simulation export · {reference.referenceImport.fileName}
+            </div>
+          )}
       </section>
       <section className="panel insights">
         <header className="panel-heading">

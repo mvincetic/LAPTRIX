@@ -15,16 +15,22 @@ import {
 import {
   catalogSchema,
   defaultSetup,
-  lapSchema,
+  parseReference,
+  isTimingReference,
   setupSchema,
   trackSchema,
   type Catalog,
   type Lap,
+  type Reference,
   type Setup,
   type Track,
 } from "../../../packages/shared/schema";
 import { normalizeTrack } from "../../../packages/track-engine";
-import { PlaybackClock, interpolate } from "../../../packages/telemetry";
+import {
+  PlaybackClock,
+  interpolate,
+  formatTime,
+} from "../../../packages/telemetry";
 import { TelemetryAudioEngine } from "../../../packages/audio-engine";
 import { getCatalog, runSimulation } from "./api";
 import { TrackView } from "./components/TrackView";
@@ -53,14 +59,18 @@ export function App() {
     [vehicleId, setVehicleId] = useState("formula-development");
   const [setup, setSetup] = useState<Setup>(defaultSetup),
     [lap, setLap] = useState<Lap | null>(null),
-    [reference, setReference] = useState<Lap | null>(null);
+    [reference, setReference] = useState<Reference | null>(null);
   const [busy, setBusy] = useState(true),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [selectedCorner, setSelectedCorner] = useState<number | null>(null),
     [menu, setMenu] = useState(false),
     [audio, setAudio] = useState(false);
+  const [errorAction, setErrorAction] = useState<"retry" | "import-reference">(
+    "retry",
+  );
   const fileInput = useRef<HTMLInputElement>(null),
+    referenceInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
   useLapTools(lap, clock);
@@ -74,6 +84,7 @@ export function App() {
       const id = ++generation.current;
       setBusy(true);
       setError("");
+      setErrorAction("retry");
       clock.play(false);
       try {
         const custom = customTracks.current.has(selectedTrack.id);
@@ -140,7 +151,7 @@ export function App() {
         let chosen = parsed.tracks[0],
           initialSetup = defaultSetup,
           chosenVehicle = parsed.vehicles[0].id;
-        let restoredReference: Lap | null = null;
+        let restoredReference: Reference | null = null;
         try {
           const raw = localStorage.getItem(storageKey);
           if (raw) {
@@ -162,9 +173,8 @@ export function App() {
               chosen = imported;
             }
             if (saved.reference) {
-              const ref = lapSchema.parse(saved.reference);
+              const ref = parseReference(saved.reference);
               restoredReference = await restoreReference(ref, chosen);
-              if (restoredReference) setReference(restoredReference);
             }
             setNotice("Saved local project restored");
           }
@@ -176,6 +186,7 @@ export function App() {
           setNotice("Saved project could not be read. Default setup loaded.");
         }
         if (!active) return;
+        setReference(restoredReference);
         setCatalog(parsed);
         setTrack(chosen);
         setVehicleId(chosenVehicle);
@@ -266,11 +277,48 @@ export function App() {
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const importReference = async (file: File) => {
+    if (!track) return;
+    const currentGeneration = generation.current;
+    try {
+      if (file.size > 5_000_000)
+        throw new Error("Reference file must be smaller than 5 MB.");
+      const parsed = parseReference(JSON.parse(await file.text()));
+      const restored = await restoreReference(parsed, track);
+      if (!restored)
+        throw new Error(
+          "Reference does not match this source track. Use its original track and start/finish alignment.",
+        );
+      if (generation.current !== currentGeneration)
+        throw new Error(
+          "The workspace changed during import. Import the reference again.",
+        );
+      setReference(
+        isTimingReference(restored)
+          ? restored
+          : {
+              ...restored,
+              referenceImport: { fileName: file.name.slice(0, 255) },
+            },
+      );
+      setError("");
+      setMenu(false);
+      setNotice("Reference imported · current simulation retained");
+    } catch (e) {
+      setErrorAction("import-reference");
+      setError(
+        `Reference import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current reference kept.`,
+      );
+      setMenu(false);
+    }
+  };
   const resultVehicle =
     lap?.vehicle ?? catalog?.vehicles.find((v) => v.id === lap?.vehicleId);
   const referenceVehicle =
-    reference?.vehicle ??
-    catalog?.vehicles.find((v) => v.id === reference?.vehicleId);
+    reference && !isTimingReference(reference)
+      ? (reference.vehicle ??
+        catalog?.vehicles.find((v) => v.id === reference.vehicleId))
+      : undefined;
   const simulationTrack = useMemo(
     () =>
       track && lap?.sampling
@@ -391,6 +439,44 @@ export function App() {
                     Import track JSON
                   </button>
                   <button
+                    disabled={!track || busy}
+                    onClick={() => referenceInput.current?.click()}
+                  >
+                    <Upload size={14} /> Import reference JSON
+                  </button>
+                  <button
+                    disabled={!lap?.alignment}
+                    onClick={() => {
+                      if (lap?.alignment)
+                        download(
+                          "laptrix-timing-reference.json",
+                          JSON.stringify(
+                            {
+                              format: "laptrix-timing-reference-v1",
+                              label: `${resultVehicle?.name ?? lap.vehicleId} · ${formatTime(lap.lapTime)}`,
+                              vehicleLabel:
+                                resultVehicle?.name ?? lap.vehicleId,
+                              origin: "external-simulation",
+                              source:
+                                "LAPTRIX Development Physics Model; synthetic inputs, not measured telemetry.",
+                              trackId: lap.trackId,
+                              lapTime: lap.lapTime,
+                              units: { time: "s", progress: "fraction" },
+                              alignment: lap.alignment,
+                              samples: lap.samples.map((s) => ({
+                                time: s.time,
+                              })),
+                            },
+                            null,
+                            2,
+                          ),
+                        );
+                      setMenu(false);
+                    }}
+                  >
+                    <Download size={14} /> Export timing reference
+                  </button>
+                  <button
                     disabled={!lap}
                     onClick={() => {
                       if (lap)
@@ -462,6 +548,18 @@ export function App() {
             e.target.value = "";
           }}
         />
+        <input
+          ref={referenceInput}
+          type="file"
+          accept=".json,application/json"
+          hidden
+          aria-label="Import reference file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void importReference(file);
+            e.target.value = "";
+          }}
+        />
       </header>
       <div className="workspace-bar">
         <div>
@@ -479,11 +577,15 @@ export function App() {
           <span>{error}</span>
           <button
             onClick={() => {
-              if (track) void run(track, vehicleId, setup);
+              if (errorAction === "import-reference")
+                referenceInput.current?.click();
+              else if (track) void run(track, vehicleId, setup);
               else window.location.reload();
             }}
           >
-            Retry
+            {errorAction === "import-reference"
+              ? "Import reference again"
+              : "Retry"}
           </button>
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={15} />

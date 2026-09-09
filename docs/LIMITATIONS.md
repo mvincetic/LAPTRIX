@@ -22,6 +22,11 @@
   Seam-adjacent event windows are clipped to the canonical lap interval.
 - Track imports accept local JSON only. GPX/GeoJSON conversion, self-intersection
   validation, bridges and surveyed terrain are not implemented.
+- Reference imports accept native simulation JSON or explicitly source-aligned
+  timing JSON. GPS alignment and generic logger CSV conversion are not implemented.
+  Imported timing origin is declared by its file and is not independently verified;
+  sparse samples limit corner detail. Reference channels do not replace simulation
+  graphs, ghost playback or audio.
 - Terrain and trees are contextual generated scenery. The ghost is intentionally
   enlarged three times for engineering visibility, not a physically scaled asset.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.

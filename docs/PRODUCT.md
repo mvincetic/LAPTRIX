@@ -10,6 +10,9 @@ and GT development profiles and dry conditions. Users can compare a setup or veh
 reference, inspect individual corners, play a telemetry-driven ghost, scrub the
 lap, save settings on their device and export results. Track JSON import extends
 the same generic pipeline rather than adding track-specific UI logic.
+References can also come from a LAPTRIX export or explicitly aligned external
+timing JSON. Imported timing keeps its declared provenance and does not invent
+missing measured channels or replace the simulation's playback.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

@@ -45,3 +45,8 @@ shows base/run mass, power, aero, grip, braking and drivetrain values followed b
 assumptions and source links. The lap result and reference footer identify their
 own vehicle, including during a failed change. Original formula/coupe meshes share
 the same telemetry position and grade; both remain visibly schematic at 3× scale.
+
+Reference import/export lives in Additional actions. The comparison footer exposes
+imported source, declared origin and timing resolution, using wrapped text. Invalid
+files retain the prior comparison and present an import-specific retry. Timing-only
+references contribute comparison intervals without inserting invented graph traces.

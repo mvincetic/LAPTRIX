@@ -40,5 +40,6 @@ can be migrated only after verifying their positions against source points and
 their recorded lateral offsets. Unrelated geometry with a reused ID is rejected.
 
 Sector fractions retain the v1 definition: fractions of each solved racing-line
-distance. They are not surveyed fixed-position timing gates. Sampling, alignment
+distance. Reference sectors are now interpolated at those same source positions,
+so comparisons use matching physical intervals. They are not surveyed timing gates. Sampling, alignment
 and better numerical consistency do not establish real-world physics accuracy.

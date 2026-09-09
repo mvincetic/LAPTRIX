@@ -1,4 +1,10 @@
-import type { Corner, Lap, Sample } from "../shared/schema";
+import {
+  isTimingReference,
+  type Corner,
+  type Lap,
+  type Reference,
+  type Sample,
+} from "../shared/schema";
 
 function interpolateValues(axis: number[], values: number[], at: number) {
   if (!Number.isFinite(at)) throw new Error("Alignment cursor must be finite");
@@ -19,7 +25,7 @@ function interpolateValues(axis: number[], values: number[], at: number) {
 
 export function cornerDelta(
   current: Lap,
-  reference: Lap | null,
+  reference: Reference | null,
   corner: Corner,
 ) {
   if (
@@ -69,7 +75,11 @@ export function interpolate(
   }
   return result;
 }
-export function lapDeltaAt(current: Lap, reference: Lap, distance: number) {
+export function lapDeltaAt(
+  current: Lap,
+  reference: Reference,
+  distance: number,
+): number | null {
   if (
     current.alignment &&
     reference.alignment &&
@@ -89,12 +99,41 @@ export function lapDeltaAt(current: Lap, reference: Lap, distance: number) {
       )
     );
   }
+  if (isTimingReference(reference)) return null;
   // Match normalized progress rather than raw racing-line length for comparable laps.
   const fraction = Math.max(0, Math.min(1, distance / current.length));
   return (
     interpolate(current.samples, fraction * current.length, "distance").time -
     interpolate(reference.samples, fraction * reference.length, "distance").time
   );
+}
+
+/** Compare the same physical intervals, including references with unrelated sample counts. */
+export function referenceSectorTimes(
+  current: Lap,
+  reference: Reference | null,
+): (number | null)[] {
+  if (!reference) return current.sectors.map(() => null);
+  if (
+    current.alignment &&
+    reference.alignment &&
+    current.alignment.trackFingerprint === reference.alignment.trackFingerprint
+  ) {
+    const distance = current.samples.map((s) => s.distance);
+    const times = reference.samples.map((s) => s.time);
+    const atDistance = (at: number) =>
+      interpolateValues(
+        reference.alignment!.progress,
+        times,
+        interpolateValues(distance, current.alignment!.progress, at),
+      );
+    return current.sectors.map(
+      (s) => atDistance(s.endDistance) - atDistance(s.startDistance),
+    );
+  }
+  return isTimingReference(reference)
+    ? current.sectors.map(() => null)
+    : current.sectors.map((_, i) => reference.sectors[i]?.time ?? null);
 }
 export function formatTime(seconds: number) {
   const ms = Math.round(seconds * 1000);

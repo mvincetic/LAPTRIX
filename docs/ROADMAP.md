@@ -32,11 +32,15 @@ immutable result snapshots. A public 2D track dataset was evaluated; it does not
 provide the independently documented elevation needed for a bundled 3D circuit.
 Independent uphill/downhill work-balance and exported actuator-energy checks now
 cover steep grades and both development profiles; see PHYSICS_BENCHMARKS.md.
+Reference-file import now accepts native simulation exports and explicit external
+timing data with units/provenance/source checks. Sector and corner comparisons
+use matched physical intervals. Measured channel overlays and automatic logger
+alignment remain separate future work; imported timing never fabricates channels.
 
 ## Next highest-value work
 
-1. Add user telemetry import using the established source-alignment contract plus
-   explicit units, provenance and import validation.
+1. Improve reference analysis with a synchronized time-delta trace and inspectable
+   provenance; keep imported timing distinct from simulated channels.
 2. Evaluate measured calibration data and reusable 3D track geometry; add transient
    dynamics only with independent benchmarks and suitable parameter sources.
 
@@ -44,8 +48,8 @@ cover steep grades and both development profiles; see PHYSICS_BENCHMARKS.md.
 
 The local numerical suite contains 69 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Nineteen TypeScript tests cover
-geometry, alignment, vehicle contracts and clock/data invariants. Ten browser journeys cover the
+extremes and analytical work/grip benchmarks. Thirty-two TypeScript tests cover
+geometry, alignment, reference validation, vehicle contracts and clock/data invariants. Twelve browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

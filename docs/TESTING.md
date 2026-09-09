@@ -1,5 +1,12 @@
 # Testing and validation
 
+Reference tests reject wrong units, missing provenance, incomplete intervals,
+nonmonotonic time/progress, mismatched source geometry and malformed native exports.
+A hand-calculated example checks physical sector-gate interpolation with unequal
+grids. Browser journeys import native and timing-only files, verify deltas, save
+and restore, switch vehicles, and reject invalid files without losing the current
+lap/reference. File inputs are located by their distinct accessible labels.
+
 Independent grade/energy checks use long constant-grade arcs with separately
 root-solved steady speeds, plus exported actuator work over a closed elevation lap.
 Both uphill/downhill signs and both production vehicles are covered. Their limits

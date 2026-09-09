@@ -30,9 +30,10 @@ and looping change this clock. The ghost reads it each 3D frame; graph subscribe
 receive approximately 30 Hz updates. After a new simulation the clock resets and
 pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
 
-Comparison uses the same circuit. Sector differences compare the configured sector
-fractions. The generic distance comparison helper maps normalized lap progress
-when different optimized lines have different lengths. Corner deltas compare the
+Comparison uses the same source circuit. Reference sector times interpolate at
+the current result's physical gates using source alignment. The distance helper
+also uses source progress, with normalized-distance fallback for old native laps
+without alignment. Corner deltas compare the
 same entry/exit source-track progress via `alignment`, interpolating the reference
 time even when sample counts differ. Detected corner numbering need not be identical.
 Baseline and current setup
@@ -41,8 +42,9 @@ units, even when the dashboard shows km/h or percentages.
 
 Chart domains derive from the current lap, including negative/high elevations and
 different RPM/gear limits. Sector markers use the selected time or distance axis.
-Stored references are validated for strict ordering, closed endpoints, sector
-partitioning and valid corner indices before use.
+Stored native references are validated for strict ordering, closed endpoints, sector
+partitioning and valid corner indices before use. Timing-only references validate
+their separate complete time/progress contract; they carry no invented channels.
 
 Lap-time mode adds `optimization.refinement`: `seedLapTime`, `gainSeconds`,
 `evaluations`, `evaluationBudget`, `acceptedSteps`, `rejectedCandidates` and `status`
@@ -67,3 +69,10 @@ comparison permits different vehicles on the same source. Results preserve the
 snapshot used at calculation time, so later catalog changes cannot rename or
 replace those inputs. Setup and vehicle changes are both marked pending until a
 new solve succeeds. The reference footer identifies its vehicle and solver mode.
+
+`Reference` is now a union of native `Lap` and `TimingReference`. The latter carries
+explicit seconds/fraction units, declared origin and source description plus paired
+time/progress arrays. `parseReference` validates either format. Native reference
+imports record `referenceImport.fileName`; API-generated laps omit it. Both formats
+restore against the same source identity. See REFERENCE_IMPORT.md for the file
+contract and the limits of declared logger alignment.

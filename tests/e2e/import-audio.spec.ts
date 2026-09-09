@@ -6,7 +6,7 @@ test("valid and invalid custom track imports preserve a usable project", async (
 }) => {
   await page.goto("/");
   await expect(page.getByTestId("lap-time")).toBeVisible();
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import track file", { exact: true }).setInputFiles({
     name: "invalid.json",
     mimeType: "application/json",
     buffer: Buffer.from('{"points":[]}'),
@@ -20,7 +20,7 @@ test("valid and invalid custom track imports preserve a usable project", async (
     id: "browser-imported",
     name: "Imported elevation loop",
   };
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import track file", { exact: true }).setInputFiles({
     name: "custom.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(imported)),

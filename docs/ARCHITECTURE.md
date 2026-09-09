@@ -58,7 +58,11 @@ snapshot fall back to the catalog name or their stored vehicle ID.
 
 Device-local project state lives in versioned browser storage, with explicit Save.
 Telemetry exports remain on the user's device. Imports use the same validated
-custom-track contract. There is no account system, database or external telemetry.
+custom-track contract. Reference files are read and validated locally as native
+Lap or timing-only Reference data; they never pass through the simulation API.
+Common comparison functions interpolate their time arrays against source progress.
+Neither imported references nor metadata drive the canonical playback clock.
+There is no account system or database.
 
 Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
 may decorate the scene without defining track or physics. Neither track-specific

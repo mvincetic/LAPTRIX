@@ -1,5 +1,21 @@
 # Decision log
 
+## 2026-09-09 — Separate external timing reference contract
+
+**Decision:** Accept native Lap exports and a separate timing-only format with
+explicit units, provenance, source identity and complete paired time/progress.
+Use common interpolation for sector/corner comparisons; preserve simulation
+telemetry as the only ghost/graph/audio input.
+**Alternatives:** Fabricating missing measured channels to satisfy the Lap schema,
+or silently treating normalized logger distance as source-track correspondence.
+**Reasoning:** A timing file can support useful comparison without asserting
+unavailable vehicle physics, controls or geometry. Source identity and alignment
+accuracy are separate claims; the file declares the latter.
+**Consequences:** Imported files are browser-local and capped at 5 MB. Reference
+sectors now use the current lap's source gates rather than raw reference-sector
+indices. Native imports retain snapshots and an imported filename. GPS map matching,
+generic CSV conversion and measured channel overlays remain unimplemented.
+
 ## 2026-09-09 — Documented GT profile and persistent vehicle references
 
 **Decision:** Add a synthetic GT profile with selected published numerical anchors

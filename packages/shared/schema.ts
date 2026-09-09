@@ -161,6 +161,7 @@ export const lapSchema = z
     trackId: z.string(),
     vehicleId: z.string(),
     vehicle: vehicleSchema.optional(),
+    referenceImport: z.object({ fileName: z.string().max(255) }).optional(),
     setup: setupSchema,
     model: z.string(),
     lapTime: finite.positive(),
@@ -214,7 +215,7 @@ export const lapSchema = z
         progress: z.array(finite.min(0).max(1)).min(41),
       })
       .optional(),
-    samples: z.array(sampleSchema).min(41),
+    samples: z.array(sampleSchema).min(41).max(2001),
     sectors: z.array(
       z.object({
         id: finite.int(),
@@ -245,6 +246,7 @@ export const lapSchema = z
     ),
   })
   .superRefine((lap, ctx) => {
+    if (lap.samples.length < 41) return;
     if (lap.vehicle && lap.vehicle.id !== lap.vehicleId)
       ctx.addIssue({
         code: "custom",
@@ -347,6 +349,71 @@ export const lapSchema = z
   });
 export type Lap = z.infer<typeof lapSchema>;
 export type Corner = Lap["corners"][number];
+
+/** External timing has no invented position, controls, solver diagnostics or vehicle model. */
+export const timingReferenceSchema = z
+  .object({
+    format: z.literal("laptrix-timing-reference-v1"),
+    label: z.string().min(1).max(100),
+    vehicleLabel: z.string().min(1).max(100),
+    origin: z.enum(["recorded", "external-simulation"]),
+    source: z.string().min(1).max(500),
+    trackId: z.string().regex(/^[a-z0-9-]{1,64}$/),
+    lapTime: finite.positive().max(86400),
+    units: z
+      .object({ time: z.literal("s"), progress: z.literal("fraction") })
+      .strict(),
+    alignment: z
+      .object({
+        trackFingerprint: z.string().regex(/^sha256:[0-9a-f]{64}$/),
+        progress: z.array(finite.min(0).max(1)).min(2).max(20000),
+      })
+      .strict(),
+    samples: z
+      .array(z.object({ time: finite.nonnegative() }).strict())
+      .min(2)
+      .max(20000),
+  })
+  .strict()
+  .superRefine((ref, ctx) => {
+    const progress = ref.alignment.progress;
+    if (!ref.samples.length || !progress.length) return;
+    if (
+      ref.samples.length !== progress.length ||
+      progress[0] !== 0 ||
+      progress.at(-1) !== 1 ||
+      ref.samples[0].time !== 0 ||
+      Math.abs(ref.samples.at(-1)!.time - ref.lapTime) > 1e-5 ||
+      progress.some((p, i) => i > 0 && p <= progress[i - 1]) ||
+      ref.samples.some((s, i) => i > 0 && s.time <= ref.samples[i - 1].time)
+    )
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Reference time and source progress must strictly increase through one complete lap",
+      });
+  });
+export type TimingReference = z.infer<typeof timingReferenceSchema>;
+export type Reference = Lap | TimingReference;
+export const isTimingReference = (ref: Reference): ref is TimingReference =>
+  "format" in ref;
+export function parseReference(value: unknown): Reference {
+  const schema =
+    value && typeof value === "object" && "format" in value
+      ? timingReferenceSchema
+      : lapSchema;
+  const parsed = schema.safeParse(value);
+  if (!parsed.success)
+    throw new Error(
+      parsed.error.issues
+        .slice(0, 2)
+        .map(
+          (issue) => `${issue.path.join(".") || "Reference"}: ${issue.message}`,
+        )
+        .join("; "),
+    );
+  return parsed.data;
+}
 export const catalogSchema = z.object({
   tracks: z.array(trackSchema).min(1),
   vehicles: z.array(vehicleSchema).min(1),

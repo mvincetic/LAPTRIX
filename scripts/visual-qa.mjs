@@ -1,5 +1,6 @@
 /* global document */
 import { chromium } from "@playwright/test";
+import { Buffer } from "node:buffer";
 import { mkdir } from "node:fs/promises";
 await mkdir("artifacts", { recursive: true });
 const browser = await chromium.launch({
@@ -21,7 +22,8 @@ await page.getByTestId("lap-time").waitFor({ timeout: 60000 });
 const refined = process.argv.includes("--refinement");
 const sampled = process.argv.includes("--sampling");
 const gt = process.argv.includes("--gt");
-const prefix = `${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+const imported = process.argv.includes("--reference");
+const prefix = `${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
 if (gt) {
   await page
     .getByRole("button", { name: "Set reference", exact: true })
@@ -56,11 +58,49 @@ if (refined) {
     .click();
   await page.getByTestId("refinement-summary").waitFor({ timeout: 60000 });
 }
+if (imported) {
+  const result = await page.request.post("http://127.0.0.1:5173/api/simulate", {
+    data: { vehicleId: "formula-development" },
+  });
+  const lap = await result.json();
+  const reference = {
+    format: "laptrix-timing-reference-v1",
+    label: "Formula baseline · imported",
+    vehicleLabel: "Formula Development 01",
+    origin: "external-simulation",
+    source:
+      "LAPTRIX Formula Development 01 export; synthetic development model.",
+    trackId: lap.trackId,
+    lapTime: lap.lapTime,
+    units: { time: "s", progress: "fraction" },
+    alignment: lap.alignment,
+    samples: lap.samples.map((s) => ({ time: s.time })),
+  };
+  await page
+    .getByLabel("Import reference file", { exact: true })
+    .setInputFiles({
+      name: "formula-reference.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(reference)),
+    });
+  await page
+    .getByTestId("reference-vehicle")
+    .filter({ hasText: "Formula baseline · imported" })
+    .waitFor();
+}
 await page.waitForTimeout(2500);
 await page.screenshot({
   path: `artifacts/${prefix}desktop.png`,
   fullPage: true,
 });
+if (imported) {
+  await page.locator("details.reference-provenance summary").click();
+  await page.screenshot({
+    path: `artifacts/${prefix}source-details.png`,
+    fullPage: true,
+  });
+  await page.locator("details.reference-provenance summary").click();
+}
 for (const width of [1280, 900]) {
   await page.setViewportSize({ width, height: 900 });
   await page.waitForTimeout(500);

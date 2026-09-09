@@ -44,6 +44,7 @@ the last completed result remains visible if a solve fails.
 - Orbit, top and chase cameras; configurable analysis layers.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
+- Import simulation or aligned external timing references with explicit source/units checks.
 
 ## Checks
 
@@ -54,6 +55,7 @@ npm run test:e2e
 node scripts/visual-qa.mjs
 node scripts/visual-qa.mjs --refinement
 node scripts/visual-qa.mjs --gt
+node scripts/visual-qa.mjs --gt --reference
 npm run study:solver
 npm run study:sampling
 ```
@@ -70,6 +72,9 @@ unchanged. See [SAMPLING](docs/SAMPLING.md) for the grid and reference contract.
 Changing **Car profile** runs that vehicle and retains the selected reference.
 Expand **Vehicle data & assumptions** to inspect model parameters and specification
 anchors. Both vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md).
+**Import reference JSON** accepts LAPTRIX exports or the timing-only external
+format. **Export timing reference** provides a working format example. See
+[REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

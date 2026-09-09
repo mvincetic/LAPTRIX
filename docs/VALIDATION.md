@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 19 tests pass.
+- Vitest: 32 tests pass.
 - Python numerical/API tests: 69 tests pass.
-- Playwright: ten browser journeys pass against running local services.
+- Playwright: twelve browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.28 MB JavaScript / 354 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `87b1543`; each following milestone reruns CI on push.
+- GitHub Actions passed through `b87ee24`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -61,6 +61,17 @@ The full lint, typecheck, unit/API and build gate passed again. This benchmark-o
 milestone changes no application behavior; it retains the ten passing browser
 journeys and reviewed vehicle UI from `226b88d`. PHYSICS_BENCHMARKS.md specifies
 the independent equations, exported-control reconstruction and tolerances.
+
+Reference import adds two browser journeys and thirteen TypeScript cases. The
+existing track-import test was updated to target its accessible file-input label
+after the second input was added; its focused rerun passes, as do all eleven other
+journeys. The final collapsible provenance UI passed both affected import journeys
+again, with lint/typecheck/build also passing. Native and timing-only imports,
+wrong units/source identity, reference preservation and save/reload are covered.
+`--gt --reference` visual QA reports zero runtime errors and no horizontal overflow
+at 1600, 1280, 900 and 390 px. Final desktop, expanded provenance and mobile images
+were opened and reviewed in `artifacts/reference-gt-*.png`. The source disclosure
+is readable and does not permanently consume the corner table's vertical space.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.
