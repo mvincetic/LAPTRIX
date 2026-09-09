@@ -9,11 +9,11 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 38 tests pass.
-- Python numerical/API tests: 70 tests pass.
+- Python numerical/API tests: 77 tests pass.
 - Playwright: eighteen browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.30 MB JavaScript / 359 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `7a616b4`; each following milestone reruns CI on push.
+- GitHub Actions passed through `cecee0b`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -111,7 +111,20 @@ Desktop/mobile screenshots `artifacts/sweep-gt-*.png` were opened and reviewed;
 the export and application controls remain visible. The GT study correctly
 excludes three force-demand failures and selects aero -2 at 91.398 seconds.
 Inspection traces their excess drive request to the uniform power lookup crossing
-gear redlines; correcting that approximation is the next numerical milestone.
+gear redlines; that finding motivated the following numerical correction.
+
+Exact per-gear power evaluation adds seven Python regressions and passes the full
+77-case numerical suite, lint, typecheck and build. All five GT aero rows now pass
+with force-demand ratios within floating-point roundoff of 1.0; the best checked
+row is aero -5 at 91.316 seconds. The existing 1.015 acceptance tolerance was not
+changed. Formula/GT source and 3 m refinement also converge and pass force checks.
+Refreshed GT study screenshots were opened and reviewed at desktop/mobile; export,
+selection and application remain usable without browser errors or overflow.
+One browser study exceeded its 15-second assertion while competing with a second
+software-rendered browser. Its multi-request completion wait is now 30 seconds;
+visual QA and the browser regression suite should run separately on this machine.
+The other 17 journeys passed in that run, and all three aero journeys passed on
+the isolated rerun with the corrected wait. Lint and typecheck also passed again.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

@@ -46,6 +46,7 @@ test("real aero runs keep other settings fixed and apply the fastest checked lap
     .click();
   await expect(dialog.getByTestId("aero-status")).toHaveText(
     "Comparison complete · 5 checked results",
+    { timeout: 30000 },
   );
   expect(results.map((lap) => lap.setup.aero)).toEqual([0, -5, -2, 2, 5]);
   for (const lap of results)
@@ -137,6 +138,7 @@ test("failed and numerically excluded runs cannot replace the workspace", async 
     .click();
   await expect(dialog.getByTestId("aero-status")).toHaveText(
     "Comparison complete · 0 checked results",
+    { timeout: 30000 },
   );
   await expect(
     dialog.getByRole("button", { name: "Apply selected result" }),

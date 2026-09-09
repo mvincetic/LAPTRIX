@@ -55,6 +55,13 @@ Longitudinal grip uses the residual of a friction circle after lateral demand.
 Acceleration is limited by interpolated power, 94% efficiency and grip; braking by
 the configured maximum and grip. Drag, a 0.015 rolling coefficient and gravity along
 the local gradient are included. The aerodynamic terms use the selected air density.
+Power is evaluated separately on each gear's piecewise-linear RPM curve before
+taking the maximum valid value. `drivetrain.py` precomputes interval slopes for
+scalar sweep evaluation. It preserves the discontinuity when a gear exceeds
+redline and the intersections between gear curves; it does not interpolate a
+coarse, uniformly sampled maximum-power envelope. Exported gear/RPM selection uses
+the equivalent vector calculation, with breakpoint and redline-side tests checking
+agreement. Both paths retain the same idle clamp and redline rules.
 Backward propagation also verifies start-node braking capacity with a bounded
 scalar solve; downstream grip alone can overestimate available deceleration.
 

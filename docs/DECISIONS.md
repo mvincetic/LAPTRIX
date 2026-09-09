@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Exact per-gear power inside the speed envelope
+
+**Decision:** Replace the uniform maximum-power lookup with scalar evaluation of
+each gear's piecewise-linear RPM curve, using precomputed slopes and interval
+search. **Alternative:** Increasing the lookup resolution or loosening demand
+tolerance. **Reasoning:** The GT aero study exposed up to 3.34% excess drive
+demand where the lookup bridged a redline drop. A denser grid still smooths a
+discontinuity. **Consequences:** The sweep and exported drivetrain now agree at
+knots, redline sides and gear crossings; existing 1.015 force tolerance is unchanged.
+Lap results may move slightly in either direction because the old approximation
+could both overstate and understate available power. Provenance includes the new
+drivetrain module, and recorded older references retain their original values.
+
 ## 2026-09-09 — Archive study evidence and solver identity
 
 **Decision:** Export a versioned local study record with source inputs, full Lap

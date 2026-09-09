@@ -8,8 +8,10 @@ being reduced to the simulation grid. Interpolation uses binary searches.
 
 The supplied circuit has 720 unique samples and each lap returns 721 telemetry
 samples. The baseline optimizer uses a sparse quadratic and active-set linear solves
-rather than numerical finite differences. A 512-point speed/power lookup avoids repeated gear evaluation
-inside envelope sweeps. Identical requests use a 24-entry backend LRU cache.
+rather than numerical finite differences. Scalar gear evaluation uses precomputed
+piecewise-linear RPM slopes and binary interval searches. This replaced the
+512-point maximum-power lookup after it overstated power across gear redlines.
+Identical requests use a 24-entry backend LRU cache.
 
 The 2026-09-09 grid study measured about 0.13 seconds for the 720-point curvature
 solve and 2.47 seconds including its optional 78-candidate lap-time search. At 2,000
@@ -36,3 +38,10 @@ Terrain nearest-sample interpolation is generated on track changes only. Large
 custom imports and small screens should be profiled before increasing resolution
 or tree counts. The current synthetic scenery is intentionally simple. Production
 optimization should follow measured frame time, memory and payload regressions.
+
+After exact gear-power evaluation, a local study measured Formula/GT source-grid
+curvature runs at 147/139 ms and source-grid refinement at 2.72/2.76 seconds.
+Refinement on the 3 m grid took 7.59/7.68 seconds. All six profiles converged with
+maximum force-demand ratios within floating-point roundoff of 1.0. These runs
+overlapped other validation activity and are observations, not a controlled
+performance comparison. Results are retained in `artifacts/exact-power-study.json`.

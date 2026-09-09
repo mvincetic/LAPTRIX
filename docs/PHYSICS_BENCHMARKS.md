@@ -27,6 +27,15 @@ Run `node scripts/python.mjs -m pytest tests/python/test_gradient_energy.py -q` 
 the five grade/energy cases. The full suite also covers line bounds, analytical
 quadratic solutions, setup response and both production drivetrains.
 
+`tests/python/test_drivetrain_envelope.py` adds seven regression cases. The scalar
+power evaluator agrees with the independent vector gear/RPM calculation over
+4,001 evenly spaced speeds, every power-curve breakpoint and both sides of all
+gear redlines for both vehicles. Five GT aero cases independently reconstruct
+wheel-force demand from endpoint kinetic energy, drag, rolling loss and exported
+grade; drive demand stays within exact available power to `1e-8` relative tolerance.
+The broader combined-force tolerance remains 1.015. The formerly failing GT rows
+now report maximum demand ratios within floating-point roundoff of 1.0.
+
 Remaining limits include fixed rolling resistance without slope-normal correction,
 no vertical-curvature load, constant friction, fixed aerodynamic coefficients and
 no transient suspension/tyre state. The grade equation intentionally tests that

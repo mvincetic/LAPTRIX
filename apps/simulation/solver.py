@@ -5,6 +5,7 @@ import time
 import numpy as np
 from scipy.signal import find_peaks
 
+from .drivetrain import available_power
 from .models import Setup, Track, Vehicle
 from .numerics import box_quadratic, curvature_quadratic
 from .provenance import solver_provenance
@@ -91,9 +92,8 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         max_speed, np.sqrt(0.98 * mu * G / np.maximum(k - 0.98 * mu * rho * lift / (2 * mass), 1e-6))
     )
     speeds = limit.copy()
-    # Power table avoids expensive per-node drivetrain interpolation inside sweeps.
-    speed_axis = np.linspace(0, max_speed, 512)
-    power_axis = vehicle_state(vehicle, speed_axis)[2]
+    # Evaluate each gear's curve exactly, preserving discontinuities at redline.
+    power_at_speed = available_power(vehicle)
     bias_efficiency = max(0.7, 1 - abs(setup.brakeBias - 56) * 0.012)
 
     def capacities(v, i):
@@ -101,7 +101,7 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         lateral = v * v * k[i]
         remaining = np.sqrt(max(0.0, grip * grip - lateral * lateral))
         resistance = rho * drag * v * v / (2 * mass) + 0.015 * G
-        drive = min(np.interp(v, speed_axis, power_axis) * 0.94 / (mass * max(v, 4)), remaining)
+        drive = min(power_at_speed(v) * 0.94 / (mass * max(v, 4)), remaining)
         brake = min(vehicle.maxBrakeG * G * bias_efficiency, remaining)
         return drive - resistance - G * grade[i], brake + resistance + G * grade[i]
 

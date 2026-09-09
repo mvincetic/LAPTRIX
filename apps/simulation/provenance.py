@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import scipy
 
-SOURCE_FILES = ("models.py", "numerics.py", "provenance.py", "sampling.py", "solver.py")
+SOURCE_FILES = ("drivetrain.py", "models.py", "numerics.py", "provenance.py", "sampling.py", "solver.py")
 
 
 def fingerprint_sources(sources: dict[str, str]) -> str:

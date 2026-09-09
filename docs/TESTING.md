@@ -61,7 +61,13 @@ power balance. TypeScript checks fingerprints, legacy migration and interpolatio
 between unequal sample arrays; rigid map transforms preserve the searched lap.
 
 Visual QA uses actual browser screenshots, reviewed by an agent, at desktop and
-mobile sizes. The initial pass found mobile topbar overflow and camera framing;
+mobile sizes.
+Run visual QA separately from the browser regression suite on machines using
+software WebGL. Simultaneous renderers can consume enough CPU to delay ordinary
+API/UI assertions. Aero-study completion waits allow 30 seconds for five sequential
+requests; other interaction assertions retain their ordinary timeout.
+
+The initial pass found mobile topbar overflow and camera framing;
 those became explicit responsive checks. The first physics pass found a bad
 speed-envelope update that collapsed speeds toward 1 m/s; the plausible-lap and
 analytical-circle tests protect against its recurrence.

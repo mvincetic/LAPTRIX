@@ -49,19 +49,20 @@ failed/unfinished states and timestamps. New laps identify the solver source and
 numerical runtime. A bounded review of RACECAR, BETTY and Marzaglia is recorded in
 CALIBRATION_DATA_EVALUATION.md; no suitable complete calibration/3D input was
 established and no external dataset was copied.
+The GT study subsequently exposed a coarse power-envelope interpolation error at
+gear redlines. Exact per-gear evaluation now removes it, with breakpoint agreement
+and independent integrated wheel-force checks across all five GT aero settings.
 
 ## Next highest-value work
 
-1. Correct drivetrain power interpolation around gear redlines: the GT study
-   exposes optimistic force demand of up to 3.34%, and correctly excludes those runs.
-2. Make timing-sector gates use fixed source positions, independent of racing-line
+1. Make timing-sector gates use fixed source positions, independent of racing-line
    length and sampling, while preserving native reference compatibility.
-3. Revisit measured calibration and reusable 3D data when complete inputs are
+2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
 ## Stabilization evidence
 
-The local numerical suite contains 70 passing tests, including coupled quadratic
+The local numerical suite contains 77 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Thirty-eight TypeScript tests cover
 geometry, alignment, project/reference validation, comparison eligibility, vehicle contracts and clock/data invariants. Eighteen browser journeys cover the
