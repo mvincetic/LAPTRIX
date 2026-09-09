@@ -9,6 +9,10 @@ export function ViewerToolsPanels({
   onLayers,
   ghost,
   onGhost,
+  referenceGhost,
+  onReferenceGhost,
+  referenceName,
+  referenceReason,
   mode,
   onMode,
 }: {
@@ -18,6 +22,10 @@ export function ViewerToolsPanels({
   onLayers: (value: ViewLayers) => void;
   ghost: boolean;
   onGhost: (value: boolean) => void;
+  referenceGhost: boolean;
+  onReferenceGhost: (value: boolean) => void;
+  referenceName: string | null;
+  referenceReason: string;
   mode: CameraMode;
   onMode: (value: CameraMode) => void;
 }) {
@@ -79,7 +87,7 @@ export function ViewerToolsPanels({
         className="viewer-popover"
       >
         <h3>
-          <Eye size={14} /> Telemetry ghost
+          <Eye size={14} /> Telemetry ghosts
         </h3>
         <label>
           <input
@@ -87,14 +95,27 @@ export function ViewerToolsPanels({
             checked={ghost}
             onChange={(e) => onGhost(e.target.checked)}
           />
-          Show ghost vehicle
+          Show current ghost
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={referenceGhost}
+            disabled={!referenceName}
+            onChange={(e) => onReferenceGhost(e.target.checked)}
+          />
+          Show reference ghost
         </label>
         <p>
-          Playback follows the calculated lap. Use the transport below to play
-          or seek.
+          {referenceName ? `Reference · ${referenceName}` : referenceReason}
+        </p>
+        <p>
+          {referenceName
+            ? "Both start together. Current-lap playback sets the duration; a finished reference stays at the line."
+            : "Playback follows the current calculated lap. Use the transport below to play or seek."}
         </p>
         <span className="tiny muted">
-          Vehicle shown at 3× scale for visibility.
+          Blue current · grey reference · vehicles shown at 3× scale.
         </span>
       </div>
       <div

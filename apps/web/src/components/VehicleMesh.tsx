@@ -1,7 +1,13 @@
 import type { Vehicle } from "../../../../packages/shared/schema";
 
 /** Original schematic geometry. Body style changes appearance, never simulation physics. */
-export function VehicleMesh({ vehicle }: { vehicle?: Vehicle }) {
+export function VehicleMesh({
+  vehicle,
+  color = "#0866ec",
+}: {
+  vehicle?: Vehicle;
+  color?: string;
+}) {
   const width = vehicle?.width ?? 2;
   const wheelbase = vehicle?.wheelbase ?? 3.6;
   const radius = vehicle?.wheelRadius ?? 0.34;
@@ -17,7 +23,7 @@ export function VehicleMesh({ vehicle }: { vehicle?: Vehicle }) {
             length,
           ]}
         />
-        <meshStandardMaterial color="#0866ec" metalness={0.3} roughness={0.3} />
+        <meshStandardMaterial color={color} metalness={0.3} roughness={0.3} />
       </mesh>
       {coupe ? (
         <>
@@ -31,7 +37,7 @@ export function VehicleMesh({ vehicle }: { vehicle?: Vehicle }) {
           </mesh>
           <mesh position={[0, 1.27, -0.2]}>
             <boxGeometry args={[width * 0.74, 0.06, length * 0.29]} />
-            <meshStandardMaterial color="#0866ec" />
+            <meshStandardMaterial color={color} />
           </mesh>
           {[-1, 1].map((side) => (
             <group key={side}>

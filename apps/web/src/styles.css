@@ -865,6 +865,18 @@ select {
   color: #c7d0da;
   margin: 0 3px;
 }
+.ghost-tag {
+  display: block;
+  padding: 2px 4px;
+  border: 1px solid;
+  border-radius: 3px;
+  background: #ffffffed;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+}
 .viewer-popover {
   position: absolute;
   right: 55px;

@@ -44,6 +44,11 @@ Cursor Data adds exact time/distance entry and numerical channel inspection.
 Inspect pauses playback at the entered position; invalid or unsent entries leave
 the clock unchanged. It reports the development model's channels and explicitly
 identifies vertical dynamics as unmodelled.
+An optional grey native-reference ghost compares vehicles on the same elapsed-time
+clock. Visibility is independent of the blue current ghost, and each uses its own
+vehicle snapshot. Timing-only files retain analytical comparison without a drawn
+vehicle. Current-lap playback determines the duration and a finished reference waits
+at the line; see GHOST_PLAYBACK.md.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

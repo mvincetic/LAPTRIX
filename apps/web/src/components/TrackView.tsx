@@ -15,7 +15,6 @@ import {
   BufferGeometry,
   Color,
   DoubleSide,
-  Group,
   Object3D,
   Vector3,
 } from "three";
@@ -27,8 +26,14 @@ import {
   Flag,
   MousePointer2,
 } from "lucide-react";
-import type { Lap, Track, Vehicle } from "../../../../packages/shared/schema";
-import { VehicleMesh } from "./VehicleMesh";
+import {
+  isTimingReference,
+  type Lap,
+  type Reference,
+  type Track,
+  type Vehicle,
+} from "../../../../packages/shared/schema";
+import { TelemetryGhost } from "./TelemetryGhost";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import {
@@ -39,6 +44,7 @@ import {
 import {
   formatTime,
   interpolate,
+  referenceGhostLap,
   type PlaybackClock,
 } from "../../../../packages/telemetry";
 
@@ -195,51 +201,6 @@ function Landscape({ track }: { track: Track }) {
   );
 }
 
-function Ghost({
-  lap,
-  clock,
-  marker,
-  vehicle,
-}: {
-  lap: Lap;
-  clock: PlaybackClock;
-  marker: boolean;
-  vehicle?: Vehicle;
-}) {
-  const ref = useRef<Group>(null);
-  useFrame(() => {
-    if (!ref.current) return;
-    const s = interpolate(lap.samples, clock.getSnapshot().time),
-      next = interpolate(
-        lap.samples,
-        (clock.getSnapshot().time + 0.15) % lap.lapTime,
-      );
-    ref.current.position.set(s.x, s.y + 0.3, s.z);
-    ref.current.rotation.set(
-      -Math.atan2(next.y - s.y, Math.hypot(next.x - s.x, next.z - s.z)),
-      Math.atan2(next.x - s.x, next.z - s.z),
-      0,
-      "YXZ",
-    );
-  });
-  return (
-    <group ref={ref} scale={3}>
-      <VehicleMesh vehicle={vehicle} />
-      {marker && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
-          <ringGeometry args={[3.2, 3.7, 32]} />
-          <meshBasicMaterial
-            color="#0866ec"
-            transparent
-            opacity={0.7}
-            side={DoubleSide}
-          />
-        </mesh>
-      )}
-    </group>
-  );
-}
-
 function CameraRig({
   track,
   mode,
@@ -336,6 +297,8 @@ export function TrackView({
   track,
   lap,
   vehicle,
+  reference,
+  referenceVehicle,
   clock,
   onCorner,
   selectedCorner,
@@ -344,6 +307,8 @@ export function TrackView({
   track: Track;
   lap: Lap | null;
   vehicle?: Vehicle;
+  reference: Reference | null;
+  referenceVehicle?: Vehicle;
   clock: PlaybackClock;
   onCorner: (id: number) => void;
   selectedCorner: number | null;
@@ -353,7 +318,10 @@ export function TrackView({
     [layers, setLayers] = useState(initialLayers),
     [mode, setMode] = useState<CameraMode>("orbit"),
     [reset, setReset] = useState(0),
-    [ghost, setGhost] = useState(true);
+    [ghost, setGhost] = useState(true),
+    [showReference, setShowReference] = useState(false);
+  const referenceLap = referenceGhostLap(lap, reference);
+  const referenceVisible = showReference && !!referenceLap;
   const tabsPrefix = useId();
   const panel = useRef<HTMLElement>(null),
     frame = useMemo(() => normalizeTrack(track), [track]);
@@ -409,6 +377,20 @@ export function TrackView({
           onLayers={setLayers}
           ghost={ghost}
           onGhost={setGhost}
+          referenceGhost={referenceVisible}
+          onReferenceGhost={setShowReference}
+          referenceName={
+            referenceLap
+              ? (referenceVehicle?.name ?? referenceLap.vehicleId)
+              : null
+          }
+          referenceReason={
+            !reference
+              ? "Set or import a native lap reference to show its vehicle."
+              : isTimingReference(reference)
+                ? "This timing-only reference has no vehicle positions."
+                : "Reference positions must match this source track."
+          }
           mode={mode}
           onMode={setMode}
         />
@@ -576,11 +558,22 @@ export function TrackView({
               </div>
             </Html>
             {lap && ghost && (
-              <Ghost
+              <TelemetryGhost
                 lap={lap}
                 clock={clock}
                 marker={mode !== "chase"}
                 vehicle={vehicle}
+                label={referenceVisible}
+              />
+            )}
+            {referenceVisible && referenceLap && (
+              <TelemetryGhost
+                lap={referenceLap}
+                clock={clock}
+                marker
+                vehicle={referenceVehicle}
+                reference
+                label
               />
             )}
             <CameraRig

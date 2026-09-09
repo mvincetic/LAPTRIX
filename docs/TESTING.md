@@ -1,11 +1,21 @@
 # Testing and validation
 
+Ghost tests independently check sampled position, yaw/grade, unequal lap durations,
+finish holding, shared-clock restart, rigid transforms and native source eligibility.
+Browser journeys switch to a GT current lap with a Formula reference and compare
+actual projected label positions: the reference remains fixed at the finish while
+the current vehicle advances. They exercise independent visibility, keyboard toggle
+activation and timing-only replacement at 1600/390 px. The reference ghost QA script
+captures controls, orbit/top/chase framing, finished-reference and unavailable states.
+
 Cursor inspection journeys use real exported solver samples and independently
 interpolate between two nodes around a gear change. They verify continuous channel
 values, UI unit conversions and stepped gear selection, then exercise exact time
 entry during playback, invalid inputs, Escape, the closing endpoint, chart/corner
-synchronization and draft reset after axis/result changes at 1600/390 px. The visual
-QA script `scripts/cursor-qa.mjs` captures the workspace and numerical panel at
+synchronization and draft reset after axis/result changes at 1600/390 px. The
+regression also waits for the clock to advance after field focus and verifies the
+captured input stays fixed before typing, protecting selection from playback updates.
+The visual QA script `scripts/cursor-qa.mjs` captures the workspace and numerical panel at
 1600, 1280 and 390 px and records the shared cursor, runtime errors and overflow.
 
 Tab journeys at 1600/390 px check roving focus, arrow wrapping, Home/End, reciprocal

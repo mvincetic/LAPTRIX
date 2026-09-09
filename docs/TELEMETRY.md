@@ -29,8 +29,10 @@ The Cursor Data tab presents these values numerically with explicit UI units,
 including km/h, percentages and road-wheel degrees. Time/distance entry pauses and
 seeks the shared clock through this same interpolation. Native number constraints
 reject empty, negative and beyond-lap positions; the complete closing endpoint is
-accepted. Draft text survives playback updates until Inspect/Enter, Escape, an axis
-change or a new result. Gear/corner/sector remain stepped values, zero corner is
+accepted. Focusing the input captures its value before selection or typing, so
+playback cannot overwrite an edit in progress. The draft survives playback and
+blur until Inspect/Enter, Escape, an axis change or a new result. Escape captures
+the current value again. Gear/corner/sector remain stepped values, zero corner is
 shown as None, and reserved vertical dynamics are labelled Not modelled. Numerical
 display precision is not an accuracy claim. The playback slider exposes its current
 seconds and metres through an accessible value description.
@@ -39,6 +41,14 @@ seconds and metres through an accessible value description.
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers
 receive approximately 30 Hz updates. After a new simulation the clock resets and
 pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
+
+Optional native-reference playback also reads this elapsed time, never normalized
+progress through each lap. Both ghosts start together, and each interpolates its
+own samples. The current lap defines loop duration; a faster reference remains at
+its finish after completing, while a slower one can be interrupted by that loop.
+Source identity must match and timing-only files cannot supply a reference ghost.
+Current-lap audio, camera and telemetry inspection remain on the existing clock.
+See GHOST_PLAYBACK.md for rendering, source declarations and finish semantics.
 
 Comparison uses the same source circuit. Reference sector times interpolate at
 the current result's physical gates using source alignment. The distance helper

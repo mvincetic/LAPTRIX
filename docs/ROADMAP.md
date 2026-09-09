@@ -76,25 +76,34 @@ canvas, layer choices and playback position.
 Cursor Data now offers exact seconds/metres entry and numerical channel values.
 Inspect pauses and seeks the shared clock, invalid positions retain it, and draft
 entry resets on axis/result changes. Reserved vertical dynamics stay explicit.
+Native references now support an optional second ghost with independent visibility
+and vehicle snapshots. Both use shared elapsed time; a completed reference holds
+its finish pose. Timing-only files remain comparisons without invented positions.
 
 ## Next highest-value work
 
-1. Add an optional native-reference ghost driven by the same elapsed playback time,
-   with explicit finish behavior and no invented positions for timing-only files.
+1. Support bounded user-supplied vehicle profiles through the existing solver,
+   preserving profile provenance and transactional project import/save behavior.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+Vehicle import should send a bounded inline profile through the same solver and
+cache, retain built-in profiles unchanged, and activate a new profile only after a
+successful calculation. Preserve names, declared sources and assumptions in saved
+projects. Resolve local ID collisions deliberately, retain legacy installed-profile
+validation, and distinguish user-supplied parameters from measured calibration.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 86 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Forty-seven TypeScript tests cover
+extremes and analytical work/grip benchmarks. Fifty-one TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts and clock/data invariants. Thirty-six browser journeys cover the
+eligibility, vehicle contracts, ghost poses and clock/data invariants. Thirty-eight browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection and the
+precise cursor inspection, reference ghosts and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

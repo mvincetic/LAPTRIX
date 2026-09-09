@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 47 tests pass.
+- Vitest: 51 tests pass.
 - Python numerical/API tests: 86 tests pass.
-- Playwright: 36 development browser journeys pass; two viewer journeys also run
+- Playwright: 38 development browser journeys pass; two viewer journeys also run
   against built production assets.
 - Vite production build: pass; approximately 365 kB initial JavaScript / 111 kB
-  gzip, plus a separate 950 kB viewer / 253 kB gzip.
+  gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `683fe13`; each following milestone reruns CI on push.
+- GitHub Actions passed through `109bc88`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -254,6 +254,25 @@ journeys and frontend gates pass again. Focused PageDown reaches the complete
 desktop readout and model note. Refreshed `artifacts/cursor-*.png` images at 1600,
 1280 and 390 px were opened and reviewed; the QA report records no runtime errors
 or horizontal overflow and the same 2500.125 m cursor at every width.
+
+Native-reference ghosts pass the full 86 Python / 51 TypeScript / 38 development
+browser gates, lint, typecheck and build, plus both production viewer journeys.
+Four pose/eligibility tests cover elapsed-time interpolation, finish holding,
+loop restart and rigid transforms. Two new browser journeys verify actual projected
+reference positions remain fixed after finishing while the current vehicle moves,
+independent visibility and timing-only replacement at 1600/390 px. The final QA
+report records no runtime errors or horizontal overflow at 1600/1280/390 px.
+Controls, orbit/top, finish and chase screenshots were opened and reviewed. Chase
+review found labels too high above the cars; lowering their anchors makes their
+association clear. Ghost journeys and frontend/production gates pass after that
+adjustment, and the refreshed chase/mobile/1280 images were reviewed again.
+
+The first full ghost run exposed a cursor-entry race: ongoing playback could change
+the input between focus/selection and typing, producing an appended number. Focus
+now captures the draft before editing, and Escape captures the current value again.
+Both cursor regressions explicitly wait for playback to advance while the focused
+value remains fixed. The subsequent full 38-journey browser run passes. Original
+failure and corrected-run logs remain in local `artifacts/ghost-e2e*.log`.
 
 ## Scope of the evidence
 

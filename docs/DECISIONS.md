@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Compare native ghosts at shared elapsed time
+
+**Decision:** Render an optional grey native-reference vehicle beside the current
+blue ghost. Require matching source fingerprints, preserve individual samples and
+vehicle snapshots, and drive both from the existing clock's elapsed seconds.
+Clamp a completed reference at its finish until current-lap playback restarts.
+**Alternative:** Match normalized lap progress or synthesize a path for timing-only
+references. **Reasoning:** Equal elapsed time shows the modeled spatial separation;
+the latter approaches would obscure that comparison or invent unavailable data.
+**Consequences:** The current lap controls duration, audio and chase camera. Native
+reference imports remain declared data, not authenticated real-world trajectories.
+Body geometry stays original and schematic. See GHOST_PLAYBACK.md.
+
 ## 2026-09-09 — Inspect exact positions through the existing playback clock
 
 **Decision:** Add a Cursor Data tab with numerical channels and a native time/distance

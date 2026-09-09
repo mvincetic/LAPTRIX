@@ -836,6 +836,8 @@ export function App() {
               track={simulationTrack}
               lap={lap}
               vehicle={resultVehicle}
+              reference={reference}
+              referenceVehicle={referenceVehicle}
               clock={clock}
               onCorner={onCorner}
               selectedCorner={selectedCorner}

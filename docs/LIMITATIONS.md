@@ -30,8 +30,12 @@
 - Reference imports accept native simulation JSON or explicitly source-aligned
   timing JSON. GPS alignment and generic logger CSV conversion are not implemented.
   Imported timing origin is declared by its file and is not independently verified;
-  sparse samples limit corner detail. Reference channels do not replace simulation
-  graphs, ghost playback or audio.
+  sparse samples limit corner detail. Reference channels do not replace current
+  simulation graphs or audio. Only matching native laps can supply the optional
+  reference ghost; source identity declarations do not authenticate its trajectory.
+- Reference ghosts share current-lap elapsed time and duration. Faster references
+  hold the finish; slower ones may not finish before the current clock loops. This
+  is visual telemetry interpolation and does not add transient vehicle dynamics.
 - Terrain and trees are contextual generated scenery. The ghost is intentionally
   enlarged three times for engineering visibility, not a physically scaled asset.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.

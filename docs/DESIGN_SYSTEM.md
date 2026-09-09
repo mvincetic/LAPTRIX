@@ -114,3 +114,8 @@ Inspect pauses and seeks; Escape restores the cursor value. The grid has four
 columns in the desktop panel and two on mobile, where the document can grow.
 The desktop tab panel is its own keyboard-scrollable container.
 Values include units, discrete fields and an explicit Not modelled vertical channel.
+Ghost Car offers independent current/reference checkboxes and names the native
+reference. Blue CURRENT and grey REF labels identify the two schematic vehicles
+when reference playback is enabled. The panel explains shared elapsed time, current
+lap duration and finish holding. Timing-only data gets a disabled reference control
+with an explicit no-positions explanation. Both bodies retain the 3× display scale.

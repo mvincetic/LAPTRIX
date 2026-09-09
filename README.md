@@ -54,6 +54,7 @@ the last completed result remains visible if a solve fails.
 - Cancel pending calculations/imports while retaining the completed workspace and setup edits.
 - Keyboard navigation for actions, viewer tools and telemetry tabs with visible focus.
 - Exact time/distance cursor entry with numerical telemetry and explicit model limits.
+- Optional native-reference ghost with independent vehicle styling and shared-time playback.
 
 ## Checks
 
@@ -76,6 +77,7 @@ node scripts/cancellation-qa.mjs
 node scripts/keyboard-audit.mjs
 node scripts/tabs-qa.mjs
 node scripts/cursor-qa.mjs
+node scripts/reference-ghost-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -104,6 +106,10 @@ dragging, corner selection and playback all use the existing shared cursor.
 **Cursor Data** exposes numerical channels at that same position. Enter a time in
 seconds or distance in metres and press **Inspect** to pause and seek exactly.
 Escape discards an unsent entry; switching axis or calculating a new lap resets it.
+In **Ghost Car**, enable **Show reference ghost** to compare a native lap in 3D.
+Both vehicles use elapsed seconds from the same start. The current lap sets playback
+duration, and a finished reference holds the line. Timing-only files keep this
+option disabled; see [GHOST_PLAYBACK](docs/GHOST_PLAYBACK.md).
 **Export project** and **Import project JSON** move the whole setup and reference
 between workspaces. Import recalculates with the installed vehicle and retains the
 prior workspace if validation or calculation fails. See [PROJECT_FILES](docs/PROJECT_FILES.md).

@@ -191,6 +191,43 @@ export function signed(value: number, digits = 3) {
   return `${value > 0 ? "+" : ""}${value.toFixed(digits)}`;
 }
 
+/** Native positions are comparable only when both laps identify the same source. */
+export function referenceGhostLap(
+  current: Lap | null,
+  reference: Reference | null,
+): Lap | null {
+  if (!current?.alignment || !reference || isTimingReference(reference))
+    return null;
+  return current.alignment.trackFingerprint ===
+    reference.alignment?.trackFingerprint
+    ? reference
+    : null;
+}
+
+/** A completed ghost holds the finish pose until the shared current-lap clock restarts. */
+export function ghostPose(
+  lap: Pick<Lap, "samples" | "lapTime">,
+  elapsedTime: number,
+) {
+  if (!Number.isFinite(elapsedTime))
+    throw new Error("Playback time must be finite");
+  const time = Math.max(0, Math.min(lap.lapTime, elapsedTime));
+  const sample = interpolate(lap.samples, time);
+  const next = interpolate(
+    lap.samples,
+    (time + Math.min(0.15, lap.lapTime / 4)) % lap.lapTime,
+  );
+  const dx = next.x - sample.x,
+    dy = next.y - sample.y,
+    dz = next.z - sample.z;
+  return {
+    sample,
+    yaw: Math.atan2(dx, dz),
+    pitch: -Math.atan2(dy, Math.hypot(dx, dz)),
+    finished: time >= lap.lapTime,
+  };
+}
+
 export class PlaybackClock {
   private snapshot = {
     time: 0,

@@ -47,10 +47,15 @@ relationships, layer interaction, camera/axis state and retained playback time.
 
 Cursor Data provides native numeric entry with labelled units, bounds and keyboard
 submission. Invalid entry keeps the clock unchanged; Escape discards draft text.
+Focus captures the entry value before typing so playback cannot change a selection;
+Escape restores the current value and holds it for continued editing.
 Its description list exposes numerical channel values without a rapidly updating
 live region. The existing slider's value text identifies both seconds and metres.
 The focused panel itself scrolls on desktop, keeping its complete readout and note
 reachable by keyboard; mobile content expands into the document.
+Ghost visibility uses independent labelled native checkboxes. The reference option
+is disabled with an explanation when positions are unavailable. Optional CURRENT
+and REF labels expose vehicle names and do not intercept viewer pointer gestures.
 
 Remaining review includes broader expanded/error states, contrast, zoom, screen
 readers and representative browsers.
