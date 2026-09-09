@@ -5,6 +5,16 @@ import {
   type Lap,
 } from "../../packages/shared/schema";
 import { formatTime } from "../../packages/telemetry";
+import { trackFingerprint } from "../../packages/track-engine";
+
+async function exportStudy(page: Page) {
+  const downloading = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export study JSON" }).click();
+  const stream = await (await downloading).createReadStream();
+  const chunks = [];
+  for await (const chunk of stream!) chunks.push(chunk);
+  return JSON.parse(Buffer.concat(chunks).toString());
+}
 
 async function openComparison(page: Page) {
   await page.getByRole("button", { name: "Additional actions" }).click();
@@ -23,6 +33,7 @@ test("real aero runs keep other settings fixed and apply the fastest checked lap
     .getByRole("button", { name: "Set reference", exact: true })
     .click();
   const original = await page.getByTestId("lap-time").textContent();
+  await page.getByLabel("Project name").fill("Formula aero study");
   const results: Lap[] = [];
   await page.route("**/api/simulate", async (route) => {
     const response = await route.fetch();
@@ -44,6 +55,36 @@ test("real aero runs keep other settings fixed and apply the fastest checked lap
   await expect(dialog.locator("input:checked")).toHaveAccessibleName(
     `Select aero ${best.setup.aero > 0 ? "+" : ""}${best.setup.aero}`,
   );
+  const report = await exportStudy(page);
+  expect(report.format).toBe("laptrix-aero-study-v1");
+  expect(report.projectName).toBe("Formula aero study");
+  expect(report.outcome).toBe("completed");
+  expect(report.startingSetup).toEqual(defaultSetup);
+  expect(report.source.trackFingerprint).toBe(
+    await trackFingerprint(report.source.track),
+  );
+  expect(report.source.vehicle).toEqual(results[0].vehicle);
+  expect(report.fastestCheckedAero).toBe(best.setup.aero);
+  expect(report.selectedAero).toBe(best.setup.aero);
+  expect(report.candidates).toHaveLength(5);
+  expect(Date.parse(report.finishedAt)).toBeGreaterThanOrEqual(
+    Date.parse(report.startedAt),
+  );
+  for (let i = 0; i < results.length; i++) {
+    const candidate = report.candidates[i];
+    expect(candidate.state).toBe("passed");
+    expect(lapSchema.parse(candidate.result)).toEqual(results[i]);
+    expect(candidate.deltaSeconds).toBeCloseTo(
+      results[i].lapTime - results[0].lapTime,
+      10,
+    );
+    expect(candidate.result.solverProvenance.sourceFingerprint).toMatch(
+      /^sha256:[0-9a-f]{64}$/,
+    );
+    expect(candidate.result.solverProvenance).toEqual(
+      results[0].solverProvenance,
+    );
+  }
   await dialog.getByRole("button", { name: "Apply selected result" }).click();
   await expect(dialog).not.toBeVisible();
   await expect(page.getByTestId("lap-time")).toHaveText(
@@ -106,6 +147,22 @@ test("failed and numerically excluded runs cannot replace the workspace", async 
     dialog.getByText("Injected comparison service failure"),
   ).toBeVisible();
   await expect(dialog.locator("input:enabled")).toHaveCount(0);
+  const report = await exportStudy(page);
+  expect(report.selectedAero).toBeNull();
+  expect(report.fastestCheckedAero).toBeNull();
+  expect(report.candidates.map((row: { state: string }) => row.state)).toEqual([
+    "failed",
+    "excluded",
+    "excluded",
+    "excluded",
+    "excluded",
+  ]);
+  expect(report.candidates[0].result).toBeNull();
+  expect(
+    report.candidates.every(
+      (row: { deltaSeconds: number | null }) => row.deltaSeconds === null,
+    ),
+  ).toBe(true);
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(page.getByTestId("lap-time")).toHaveText(original!);
@@ -146,6 +203,16 @@ test("stopping aborts an in-flight request and prevents the remaining candidate 
       dialog.getByRole("button", { name: "Apply selected result" }),
     ).toBeDisabled();
     expect(requests).toBe(1);
+    const report = await exportStudy(page);
+    expect(report.outcome).toBe("stopped");
+    expect(report.selectedAero).toBeNull();
+    expect(report.candidates).toHaveLength(5);
+    expect(
+      report.candidates.every(
+        (row: { state: string; result: unknown }) =>
+          row.state === "not-run" && row.result === null,
+      ),
+    ).toBe(true);
     await dialog.getByRole("button", { name: "Close aero comparison" }).click();
     await expect(page.getByTestId("lap-time")).toHaveText(original!);
   } finally {

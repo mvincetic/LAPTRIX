@@ -136,6 +136,9 @@ if (sweep) {
       scroll: element.scrollWidth,
     })),
   );
+  const downloading = page.waitForEvent("download");
+  await dialog.getByRole("button", { name: "Export study JSON" }).click();
+  await (await downloading).saveAs(`artifacts/sweep-${prefix}study.json`);
   await dialog.getByRole("button", { name: "Apply selected result" }).click();
   await page.setViewportSize({ width: 1600, height: 1000 });
 }

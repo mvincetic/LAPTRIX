@@ -69,3 +69,7 @@ Passed/Excluded/Failed states supplement color. Starting and fastest checked row
 are labelled. Apply is deliberate and unavailable while running or without an
 eligible result. The footer remains reachable on short screens; narrow layouts
 retain all columns. Escape closes the study and returns focus to Additional actions.
+After completion or Stop, a compact Export study JSON action appears below the
+result notes. It remains available for wholly failed or unfinished studies, since
+those states are part of the evidence. Technical source fingerprints stay in the
+exported artifact; the comparison table retains its readable engineering values.

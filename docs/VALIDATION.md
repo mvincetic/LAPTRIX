@@ -9,11 +9,11 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 38 tests pass.
-- Python numerical/API tests: 69 tests pass.
+- Python numerical/API tests: 70 tests pass.
 - Playwright: eighteen browser journeys pass against running local services.
-- Vite production build: pass; approximately 1.30 MB JavaScript / 358 kB gzip.
+- Vite production build: pass; approximately 1.30 MB JavaScript / 359 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `c371dfd`; each following milestone reruns CI on push.
+- GitHub Actions passed through `7a616b4`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -101,6 +101,17 @@ aero -5 at 71.430 seconds, approximately 0.102 seconds below the starting aero 0
 reviewed `artifacts/sweep-desktop.png` and `artifacts/sweep-mobile.png` confirm
 readable signed deltas, check states, selection and footer controls at 1600 and
 390 px. The narrow dialog has equal client/scroll widths of 356 px.
+
+Study export adds source-identity verification, complete Lap round trips and
+failed/stopped report checks to the existing browser journeys. All 70 Python / 38
+TypeScript / 18 browser tests pass. A Python test verifies source-fingerprint
+invariance to CRLF/order and sensitivity to changed source. `--sweep --gt` QA
+exports an approximately 3.49 MB report and has no browser errors or overflow.
+Desktop/mobile screenshots `artifacts/sweep-gt-*.png` were opened and reviewed;
+the export and application controls remain visible. The GT study correctly
+excludes three force-demand failures and selects aero -2 at 91.398 seconds.
+Inspection traces their excess drive request to the uniform power lookup crossing
+gear redlines; correcting that approximation is the next numerical milestone.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

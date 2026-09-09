@@ -7,6 +7,7 @@ from scipy.signal import find_peaks
 
 from .models import Setup, Track, Vehicle
 from .numerics import box_quadratic, curvature_quadratic
+from .provenance import solver_provenance
 from .sampling import prepare_track
 
 G = 9.80665
@@ -364,6 +365,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         vehicle=vehicle.model_dump(mode="json"),
         setup=setup.model_dump(),
         model="Development Physics Model",
+        solverProvenance=solver_provenance(),
         lapTime=lap_time,
         length=total_length,
         maxSpeed=float(max(profile["speed"])),

@@ -44,17 +44,24 @@ before activating state, and track-ID collisions preserve existing geometry.
 A bounded aero study now compares five or six settings through the existing
 solver, exposes progress and numerical eligibility, and applies only a selected
 checked result. Stopping retains completed rows; references survive application.
+Studies can now be exported with complete source inputs, every full result,
+failed/unfinished states and timestamps. New laps identify the solver source and
+numerical runtime. A bounded review of RACECAR, BETTY and Marzaglia is recorded in
+CALIBRATION_DATA_EVALUATION.md; no suitable complete calibration/3D input was
+established and no external dataset was copied.
 
 ## Next highest-value work
 
-1. Evaluate measured calibration data and reusable 3D track geometry; add transient
-   dynamics only with independent benchmarks and suitable parameter sources.
-2. Improve reproducibility of setup studies with portable comparison reports and
-   complete input provenance before expanding the search dimensions.
+1. Correct drivetrain power interpolation around gear redlines: the GT study
+   exposes optimistic force demand of up to 3.34%, and correctly excludes those runs.
+2. Make timing-sector gates use fixed source positions, independent of racing-line
+   length and sampling, while preserving native reference compatibility.
+3. Revisit measured calibration and reusable 3D data when complete inputs are
+   available; add transient dynamics only with independent benchmarks and sources.
 
 ## Stabilization evidence
 
-The local numerical suite contains 69 passing tests, including coupled quadratic
+The local numerical suite contains 70 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Thirty-eight TypeScript tests cover
 geometry, alignment, project/reference validation, comparison eligibility, vehicle contracts and clock/data invariants. Eighteen browser journeys cover the

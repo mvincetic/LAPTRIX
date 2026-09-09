@@ -21,6 +21,29 @@ and Lap output, resets the shared playback clock, and retains the reference.
 The ordinary Save and project export actions then preserve the applied setup.
 Closing the dialog leaves the workspace unchanged and discards the study.
 
+After completion or Stop, **Export study JSON** downloads a
+`laptrix-aero-study-v1` record. It contains the project name, original source track
+and fingerprint, full vehicle snapshot, starting setup, candidate order, selected
+and fastest checked aero values, and every completed Lap including all telemetry,
+sampling points, numerical checks, warnings and solver provenance. Failed rows
+retain their error; unfinished rows are explicitly `not-run` with no result.
+Unavailable baseline deltas are null. Selection does not imply application.
+
+The report records UTC request-start, finish and export timestamps. These describe
+the study workflow: an API cache hit can reuse a previously calculated Lap. The
+report is an archival artifact, not a project-import format. A completed candidate's
+`result` object is a normal native Lap that can be imported as a reference against
+its matching source. Reports may be several megabytes on fine sampling grids.
+
+New Lap outputs include `solverProvenance`: a SHA-256 fingerprint of the listed
+Python solver/model/sampling sources plus Python, NumPy, SciPy, OS and architecture
+identifiers. The fingerprint sorts file names and normalizes CRLF to LF, so a
+Windows checkout and Linux checkout identify identical text consistently. It is
+captured at process import time, and server restarts load changed source. Older
+Laps without provenance remain readable and have unknown implementation identity.
+This record aids comparison; it does not guarantee bit-identical results across
+different native numerical libraries or hardware.
+
 Stop or close aborts the browser's current fetch and prevents queued candidates
 from starting. A synchronous solve already executing on the server may finish;
 this is not server-side job cancellation. Completed checked rows remain usable

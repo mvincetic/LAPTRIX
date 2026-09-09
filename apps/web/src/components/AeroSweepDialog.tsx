@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { FlaskConical, LoaderCircle, X } from "lucide-react";
-import type { Lap, Setup, Track } from "../../../../packages/shared/schema";
+import type {
+  Lap,
+  Setup,
+  Track,
+  Vehicle,
+} from "../../../../packages/shared/schema";
 import { formatTime } from "../../../../packages/telemetry";
 import { runSimulation } from "../api";
-import { aeroCandidates, comparisonIssue } from "../aeroComparison";
+import {
+  aeroCandidates,
+  comparisonIssue,
+  buildAeroReport,
+  type AeroCandidate,
+  type StudyRun,
+} from "../aeroComparison";
+import { download } from "../download";
 import "./aero-comparison.css";
 
-type Candidate = { aero: number; lap?: Lap; error?: string };
 type Props = {
   track: Track;
-  vehicleId: string;
-  vehicleName: string;
+  vehicle: Vehicle;
+  projectName: string;
   setup: Setup;
   custom: boolean;
   onClose: () => void;
@@ -20,8 +31,8 @@ const aeroLabel = (value: number) => (value > 0 ? `+${value}` : `${value}`);
 
 export function AeroSweepDialog({
   track,
-  vehicleId,
-  vehicleName,
+  vehicle,
+  projectName,
   setup,
   custom,
   onClose,
@@ -30,13 +41,16 @@ export function AeroSweepDialog({
   const dialog = useRef<HTMLDialogElement>(null);
   const controller = useRef<AbortController | null>(null);
   const alive = useRef(false);
-  const [rows, setRows] = useState<Candidate[]>(() =>
+  const [rows, setRows] = useState<AeroCandidate[]>(() =>
     aeroCandidates(setup.aero).map((aero) => ({ aero })),
   );
   const [running, setRunning] = useState(false);
   const [activeAero, setActiveAero] = useState<number | null>(null);
   const [status, setStatus] = useState("Ready to compare");
   const [selected, setSelected] = useState<number | null>(null);
+  const [studyRun, setStudyRun] = useState<StudyRun | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
   useEffect(() => {
     alive.current = true;
     const element = dialog.current;
@@ -49,7 +63,7 @@ export function AeroSweepDialog({
   }, []);
   const baseline = rows.find((row) => row.aero === setup.aero)?.lap;
   const checked = rows.filter((row) => row.lap && !comparisonIssue(row.lap));
-  const best = checked.reduce<Candidate | null>(
+  const best = checked.reduce<AeroCandidate | null>(
     (winner, row) =>
       !winner || row.lap!.lapTime < winner.lap!.lapTime ? row : winner,
     null,
@@ -60,7 +74,10 @@ export function AeroSweepDialog({
     if (controller.current) return;
     const abort = new AbortController();
     controller.current = abort;
-    const results: Candidate[] = aeroCandidates(setup.aero).map((aero) => ({
+    const startedAt = new Date().toISOString();
+    setStudyRun(null);
+    setExportError("");
+    const results: AeroCandidate[] = aeroCandidates(setup.aero).map((aero) => ({
       aero,
     }));
     setRows(results);
@@ -76,7 +93,7 @@ export function AeroSweepDialog({
       try {
         const lap = await runSimulation(
           track,
-          vehicleId,
+          vehicle.id,
           { ...setup, aero: row.aero },
           custom,
           abort.signal,
@@ -100,10 +117,42 @@ export function AeroSweepDialog({
     setSelected(eligible[0]?.aero ?? null);
     setActiveAero(null);
     setRunning(false);
+    setStudyRun({
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      outcome: abort.signal.aborted ? "stopped" : "completed",
+    });
     setStatus(
       `${abort.signal.aborted ? "Comparison stopped" : "Comparison complete"} · ${eligible.length} checked results`,
     );
     controller.current = null;
+  };
+  const exportStudy = async () => {
+    if (!studyRun) return;
+    setExporting(true);
+    setExportError("");
+    try {
+      const report = await buildAeroReport({
+        projectName,
+        track,
+        vehicle,
+        setup,
+        rows,
+        selectedAero: selected,
+        run: studyRun,
+      });
+      if (alive.current)
+        download("laptrix-aero-study.json", JSON.stringify(report, null, 2));
+    } catch (error) {
+      if (alive.current)
+        setExportError(
+          error instanceof Error
+            ? error.message
+            : "Study export failed. Please retry.",
+        );
+    } finally {
+      if (alive.current) setExporting(false);
+    }
   };
   const close = () => {
     controller.current?.abort();
@@ -142,7 +191,7 @@ export function AeroSweepDialog({
           stay fixed. Select a checked result to apply it to your workspace.
         </p>
         <div className="aero-context">
-          <strong>{vehicleName}</strong>
+          <strong>{vehicle.name}</strong>
           <span>
             {setup.solver === "lap-time"
               ? "Lap-time refinement"
@@ -262,6 +311,19 @@ export function AeroSweepDialog({
             <strong>{formatTime(chosen.lapTime)}</strong>
           </p>
         )}
+        {studyRun && !running && (
+          <div className="aero-export">
+            <span>Keep inputs, full results and checks.</span>
+            <button disabled={exporting} onClick={() => void exportStudy()}>
+              {exporting ? "Exporting…" : "Export study JSON"}
+            </button>
+          </div>
+        )}
+        {exportError && (
+          <p className="aero-slower" role="alert">
+            {exportError}
+          </p>
+        )}
       </div>
       <footer className="aero-footer">
         {running ? (
@@ -269,7 +331,7 @@ export function AeroSweepDialog({
             Stop comparison
           </button>
         ) : (
-          <button onClick={() => void start()}>
+          <button disabled={exporting} onClick={() => void start()}>
             {completed ? "Run again" : "Run comparison"}
           </button>
         )}

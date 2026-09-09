@@ -48,6 +48,7 @@ the last completed result remains visible if a solve fails.
 - Import simulation or aligned external timing references with explicit source/units checks.
 - Portable project import/export with name, setup, custom source and reference restoration.
 - Bounded aero comparison with numerical eligibility, progress and deliberate result application.
+- Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
 
 ## Checks
 

@@ -76,6 +76,11 @@ simulation endpoint. Full Lap results stay temporary until explicit application;
 eligibility uses returned convergence and force diagnostics. Abort signals combine
 user cancellation with the existing request timeout. No new backend job system or
 alternative lap computation is introduced.
+Study exports retain full source inputs and every returned Lap, including failed
+and unfinished candidate states. The shared download helper keeps file creation
+local. `apps/simulation/provenance.py` fingerprints normalized source text once
+per process and attaches numerical runtime versions to new outputs; the optional
+schema field preserves readers for older native references.
 
 Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
 may decorate the scene without defining track or physics. Neither track-specific

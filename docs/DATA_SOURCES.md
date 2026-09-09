@@ -53,6 +53,10 @@ It remains a candidate for explicitly approximate 2D imports, not a replacement
 for independently documented 3D geometry. The original elevation circuit remains
 the bundled source until appropriate data is identified.
 
+The subsequent [calibration/3D review](CALIBRATION_DATA_EVALUATION.md) records
+RACECAR, BETTY and Marzaglia source documentation, availability observations and
+their limits for this model. No dataset has been copied or used to fit parameters.
+
 ## Application dependencies
 
 React, React DOM, Vite, Three.js, React Three Fiber, Drei, Zod and FastAPI use MIT

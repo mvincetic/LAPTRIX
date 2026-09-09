@@ -19,6 +19,8 @@ before activation, preserving the previous workspace on any file or API failure.
 An aero study compares five or six settings through the selected solver while
 keeping other inputs fixed. Only checked runs can be applied, and the existing
 reference remains available. See AERO_COMPARISON.md for its bounded scope.
+Complete study reports preserve source inputs, all candidate outputs and failures,
+with solver implementation/runtime provenance on new laps.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Archive study evidence and solver identity
+
+**Decision:** Export a versioned local study record with source inputs, full Lap
+outputs, errors and unfinished rows. Include a source fingerprint and numerical
+runtime versions in each newly calculated Lap. **Alternative:** Saving only the
+winning time or relying on the development model's display name as its version.
+**Reasoning:** A comparison needs inspectable evidence and implementation identity
+to remain interpretable after parameters or solver code change. **Consequences:**
+Reports are larger than summaries, legacy outputs have unknown provenance, and
+request timestamps do not imply fresh computation when the API cache is used.
+The hash records source identity rather than a promise of cross-platform equality.
+
 ## 2026-09-09 — Bounded aero study with deliberate activation
 
 **Decision:** Compare five or six aero values sequentially using the selected

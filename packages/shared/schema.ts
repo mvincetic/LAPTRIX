@@ -164,6 +164,17 @@ export const lapSchema = z
     referenceImport: z.object({ fileName: z.string().max(255) }).optional(),
     setup: setupSchema,
     model: z.string(),
+    solverProvenance: z
+      .object({
+        sourceFingerprint: z.string().regex(/^sha256:[0-9a-f]{64}$/),
+        sourceFiles: z.array(z.string().min(1)).min(1),
+        python: z.string().min(1),
+        numpy: z.string().min(1),
+        scipy: z.string().min(1),
+        platform: z.string().min(1),
+        machine: z.string().min(1),
+      })
+      .optional(),
     lapTime: finite.positive(),
     length: finite.positive(),
     maxSpeed: finite.positive(),

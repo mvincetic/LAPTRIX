@@ -20,6 +20,22 @@
   gap: 12px;
   padding: 19px 22px;
 }
+.aero-export {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 9px;
+  padding-top: 13px;
+  margin-top: 13px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: #61758e;
+}
+.aero-export button {
+  padding: 8px;
+  font-size: 10px;
+  white-space: nowrap;
+}
 .aero-heading {
   border-bottom: 1px solid var(--line);
 }

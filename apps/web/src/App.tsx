@@ -42,18 +42,11 @@ import { useLapTools } from "./useLapTools";
 import { restoreReference } from "./reference";
 import { prepareProject } from "./project";
 import { AeroSweepDialog } from "./components/AeroSweepDialog";
+import { download } from "./download";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
 const storageKey = "laptrix.project.v1";
-function download(name: string, content: string, type = "application/json") {
-  const url = URL.createObjectURL(new Blob([content], { type }));
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = name;
-  anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 export function App() {
   const [projectName, setProjectName] = useState("Development workspace");
@@ -794,8 +787,8 @@ export function App() {
       {aeroComparison && track && vehicle && (
         <AeroSweepDialog
           track={track}
-          vehicleId={vehicleId}
-          vehicleName={vehicle.name}
+          vehicle={vehicle}
+          projectName={projectName}
           setup={setup}
           custom={customTracks.current.has(track.id)}
           onClose={closeAeroComparison}
