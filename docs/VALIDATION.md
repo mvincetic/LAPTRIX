@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 32 tests pass.
+- Vitest: 33 tests pass.
 - Python numerical/API tests: 69 tests pass.
-- Playwright: twelve browser journeys pass against running local services.
-- Vite production build: pass; approximately 1.28 MB JavaScript / 354 kB gzip.
+- Playwright: thirteen browser journeys pass against running local services.
+- Vite production build: pass; approximately 1.29 MB JavaScript / 356 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `b87ee24`; each following milestone reruns CI on push.
+- GitHub Actions passed through `6792ab3`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -72,6 +72,14 @@ wrong units/source identity, reference preservation and save/reload are covered.
 at 1600, 1280, 900 and 390 px. Final desktop, expanded provenance and mobile images
 were opened and reviewed in `artifacts/reference-gt-*.png`. The source disclosure
 is readable and does not permanently consume the corner table's vertical space.
+
+The Time Delta milestone passes the complete 69 Python / 33 TypeScript / 13 browser
+suite, lint, typecheck and build. Hand-calculated unequal-grid tests verify merged
+breakpoints and cursor values. The browser checks the known imported timing ratio,
+corner/chart seeking, axis switching, playback and reference replacement. Visual
+QA with `--gt --reference --delta` has no runtime errors or horizontal overflow
+at 1600, 1280, 900 and 390 px. Desktop, mobile and selected-corner delta screenshots
+were opened and reviewed in `artifacts/delta-reference-gt-*.png`.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

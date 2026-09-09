@@ -22,6 +22,9 @@ The explicit `laptrix-timing-reference-v1` format carries timing only. It does n
 invent missing speed, throttle, brake, position or simulation diagnostics. The
 comparison shows total lap, sector and current-corner timing differences. The
 current simulation remains the source for the ghost, graphs and audio.
+The separate **Time Delta** view compares reference timing along the lap, using
+the same cursor and source alignment as the tables. It is available for both native
+and external references and retains breakpoints from both sampling grids.
 
 Use **Export timing reference** to obtain a complete working example from the
 current simulation, with its exact track fingerprint. The exported origin is

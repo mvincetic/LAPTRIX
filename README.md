@@ -41,6 +41,7 @@ the last completed result remains visible if a solve fails.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
+- A source-aligned Time Delta plot for native and imported timing references.
 - Orbit, top and chase cameras; configurable analysis layers.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
@@ -56,6 +57,7 @@ node scripts/visual-qa.mjs
 node scripts/visual-qa.mjs --refinement
 node scripts/visual-qa.mjs --gt
 node scripts/visual-qa.mjs --gt --reference
+node scripts/visual-qa.mjs --gt --reference --delta
 npm run study:solver
 npm run study:sampling
 ```
@@ -75,6 +77,9 @@ anchors. Both vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md)
 **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
+Select **Time Delta** under Telemetry graphs to inspect where the current lap gains
+or loses time. Negative values are faster; positive values are slower. Clicking,
+dragging, corner selection and playback all use the existing shared cursor.
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

@@ -12,6 +12,7 @@ import {
   cornerDelta,
   lapDeltaAt,
   referenceSectorTimes,
+  prepareTimeComparison,
 } from "../../packages/telemetry";
 import { restoreReference } from "../../apps/web/src/reference";
 
@@ -75,6 +76,24 @@ function lap(progress: number[], times: number[]): Lap {
 }
 
 describe("physical track alignment across solver grids", () => {
+  it("preserves reference breakpoints and exact cursor deltas between unequal grids", () => {
+    const current = lap([0, 0.2, 0.6, 1], [0, 4, 8, 12]);
+    const reference = lap([0, 0.1, 0.5, 0.8, 1], [0, 1, 5, 11, 15]);
+    const prepared = prepareTimeComparison(current, reference)!;
+    expect(prepared.samples.map((s) => s.distance)).toEqual([
+      0, 10, 20, 50, 60, 80, 100,
+    ]);
+    expect(prepared.samples[1].delta).toBeCloseTo(1);
+    expect(prepared.samples[5].delta).toBeCloseTo(-1);
+    expect(prepared.atTime(2)).toBeCloseTo(1);
+    expect(prepared.atTime(10)).toBeCloseTo(-1);
+    expect(prepared.atDistance(50)).toBeCloseTo(2);
+    expect(prepared.atTime(-10)).toBe(0);
+    expect(prepared.atTime(50)).toBe(-3);
+    expect(() => prepared.atTime(NaN)).toThrow();
+    reference.alignment!.trackFingerprint = `sha256:${"0".repeat(64)}`;
+    expect(prepareTimeComparison(current, reference)).toBeNull();
+  });
   it("uses current physical sector gates for timing-only references without inventing channels", () => {
     const current = lap([0, 0.2, 0.6, 1], [0, 4, 8, 12]);
     current.samples[1].distance = 10;

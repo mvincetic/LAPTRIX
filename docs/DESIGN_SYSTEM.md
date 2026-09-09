@@ -50,3 +50,9 @@ Reference import/export lives in Additional actions. The comparison footer expos
 imported source, declared origin and timing resolution, using wrapped text. Invalid
 files retain the prior comparison and present an import-specific retry. Timing-only
 references contribute comparison intervals without inserting invented graph traces.
+
+Time Delta is a separate telemetry tab. A zero baseline, signed seconds, red/green
+trace and text legend distinguish slower/faster intervals. Both horizontal axes
+and existing playback controls remain available. Numeric axis labels use ordinary
+layout text so they remain legible on narrow screens. Provenance stays in the
+comparison panel, and the trace footer identifies the active reference.

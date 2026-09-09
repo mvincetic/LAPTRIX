@@ -76,3 +76,11 @@ time/progress arrays. `parseReference` validates either format. Native reference
 imports record `referenceImport.fileName`; API-generated laps omit it. Both formats
 restore against the same source identity. See REFERENCE_IMPORT.md for the file
 contract and the limits of declared logger alignment.
+
+The Time Delta view prepares both time/progress axes once for each lap/reference.
+Its plotted knots are the sorted union of both source-progress grids, retaining
+changes between the current simulation's samples. Cursor values interpolate
+reference time at the current cursor's source position. Negative means faster,
+positive means slower. Both horizontal axes, pointer seeking and the transport
+share the existing PlaybackClock. The seven physical channel graphs remain
+simulation telemetry; this separate view contains comparison values only.

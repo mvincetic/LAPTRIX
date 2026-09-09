@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-09 — Source-aligned delta trace
+
+**Decision:** Add a dedicated Time Delta view that merges both timing grids before
+plotting and interpolates the live cursor against the reference's source progress.
+**Alternative:** Plot only at simulation samples or introduce a separate playback
+clock. **Reasoning:** Fine reference events must survive and seeking must stay
+synchronized with the ghost and telemetry. **Consequence:** Prepared comparison
+axes and paths are memoized. The existing seven physical channels remain separate
+from comparison values, and mismatched source alignment produces an empty state.
+
 ## 2026-09-09 — Separate external timing reference contract
 
 **Decision:** Accept native Lap exports and a separate timing-only format with

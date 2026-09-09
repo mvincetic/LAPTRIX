@@ -932,6 +932,89 @@ select {
 .telemetry-panel h2 {
   font-size: 10px;
 }
+.delta-analysis {
+  height: 278px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.delta-readout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+.delta-readout > div:first-child {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.delta-readout span {
+  font-size: 10px;
+  color: #79869a;
+}
+.delta-readout strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.delta-legend {
+  display: flex;
+  gap: 12px;
+}
+.delta-chart {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.delta-y-ticks {
+  width: 45px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 5px 34px 0;
+  font-size: 9px;
+  color: #79869a;
+  text-align: right;
+}
+.delta-plot {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.delta-plot svg {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  background: #fcfdff;
+  cursor: crosshair;
+  touch-action: none;
+}
+.delta-x-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+  color: #79869a;
+  font-size: 9px;
+}
+.delta-caption {
+  font-size: 9px;
+  color: #79869a;
+  padding-top: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.delta-empty {
+  height: 278px;
+  display: grid;
+  place-content: center;
+  padding: 24px;
+  font-size: 12px;
+  color: #79869a;
+}
 .axis-toggle {
   margin-left: auto;
 }

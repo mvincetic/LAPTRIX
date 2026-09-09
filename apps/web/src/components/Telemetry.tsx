@@ -1,6 +1,11 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { Pause, Play, SkipBack, Volume2, VolumeX, Repeat2 } from "lucide-react";
-import type { Lap, Sample } from "../../../../packages/shared/schema";
+import type {
+  Lap,
+  Reference,
+  Sample,
+} from "../../../../packages/shared/schema";
+import { TimeDeltaPlot } from "./TimeDeltaPlot";
 import {
   formatTime,
   interpolate,
@@ -71,11 +76,13 @@ const channelDefinitions: Channel[] = [
 ];
 export function Telemetry({
   lap,
+  reference,
   clock,
   audio,
   onAudio,
 }: {
   lap: Lap | null;
+  reference: Reference | null;
   clock: PlaybackClock;
   audio: boolean;
   onAudio: () => void;
@@ -141,7 +148,7 @@ export function Telemetry({
           role="tablist"
           aria-label="Telemetry view"
         >
-          {["Lap Graphs", "Sector Analysis"].map((t) => (
+          {["Lap Graphs", "Sector Analysis", "Time Delta"].map((t) => (
             <button
               key={t}
               role="tab"
@@ -303,6 +310,15 @@ export function Telemetry({
             </span>
           </div>
         </div>
+      ) : view === "Time Delta" ? (
+        <TimeDeltaPlot
+          lap={lap}
+          reference={reference}
+          axis={axis}
+          time={playback.time}
+          progress={progress}
+          onSeek={seek}
+        />
       ) : (
         <div className="sector-analysis-grid">
           {lap?.sectors.map((s) => {

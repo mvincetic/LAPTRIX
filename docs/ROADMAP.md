@@ -36,11 +36,13 @@ Reference-file import now accepts native simulation exports and explicit externa
 timing data with units/provenance/source checks. Sector and corner comparisons
 use matched physical intervals. Measured channel overlays and automatic logger
 alignment remain separate future work; imported timing never fabricates channels.
+A synchronized Time Delta view now retains both grids' breakpoints and supports
+either horizontal axis, shared seeking, playback and reference changes.
 
 ## Next highest-value work
 
-1. Improve reference analysis with a synchronized time-delta trace and inspectable
-   provenance; keep imported timing distinct from simulated channels.
+1. Complete portable project round trips, including project names, setup, custom
+   track geometry and verified references, with recovery when import or solving fails.
 2. Evaluate measured calibration data and reusable 3D track geometry; add transient
    dynamics only with independent benchmarks and suitable parameter sources.
 
@@ -48,8 +50,8 @@ alignment remain separate future work; imported timing never fabricates channels
 
 The local numerical suite contains 69 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Thirty-two TypeScript tests cover
-geometry, alignment, reference validation, vehicle contracts and clock/data invariants. Twelve browser journeys cover the
+extremes and analytical work/grip benchmarks. Thirty-three TypeScript tests cover
+geometry, alignment, reference validation, vehicle contracts and clock/data invariants. Thirteen browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

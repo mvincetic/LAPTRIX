@@ -629,6 +629,7 @@ export function App() {
           )}
           <Telemetry
             lap={lap}
+            reference={reference}
             clock={clock}
             audio={audio}
             onAudio={() => void toggleAudio()}

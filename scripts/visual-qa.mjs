@@ -23,7 +23,8 @@ const refined = process.argv.includes("--refinement");
 const sampled = process.argv.includes("--sampling");
 const gt = process.argv.includes("--gt");
 const imported = process.argv.includes("--reference");
-const prefix = `${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+const delta = process.argv.includes("--delta");
+const prefix = `${delta ? "delta-" : ""}${imported ? "reference-" : ""}${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
 if (gt) {
   await page
     .getByRole("button", { name: "Set reference", exact: true })
@@ -89,6 +90,8 @@ if (imported) {
     .waitFor();
 }
 await page.waitForTimeout(2500);
+if (delta)
+  await page.getByRole("tab", { name: "Time Delta", exact: true }).click();
 await page.screenshot({
   path: `artifacts/${prefix}desktop.png`,
   fullPage: true,

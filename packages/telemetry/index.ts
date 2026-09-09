@@ -139,6 +139,54 @@ export function formatTime(seconds: number) {
   const ms = Math.round(seconds * 1000);
   return `${Math.floor(ms / 60000)}:${((ms % 60000) / 1000).toFixed(3).padStart(6, "0")}`;
 }
+
+/** Prepare axes once for cursor updates; merge both grids so fine reference events survive plotting. */
+export function prepareTimeComparison(
+  current: Lap,
+  reference: Reference | null,
+) {
+  if (
+    !current.alignment ||
+    !reference?.alignment ||
+    current.alignment.trackFingerprint !== reference.alignment.trackFingerprint
+  )
+    return null;
+  const currentProgress = current.alignment.progress,
+    referenceProgress = reference.alignment.progress;
+  const currentTime = current.samples.map((s) => s.time),
+    currentDistance = current.samples.map((s) => s.distance);
+  const referenceTime = reference.samples.map((s) => s.time);
+  const atTime = (time: number) => {
+    const progress = interpolateValues(currentTime, currentProgress, time);
+    return (
+      Math.max(0, Math.min(current.lapTime, time)) -
+      interpolateValues(referenceProgress, referenceTime, progress)
+    );
+  };
+  const atDistance = (distance: number) => {
+    const progress = interpolateValues(
+      currentDistance,
+      currentProgress,
+      distance,
+    );
+    return (
+      interpolateValues(currentDistance, currentTime, distance) -
+      interpolateValues(referenceProgress, referenceTime, progress)
+    );
+  };
+  const progress = Array.from(
+    new Set([...currentProgress, ...referenceProgress]),
+  ).sort((a, b) => a - b);
+  const samples = progress.map((p) => {
+    const time = interpolateValues(currentProgress, currentTime, p);
+    return {
+      time,
+      distance: interpolateValues(currentProgress, currentDistance, p),
+      delta: time - interpolateValues(referenceProgress, referenceTime, p),
+    };
+  });
+  return { atTime, atDistance, samples };
+}
 export function signed(value: number, digits = 3) {
   return `${value > 0 ? "+" : ""}${value.toFixed(digits)}`;
 }

@@ -1,5 +1,11 @@
 # Performance
 
+Time-delta comparison memoizes source/time axes and the union of source-progress
+knots when the current lap or reference changes. Its path is memoized separately
+for each selected horizontal axis; playback updates only the readout/cursor. A
+20,000-point imported timing file can contribute its own breakpoints instead of
+being reduced to the simulation grid. Interpolation uses binary searches.
+
 The supplied circuit has 720 unique samples and each lap returns 721 telemetry
 samples. The baseline optimizer uses a sparse quadratic and active-set linear solves
 rather than numerical finite differences. A 512-point speed/power lookup avoids repeated gear evaluation

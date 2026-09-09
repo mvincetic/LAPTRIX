@@ -1,5 +1,10 @@
 # Testing and validation
 
+Delta-plot tests use hand-calculated unequal grids to verify retained breakpoints,
+positive/negative deltas, boundary clamps and cursor interpolation. A real browser
+journey imports a known timing relationship, checks corner/chart seeking, switches
+axes, plays/pauses the same clock, replaces the reference and checks mobile width.
+
 Reference tests reject wrong units, missing provenance, incomplete intervals,
 nonmonotonic time/progress, mismatched source geometry and malformed native exports.
 A hand-calculated example checks physical sector-gate interpolation with unequal
