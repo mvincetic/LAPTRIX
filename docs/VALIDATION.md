@@ -45,6 +45,7 @@ was available. Ordinary browser controls are independent of that optional API.
 - Scaled charts from data and aligned sector markers to the selected axis.
 - Stabilized the file watcher against transient empty modules during Windows writes.
 - Corrected short-desktop footer overlap and kept analysis markers out of chase view.
+- Kept temperature keyboard entry intact, applying allowed-range bounds on field exit.
 - Tightened optimizer convergence after an 87 ms start-location sensitivity;
   the checked rotated case now differs by less than 1 ms.
 - Kept slider-test expectations at the control's documented 0.01 s step while the

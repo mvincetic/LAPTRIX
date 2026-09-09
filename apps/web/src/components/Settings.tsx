@@ -135,7 +135,8 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
                 min={5}
                 max={45}
                 value={setup.temperature}
-                onChange={(e) =>
+                onChange={(e) => update("temperature", Number(e.target.value))}
+                onBlur={(e) =>
                   update(
                     "temperature",
                     Math.max(5, Math.min(45, Number(e.target.value))),

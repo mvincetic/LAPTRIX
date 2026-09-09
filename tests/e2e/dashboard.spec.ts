@@ -80,6 +80,15 @@ test("layers, camera modes, exports, telemetry tabs and responsive layout", asyn
   await expect(
     page.getByText("Time (s) · click or drag to inspect"),
   ).toBeVisible();
+  const temperature = page.getByRole("spinbutton", { name: "Temperature" });
+  await temperature.focus();
+  await temperature.press("ControlOrMeta+A");
+  await temperature.pressSequentially("32");
+  await temperature.press("Tab");
+  await expect(temperature).toHaveValue("32");
+  await temperature.fill("60");
+  await temperature.press("Tab");
+  await expect(temperature).toHaveValue("45");
   await page.getByRole("button", { name: "Additional actions" }).click();
   const downloaded = page.waitForEvent("download");
   await page
