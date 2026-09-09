@@ -10,13 +10,13 @@ and no main merge, force-push or repository-settings change was made.
 - TypeScript strict typecheck: pass.
 - Vitest: 47 tests pass.
 - Python numerical/API tests: 86 tests pass.
-- Playwright: 34 development browser journeys pass; two viewer journeys also run
+- Playwright: 36 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 361 kB initial JavaScript / 110 kB
+- Vite production build: pass; approximately 365 kB initial JavaScript / 111 kB
   gzip, plus a separate 950 kB viewer / 253 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `0f7446e`; each following milestone reruns CI on push.
+- GitHub Actions passed through `683fe13`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -243,6 +243,17 @@ QA in `artifacts/tabs-qa.json` records no runtime errors or horizontal overflow.
 Focused layers, chase legend, delta and sector screenshots were opened and reviewed
 at both widths. The active panel's inset outline remains visible, the chase legend
 appears on focus, and numerical content remains readable on mobile.
+
+Cursor Data passes the 86 Python / 47 TypeScript / 36 development browser gates,
+lint, typecheck and build, plus both production viewer journeys. New tests compare
+actual exported samples at an intermediate position, including UI units and a
+gear transition. They cover precise entry, unchanged playback on invalid input,
+Escape, the finish endpoint, corner/delta synchronization and reset after axis or
+result changes. After the final scroll-container correction, all four cursor/tab
+journeys and frontend gates pass again. Focused PageDown reaches the complete
+desktop readout and model note. Refreshed `artifacts/cursor-*.png` images at 1600,
+1280 and 390 px were opened and reviewed; the QA report records no runtime errors
+or horizontal overflow and the same 2500.125 m cursor at every width.
 
 ## Scope of the evidence
 

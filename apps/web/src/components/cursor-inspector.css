@@ -1,0 +1,91 @@
+.cursor-panel {
+  height: 278px;
+  overflow: auto;
+}
+.cursor-inspector {
+  padding: 12px;
+}
+.cursor-position {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+}
+.cursor-position input {
+  width: 132px;
+  height: 29px;
+  padding: 4px 7px;
+  font-variant-numeric: tabular-nums;
+}
+.cursor-position button {
+  padding: 6px 12px;
+  color: var(--blue);
+  font-size: 11px;
+}
+.cursor-position > span {
+  color: #64748b;
+  font-size: 10px;
+}
+.cursor-location {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  margin: 12px 0;
+  font-variant-numeric: tabular-nums;
+}
+.cursor-location strong {
+  font-size: 17px;
+}
+.cursor-location span {
+  color: #64748b;
+  font-size: 11px;
+}
+.cursor-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  gap: 1px;
+  background: #e7edf4;
+  border: 1px solid #e7edf4;
+}
+.cursor-values > div {
+  background: #fbfcfe;
+  padding: 8px;
+}
+.cursor-values dt {
+  color: #64748b;
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+.cursor-values dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.cursor-values small {
+  margin-left: 4px;
+  font-size: 10px;
+  font-weight: 400;
+}
+.cursor-values .cursor-unavailable {
+  font-size: 11px;
+  font-weight: 400;
+}
+.cursor-note {
+  margin: 9px 0 0;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.5;
+}
+@media (max-width: 650px) {
+  .cursor-panel {
+    height: auto;
+  }
+  .cursor-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

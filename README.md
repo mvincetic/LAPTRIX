@@ -53,6 +53,7 @@ the last completed result remains visible if a solve fails.
 - Source geometry contact inspection with height gaps, a diagram and local report export.
 - Cancel pending calculations/imports while retaining the completed workspace and setup edits.
 - Keyboard navigation for actions, viewer tools and telemetry tabs with visible focus.
+- Exact time/distance cursor entry with numerical telemetry and explicit model limits.
 
 ## Checks
 
@@ -74,6 +75,7 @@ node scripts/track-failure-qa.mjs
 node scripts/cancellation-qa.mjs
 node scripts/keyboard-audit.mjs
 node scripts/tabs-qa.mjs
+node scripts/cursor-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -99,6 +101,9 @@ format. **Export timing reference** provides a working format example. See
 Select **Time Delta** under Telemetry graphs to inspect where the current lap gains
 or loses time. Negative values are faster; positive values are slower. Clicking,
 dragging, corner selection and playback all use the existing shared cursor.
+**Cursor Data** exposes numerical channels at that same position. Enter a time in
+seconds or distance in metres and press **Inspect** to pause and seek exactly.
+Escape discards an unsent entry; switching axis or calculating a new lap resets it.
 **Export project** and **Import project JSON** move the whole setup and reference
 between workspaces. Import recalculates with the installed vehicle and retains the
 prior workspace if validation or calculation fails. See [PROJECT_FILES](docs/PROJECT_FILES.md).

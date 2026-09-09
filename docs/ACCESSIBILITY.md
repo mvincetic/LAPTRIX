@@ -45,6 +45,13 @@ and sector panels at both widths and records runtime errors and page widths.
 Browser regressions check arrow wrapping, first/last selection, panel focus and
 relationships, layer interaction, camera/axis state and retained playback time.
 
+Cursor Data provides native numeric entry with labelled units, bounds and keyboard
+submission. Invalid entry keeps the clock unchanged; Escape discards draft text.
+Its description list exposes numerical channel values without a rapidly updating
+live region. The existing slider's value text identifies both seconds and metres.
+The focused panel itself scrolls on desktop, keeping its complete readout and note
+reachable by keyboard; mobile content expands into the document.
+
 Remaining review includes broader expanded/error states, contrast, zoom, screen
 readers and representative browsers.
 The existing native aero dialog has keyboard dismissal and return-focus tests,

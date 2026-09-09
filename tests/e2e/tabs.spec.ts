@@ -91,6 +91,8 @@ for (const width of [1600, 390]) {
       .getByRole("tab", { name: "Lap Graphs", exact: true })
       .focus();
     await page.keyboard.press("ArrowLeft");
+    await selected(page, telemetry, "Cursor Data");
+    await page.keyboard.press("ArrowLeft");
     const delta = await selected(page, telemetry, "Time Delta");
     await page.keyboard.press("Tab");
     await expect(
@@ -112,6 +114,8 @@ for (const width of [1600, 390]) {
     await page.keyboard.press("ArrowRight");
     await selected(page, telemetry, "Sector Analysis");
     await page.keyboard.press("End");
+    await selected(page, telemetry, "Cursor Data");
+    await page.keyboard.press("ArrowLeft");
     await selected(page, telemetry, "Time Delta");
     await expect(seek).toHaveValue(time);
     await expect(timeAxis).toHaveAttribute("aria-pressed", "true");

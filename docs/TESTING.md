@@ -1,5 +1,13 @@
 # Testing and validation
 
+Cursor inspection journeys use real exported solver samples and independently
+interpolate between two nodes around a gear change. They verify continuous channel
+values, UI unit conversions and stepped gear selection, then exercise exact time
+entry during playback, invalid inputs, Escape, the closing endpoint, chart/corner
+synchronization and draft reset after axis/result changes at 1600/390 px. The visual
+QA script `scripts/cursor-qa.mjs` captures the workspace and numerical panel at
+1600, 1280 and 390 px and records the shared cursor, runtime errors and overflow.
+
 Tab journeys at 1600/390 px check roving focus, arrow wrapping, Home/End, reciprocal
 tab/panel relationships and hidden inactive panels. They operate layers and camera
 buttons by keyboard, check axis pressed state, and retain both the canvas element

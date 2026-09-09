@@ -6,6 +6,7 @@ import type {
   Sample,
 } from "../../../../packages/shared/schema";
 import { TimeDeltaPlot } from "./TimeDeltaPlot";
+import { CursorInspector } from "./CursorInspector";
 import { TabList } from "./TabList";
 import { tabPanelProps } from "./tabs";
 import {
@@ -149,7 +150,12 @@ export function Telemetry({
         <TabList
           label="Telemetry view"
           prefix={tabsPrefix}
-          options={["Lap Graphs", "Sector Analysis", "Time Delta"]}
+          options={[
+            "Lap Graphs",
+            "Sector Analysis",
+            "Time Delta",
+            "Cursor Data",
+          ]}
           value={view}
           onChange={setView}
           compact
@@ -369,6 +375,23 @@ export function Telemetry({
             );
           })}
       </div>
+      <div
+        className="cursor-panel"
+        {...tabPanelProps(tabsPrefix, 3, view === "Cursor Data")}
+      >
+        {view === "Cursor Data" && (
+          <CursorInspector
+            key={axis}
+            lap={lap}
+            sample={sample}
+            axis={axis}
+            onSeek={(time) => {
+              clock.play(false);
+              clock.seek(time);
+            }}
+          />
+        )}
+      </div>
       <div className="playback">
         <button
           className="icon-button"
@@ -396,6 +419,11 @@ export function Telemetry({
         <input
           className="seek"
           aria-label="Lap playback position"
+          aria-valuetext={
+            sample
+              ? `${sample.time.toFixed(3)} seconds, ${sample.distance.toFixed(3)} metres`
+              : undefined
+          }
           type="range"
           min={0}
           max={lap?.lapTime ?? 1}

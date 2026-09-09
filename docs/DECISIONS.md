@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Inspect exact positions through the existing playback clock
+
+**Decision:** Add a Cursor Data tab with numerical channels and a native time/distance
+entry form. Keep unsent draft text independent of the moving cursor; Inspect pauses
+and seeks through existing telemetry interpolation. Reset drafts on axis/result
+changes and allow Escape to restore the current value.
+**Reasoning:** Pointer charts and a fine-step range alone make exact engineering
+inspection cumbersome. **Consequences:** The view adds no solver or alternate clock,
+uses explicit display units and stepped categorical fields, and labels reserved
+vertical dynamics as unmodelled. Native bounds reject invalid positions without
+changing playback. Readouts do not announce every playback frame as a live region.
+
 ## 2026-09-09 — Share tab navigation while retaining the viewer
 
 **Decision:** Use one roving-tab implementation with immediate activation on focus,

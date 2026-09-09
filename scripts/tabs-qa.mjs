@@ -44,6 +44,7 @@ try {
     const telemetry = page.getByRole("tablist", { name: "Telemetry view" });
     await telemetry.getByRole("tab", { name: "Lap Graphs" }).focus();
     await page.keyboard.press("End");
+    await page.keyboard.press("ArrowLeft");
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
     await page.keyboard.press("Space");

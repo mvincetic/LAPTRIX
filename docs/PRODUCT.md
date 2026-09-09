@@ -40,6 +40,10 @@ predictable focus after exports or file selection.
 Viewer and telemetry tabs support arrow-key selection and direct panel access.
 Camera and axis choices expose their selected state, while tab changes retain
 the existing 3D canvas, layer settings and playback position.
+Cursor Data adds exact time/distance entry and numerical channel inspection.
+Inspect pauses playback at the entered position; invalid or unsent entries leave
+the clock unchanged. It reports the development model's channels and explicitly
+identifies vertical dynamics as unmodelled.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

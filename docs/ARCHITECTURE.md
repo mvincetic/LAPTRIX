@@ -66,6 +66,11 @@ content immediately. Viewer tools are separate mounted panels before the shared
 canvas in document order, so selecting a tab does not recreate the WebGL context.
 Telemetry panel shells retain their relationships while mounting only the selected
 plot. Their shared axis state and playback clock remain outside that selection.
+`CursorInspector` receives the same interpolated sample as the channel graphs.
+Distance entry uses the existing distance-to-time interpolation and seeks the one
+clock after pausing it. Local draft text is separate from playback, invalidated by
+axis/result changes, and never changes saved setup or simulation output. Numerical
+readouts use a semantic description list without a high-frequency live region.
 
 `apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
 and solves its box constraints. `solver.py` owns geometry, the speed envelope,

@@ -108,3 +108,9 @@ selection. Tab reaches the next control or active panel, whose focus outline sit
 inside its border. Inactive panels are hidden; the canvas stays mounted. The chase
 legend reappears when its panel receives keyboard focus. Camera and axis controls
 keep their compact selected styling and also expose pressed state semantically.
+Cursor Data uses a compact entry row, current time/distance summary and numerical
+channel grid. The selected horizontal axis determines the input's labelled units.
+Inspect pauses and seeks; Escape restores the cursor value. The grid has four
+columns in the desktop panel and two on mobile, where the document can grow.
+The desktop tab panel is its own keyboard-scrollable container.
+Values include units, discrete fields and an explicit Not modelled vertical channel.

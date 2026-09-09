@@ -25,6 +25,16 @@ interpolates continuous values, and steps discrete gear/corner/sector fields.
 Linear playback interpolation is a visual approximation within short samples;
 it does not reintegrate or modify the solver's trajectory.
 
+The Cursor Data tab presents these values numerically with explicit UI units,
+including km/h, percentages and road-wheel degrees. Time/distance entry pauses and
+seeks the shared clock through this same interpolation. Native number constraints
+reject empty, negative and beyond-lap positions; the complete closing endpoint is
+accepted. Draft text survives playback updates until Inspect/Enter, Escape, an axis
+change or a new result. Gear/corner/sector remain stepped values, zero corner is
+shown as None, and reserved vertical dynamics are labelled Not modelled. Numerical
+display precision is not an accuracy claim. The playback slider exposes its current
+seconds and metres through an accessible value description.
+
 `PlaybackClock` is the only source of playback time. Play, pause, seeking, speed
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers
 receive approximately 30 Hz updates. After a new simulation the clock resets and
