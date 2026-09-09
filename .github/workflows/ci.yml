@@ -19,6 +19,15 @@ jobs:
       - run: npm ci
       - run: python -m pip install -r requirements.txt
       - run: npm run check
+      - name: Disable unused Chrome APT source on the ephemeral runner
+        shell: bash
+        run: |
+          # Playwright downloads its own pinned Chromium; Ubuntu supplies system libraries.
+          for source in /etc/apt/sources.list.d/google-chrome.list /etc/apt/sources.list.d/google-chrome.sources; do
+            if [ -f "$source" ]; then
+              sudo mv -- "$source" "$source.laptrix-disabled"
+            fi
+          done
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - run: npm run test:production
