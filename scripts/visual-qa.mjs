@@ -19,6 +19,14 @@ await page.goto("http://127.0.0.1:5173/");
 await page.getByTestId("lap-time").waitFor({ timeout: 60000 });
 await page.waitForTimeout(2500);
 await page.screenshot({ path: "artifacts/desktop.png", fullPage: true });
+for (const width of [1280, 900]) {
+  await page.setViewportSize({ width, height: 900 });
+  await page.waitForTimeout(500);
+  await page.screenshot({
+    path: `artifacts/viewport-${width}.png`,
+    fullPage: true,
+  });
+}
 console.log(
   JSON.stringify(
     {
@@ -38,4 +46,17 @@ console.log(
   "Mobile width",
   await page.evaluate(() => document.body.scrollWidth),
 );
+await page.setViewportSize({ width: 1600, height: 1000 });
+await page
+  .getByRole("button", { name: "Select corner 2", exact: true })
+  .click();
+await page.waitForTimeout(500);
+await page.screenshot({
+  path: "artifacts/corner-inspection.png",
+  fullPage: true,
+});
+await page.getByRole("button", { name: "Chase", exact: true }).click();
+await page.waitForTimeout(500);
+await page.screenshot({ path: "artifacts/chase-camera.png", fullPage: true });
+console.log("Final browser errors", errors);
 await browser.close();

@@ -15,7 +15,7 @@ type Channel = {
   color: string;
   scale?: number;
 };
-const channels: Channel[] = [
+const channelDefinitions: Channel[] = [
   {
     key: "speed",
     label: "Speed",
@@ -84,6 +84,29 @@ export function Telemetry({
     [axis, setAxis] = useState<"distance" | "time">("distance"),
     [view, setView] = useState("Lap Graphs");
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
+  const channels = useMemo(
+    () =>
+      channelDefinitions.map((c) => {
+        if (!lap || c.key === "throttle" || c.key === "brake") return c;
+        const values = lap.samples.map((s) => s[c.key] * (c.scale ?? 1));
+        if (c.key === "lateralG") {
+          const max = Math.max(1, Math.ceil(Math.max(...values.map(Math.abs))));
+          return { ...c, min: -max, max };
+        }
+        const step = c.key === "rpm" ? 1000 : c.key === "gear" ? 1 : 10;
+        const min =
+          c.key === "y" ? Math.floor(Math.min(...values) / step) * step : 0;
+        return {
+          ...c,
+          min,
+          max: Math.max(
+            min + step,
+            Math.ceil(Math.max(...values) / step) * step,
+          ),
+        };
+      }),
+    [lap],
+  );
   const paths = useMemo(() => {
     if (!lap) return [];
     const max = axis === "distance" ? lap.length : lap.lapTime;
@@ -95,7 +118,7 @@ export function Telemetry({
         )
         .join(" "),
     );
-  }, [lap, axis]);
+  }, [lap, axis, channels]);
   const progress = lap
     ? axis === "distance"
       ? (sample?.distance ?? 0) / lap.length
@@ -235,7 +258,9 @@ export function Telemetry({
                 <text
                   key={s.id}
                   x={
-                    ((s.startDistance + s.endDistance) / 2 / lap.length) * 1000
+                    (axis === "distance"
+                      ? (s.startDistance + s.endDistance) / 2 / lap.length
+                      : (s.split - s.time / 2) / lap.lapTime) * 1000
                   }
                   y={10}
                   textAnchor="middle"

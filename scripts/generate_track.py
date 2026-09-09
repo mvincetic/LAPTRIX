@@ -61,8 +61,9 @@ track = dict(
     country="Synthetic · elevation study",
     synthetic=True,
     closed=True,
-    provenance=("Original LAPTRIX procedural development circuit. "
-                "Not Spa-Francorchamps or surveyed track data."),
+    provenance=(
+        "Original LAPTRIX procedural development circuit. Not Spa-Francorchamps or surveyed track data."
+    ),
     sectorFractions=[0.32, 0.67, 1],
     points=points,
 )

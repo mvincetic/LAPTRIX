@@ -66,10 +66,13 @@ export class PlaybackClock {
     for (const fn of this.listeners) fn();
   }
   configure(duration: number) {
+    if (!Number.isFinite(duration) || duration <= 0)
+      throw new Error("Lap duration must be positive and finite");
     this.snapshot = { ...this.snapshot, duration, time: 0, playing: false };
     this.emit();
   }
   seek(time: number) {
+    if (!Number.isFinite(time)) throw new Error("Seek time must be finite");
     this.snapshot = {
       ...this.snapshot,
       time: Math.max(0, Math.min(this.snapshot.duration, time)),
@@ -88,6 +91,8 @@ export class PlaybackClock {
     this.emit();
   }
   rate(rate: number) {
+    if (!Number.isFinite(rate) || rate <= 0 || rate > 16)
+      throw new Error("Playback rate must be above 0 and at most 16");
     this.snapshot = { ...this.snapshot, rate };
     this.emit();
   }
@@ -96,6 +101,8 @@ export class PlaybackClock {
     this.emit();
   }
   advance(delta: number) {
+    if (!Number.isFinite(delta) || delta < 0)
+      throw new Error("Elapsed time must be finite and nonnegative");
     const state = this.snapshot;
     if (!state.playing) return;
     let time = state.time + delta * state.rate,
@@ -111,9 +118,10 @@ export class PlaybackClock {
   }
   start() {
     const tick = (now: number) => {
+      const wasPlaying = this.snapshot.playing;
       this.advance(this.last ? Math.min((now - this.last) / 1000, 0.1) : 0);
       this.last = now;
-      if (now - this.emitted > 1000 / 30) {
+      if (wasPlaying && now - this.emitted > 1000 / 30) {
         this.emit();
         this.emitted = now;
       }

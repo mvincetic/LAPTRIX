@@ -38,6 +38,7 @@ the last completed result remains visible if a solve fails.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
 - Orbit, top and chase cameras; configurable analysis layers.
+- Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 
 ## Checks
@@ -56,6 +57,10 @@ ignored `artifacts/`, `test-results/` and `playwright-report/` directories.
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is
 intentionally delivered as a local application with no paid services or accounts.
+
+The current quality record and remaining scope are in [VALIDATION](docs/VALIDATION.md)
+and [LIMITATIONS](docs/LIMITATIONS.md). GitHub Actions repeats the local quality and
+browser gates on pushes. Work remains on `codex/autonomous-mvp`; main is untouched.
 
 ## Repository guide
 

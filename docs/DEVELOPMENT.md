@@ -14,6 +14,10 @@ The backend does not hot-reload by default: restart the dev process after Python
 changes. Frontend edits use Vite HMR. Individual commands `npm run dev:web` and
 `npm run dev:api` are available when debugging process startup.
 
+The Vite watcher waits 200 ms for writes to stabilize. This prevents a Windows
+formatter's truncate/write sequence from being cached as an empty source module.
+If an interrupted write leaves a stale HMR module, restart the development command.
+
 Quality gate: `npm run check`. Browser regression: `npm run test:e2e` after
 `npx playwright install chromium`. `node scripts/visual-qa.mjs` captures desktop
 and mobile screenshots and reports browser runtime errors. Open the actual PNGs

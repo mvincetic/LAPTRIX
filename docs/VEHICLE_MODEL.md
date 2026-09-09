@@ -5,6 +5,8 @@ vehicle, not a specification for any real team or season. Current parameters:
 790 kg dry mass, 610 kW peak power, 1.12 m² drag area, 3.6 m² downforce area,
 1.55 base tyre friction, 4.8 g maximum commanded braking, eight gears, a 3.25 final
 drive, 0.34 m wheel radius and 4,000–12,500 RPM operating range.
+The configured 3.6 m wheelbase drives the approximate steering angle, keeping this
+vehicle-specific dimension out of generic UI and solver constants.
 
 `powerCurve` is an increasing RPM table in kW. At a candidate speed, the model
 calculates engine RPM for each gear, interpolates available power, rejects

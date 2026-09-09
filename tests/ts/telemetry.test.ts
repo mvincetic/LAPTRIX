@@ -72,6 +72,15 @@ describe("authoritative telemetry interpolation", () => {
   });
 });
 describe("playback clock", () => {
+  it("rejects invalid clock inputs without corrupting its snapshot", () => {
+    const clock = new PlaybackClock(),
+      before = clock.getSnapshot();
+    expect(() => clock.configure(0)).toThrow();
+    expect(() => clock.seek(NaN)).toThrow();
+    expect(() => clock.rate(-1)).toThrow();
+    expect(() => clock.advance(Infinity)).toThrow();
+    expect(clock.getSnapshot()).toEqual(before);
+  });
   it("shares play, pause, seek, speed and looping timing", () => {
     const clock = new PlaybackClock();
     clock.configure(20);

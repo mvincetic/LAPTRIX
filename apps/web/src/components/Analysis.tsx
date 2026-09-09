@@ -13,12 +13,14 @@ export function Analysis({
   reference,
   onReference,
   onCorner,
+  onSeek,
   selectedCorner,
 }: {
   lap: Lap | null;
   reference: Lap | null;
   onReference: () => void;
   onCorner: (id: number) => void;
+  onSeek: (time: number) => void;
   selectedCorner: number | null;
 }) {
   if (!lap)
@@ -59,6 +61,11 @@ export function Analysis({
             )}
           </div>
           <small>Approximate · {lap.optimization.method}</small>
+          {!lap.optimization.converged && (
+            <small className="solver-warning">
+              Iteration limit reached · best feasible line
+            </small>
+          )}
         </div>
         <table className="sector-table">
           <thead>
@@ -99,6 +106,39 @@ export function Analysis({
             </tr>
           </tbody>
         </table>
+        {corner && (
+          <div className="corner-detail">
+            <strong>
+              T{corner.id} · {corner.direction === "L" ? "Left" : "Right"}{" "}
+              corner
+            </strong>
+            <span>
+              {corner.brakingDistance.toFixed(0)} m to apex from braking point
+            </span>
+            <span>
+              Throttle pickup at{" "}
+              {lap.samples[corner.throttleIndex].distance.toFixed(0)} m
+            </span>
+            <div className="corner-events">
+              {(
+                [
+                  "brakingIndex",
+                  "turnInIndex",
+                  "apexIndex",
+                  "throttleIndex",
+                ] as const
+              ).map((event, i) => (
+                <button
+                  key={event}
+                  onClick={() => onSeek(lap.samples[corner[event]].time)}
+                >
+                  <b>{["Brake", "Turn-in", "Apex", "Throttle"][i]}</b>
+                  {lap.samples[corner[event]].distance.toFixed(0)} m
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         <h3 className="subheading">
           CORNER-BY-CORNER ANALYSIS <span>{lap.corners.length} corners</span>
         </h3>
@@ -112,7 +152,7 @@ export function Analysis({
                 <th>Min.</th>
                 <th>Apex G</th>
                 <th>Exit</th>
-                <th />
+                <th>Δ (s)</th>
               </tr>
               <tr className="units">
                 <th />
@@ -144,34 +184,34 @@ export function Analysis({
                   <td>{c.lateralG.toFixed(1)}</td>
                   <td>{(c.exitSpeed * 3.6).toFixed(0)}</td>
                   <td>
-                    <button
-                      className="table-action"
-                      aria-label={`Inspect corner ${c.id} data`}
-                      onClick={() => onCorner(c.id)}
-                    >
+                    {reference &&
+                    reference.samples[c.exitIndex] &&
+                    reference.samples[c.entryIndex] ? (
+                      <span
+                        className={
+                          c.time -
+                            (reference.samples[c.exitIndex].time -
+                              reference.samples[c.entryIndex].time) <=
+                          0
+                            ? "positive"
+                            : "negative"
+                        }
+                      >
+                        {signed(
+                          c.time -
+                            (reference.samples[c.exitIndex].time -
+                              reference.samples[c.entryIndex].time),
+                        )}
+                      </span>
+                    ) : (
                       <ChevronRight size={12} />
-                    </button>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {corner && (
-          <div className="corner-detail">
-            <strong>
-              T{corner.id} · {corner.direction === "L" ? "Left" : "Right"}{" "}
-              corner
-            </strong>
-            <span>
-              {corner.brakingDistance.toFixed(0)} m to apex from braking point
-            </span>
-            <span>
-              Throttle pickup at{" "}
-              {lap.samples[corner.throttleIndex].distance.toFixed(0)} m
-            </span>
-          </div>
-        )}
       </section>
       <section className="panel comparison">
         <header className="panel-heading">
@@ -231,7 +271,7 @@ export function Analysis({
             : "Reference: saved simulation"}
           {delta !== null && (
             <strong className={delta <= 0 ? "positive" : "negative"}>
-              {signed((delta / lap.lapTime) * 100, 2)}%
+              {signed((delta / (reference?.lapTime ?? lap.lapTime)) * 100, 2)}%
             </strong>
           )}
         </div>

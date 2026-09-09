@@ -32,6 +32,13 @@ pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
 
 Comparison uses the same circuit. Sector differences compare the configured sector
 fractions. The generic distance comparison helper maps normalized lap progress
-when different optimized lines have different lengths. Baseline and current setup
+when different optimized lines have different lengths. Corner deltas compare the
+same entry/exit centerline sample indices rather than assuming detected corner
+numbering is identical. Baseline and current setup
 remain separate; saving a reference is explicit. Exported CSV values retain SI
 units, even when the dashboard shows km/h or percentages.
+
+Chart domains derive from the current lap, including negative/high elevations and
+different RPM/gear limits. Sector markers use the selected time or distance axis.
+Stored references are validated for strict ordering, closed endpoints, sector
+partitioning and valid corner indices before use.

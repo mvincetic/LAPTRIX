@@ -69,7 +69,8 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
           disabled={disabled}
           aria-label="Reset settings"
         >
-          <RotateCcw size={12} /> Reset
+          <RotateCcw size={12} />
+          <span className="reset-label">Reset</span>
         </button>
       </header>
       <fieldset disabled={disabled} className="settings-fields">
@@ -200,7 +201,11 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
       </fieldset>
       <div className={`setup-state ${dirty ? "dirty" : ""}`}>
         <span className="status-dot" />
-        {dirty ? "Setup changed · run to apply" : "Setup matches current run"}
+        {disabled
+          ? "Calculating setup…"
+          : dirty
+            ? "Setup changed · run to apply"
+            : "Setup matches current run"}
       </div>
       <div className="model-note">
         <span className="model-icon">
@@ -208,7 +213,7 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
         </span>
         <div>
           <strong>Development Physics Model</strong>
-          <p>Synthetic vehicle and circuit. Results are approximate.</p>
+          <p>Approximate simulation. Not validated against real telemetry.</p>
         </div>
       </div>
     </aside>

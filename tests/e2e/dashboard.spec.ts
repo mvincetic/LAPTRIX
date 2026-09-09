@@ -40,6 +40,7 @@ test("real simulation, settings, comparison and playback stay synchronized", asy
     .getByRole("button", { name: "Select corner 2", exact: true })
     .click();
   await expect(page.getByText("T2 · Left corner")).toBeVisible();
+  await expect(page.locator(".corner-detail")).toBeInViewport({ ratio: 1 });
   await expect(page.getByTestId("playback-time")).not.toHaveText("0:30.000");
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByText("Project saved on this device")).toBeVisible();
@@ -48,6 +49,9 @@ test("real simulation, settings, comparison and playback stay synchronized", asy
   await expect(
     page.getByRole("slider", { name: "Fuel load", exact: true }),
   ).toHaveValue("100");
+  await expect(
+    page.locator(".comparison-labels > div").last().locator("strong"),
+  ).toHaveText(initial!);
   expect(errors).toEqual([]);
 });
 

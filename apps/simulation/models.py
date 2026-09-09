@@ -72,6 +72,7 @@ class Vehicle(StrictModel):
     gearRatios: list[float] = Field(min_length=1)
     finalDrive: float = Field(gt=0)
     wheelRadius: float = Field(gt=0)
+    wheelbase: float = Field(gt=0)
     idleRpm: float = Field(gt=0)
     maxRpm: float = Field(gt=0)
     width: float = Field(gt=0)

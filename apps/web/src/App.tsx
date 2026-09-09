@@ -31,6 +31,7 @@ import { TrackView } from "./components/TrackView";
 import { Settings } from "./components/Settings";
 import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
+import { useLapTools } from "./useLapTools";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
@@ -61,6 +62,7 @@ export function App() {
   const fileInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
+  useLapTools(lap, clock);
   const run = useCallback(
     async (
       selectedTrack: Track,
@@ -238,7 +240,16 @@ export function App() {
     try {
       if (file.size > 1_500_000)
         throw new Error("Track file must be smaller than 1.5 MB.");
-      const imported = trackSchema.parse(JSON.parse(await file.text()));
+      const validation = trackSchema.safeParse(JSON.parse(await file.text()));
+      if (!validation.success)
+        throw new Error(
+          "Track JSON is invalid: " +
+            validation.error.issues
+              .slice(0, 2)
+              .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+              .join("; "),
+        );
+      const imported = validation.data;
       normalizeTrack(imported);
       if (catalog?.tracks.some((t) => t.id === imported.id))
         throw new Error(
@@ -480,6 +491,7 @@ export function App() {
         <div className="center-column">
           {track ? (
             <TrackView
+              calculating={busy}
               track={track}
               lap={lap}
               clock={clock}
@@ -518,6 +530,10 @@ export function App() {
             }
           }}
           onCorner={onCorner}
+          onSeek={(time) => {
+            clock.play(false);
+            clock.seek(time);
+          }}
           selectedCorner={selectedCorner}
         />
       </main>

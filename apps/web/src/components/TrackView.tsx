@@ -102,9 +102,9 @@ function Landscape({ track }: { track: Track }) {
     const box = new Box3(
       new Vector3(...f.min),
       new Vector3(...f.max),
-    ).expandByScalar(f.span * 0.18);
-    const nx = 70,
-      nz = 45;
+    ).expandByScalar(f.span * 0.7);
+    const nx = 110,
+      nz = 80;
     function height(x: number, z: number) {
       let nearest = Infinity,
         y = 0;
@@ -143,7 +143,7 @@ function Landscape({ track }: { track: Track }) {
       seed = (seed * 16807) % 2147483647;
       return (seed - 1) / 2147483646;
     };
-    for (let i = 0; i < 1800; i++) {
+    for (let i = 0; i < 4200; i++) {
       const x = box.min.x + random() * (box.max.x - box.min.x),
         z = box.min.z + random() * (box.max.z - box.min.z),
         h = height(x, z);
@@ -192,7 +192,15 @@ function Landscape({ track }: { track: Track }) {
   );
 }
 
-function Ghost({ lap, clock }: { lap: Lap; clock: PlaybackClock }) {
+function Ghost({
+  lap,
+  clock,
+  marker,
+}: {
+  lap: Lap;
+  clock: PlaybackClock;
+  marker: boolean;
+}) {
   const ref = useRef<Group>(null);
   useFrame(() => {
     if (!ref.current) return;
@@ -234,15 +242,17 @@ function Ghost({ lap, clock }: { lap: Lap; clock: PlaybackClock }) {
           </mesh>
         )),
       )}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
-        <ringGeometry args={[3.2, 3.7, 32]} />
-        <meshBasicMaterial
-          color="#0866ec"
-          transparent
-          opacity={0.7}
-          side={DoubleSide}
-        />
-      </mesh>
+      {marker && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
+          <ringGeometry args={[3.2, 3.7, 32]} />
+          <meshBasicMaterial
+            color="#0866ec"
+            transparent
+            opacity={0.7}
+            side={DoubleSide}
+          />
+        </mesh>
+      )}
     </group>
   );
 }
@@ -265,13 +275,35 @@ function CameraRig({
   const frame = useMemo(() => normalizeTrack(track), [track]);
   useEffect(() => {
     const [x, y, z] = frame.center;
-    const fit = frame.span * Math.max(0.86, 1.45 / (size.width / size.height));
-    if (mode === "top") camera.position.set(x, y + fit * 1.05, z + 1);
-    else camera.position.set(x + fit * 0.1, y + fit * 0.79, z + fit * 0.62);
+    // Fit every circuit point in camera space, including depth, at this aspect ratio.
+    const direction = new Vector3(
+      ...((mode === "top" ? [0, 1, 0.001] : [0.1, 0.79, 0.62]) as [
+        number,
+        number,
+        number,
+      ]),
+    ).normalize();
+    const right = new Vector3(0, 1, 0).cross(direction).normalize();
+    const up = direction.clone().cross(right).normalize();
+    const tan = Math.tan((45 * Math.PI) / 360),
+      aspect = size.width / size.height;
+    let distance = 1;
+    for (const p of track.points) {
+      const offset = new Vector3(p.x - x, p.y - y, p.z - z),
+        depth = offset.dot(direction);
+      distance = Math.max(
+        distance,
+        Math.abs(offset.dot(right)) / (tan * aspect) + depth,
+        Math.abs(offset.dot(up)) / tan + depth,
+      );
+    }
+    camera.position.copy(
+      new Vector3(x, y, z).addScaledVector(direction, distance * 1.27),
+    );
     camera.lookAt(x, y, z);
     controls.current?.target.set(x, y, z);
     controls.current?.update();
-  }, [camera, frame, mode, reset, size.width, size.height]);
+  }, [camera, frame, mode, reset, size.width, size.height, track]);
   useFrame(() => {
     if (mode !== "chase" || !lap) return;
     const state = clock.getSnapshot(),
@@ -323,12 +355,14 @@ export function TrackView({
   clock,
   onCorner,
   selectedCorner,
+  calculating,
 }: {
   track: Track;
   lap: Lap | null;
   clock: PlaybackClock;
   onCorner: (id: number) => void;
   selectedCorner: number | null;
+  calculating: boolean;
 }) {
   const [tab, setTab] = useState("Track View"),
     [layers, setLayers] = useState(initialLayers),
@@ -451,13 +485,13 @@ export function TrackView({
               const s = lap.samples[c.apexIndex];
               return (
                 <group key={c.id}>
-                  {layers.apex && (
+                  {layers.apex && mode !== "chase" && (
                     <mesh position={[s.x, s.y + 3, s.z]}>
                       <sphereGeometry args={[4, 12, 8]} />
                       <meshBasicMaterial color="#26b85b" />
                     </mesh>
                   )}
-                  {layers.corners && (
+                  {layers.corners && mode !== "chase" && (
                     <Html
                       center
                       position={[
@@ -480,7 +514,43 @@ export function TrackView({
               );
             })}
             {lap &&
+              selectedCorner &&
+              mode !== "chase" &&
+              lap.corners
+                .filter((c) => c.id === selectedCorner)
+                .flatMap((c) =>
+                  (
+                    ["brakingIndex", "turnInIndex", "throttleIndex"] as const
+                  ).map((event, i) => {
+                    const sample = lap.samples[c[event]],
+                      normal = frame.normals[c[event]];
+                    return (
+                      <Html
+                        key={event}
+                        center
+                        zIndexRange={[11, 1]}
+                        position={[
+                          sample.x - normal[0] * 28,
+                          sample.y + 20 + i * 14,
+                          sample.z - normal[2] * 28,
+                        ]}
+                      >
+                        <button
+                          className={`event-marker event-${i}`}
+                          onClick={() => {
+                            clock.play(false);
+                            clock.seek(sample.time);
+                          }}
+                        >
+                          {["BRAKE", "TURN-IN", "THROTTLE"][i]}
+                        </button>
+                      </Html>
+                    );
+                  }),
+                )}
+            {lap &&
               layers.sectors &&
+              mode !== "chase" &&
               lap.sectors.map((s) => {
                 const sample = interpolate(
                   lap.samples,
@@ -514,7 +584,9 @@ export function TrackView({
                 <Flag size={11} />
               </div>
             </Html>
-            {lap && ghost && <Ghost lap={lap} clock={clock} />}
+            {lap && ghost && (
+              <Ghost lap={lap} clock={clock} marker={mode !== "chase"} />
+            )}
             <CameraRig
               track={track}
               mode={mode}
@@ -525,7 +597,11 @@ export function TrackView({
           </Canvas>
         </SceneBoundary>
         <div className="scene-top-left">
-          <span className="pill">SYNTHETIC DEVELOPMENT CIRCUIT</span>
+          <span className="pill" title={track.provenance}>
+            {track.synthetic
+              ? "SYNTHETIC DEVELOPMENT CIRCUIT"
+              : "USER-SUPPLIED TRACK · UNVERIFIED"}
+          </span>
           <span className="scene-instruction">
             <MousePointer2 size={12} /> Drag to orbit · scroll to zoom
           </span>
@@ -534,7 +610,7 @@ export function TrackView({
           <Navigation size={24} strokeWidth={1.3} />
           <span>N</span>
         </div>
-        {tab === "Track View" && (
+        {tab === "Track View" && mode !== "chase" && (
           <div className="legend">
             <span>
               <i className="line-key blue" />
@@ -671,7 +747,9 @@ export function TrackView({
         </div>
         {!lap && (
           <div className="scene-lap-prompt">
-            Run a simulation to calculate the racing line.
+            {calculating
+              ? "Calculating the racing line…"
+              : "Run a simulation to calculate the racing line."}
           </div>
         )}
       </div>
@@ -685,7 +763,9 @@ export function TrackView({
         <span className="tiny">
           {lap
             ? `${formatTime(lap.lapTime)} calculated lap`
-            : "Ready for simulation"}
+            : calculating
+              ? "Solving lap…"
+              : "Ready for simulation"}
         </span>
       </div>
     </section>

@@ -184,3 +184,28 @@ def test_api_runs_are_deterministic():
     a = client.post("/api/simulate", json={}).json()
     b = client.post("/api/simulate", json={}).json()
     assert a == b
+
+
+def test_flying_lap_is_invariant_to_rotating_start_sample(source, result):
+    track, vehicle = source
+    data = track.model_dump()
+    data["points"] = data["points"][180:] + data["points"][:180]
+    rotated = solve(Track.model_validate(data), vehicle, Setup())
+    assert rotated["lapTime"] == pytest.approx(result["lapTime"], abs=0.03)
+
+
+@pytest.mark.parametrize(
+    "setup",
+    [
+        Setup(fuel=110, tire="hard", trackState="green", temperature=5, aero=-5, brakeBias=70),
+        Setup(fuel=0, tire="soft", temperature=45, aero=5, brakeBias=50),
+        Setup(airDensity=0.9, aero=-5),
+        Setup(airDensity=1.4, aero=5),
+    ],
+)
+def test_setup_extremes_produce_finite_closed_laps(source, setup):
+    result = solve(*source, setup)
+    assert 50 < result["lapTime"] < 200
+    assert all(0 <= s["throttle"] <= 1 and 0 <= s["brake"] <= 1 for s in result["samples"])
+    assert np.isfinite([s["speed"] for s in result["samples"]]).all()
+    assert result["samples"][0]["speed"] == result["samples"][-1]["speed"]

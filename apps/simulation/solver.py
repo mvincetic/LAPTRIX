@@ -58,7 +58,7 @@ def optimize_line(track: Track, vehicle: Vehicle, enabled: bool):
         jac=True,
         method="L-BFGS-B",
         bounds=bounds,
-        options={"maxiter": 1800, "ftol": 1e-9, "gtol": 1e-6, "maxcor": 20},
+        options={"maxiter": 5000, "ftol": 1e-12, "gtol": 1e-8, "maxcor": 20},
     )
     offsets = result.x if np.isfinite(result.fun) and result.fun <= baseline else np.zeros(n)
     return (
@@ -231,7 +231,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
                 gear=int(profile["gear"][j]),
                 throttle=float(profile["throttle"][j]),
                 brake=float(profile["brake"][j]),
-                steering=float(np.arctan(3.6 * profile["curvature"][j])),
+                steering=float(np.arctan(vehicle.wheelbase * profile["curvature"][j])),
                 longitudinalG=float(profile["acceleration"][j] / G),
                 lateralG=float(profile["speed"][j] ** 2 * profile["curvature"][j] / G),
                 verticalG=0.0,
@@ -253,7 +253,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         for i, t in enumerate(splits)
     ]
     warnings = [
-        "Synthetic circuit and vehicle. Approximate development physics; "
+        "Input accuracy is unverified. Approximate development physics; "
         "not validated against real telemetry."
     ]
     if not optimization["converged"]:

@@ -19,6 +19,7 @@
   "gearRatios": [3.3, 2.7, 2.25, 1.92, 1.68, 1.49, 1.34, 1.22],
   "finalDrive": 3.25,
   "wheelRadius": 0.34,
+  "wheelbase": 3.6,
   "idleRpm": 4000,
   "maxRpm": 12500,
   "width": 2.0

@@ -36,17 +36,20 @@ export const trackSchema = z
     let length = 0;
     t.points.forEach((p, i) => {
       const q = t.points[(i + 1) % t.points.length];
+      const prev = t.points[(i + t.points.length - 1) % t.points.length];
       const ds = Math.hypot(p.x - q.x, p.y - q.y, p.z - q.z);
       length += ds;
       if (
         ds < 0.1 ||
         ds > 150 ||
+        Math.hypot(q.x - prev.x, q.z - prev.z) < 0.1 ||
+        Math.abs(p.y - q.y) / ds > 0.3 ||
         Math.max(Math.abs(p.x), Math.abs(p.y), Math.abs(p.z)) > 100000 ||
         p.banking !== 0
       )
         ctx.addIssue({
           code: "custom",
-          message: `Invalid sample ${i}: check spacing, local coordinates and zero banking`,
+          message: `Invalid sample ${i}: check spacing, horizontal frame, gradient, local coordinates and zero banking`,
         });
     });
     if (length > 30000)
@@ -91,6 +94,7 @@ export const vehicleSchema = z.object({
   gearRatios: z.array(finite.positive()),
   finalDrive: finite.positive(),
   wheelRadius: finite.positive(),
+  wheelbase: finite.positive(),
   idleRpm: finite.positive(),
   maxRpm: finite.positive(),
   width: finite.positive(),
@@ -117,55 +121,111 @@ export const sampleSchema = z.object({
   offset: finite,
 });
 export type Sample = z.infer<typeof sampleSchema>;
-export const lapSchema = z.object({
-  schemaVersion: z.literal(1),
-  trackId: z.string(),
-  vehicleId: z.string(),
-  setup: setupSchema,
-  model: z.string(),
-  lapTime: finite.positive(),
-  length: finite.positive(),
-  maxSpeed: finite.positive(),
-  averageSpeed: finite.positive(),
-  elevationRange: finite.nonnegative(),
-  computationMs: finite.nonnegative(),
-  warnings: z.array(z.string()),
-  optimization: z.object({
-    method: z.string(),
-    converged: z.boolean(),
-    iterations: finite.int(),
-    curvatureObjectiveReduction: finite.optional(),
-  }),
-  samples: z.array(sampleSchema).min(41),
-  sectors: z.array(
-    z.object({
-      id: finite.int(),
-      time: finite.positive(),
-      split: finite.positive(),
-      startDistance: finite.nonnegative(),
-      endDistance: finite.positive(),
+export const lapSchema = z
+  .object({
+    schemaVersion: z.literal(1),
+    trackId: z.string(),
+    vehicleId: z.string(),
+    setup: setupSchema,
+    model: z.string(),
+    lapTime: finite.positive(),
+    length: finite.positive(),
+    maxSpeed: finite.positive(),
+    averageSpeed: finite.positive(),
+    elevationRange: finite.nonnegative(),
+    computationMs: finite.nonnegative(),
+    warnings: z.array(z.string()),
+    optimization: z.object({
+      method: z.string(),
+      converged: z.boolean(),
+      iterations: finite.int(),
+      curvatureObjectiveReduction: finite.optional(),
     }),
-  ),
-  corners: z.array(
-    z.object({
-      id: finite.int(),
-      direction: z.enum(["L", "R"]),
-      apexIndex: finite.int(),
-      entryIndex: finite.int(),
-      exitIndex: finite.int(),
-      brakingIndex: finite.int(),
-      turnInIndex: finite.int(),
-      throttleIndex: finite.int(),
-      distance: finite,
-      entrySpeed: finite,
-      minSpeed: finite,
-      exitSpeed: finite,
-      lateralG: finite,
-      brakingDistance: finite,
-      time: finite,
-    }),
-  ),
-});
+    samples: z.array(sampleSchema).min(41),
+    sectors: z.array(
+      z.object({
+        id: finite.int(),
+        time: finite.positive(),
+        split: finite.positive(),
+        startDistance: finite.nonnegative(),
+        endDistance: finite.positive(),
+      }),
+    ),
+    corners: z.array(
+      z.object({
+        id: finite.int(),
+        direction: z.enum(["L", "R"]),
+        apexIndex: finite.int(),
+        entryIndex: finite.int(),
+        exitIndex: finite.int(),
+        brakingIndex: finite.int(),
+        turnInIndex: finite.int(),
+        throttleIndex: finite.int(),
+        distance: finite,
+        entrySpeed: finite,
+        minSpeed: finite,
+        exitSpeed: finite,
+        lateralG: finite,
+        brakingDistance: finite,
+        time: finite,
+      }),
+    ),
+  })
+  .superRefine((lap, ctx) => {
+    const first = lap.samples[0],
+      last = lap.samples.at(-1)!;
+    if (
+      first.time !== 0 ||
+      first.distance !== 0 ||
+      Math.abs(last.time - lap.lapTime) > 1e-5 ||
+      Math.abs(last.distance - lap.length) > 1e-5 ||
+      Math.hypot(first.x - last.x, first.y - last.y, first.z - last.z) > 1e-5
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Lap telemetry must include the complete closed interval",
+      });
+    if (
+      lap.samples.some(
+        (s, i) =>
+          i > 0 &&
+          (s.time <= lap.samples[i - 1].time ||
+            s.distance <= lap.samples[i - 1].distance),
+      )
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Telemetry time and distance must strictly increase",
+      });
+    if (
+      lap.sectors.length < 2 ||
+      Math.abs(lap.sectors.reduce((sum, s) => sum + s.time, 0) - lap.lapTime) >
+        1e-5
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Sector times must partition the complete lap",
+      });
+    for (const corner of lap.corners) {
+      const indices = [
+        corner.brakingIndex,
+        corner.entryIndex,
+        corner.turnInIndex,
+        corner.apexIndex,
+        corner.throttleIndex,
+        corner.exitIndex,
+      ];
+      if (
+        indices.some((i) => i < 0 || i >= lap.samples.length) ||
+        corner.entryIndex > corner.apexIndex ||
+        corner.apexIndex > corner.exitIndex
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Corner event index is outside the lap",
+        });
+    }
+  });
 export type Lap = z.infer<typeof lapSchema>;
 export type Corner = Lap["corners"][number];
 export const catalogSchema = z.object({
