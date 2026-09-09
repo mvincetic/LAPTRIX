@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Upload, X } from "lucide-react";
 import type { Track } from "../../../../packages/shared/schema";
 import { normalizeTrack } from "../../../../packages/track-engine";
+import { SourceProfile } from "./SourceProfile";
 import {
   parseGpx,
   prepareGpxTrack,
@@ -306,6 +307,7 @@ export function GpxImportDialog({
                   </div>
                 </div>
               )}
+              {preview?.track && <SourceProfile track={preview.track} />}
               <div className="gpx-assumptions">
                 <strong>Import assumptions</strong>
                 <p>

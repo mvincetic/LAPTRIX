@@ -17,8 +17,11 @@ Include 40–2000 distinct ordered samples around a closed circuit, **without**
 repeating the first sample at the end. Every adjacent segment, including the seam,
 must be 0.1–150 m; the total length must be at most 30 km. Coordinates must stay
 within 100 km of the local origin. Widths are 2–40 m per side; the chosen vehicle
-also needs lateral safety clearance. Degenerate horizontal frames and gradients
-above 30% are rejected. Use reasonably uniform spacing for this curvature baseline.
+also needs lateral safety clearance. Degenerate horizontal frames and absolute
+`rise / 3D segment length` above 0.30 are rejected. This established solver slope
+is not conventional percent grade (`100 × rise / horizontal run`), which the
+source-profile inspector labels separately. Use reasonably uniform spacing for
+this curvature baseline.
 Optional controlled resampling can normalize spacing without changing the imported
 source. It retains narrow widths conservatively and rejects excessive interpolation
 displacement. Its effective grid and source alignment are separate Lap metadata;
@@ -54,6 +57,7 @@ the actions menu (1.5 MB limit); backend validation remains authoritative.
 
 The API supports custom tracks per request; imports do not modify repository files.
 Save persists the selected custom track on this device. Expand Track geometry for
+original elevation/grade profiles and segment inspection (see SOURCE_PROFILES.md),
 source segment contacts and height gaps, with a selectable diagram and local report.
 This diagnostic does not change track acceptance or certify road surface clearance
 at bridges. GPX import adds bounded WGS84 surface conversion with supplied elevations

@@ -29,6 +29,10 @@ continue working, save locally, and reload to recover the viewer.
 Source geometry inspection identifies projected segment contacts and their height
 gaps, with an original-track diagram and exportable report. It helps review imports
 without implying surveyed road accuracy or validated bridge clearance.
+Expandable elevation and grade plots inspect original source chords and raw
+ascent/descent, including during GPX review. Keyboard/pointer selection and a
+complete profile export leave simulation, pending setup and playback untouched.
+See SOURCE_PROFILES.md for units, selection and source-noise limits.
 Track imports and selection retain the current source, lap and reference until
 both new calculations succeed. Failed imports preserve the workspace and expose
 an import retry; failed selection retries the intended track with its new baseline.

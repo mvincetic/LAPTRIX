@@ -2,7 +2,7 @@
   border-top: 1px solid #e0e6ee;
   min-width: 0;
 }
-.track-details summary {
+.track-details > summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +12,7 @@
   font-size: 11px;
   list-style: none;
 }
-.track-details summary::-webkit-details-marker {
+.track-details > summary::-webkit-details-marker {
   display: none;
 }
 .geometry-count {

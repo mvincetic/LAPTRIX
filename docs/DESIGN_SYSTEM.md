@@ -159,3 +159,10 @@ summary shows retained points, closed length and elevation bounds; explicit text
 describes the model-centerline, zero-banking and equal-sector assumptions. Invalid
 input is shown inside the dialog, leaving the workspace available after cancellation.
 Mobile fields and preview stack, and the footer remains reachable by modal scrolling.
+Elevation & grade opens a bounded native dialog from Track geometry. GPX review
+keeps the same inspector in an optional native disclosure within its existing dialog.
+Two compact blue plots use fixed-size HTML scales/ticks, with a signed grade zero
+guide and a dark selected-segment cursor. A named range input provides keyboard
+access to the same source selection. Numerical fields identify endpoint elevations,
+distance, length and grade; captions explain original samples and raw totals.
+The compact launcher and default GPX collapse keep the usual review surfaces compact.

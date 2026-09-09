@@ -1,5 +1,21 @@
 # Decision log
 
+## 2026-09-09 — Inspect original source profiles independently of simulated laps
+
+**Decision:** Derive elevation and conventional percent grade from every closed
+source chord, with cumulative 3D source distance, raw ascent/descent, keyboard and
+pointer inspection, and a full profile export. Reuse the plots/data in a settings
+dialog and optional GPX review disclosure. **Reasoning:** Imported elevation should be visible
+before interpreting model behavior; resampled simulation channels cannot explain
+the original file on their own. **Consequences:** Source selection does not seek
+playback or trigger calculation. Noise remains visible, with explicit raw-total
+limits. Rise/horizontal run is named separately from the existing rise/3D-distance
+solver slope; validation and dynamics are unchanged. The contact-report v1 format
+is preserved, with a separate versioned profile artifact. An inline sidebar preview
+was too narrow at 1280 px, so the settings launcher opens an 820 px bounded dialog.
+Selection survives closure, and native Close/Escape returns focus to the launcher.
+See SOURCE_PROFILES.md.
+
 ## 2026-09-09 — Review bounded GPX geometry before transactional activation
 
 **Decision:** Accept one continuous GPX 1.1 circuit with complete elevations through

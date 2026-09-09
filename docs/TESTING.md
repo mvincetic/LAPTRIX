@@ -1,5 +1,13 @@
 # Testing and validation
 
+Source-profile math tests use independent ramp dimensions, seam rotation, rigid
+transforms and unequal source intervals. Desktop/phone journeys inspect original
+segments with keyboard and pointer, export all derived values, verify unchanged
+workspace/playback and resample the smooth catalog source without changing either
+profile path. The same journeys inspect and export GPX draft elevations before
+cancelling with no calculation or active-source mutation. Visual evidence comes
+from `scripts/source-profile-qa.mjs`; see SOURCE_PROFILES.md for the exact definitions.
+
 GPX conversion tests check equatorial and meridional geometry, southern-hemisphere
 rotation, antimeridian continuity, unchanged elevations and full-chord extent bounds
 including antipodal rejection. Signed-zero fixtures verify identical fingerprints

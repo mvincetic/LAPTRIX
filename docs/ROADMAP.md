@@ -82,9 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Improve source-geometry inspection with elevation and gradient profiles mapped
-   to original source samples, making imported geometry easier to assess before
-   interpreting simulation results.
+1. Make viewer framing and clipping planes respond to accepted source extents and
+   viewport proportions. A 28 km analytic scaling of the development source falls
+   beyond the current fixed far plane at phone proportions; preserve complete
+   road visibility through fit/reset and responsive camera changes.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -111,20 +112,27 @@ Reviewed GPX 1.1 import now converts one bounded circuit with complete elevation
 Users inspect its start, closure, dimensions and width assumptions before the
 existing transactional pair solve. Failed runs retain the reviewed draft for retry;
 local Save and portable projects preserve converted geometry and provenance.
+Source elevation and conventional grade now use original closed chords, with raw
+totals, exact segment inspection and complete profile exports. Settings open a
+bounded dialog that preserves selection on closure; GPX review embeds the same
+plots. Inspection preserves playback and project state, including after resampling.
+See SOURCE_PROFILES.md for source-noise and slope-definition limits.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Seventy-seven TypeScript tests cover
+extremes and analytical work/grip benchmarks. Eighty-two TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
-ghost poses, local geographic conversion and clock/data invariants. Fifty-seven browser journeys cover the
+ghost poses, local geographic conversion, source elevation/grade and clock/data
+invariants. Fifty-nine browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
 precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
-native channel overlays, sector graph inspection, reviewed GPX import and the
+native channel overlays, sector graph inspection, reviewed GPX import, source
+profile inspection/export and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

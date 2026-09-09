@@ -31,6 +31,13 @@ segments for projected contacts and interpolated height gaps. The settings panel
 memoizes the complete bounded scan on source points and caps retained details at
 100 pairs. Its diagram/export are source inspection tools; they do not modify
 geometry, certify surfaces or feed an alternative trajectory into the solver.
+`packages/track-engine/profile.ts` derives closed source chords, cumulative 3D
+distance, elevation totals and conventional rise/horizontal-run grade in O(n).
+`SourceProfile` memoizes those values and SVG paths on source points. A settings
+dialog and optional GPX preview disclosure share its plots and data. The settings
+dialog keeps its inspector mounted so selection survives closure. Local segment
+selection has no clock or API dependency; export reuses the source fingerprint and
+download helper. Resampling a lap does not replace the original source array.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and

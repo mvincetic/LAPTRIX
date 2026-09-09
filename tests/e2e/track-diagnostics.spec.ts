@@ -7,7 +7,7 @@ test("source geometry diagnostics survive importing, resampling, exporting and m
 }) => {
   await page.goto("/");
   await expect(page.getByTestId("lap-time")).toBeVisible();
-  await page.locator(".track-details summary").click();
+  await page.locator(".track-details > summary").click();
   await expect(page.getByTestId("geometry-summary")).toHaveText(
     "No projected segment contacts found.",
   );
@@ -63,7 +63,7 @@ test("source geometry diagnostics survive importing, resampling, exporting and m
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.reload();
   await expect(page.getByTestId("lap-time")).toBeVisible();
-  await page.locator(".track-details summary").click();
+  await page.locator(".track-details > summary").click();
   await expect(page.getByTestId("geometry-height-gap")).toHaveText("7.998 m");
   await expect(page.getByTestId("geometry-summary")).toHaveText(
     "1 projected segment contact.",

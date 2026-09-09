@@ -24,7 +24,7 @@ await page
 await page
   .getByText("Track imported and simulated", { exact: true })
   .waitFor({ timeout: 60000 });
-await page.locator(".track-details summary").click();
+await page.locator(".track-details > summary").click();
 for (const [label, width, height] of [
   ["desktop", 1600, 1000],
   ["mobile", 390, 844],

@@ -8,15 +8,18 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 77 tests pass.
+- Vitest: 82 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 57 development browser journeys pass; two viewer journeys also run
+- Playwright: 59 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 390 kB initial JavaScript / 119 kB
+- Vite production build: pass; approximately 398 kB initial JavaScript / 121 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `059e153`; each following milestone reruns CI on push.
+- GitHub Actions passed through `059e153`. GPX passed its remote code checks, but
+  two attempts stopped at an upstream APT index mismatch before browser tests.
+  `d49c5be` isolates the unused Chrome source; dependency installation now passes
+  and the remote browser run is in progress. See CI.md for the scoped fix.
 
 ## Browser evidence
 
@@ -368,6 +371,28 @@ were opened and reviewed. `artifacts/gpx-qa.json` records bounded dialog geometr
 exact document widths, zero runtime errors, no simulation requests during review
 and exactly two after Apply. The following signed-zero normalization changes no
 visible geometry; final browser gates reran on that exact source revision.
+
+Source-profile inspection passes all 82 TypeScript / 96 Python tests, lint,
+typecheck, build, 59 development browser journeys and both production viewer
+journeys. Five independent geometry tests cover exact ramp dimensions, closing
+elevation changes, start rotation, rigid transforms, direction reversal and
+unequal-length segment lookup. Desktop/phone journeys verify keyboard/pointer
+inspection, every exported source segment, source fingerprints, unchanged project
+data/playback, selection retention on modal closure, reset on source replacement,
+and stable original profiles after a 5 m solve. GPX draft profiles inspect/export
+before activation with zero calculation requests. Initial integration failures
+identified a changing slider accessible name and a mistaken test field name;
+the control now has a stable name and the oracle uses `alignment.trackFingerprint`.
+
+Visual review first found cramped inline plots in the 1280 px sidebar. The settings
+launcher now opens a bounded native dialog while GPX keeps an optional embedded
+view. Refreshed desktop, phone, short-landscape and GPX captures were opened and
+reviewed. `artifacts/source-profile-qa.json` reports zero runtime errors, exact
+document widths, bounded modal geometry and an unchanged 10-second cursor at
+1600×1000, 1280×900, 390×844 and 780×390. The narrow original is retained as
+`artifacts/source-profile-sidebar-before.png`. Final gate logs are
+`source-profile-check-final.log`, `source-profile-e2e-final.log` and
+`source-profile-production-final.log` in `artifacts/`.
 
 ## Scope of the evidence
 

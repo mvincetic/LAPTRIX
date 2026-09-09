@@ -5,6 +5,9 @@ track. The panel shows provenance, original sample count/length/elevation range,
 projected segment contacts, a top-view diagram and the selected pair's height gap.
 It uses original points even when a lap uses a resampled grid. It is a read-only
 diagnostic: imports and solves retain their existing validation and behavior.
+The Elevation & grade button opens a separate source-profile view
+and export; see SOURCE_PROFILES.md. Its local segment selector does not change the
+selected contact pair or lap playback.
 
 `packages/track-engine/diagnostics.ts` inspects the closed piecewise-linear source
 centerline in the x/z plane, including the last-to-first segment. It checks every

@@ -31,6 +31,10 @@
   conversion. Source-centerline diagnostics report projected contacts and height
   gaps, but do not validate road-width/surface intersections, bridge clearance or
   trajectory topology. Bridge structures and surveyed terrain are not implemented.
+- Source elevation/grade profiles use unsmoothed original chords. Raw ascent and
+  descent can be inflated by elevation noise; datum and survey accuracy remain
+  unverified. Conventional grade uses rise/horizontal run, while the solver's
+  established slope and acceptance bound use rise/3D distance. See SOURCE_PROFILES.md.
 - Reference imports accept native simulation JSON or explicitly source-aligned
   timing JSON. GPS alignment and generic logger CSV conversion are not implemented.
   Imported timing origin is declared by its file and is not independently verified;

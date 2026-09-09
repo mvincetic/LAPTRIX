@@ -6,6 +6,9 @@ count, closed length and supplied elevation bounds. Edit the track name, source
 description and assumed left/right half-widths, then choose **Import and simulate**.
 Cancel, Close and Escape discard unsubmitted edits and restore focus to the actions
 button. Reading and reviewing a file makes no simulation request or clock change.
+Expand **Elevation & grade** to inspect individual original source chords, raw
+ascent/descent and the closing segment before applying. Profile export includes the
+reviewed geometry; it does not activate the draft. See SOURCE_PROFILES.md.
 
 The path becomes the model centerline. A recorded driving line is not automatically
 the road centerline, and GPX supplies neither usable road widths nor banking here.

@@ -7,6 +7,7 @@ import {
 } from "../../../../packages/track-engine";
 import { inspectTrackGeometry } from "../../../../packages/track-engine/diagnostics";
 import { download } from "../download";
+import { SourceProfileDialog } from "./SourceProfileDialog";
 import "./track-details.css";
 
 const gap = (value: number) =>
@@ -84,6 +85,7 @@ export function TrackDetails({ track }: { track: Track }) {
             <dd>{frame.elevationRange.toFixed(2)} m</dd>
           </div>
         </dl>
+        <SourceProfileDialog track={track} />
         <p className="geometry-summary" data-testid="geometry-summary">
           {report.contactCount === 0
             ? "No projected segment contacts found."

@@ -1,0 +1,219 @@
+.source-profile {
+  margin: 14px 0;
+  border: 1px solid #e0e6ee;
+  border-radius: 4px;
+  min-width: 0;
+  background: white;
+}
+.source-profile > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px;
+  list-style: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+}
+.source-profile > summary::-webkit-details-marker {
+  display: none;
+}
+.source-profile-body {
+  padding: 0 10px 10px;
+  font-size: 10px;
+  min-width: 0;
+}
+.source-profile .profile-note {
+  font-size: 10px;
+  line-height: 1.55;
+  color: #61758e;
+  margin: 7px 0 10px;
+}
+.source-profile dl {
+  margin: 10px 0;
+}
+.source-profile dt {
+  font-size: 9px;
+  color: #61758e;
+}
+.source-profile dd {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.source-profile dl > div {
+  padding: 5px 0;
+  border-bottom: 1px solid #edf1f6;
+}
+.source-chart {
+  margin-top: 12px;
+  min-width: 0;
+}
+.source-chart > strong {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.source-chart-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 5px;
+}
+.source-chart-scale {
+  position: relative;
+  height: 100px;
+  color: #61758e;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+.source-chart-scale span {
+  position: absolute;
+  right: 0;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+.profile-max {
+  top: 4px;
+}
+.profile-zero {
+  top: 43px;
+}
+.profile-min {
+  top: 82px;
+}
+.source-chart-plot {
+  min-width: 0;
+}
+.source-chart svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+  cursor: crosshair;
+  touch-action: none;
+  overflow: hidden;
+}
+.source-chart-ticks {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  height: 12px;
+  margin-top: -12px;
+  color: #61758e;
+  font-size: 9px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.source-profile .profile-axis {
+  text-align: center;
+  font-size: 9px;
+  color: #61758e;
+  margin: 7px 0 12px;
+}
+.source-segment-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+}
+.source-segment-label span {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.source-profile input[type="range"] {
+  display: block;
+  width: 100%;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  margin: 7px 0;
+  background: transparent;
+}
+.source-selected {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 12px;
+}
+.source-profile-export {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 6px;
+  font-size: 10px;
+}
+.source-profile .profile-error {
+  font-size: 10px;
+  line-height: 1.55;
+  color: #a22a33;
+  margin: 8px 0;
+}
+.source-profile-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 6px;
+  margin: 12px 0;
+  font-size: 10px;
+}
+.source-profile-dialog {
+  width: min(820px, calc(100vw - 28px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: #23344d;
+  overflow-y: auto;
+  box-shadow: 0 20px 70px #142b4430;
+}
+.source-profile-dialog::backdrop {
+  background: #1b304b52;
+  backdrop-filter: blur(2px);
+}
+.source-profile-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.source-profile-heading > div {
+  min-width: 0;
+}
+.source-profile-heading h1 {
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.35;
+  margin: 0;
+}
+.source-profile-heading p {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  margin: 6px 0 0;
+}
+.source-profile-heading > button {
+  flex-shrink: 0;
+}
+.source-profile-dialog .source-profile {
+  margin: 0;
+  border: 0;
+}
+.source-profile-dialog .source-profile-body {
+  padding: 12px 20px 20px;
+}
+@media (max-width: 600px) {
+  .source-profile-heading {
+    padding: 16px;
+  }
+  .source-profile-dialog .source-profile-body {
+    padding: 10px 16px 16px;
+  }
+}
