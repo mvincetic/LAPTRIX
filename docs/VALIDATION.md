@@ -9,7 +9,7 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 19 tests pass.
-- Python numerical/API tests: 64 tests pass.
+- Python numerical/API tests: 69 tests pass.
 - Playwright: ten browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.28 MB JavaScript / 354 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
@@ -55,6 +55,12 @@ or horizontal overflow at 1600, 1280, 900 and 390 px. Desktop, expanded mobile v
 details and chase images were opened and reviewed. The provenance text is readable,
 references identify the original Formula run, and the original coupe ghost follows
 GT telemetry. Local evidence is saved as `artifacts/gt-*.png`.
+
+Five additional grade/energy benchmarks pass, taking the numerical suite to 69.
+The full lint, typecheck, unit/API and build gate passed again. This benchmark-only
+milestone changes no application behavior; it retains the ten passing browser
+journeys and reviewed vehicle UI from `226b88d`. PHYSICS_BENCHMARKS.md specifies
+the independent equations, exported-control reconstruction and tolerances.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

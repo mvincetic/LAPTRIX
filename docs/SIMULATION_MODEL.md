@@ -83,3 +83,5 @@ See SOLVER_STUDY.md for grid sensitivity; interpolation adds no input accuracy.
 Source and optional uniform grids are prepared before the line solve; see
 SAMPLING.md. Analytical benchmarks include circular aero/grip limits, nonuniform
 circle resampling and power-limited terminal speed from an independent work balance.
+PHYSICS_BENCHMARKS.md records uphill/downhill steady-speed equations and closed-lap
+wheel-work checks reconstructed from exported controls for both vehicles.

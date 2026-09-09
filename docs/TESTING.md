@@ -1,5 +1,10 @@
 # Testing and validation
 
+Independent grade/energy checks use long constant-grade arcs with separately
+root-solved steady speeds, plus exported actuator work over a closed elevation lap.
+Both uphill/downhill signs and both production vehicles are covered. Their limits
+and tolerances are documented in PHYSICS_BENCHMARKS.md.
+
 Vehicle coverage includes two catalog profiles, drivetrain contract rejection,
 gear-boundary RPM/power constraints, GT specification arithmetic, numerical force
 checks and bounded refinement. Browser tests retain a Formula reference while

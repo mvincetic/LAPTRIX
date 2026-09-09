@@ -30,19 +30,19 @@ The second vehicle milestone adds documented GT specification anchors, visible
 assumptions, stricter drivetrain contracts and cross-vehicle references with
 immutable result snapshots. A public 2D track dataset was evaluated; it does not
 provide the independently documented elevation needed for a bundled 3D circuit.
+Independent uphill/downhill work-balance and exported actuator-energy checks now
+cover steep grades and both development profiles; see PHYSICS_BENCHMARKS.md.
 
 ## Next highest-value work
 
-1. Extend gradient and energy-balance benchmarks before claiming greater
-   physical accuracy. Controlled resampling remains subject to grid sensitivity.
-2. Add user telemetry import using the established source-alignment contract plus
+1. Add user telemetry import using the established source-alignment contract plus
    explicit units, provenance and import validation.
-3. Evaluate measured calibration data and reusable 3D track geometry; add transient
+2. Evaluate measured calibration data and reusable 3D track geometry; add transient
    dynamics only with independent benchmarks and suitable parameter sources.
 
 ## Stabilization evidence
 
-The local numerical suite contains 64 passing tests, including coupled quadratic
+The local numerical suite contains 69 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Nineteen TypeScript tests cover
 geometry, alignment, vehicle contracts and clock/data invariants. Ten browser journeys cover the
