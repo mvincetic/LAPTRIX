@@ -10,6 +10,9 @@
 - Force-demand checks cover sampled discrete segments with a 1.5% tolerance, not
   continuous trajectory feasibility. Imported geometry may fail these checks;
   the UI flags the result and skips lap-time refinement when its seed fails.
+- Resampling cannot recover details absent from the source. It rejects cubic
+  displacement above 0.50 m and can conservatively narrow abrupt width transitions.
+  Long circuits may reach the 2,000-point budget before reaching the target spacing.
 - The point-mass model omits transient yaw, axle load transfer, tyre temperature/
   wear, suspension, braking lockup, slip, shift delays, hybrid energy and fuel burn.
 - Banking is reserved but rejected; vertical G is a reserved zero field. Elevation

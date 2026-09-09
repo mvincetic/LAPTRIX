@@ -97,6 +97,7 @@ class Setup(StrictModel):
     trackState: Literal["optimum", "green"] = "optimum"
     solver: Literal["optimized", "centerline", "lap-time"] = "optimized"
     airDensity: float = Field(default=1.225, ge=0.9, le=1.4)
+    sampling: Literal["source", "5m", "3m"] = "source"
 
 
 class SimulationRequest(StrictModel):

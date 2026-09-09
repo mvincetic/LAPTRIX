@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   Check,
@@ -32,6 +32,7 @@ import { Settings } from "./components/Settings";
 import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
+import { restoreReference } from "./reference";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
@@ -162,15 +163,12 @@ export function App() {
             }
             if (saved.reference) {
               const ref = lapSchema.parse(saved.reference);
-              if (
-                ref.trackId === chosen.id &&
-                ref.vehicleId === chosenVehicle &&
-                ref.samples.length === chosen.points.length + 1 &&
-                ref.sectors.length === chosen.sectorFractions.length
-              ) {
-                restoredReference = ref;
-                setReference(ref);
-              }
+              restoredReference = await restoreReference(
+                ref,
+                chosen,
+                chosenVehicle,
+              );
+              if (restoredReference) setReference(restoredReference);
             }
             setNotice("Saved local project restored");
           }
@@ -181,6 +179,7 @@ export function App() {
           restoredReference = null;
           setNotice("Saved project could not be read. Default setup loaded.");
         }
+        if (!active) return;
         setCatalog(parsed);
         setTrack(chosen);
         setVehicleId(chosenVehicle);
@@ -268,6 +267,13 @@ export function App() {
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const simulationTrack = useMemo(
+    () =>
+      track && lap?.sampling
+        ? { ...track, points: lap.sampling.points }
+        : track,
+    [track, lap?.sampling],
+  );
   return (
     <div className="application">
       <header className="topbar">
@@ -489,10 +495,10 @@ export function App() {
           dirty={dirty}
         />
         <div className="center-column">
-          {track ? (
+          {simulationTrack ? (
             <TrackView
               calculating={busy}
-              track={track}
+              track={simulationTrack}
               lap={lap}
               clock={clock}
               onCorner={onCorner}

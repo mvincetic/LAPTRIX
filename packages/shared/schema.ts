@@ -66,6 +66,7 @@ export const setupSchema = z.object({
   trackState: z.enum(["optimum", "green"]),
   solver: z.enum(["optimized", "centerline", "lap-time"]),
   airDensity: finite.min(0.9).max(1.4),
+  sampling: z.enum(["source", "5m", "3m"]).default("source"),
 });
 export type Setup = z.infer<typeof setupSchema>;
 export const defaultSetup: Setup = {
@@ -77,6 +78,7 @@ export const defaultSetup: Setup = {
   trackState: "optimum",
   solver: "optimized",
   airDensity: 1.225,
+  sampling: "source",
 };
 export const vehicleSchema = z.object({
   id: z.string(),
@@ -160,6 +162,25 @@ export const lapSchema = z
         demandTolerance: finite.min(1),
       })
       .optional(),
+    sampling: z
+      .object({
+        mode: z.enum(["source", "5m", "3m"]),
+        sourcePointCount: finite.int().min(40).max(2000),
+        pointCount: finite.int().min(40).max(2000),
+        targetSpacing: finite.positive().nullable(),
+        meanSpacing: finite.positive(),
+        maxSpacing: finite.positive(),
+        capped: z.boolean(),
+        maxSourceDeviation: finite.nonnegative(),
+        points: z.array(pointSchema).min(40).max(2000),
+      })
+      .optional(),
+    alignment: z
+      .object({
+        trackFingerprint: z.string().regex(/^sha256:[0-9a-f]{64}$/),
+        progress: z.array(finite.min(0).max(1)).min(41),
+      })
+      .optional(),
     samples: z.array(sampleSchema).min(41),
     sectors: z.array(
       z.object({
@@ -191,6 +212,30 @@ export const lapSchema = z
     ),
   })
   .superRefine((lap, ctx) => {
+    if (lap.alignment) {
+      const p = lap.alignment.progress;
+      if (
+        p.length !== lap.samples.length ||
+        p[0] !== 0 ||
+        p.at(-1) !== 1 ||
+        p.some((v, i) => i > 0 && v <= p[i - 1])
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Track alignment must span the complete lap in order",
+        });
+    }
+    if (
+      lap.sampling &&
+      (lap.sampling.pointCount !== lap.samples.length - 1 ||
+        lap.sampling.points.length !== lap.sampling.pointCount ||
+        !lap.alignment ||
+        lap.sampling.mode !== lap.setup.sampling)
+    )
+      ctx.addIssue({
+        code: "custom",
+        message: "Sampling geometry must match the solved lap",
+      });
     const refinement = lap.optimization.refinement;
     if (
       refinement &&

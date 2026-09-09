@@ -19,6 +19,10 @@ must be 0.1–150 m; the total length must be at most 30 km. Coordinates must st
 within 100 km of the local origin. Widths are 2–40 m per side; the chosen vehicle
 also needs lateral safety clearance. Degenerate horizontal frames and gradients
 above 30% are rejected. Use reasonably uniform spacing for this curvature baseline.
+Optional controlled resampling can normalize spacing without changing the imported
+source. It retains narrow widths conservatively and rejects excessive interpolation
+displacement. Its effective grid and source alignment are separate Lap metadata;
+see SAMPLING.md.
 This is not yet a general geospatial import format or a validated road survey.
 
 `sectorFractions` has 2–6 strictly increasing fractions above zero, ending at 1.

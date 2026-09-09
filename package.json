@@ -16,7 +16,8 @@
     "check": "npm run lint && npm run lint:python && npm run typecheck && npm test && npm run test:api && npm run build",
     "lint:python": "node scripts/python.mjs -m ruff check apps/simulation scripts/*.py tests/python",
     "format:python": "node scripts/python.mjs -m ruff format apps/simulation scripts/*.py tests/python",
-    "study:solver": "node scripts/python.mjs scripts/solver_study.py"
+    "study:solver": "node scripts/python.mjs scripts/solver_study.py",
+    "study:sampling": "node scripts/python.mjs scripts/solver_study.py --sampling --output artifacts/sampling-study.json"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",

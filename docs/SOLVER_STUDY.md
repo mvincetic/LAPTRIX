@@ -4,6 +4,10 @@ This is a numerical study of the original synthetic Ardennes Development Circuit
 and Formula Development 01 at the default setup. It establishes model behavior,
 not accuracy against a real circuit or car.
 
+The first table records commit `cf91692`. The subsequent controlled-sampling update
+changed the refinement anchor after an orientation-invariance test; current results
+are in the second table below. The older numbers remain a historical baseline.
+
 Reproduce with `npm run study:solver`. The script writes full diagnostics to
 `artifacts/solver-study.json`. Coordinates are periodically cubic-interpolated in
 the source sample parameter; widths are linearly interpolated. No data file is
@@ -45,3 +49,21 @@ Further work should establish a controlled spatial resampling policy and wider
 curvature/gradient/vehicle benchmarks before claiming better physical accuracy.
 The current search considers broad bounded blends; it does not solve every local
 direction or establish a global minimum-lap-time trajectory.
+
+## Production sampling comparison
+
+`npm run study:sampling` compares all modes on the same untouched 720-point source.
+Its output is `artifacts/sampling-study.json`. The search anchor is now invariant to
+rigid coordinate transforms. Each sample mode has the same source fingerprint.
+
+| Sampling | Grid points | Mean spacing (m) | Centerline (s) | Curvature (s) | Refined (s) | Seed / refined runtime (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Original | 720 | 7.784 | 74.486 | 71.532 | 71.392 | 133 / 2,413 |
+| 5 m target | 1,121 | 5.000 | 74.454 | 71.667 | 71.523 | 290 / 3,958 |
+| 3 m target | 1,869 | 2.999 | 74.438 | 71.623 | 71.479 | 553 / 6,437 |
+
+Every seed and speed envelope converged; maximum demand ratio remained below
+1.0015. The 5 m/3 m refined difference is about 0.044 seconds. Maximum cubic-source
+displacement was 0.242 m, below the 0.50 m guard; neither run reached the point cap.
+These are discrete-model observations, not a rigorous error bound. Added samples
+remain interpolations of synthetic geometry, not new measurements.

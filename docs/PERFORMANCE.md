@@ -14,6 +14,11 @@ The sparse solve converged at every studied resolution and the new candidate ord
 is independent of the canonical start sample. Demanding imported geometry and
 concurrent requests can cost more; the API remains a local synchronous worker.
 API payloads include the full solved lap once per run, not every animation frame.
+Controlled resampling adds effective track points and a source-progress array to
+the response. The 5 m (1,121 point) run measured about 0.29 seconds for curvature
+and 3.96 seconds with refinement; the 3 m (1,869 point) run measured about 0.55 and
+6.44 seconds. Effective rendering geometry is memoized so ordinary setup edits do
+not rebuild it. Measurements remain machine/load dependent.
 
 Geometry and chart paths are memoized on data changes. The ghost updates one group
 transform; trees use one instanced draw. Renderer pixel ratio is limited to 1.5.

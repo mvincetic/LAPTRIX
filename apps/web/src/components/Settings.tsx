@@ -191,6 +191,26 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
           <summary>
             Advanced settings <ChevronDown size={14} />
           </summary>
+          <label className="setting">
+            <span className="setting-label">
+              Spatial sampling <Info size={12} />
+            </span>
+            <select
+              aria-label="Spatial sampling"
+              value={setup.sampling}
+              onChange={(e) =>
+                update("sampling", e.target.value as Setup["sampling"])
+              }
+            >
+              <option value="source">Original samples</option>
+              <option value="5m">Uniform · 5 m target</option>
+              <option value="3m">Uniform · 3 m target</option>
+            </select>
+            <span className="solver-hint">
+              Resampling is limited to 2,000 points. More samples add no source
+              accuracy.
+            </span>
+          </label>
           <Range
             label="Air density"
             value={setup.airDensity}

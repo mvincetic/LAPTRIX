@@ -45,6 +45,10 @@ optional local lap-time refinement and result assembly. Refinement repeatedly ca
 the same vehicle/setup speed envelope; accepted positions and the matching profile
 are returned together. No renderer or UI computes an independent optimized path.
 Numerical demand diagnostics and refinement accounting cross the existing Lap API.
+Before that solve, `sampling.py` prepares a checked source or uniform grid and
+source-progress alignment. The Lap response carries effective points for rendering;
+the project retains the original imported track. Reference restoration verifies
+source geometry independently of the selected solver resolution.
 
 Device-local project state lives in versioned browser storage, with explicit Save.
 Telemetry exports remain on the user's device. Imports use the same validated

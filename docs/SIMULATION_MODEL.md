@@ -25,8 +25,9 @@ on every imported track or vehicle. The separate speed solver makes that observa
 `setup.solver = "lap-time"` starts from that curvature seed. Three sequential passes
 (blend fractions 0.3, 0.15, 0.075) test a whole-lap blend and twelve periodic cosine
 windows toward each safe boundary: 78 candidates. Window centers are spaced by
-centerline distance, anchored at the lexicographically smallest x/z sample, so
-moving the start/finish index does not arbitrarily reorder the search.
+centerline distance, anchored at the point farthest from the arc-weighted horizontal
+centroid. This preserves the candidate order when translating/rotating the map or
+moving the start/finish index; a rigid-transform benchmark checks the result.
 
 Each candidate retains the original centerline sample correspondence. Blending
 toward the existing bounds preserves per-sample clearance. Collapsed/reversed
@@ -79,3 +80,6 @@ These are numerical/model checks, **not real-world physics validation**. No CFD,
 load transfer, tyre temperature state, banked-road dynamics, vertical dynamics,
 energy recovery, fuel burn or shift-time loss is calculated.
 See SOLVER_STUDY.md for grid sensitivity; interpolation adds no input accuracy.
+Source and optional uniform grids are prepared before the line solve; see
+SAMPLING.md. Analytical benchmarks include circular aero/grip limits, nonuniform
+circle resampling and power-limited terminal speed from an independent work balance.

@@ -56,6 +56,26 @@ mode. Candidate gains are model results, not accuracy claims, and fine-grid
 differences remain larger than some gains. Start-node braking checks now prevent
 an overestimate exposed by a zero-downforce vehicle test. See SOLVER_STUDY.md.
 
+## 2026-09-09 — Controlled grids and source-based comparison
+
+**Context:** Numerical grid sensitivity remained larger than some search gains,
+and corner comparison assumed equal source sample indices. A rigid-transform
+benchmark also exposed a 0.036-second search dependence on map orientation.
+**Decision:** Add explicit source/5 m/3 m sampling, cap at 2,000 points, preserve the
+source and return the effective grid. Reject excessive cubic displacement, retain
+narrow width features conservatively, and compare reference corner windows through
+source progress protected by a cross-language geometry fingerprint. Anchor search
+windows at the point farthest from the arc-weighted horizontal centroid.
+**Alternatives:** Silent default densification, comparing array indices after
+resampling, or treating added samples as added survey accuracy.
+**Reasoning:** Grid choice and its limitations should be inspectable. Physical
+correspondence must survive resolution changes, and coordinate orientation must
+not change the modeled performance of the same track.
+**Consequences:** The default remains source sampling. Older references need a
+position check before alignment migration. The search anchor changes refinement
+gains; the rigid-transform benchmark now passes. Sector-fraction semantics remain
+v1. See SAMPLING.md and the current sampling table in SOLVER_STUDY.md.
+
 ## 2026-09-09 — Shared telemetry and one playback clock
 
 **Decision:** Metres/seconds are canonical; samples include a closing endpoint.

@@ -9,6 +9,7 @@ const browser = await chromium.launch({
 const page = await browser.newPage({
   viewport: { width: 1600, height: 1000 },
   deviceScaleFactor: 1,
+  locale: "en-US",
 });
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
@@ -17,8 +18,23 @@ page.on("console", (msg) => {
 });
 await page.goto("http://127.0.0.1:5173/");
 await page.getByTestId("lap-time").waitFor({ timeout: 60000 });
-const prefix = process.argv.includes("--refinement") ? "refinement-" : "";
-if (prefix) {
+const refined = process.argv.includes("--refinement");
+const sampled = process.argv.includes("--sampling");
+const prefix = `${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+if (sampled) {
+  await page.locator(".advanced summary").click();
+  await page
+    .getByRole("combobox", { name: "Spatial sampling" })
+    .selectOption("5m");
+  await page
+    .getByRole("button", { name: "Run Simulation", exact: true })
+    .click();
+  await page
+    .getByTestId("sampling-summary")
+    .filter({ hasText: "1,121 samples" })
+    .waitFor({ timeout: 60000 });
+}
+if (refined) {
   await page
     .getByRole("combobox", { name: "Solver mode" })
     .selectOption("lap-time");

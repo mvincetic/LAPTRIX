@@ -7,6 +7,7 @@ from scipy.signal import find_peaks
 
 from .models import Setup, Track, Vehicle
 from .numerics import box_quadratic, curvature_quadratic
+from .sampling import prepare_track
 
 G = 9.80665
 
@@ -201,8 +202,9 @@ def refine_line(track: Track, vehicle: Vehicle, setup: Setup, offsets, profile):
     ):
         info["status"] = "seed-infeasible"
         return offsets, profile, info
-    # Physical anchor keeps candidate order independent of the start/finish index.
-    anchor = int(np.lexsort((center[:, 2], center[:, 0]))[0])
+    # Anchor by geometry, independent of the start index, map origin and orientation.
+    centroid = np.sum((center + np.roll(center, -1, axis=0)) * 0.5 * ds[:, None], axis=0) / length
+    anchor = int(np.argmax(np.sum((center[:, [0, 2]] - centroid[[0, 2]]) ** 2, axis=1)))
     weights = [np.ones(len(center))]
     for origin in (distance[anchor] + np.arange(12) * length / 12) % length:
         separation = np.abs(distance - origin)
@@ -241,6 +243,7 @@ def refine_line(track: Track, vehicle: Vehicle, setup: Setup, offsets, profile):
 
 def solve(track: Track, vehicle: Vehicle, setup: Setup):
     started = time.perf_counter()
+    track, sampling, alignment = prepare_track(track, setup.sampling)
     points, offsets, optimization = optimize_line(track, vehicle, setup.solver != "centerline")
     profile = speed_profile(points, vehicle, setup)
     if setup.solver == "lap-time":
@@ -369,6 +372,8 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         sectors=sectors,
         corners=corners,
         optimization=optimization,
+        sampling=sampling,
+        alignment=alignment,
         numericalChecks=dict(
             speedConverged=profile["converged"],
             maxDemandRatio=profile["maxDemandRatio"],

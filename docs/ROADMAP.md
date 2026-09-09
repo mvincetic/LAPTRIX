@@ -23,21 +23,26 @@ and telemetry JSON/CSV export. They reuse existing contracts without new service
 The next solver milestone is also delivered: sparse curvature convergence through
 the 2,000-point grid study, integrated braking/force checks, and opt-in 78-candidate
 lap-time refinement with visible seed gains and exportable diagnostics.
+Controlled source/5 m/3 m sampling, source-progress comparison across grids,
+verified reference migration, and independent circle/power/rigid-transform
+benchmarks are now implemented too. The source geometry remains unchanged.
 
 ## Next highest-value work
 
-1. Establish a controlled spatial resampling policy and broaden independent
-   curvature/gradient/vehicle benchmarks. The current grid effect can exceed the
-   local-search gain; see SOLVER_STUDY.md. Only claim greater accuracy after evidence.
-2. Evaluate reusable surveyed track data and a second independently documented vehicle.
-3. Add user telemetry import only after a reliable alignment/unit/provenance contract.
+1. Evaluate reusable track data and add a second independently documented vehicle,
+   with comparisons and benchmarks that expose the current model's assumptions.
+2. Extend gradient, transient and calibration benchmarks before claiming greater
+   physical accuracy. Controlled resampling remains subject to grid sensitivity.
+3. Add user telemetry import using the established source-alignment contract plus
+   explicit units, provenance and import validation.
 
 ## Stabilization evidence
 
-The local numerical suite contains 41 passing tests, including coupled quadratic
+The local numerical suite contains 54 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes. Twelve TypeScript tests cover geometry and clock/data invariants. Seven
-browser journeys cover the core workflow, refinement, reference restore, imports,
+extremes and analytical work/grip benchmarks. Seventeen TypeScript tests cover
+geometry, alignment and clock/data invariants. Eight browser journeys cover the
+core workflow, refinement, resampling, reference restore, imports,
 audio and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 

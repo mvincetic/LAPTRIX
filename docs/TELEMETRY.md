@@ -33,8 +33,9 @@ pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
 Comparison uses the same circuit. Sector differences compare the configured sector
 fractions. The generic distance comparison helper maps normalized lap progress
 when different optimized lines have different lengths. Corner deltas compare the
-same entry/exit centerline sample indices rather than assuming detected corner
-numbering is identical. Baseline and current setup
+same entry/exit source-track progress via `alignment`, interpolating the reference
+time even when sample counts differ. Detected corner numbering need not be identical.
+Baseline and current setup
 remain separate; saving a reference is explicit. Exported CSV values retain SI
 units, even when the dashboard shows km/h or percentages.
 
@@ -52,3 +53,10 @@ final trajectory. `numericalChecks` reports speed convergence, maximum integrate
 force demand/capacity ratio and tolerance. Both diagnostic blocks are optional in
 the reader for compatibility with older saved references. Old saved numerical
 results remain literal references and are not silently recalculated.
+
+`sampling` stores actual grid points, original/grid counts, mode, requested and
+actual spacing, cap status and interpolation displacement. `alignment` stores a
+source fingerprint and a strictly increasing progress array paired with telemetry,
+including 0 at the start and 1 at the closing endpoint. Runtime validation checks
+array lengths and ordering. These blocks are optional for old exports; new results
+always include them. SAMPLING.md describes their geometry and migration contract.

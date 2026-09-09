@@ -1,4 +1,46 @@
-import type { Lap, Sample } from "../shared/schema";
+import type { Corner, Lap, Sample } from "../shared/schema";
+
+function interpolateValues(axis: number[], values: number[], at: number) {
+  if (!Number.isFinite(at)) throw new Error("Alignment cursor must be finite");
+  if (at <= axis[0]) return values[0];
+  if (at >= axis.at(-1)!) return values.at(-1)!;
+  let lo = 0,
+    hi = axis.length - 1;
+  while (hi - lo > 1) {
+    const mid = (lo + hi) >> 1;
+    if (axis[mid] <= at) lo = mid;
+    else hi = mid;
+  }
+  return (
+    values[lo] +
+    ((values[hi] - values[lo]) * (at - axis[lo])) / (axis[hi] - axis[lo])
+  );
+}
+
+export function cornerDelta(
+  current: Lap,
+  reference: Lap | null,
+  corner: Corner,
+) {
+  if (
+    !current.alignment ||
+    !reference?.alignment ||
+    current.alignment.trackFingerprint !== reference.alignment.trackFingerprint
+  )
+    return null;
+  const time = reference.samples.map((s) => s.time);
+  const entry = interpolateValues(
+    reference.alignment.progress,
+    time,
+    current.alignment.progress[corner.entryIndex],
+  );
+  const exit = interpolateValues(
+    reference.alignment.progress,
+    time,
+    current.alignment.progress[corner.exitIndex],
+  );
+  return corner.time - (exit - entry);
+}
 
 export function interpolate(
   samples: Sample[],
@@ -28,6 +70,25 @@ export function interpolate(
   return result;
 }
 export function lapDeltaAt(current: Lap, reference: Lap, distance: number) {
+  if (
+    current.alignment &&
+    reference.alignment &&
+    current.alignment.trackFingerprint === reference.alignment.trackFingerprint
+  ) {
+    const progress = interpolateValues(
+      current.samples.map((s) => s.distance),
+      current.alignment.progress,
+      distance,
+    );
+    return (
+      interpolate(current.samples, distance, "distance").time -
+      interpolateValues(
+        reference.alignment.progress,
+        reference.samples.map((s) => s.time),
+        progress,
+      )
+    );
+  }
   // Match normalized progress rather than raw racing-line length for comparable laps.
   const fraction = Math.max(0, Math.min(1, distance / current.length));
   return (

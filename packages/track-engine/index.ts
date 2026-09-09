@@ -1,6 +1,25 @@
 import type { Point, Track } from "../shared/schema";
 
 export type Vec3 = [number, number, number];
+/** Fingerprint only the physical track contract, using the backend's byte layout. */
+export async function trackFingerprint(track: Track) {
+  const values = [
+    track.points.length,
+    track.sectorFractions.length,
+    ...track.sectorFractions,
+  ];
+  for (const p of track.points)
+    values.push(p.x, p.y, p.z, p.widthLeft, p.widthRight, p.banking);
+  const prefix = new TextEncoder().encode("laptrix.track.v1\0");
+  const bytes = new Uint8Array(prefix.length + values.length * 8);
+  bytes.set(prefix);
+  const view = new DataView(bytes.buffer);
+  values.forEach((value, i) =>
+    view.setFloat64(prefix.length + i * 8, value, true),
+  );
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return `sha256:${Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("")}`;
+}
 export function normalizeTrack(track: Track) {
   let length = 0;
   const distances: number[] = [];

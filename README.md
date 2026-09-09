@@ -35,6 +35,7 @@ the last completed result remains visible if a solve fails.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.
 - Bounded minimum-curvature optimization and a closed-loop speed envelope.
 - Optional vehicle-aware lap-time refinement with a fixed, reported candidate budget.
+- Controlled 5 m / 3 m resampling with geometry checks and comparison across grids.
 - Grip, fuel mass, downforce, drag, power curve, gears, braking and gradient.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
@@ -51,6 +52,7 @@ npm run test:e2e
 node scripts/visual-qa.mjs
 node scripts/visual-qa.mjs --refinement
 npm run study:solver
+npm run study:sampling
 ```
 
 `check` runs frontend and Python lint, TypeScript, unit/API tests and the production
@@ -60,6 +62,8 @@ The solver study compares five sampling resolutions and all three solver modes.
 See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Select
 **Lap-time refinement** in Solver mode, then run to compare against the curvature
 seed under the same vehicle/setup. The default remains minimum curvature.
+Advanced settings also offers **Spatial sampling**; the imported source remains
+unchanged. See [SAMPLING](docs/SAMPLING.md) for the grid and reference contract.
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

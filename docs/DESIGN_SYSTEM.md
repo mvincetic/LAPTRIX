@@ -34,3 +34,8 @@ checks appear as text warnings; a completed candidate budget is not labelled a
 globally optimal setup.
 On desktop, long settings and expanded advanced controls scroll within the settings
 body; the pending-state indicator and model note remain visible below it.
+
+Spatial sampling lives in Advanced settings. Its options distinguish the original
+grid from target spacings, with a visible sample cap and accuracy caveat. Results
+show the actual count and mean spacing. Reference comparisons align to source
+track progress, so choosing a different grid does not discard a valid reference.

@@ -42,6 +42,9 @@ def resample(track: Track, count: int):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--counts", nargs="+", type=int, default=[180, 360, 720, 1440, 2000])
+    parser.add_argument(
+        "--sampling", action="store_true", help="Compare production sampling modes on one source"
+    )
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/solver-study.json")
     args = parser.parse_args()
     track, vehicle = (items[0] for items in catalog())
@@ -54,14 +57,22 @@ def main():
         note="Synthetic grid study, not real-world validation. Resampling adds no source accuracy.",
         rows=[],
     )
-    print("Samples  Mode         Lap (s)  Gain (s)  Time (ms)  Seed converged  Max demand", flush=True)
-    for count in args.counts:
-        sampled = resample(track, count)
+    print(
+        "Grid    Samples  Mode         Lap (s)  Gain (s)  Time (ms)  Seed converged  Max demand", flush=True
+    )
+    cases = (
+        [(mode, track) for mode in ("source", "5m", "3m")]
+        if args.sampling
+        else [("source", resample(track, count)) for count in args.counts]
+    )
+    for sampling_mode, sampled in cases:
         for mode in ("centerline", "optimized", "lap-time"):
-            lap = solve(sampled, vehicle, Setup(solver=mode))
+            lap = solve(sampled, vehicle, Setup(solver=mode, sampling=sampling_mode))
             refinement = lap["optimization"].get("refinement", {})
             row = dict(
-                samples=count,
+                samples=len(lap["samples"]) - 1,
+                sampling={k: v for k, v in lap["sampling"].items() if k != "points"},
+                trackFingerprint=lap["alignment"]["trackFingerprint"],
                 mode=mode,
                 lapTime=lap["lapTime"],
                 length=lap["length"],
@@ -71,7 +82,8 @@ def main():
             )
             report["rows"].append(row)
             print(
-                f"{count:7}  {mode:11}  {lap['lapTime']:7.3f}  {refinement.get('gainSeconds', 0):8.3f}"
+                f"{sampling_mode:6}  {len(lap['samples']) - 1:7}  {mode:11}  {lap['lapTime']:7.3f}"
+                f"  {refinement.get('gainSeconds', 0):8.3f}"
                 f"  {lap['computationMs']:9.1f}  {str(lap['optimization']['converged']):14}"
                 f"  {lap['numericalChecks']['maxDemandRatio']:.6f}",
                 flush=True,

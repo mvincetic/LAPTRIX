@@ -24,6 +24,12 @@ responsive widths and recoverable backend errors. Failures retain traces/screens
 The lap-time journey runs the real solver, verifies gain accounting and force
 diagnostics, seeks its actual corner sample, checks exported JSON and restores
 the saved mode and reference.
+An additional browser journey changes grid spacing, retains a source-resolution
+reference, verifies corner deltas, reloads the saved project and exports the
+original track alongside the effective grid. Python checks resampling bounds,
+narrow widths, caps, interpolation rejection, analytical aero/grip and terminal
+power balance. TypeScript checks fingerprints, legacy migration and interpolation
+between unequal sample arrays; rigid map transforms preserve the searched lap.
 
 Visual QA uses actual browser screenshots, reviewed by an agent, at desktop and
 mobile sizes. The initial pass found mobile topbar overflow and camera framing;

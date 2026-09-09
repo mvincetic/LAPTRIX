@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 12 tests pass.
-- Python numerical/API tests: 41 tests pass.
-- Playwright: seven browser journeys pass against running local services.
+- Vitest: 17 tests pass.
+- Python numerical/API tests: 54 tests pass.
+- Playwright: eight browser journeys pass against running local services.
 - Vite production build: pass; approximately 1.27 MB JavaScript / 351 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed the prior MVP commits; the solver milestone reruns CI on push.
+- GitHub Actions passed through `cf91692`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -40,6 +40,14 @@ and reviewed: the solver explanation, seed gain and selected corner remain visib
 `artifacts/refinement-*.png` preserves local evidence. The five-resolution numerical
 study is summarized, including its accuracy caveat, in SOLVER_STUDY.md.
 
+The sampling continuation adds the eighth journey, exercising a 720-node reference
+against a 1,121-node solve, physical corner correspondence, local restoration and
+an export that preserves the original source. Combined sampling/refinement visual
+QA reports no runtime errors or horizontal overflow at 1600, 1280, 900 and 390 px.
+Desktop, 1280 px, mobile and corner-inspection images were opened and reviewed;
+the controls, grid diagnostics and reference results remain usable. Local evidence
+is saved as `artifacts/sampling-refinement-*.png`.
+
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.
 **Native WebMCP integration was not verified** because no native supported registry
@@ -62,6 +70,9 @@ was available. Ordinary browser controls are independent of that optional API.
   regularization and nonuniform derivatives make the objective consistent across grids.
 - Enforced braking capacity at the segment start after a zero-downforce test exposed
   a force-demand overshoot. Local refinement accepts only checked improvements.
+- Removed map-orientation dependence from the local search after a rigid-transform
+  benchmark exposed a 0.036-second discrepancy. Added controlled grids and
+  source-based reference correspondence, tested across save/reload and JSON export.
 - Kept slider-test expectations at the control's documented 0.01 s step while the
   canonical clock and displayed telemetry retain their original precision.
 

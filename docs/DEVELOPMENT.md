@@ -26,6 +26,9 @@ Add `--refinement` to that script for screenshots of the optional lap-time mode.
 `npm run study:solver` writes `artifacts/solver-study.json` and prints the grid study.
 Use `npm run study:solver -- --counts 360 720` for a shorter run. The script resamples
 the synthetic catalog input, changes no source data and does not start the servers.
+`npm run study:sampling` compares production source/5 m/3 m modes on one unchanged
+source. `node scripts/visual-qa.mjs --sampling --refinement` captures the combined
+resampling/refinement workflow. Browser comparison tests exercise unequal grids.
 
 Use `npx prettier --write <files>` and `npm run format:python` for formatting.
 Changes to data or numerical logic need focused tests. Keep expensive Three.js

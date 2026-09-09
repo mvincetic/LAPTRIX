@@ -7,7 +7,11 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { Lap } from "../../../../packages/shared/schema";
-import { formatTime, signed } from "../../../../packages/telemetry";
+import {
+  cornerDelta,
+  formatTime,
+  signed,
+} from "../../../../packages/telemetry";
 export function Analysis({
   lap,
   reference,
@@ -63,6 +67,13 @@ export function Analysis({
             )}
           </div>
           <small>Approximate · {lap.optimization.method}</small>
+          {lap.sampling && (
+            <small data-testid="sampling-summary">
+              {lap.sampling.pointCount.toLocaleString()} samples ·{" "}
+              {lap.sampling.meanSpacing.toFixed(2)} m mean
+              {lap.sampling.capped ? " · point limit reached" : ""}
+            </small>
+          )}
           {!lap.optimization.converged && (
             <small className="solver-warning">
               Curvature iteration limit reached · best bounded line
@@ -184,50 +195,38 @@ export function Analysis({
               </tr>
             </thead>
             <tbody>
-              {lap.corners.map((c) => (
-                <tr
-                  key={c.id}
-                  className={c.id === selectedCorner ? "selected" : ""}
-                >
-                  <td>
-                    <button
-                      aria-label={`Select corner ${c.id}`}
-                      onClick={() => onCorner(c.id)}
-                    >
-                      {c.id}
-                    </button>
-                  </td>
-                  <td>{c.direction}</td>
-                  <td>{(c.entrySpeed * 3.6).toFixed(0)}</td>
-                  <td>{(c.minSpeed * 3.6).toFixed(0)}</td>
-                  <td>{c.lateralG.toFixed(1)}</td>
-                  <td>{(c.exitSpeed * 3.6).toFixed(0)}</td>
-                  <td>
-                    {reference &&
-                    reference.samples[c.exitIndex] &&
-                    reference.samples[c.entryIndex] ? (
-                      <span
-                        className={
-                          c.time -
-                            (reference.samples[c.exitIndex].time -
-                              reference.samples[c.entryIndex].time) <=
-                          0
-                            ? "positive"
-                            : "negative"
-                        }
+              {lap.corners.map((c) => {
+                const d = cornerDelta(lap, reference, c);
+                return (
+                  <tr
+                    key={c.id}
+                    className={c.id === selectedCorner ? "selected" : ""}
+                  >
+                    <td>
+                      <button
+                        aria-label={`Select corner ${c.id}`}
+                        onClick={() => onCorner(c.id)}
                       >
-                        {signed(
-                          c.time -
-                            (reference.samples[c.exitIndex].time -
-                              reference.samples[c.entryIndex].time),
-                        )}
-                      </span>
-                    ) : (
-                      <ChevronRight size={12} />
-                    )}
-                  </td>
-                </tr>
-              ))}
+                        {c.id}
+                      </button>
+                    </td>
+                    <td>{c.direction}</td>
+                    <td>{(c.entrySpeed * 3.6).toFixed(0)}</td>
+                    <td>{(c.minSpeed * 3.6).toFixed(0)}</td>
+                    <td>{c.lateralG.toFixed(1)}</td>
+                    <td>{(c.exitSpeed * 3.6).toFixed(0)}</td>
+                    <td>
+                      {d !== null ? (
+                        <span className={d <= 0 ? "positive" : "negative"}>
+                          {signed(d)}
+                        </span>
+                      ) : (
+                        <ChevronRight size={12} />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
