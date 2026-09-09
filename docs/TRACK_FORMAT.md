@@ -57,3 +57,10 @@ source segment contacts and height gaps, with a selectable diagram and local rep
 This diagnostic does not change track acceptance or certify road surface clearance
 at bridges. Geodetic coordinate conversion remains unimplemented. See
 TRACK_DIAGNOSTICS.md for tolerance, pair counts and the bounded-detail contract.
+
+Import validates the file and calculates the selected setup and centerline
+reference before adding its ID or changing the current source. If either request
+fails, the previous workspace stays intact and the same file/ID can be retried.
+Superseded import completions cannot add catalog entries or overwrite newer work.
+Switching between loaded tracks likewise activates the new source and both laps
+together; Retry remembers a failed target rather than recalculating the old track.

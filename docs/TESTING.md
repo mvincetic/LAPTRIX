@@ -1,5 +1,13 @@
 # Testing and validation
 
+Track activation journeys inject separate selected-lap and baseline failures,
+compare complete exported projects before/after, and retry the same source ID.
+A failed selector change keeps its prior source and Retry activates the intended
+track with a matching reference. Another journey holds both older import requests
+until a newer import completes, then verifies stale responses cannot add a source
+or replace the completed project. `scripts/track-failure-qa.mjs` captures retained
+workspace/error layouts and verifies Save/reload after a failed import.
+
 Track diagnostics use analytical closed polylines to check crossing/touch/overlap
 semantics, seam handling and source-height interpolation, including an overlap
 whose minimum gap lies inside the interval. Rotation/translation preserve gaps;

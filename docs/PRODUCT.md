@@ -29,6 +29,9 @@ continue working, save locally, and reload to recover the viewer.
 Source geometry inspection identifies projected segment contacts and their height
 gaps, with an original-track diagram and exportable report. It helps review imports
 without implying surveyed road accuracy or validated bridge clearance.
+Track imports and selection retain the current source, lap and reference until
+both new calculations succeed. Failed imports preserve the workspace and expose
+an import retry; failed selection retries the intended track with its new baseline.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

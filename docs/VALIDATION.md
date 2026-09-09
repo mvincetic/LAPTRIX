@@ -193,6 +193,20 @@ The contact label was shortened after visual review and tiny negative coordinate
 now display as zero. Lint, typecheck and production checks pass after that polish.
 The viewer-split commit's remote CI also passed, including the new production gate.
 
+Transactional track activation passes the full 86 Python / 47 TypeScript / 26
+development browser suite, lint, typecheck and build, plus both production viewer
+journeys. A regression reproduced the old failed-import path before the fix.
+Four new journeys now verify separate selected-lap/baseline failures, unchanged
+project exports, same-ID retry, failed track selection with correct-target Retry,
+and delayed older imports that cannot overwrite newer work or add catalog entries.
+The overlapping-request test waits for both old requests before releasing them;
+its pending-state assertion uses the stable track control rather than the run
+button's changing label. Visual QA confirms the old lap remains available and
+Save/reload retains the old source after failure. Opened desktop/mobile screenshots
+in `artifacts/track-failure-*.png` show readable error and retry controls, no
+horizontal overflow, and no runtime errors. The preceding geometry commit's
+remote CI passed on the working branch.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

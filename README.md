@@ -68,6 +68,7 @@ node scripts/visual-qa.mjs --gt --reference --delta --project
 node scripts/visual-qa.mjs --sweep
 node scripts/viewer-load-qa.mjs
 node scripts/geometry-qa.mjs
+node scripts/track-failure-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```

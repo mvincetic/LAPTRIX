@@ -87,3 +87,7 @@ the selected pair. The gap is explicitly a source height difference in metres.
 The report action and scope note remain reachable inside the settings scroll area
 and span both settings columns on mobile. No green clearance or safety badge is
 inferred from a positive height gap.
+During track selection/import, controls show the pending calculation while the
+last complete source and analysis remain visible. Import errors explicitly state
+that the workspace was kept and offer Import track again; ordinary run errors
+identify the attempted track. Retry carries the failed track target internally.

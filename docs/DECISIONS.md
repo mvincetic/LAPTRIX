@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Activate track changes after successful calculation
+
+**Decision:** Commit an imported source, current lap and new reference together
+after both calculations succeed. Retain the prior source while selecting another
+loaded track, and remember the failed target and baseline requirement for Retry.
+Reserve request generations before file reading and ignore superseded results.
+**Alternative:** Clear the prior lap and catalog the import before awaiting the
+general run helper. **Reasoning:** That helper handled errors internally, so the
+import path could lose the workspace and report success after a failed request.
+**Consequences:** Failed imports do not consume an ID or change exported project
+contents. Playback pauses during loading; existing results remain inspectable.
+
 ## 2026-09-09 — Inspect source contacts without changing track acceptance
 
 **Decision:** Report closed-centerline x/z crossing, touch and overlap pairs,

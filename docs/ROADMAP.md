@@ -61,12 +61,15 @@ the same recovery behavior as development modules.
 Source geometry diagnostics now report projected crossing/touch/overlap pairs and
 interpolated height gaps. The original-track diagram and report remain independent
 of resampled lap geometry; complete counts survive a 100-pair detail cap.
+Track imports and loaded-track selection now activate source/current/reference
+together after successful calculation. Failures preserve complete exported project
+contents; retries retain the intended target, and stale imports cannot add sources.
 
 ## Next highest-value work
 
-1. Make custom-track import activate only after successful calculation. Code
-   inspection found that it clears the current lap/reference before awaiting a
-   helper that handles failures internally, then can show a false success notice.
+1. Add explicit cancellation for ordinary calculations and file-import solves.
+   Reuse request abort signals and generation guards to retain the last completed
+   workspace; distinguish browser cancellation from stopping a server-side solve.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -76,9 +79,10 @@ The local numerical/API suite contains 86 passing tests, including coupled quadr
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Forty-seven TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts and clock/data invariants. Twenty-two browser journeys cover the
+eligibility, vehicle contracts and clock/data invariants. Twenty-six browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
-audio, aero comparison application/failure/cancellation, viewer downloads, geometry reports and the
+audio, aero comparison application/failure/cancellation, viewer downloads, geometry
+reports, failed/superseded track activation and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

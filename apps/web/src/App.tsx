@@ -70,6 +70,9 @@ export function App() {
     projectInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
+  const retryTarget = useRef<{ track: Track; makeReference: boolean } | null>(
+    null,
+  );
   const [aeroComparison, setAeroComparison] = useState(false);
   const actionsButton = useRef<HTMLButtonElement>(null);
   const closeAeroComparison = () => {
@@ -85,6 +88,7 @@ export function App() {
       makeReference = false,
     ) => {
       const id = ++generation.current;
+      retryTarget.current = null;
       setBusy(true);
       setError("");
       setErrorAction("retry");
@@ -103,15 +107,18 @@ export function App() {
             : Promise.resolve(null),
         ]);
         if (id !== generation.current) return;
+        setTrack(selectedTrack);
         setLap(result);
         if (baseline) setReference(baseline);
         setSelectedCorner(null);
         clock.configure(result.lapTime);
       } catch (e) {
-        if (id === generation.current)
+        if (id === generation.current) {
+          retryTarget.current = { track: selectedTrack, makeReference };
           setError(
-            e instanceof Error ? e.message : "Simulation failed. Please retry.",
+            `${selectedTrack.name}: ${e instanceof Error ? e.message : "Simulation failed. Please retry."}`,
           );
+        }
       } finally {
         if (id === generation.current) setBusy(false);
       }
@@ -249,6 +256,14 @@ export function App() {
     }
   };
   const importTrack = async (file: File) => {
+    if (!catalog) return;
+    const id = ++generation.current;
+    retryTarget.current = null;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    setMenu(false);
+    clock.play(false);
     try {
       if (file.size > 1_500_000)
         throw new Error("Track file must be smaller than 1.5 MB.");
@@ -267,17 +282,34 @@ export function App() {
         throw new Error(
           "A track with this ID is already loaded. Use a unique ID.",
         );
+      if (id !== generation.current) return;
+      const [result, baseline] = await Promise.all([
+        runSimulation(imported, vehicleId, setup, true),
+        runSimulation(
+          imported,
+          vehicleId,
+          { ...setup, solver: "centerline" },
+          true,
+        ),
+      ]);
+      if (id !== generation.current) return;
       customTracks.current.add(imported.id);
       setCatalog((c) => (c ? { ...c, tracks: [...c.tracks, imported] } : c));
       setTrack(imported);
-      setLap(null);
-      setReference(null);
-      setMenu(false);
-      await run(imported, vehicleId, setup, true);
+      setLap(result);
+      setReference(baseline);
+      setSelectedCorner(null);
+      clock.configure(result.lapTime);
       setNotice("Track imported and simulated");
     } catch (e) {
-      setErrorAction("import-track");
-      setError(e instanceof Error ? e.message : "Invalid track JSON");
+      if (id === generation.current) {
+        setErrorAction("import-track");
+        setError(
+          `Track import failed: ${e instanceof Error ? e.message : "Invalid track JSON"}. Current workspace kept.`,
+        );
+      }
+    } finally {
+      if (id === generation.current) setBusy(false);
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
@@ -423,12 +455,7 @@ export function App() {
             value={track?.id ?? ""}
             onChange={(e) => {
               const next = catalog?.tracks.find((t) => t.id === e.target.value);
-              if (next) {
-                setTrack(next);
-                setLap(null);
-                setReference(null);
-                void run(next, vehicleId, setup, true);
-              }
+              if (next) void run(next, vehicleId, setup, true);
             }}
           >
             {catalog?.tracks.map((t) => (
@@ -694,7 +721,13 @@ export function App() {
                 projectInput.current?.click();
               else if (errorAction === "import-track")
                 fileInput.current?.click();
-              else if (track) void run(track, vehicleId, setup);
+              else if (track)
+                void run(
+                  retryTarget.current?.track ?? track,
+                  vehicleId,
+                  setup,
+                  retryTarget.current?.makeReference ?? !reference,
+                );
               else window.location.reload();
             }}
           >

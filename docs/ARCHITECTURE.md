@@ -43,6 +43,12 @@ responses before they enter the UI. The API runs synchronous simulation function
 in FastAPI's worker pool. A bounded 24-entry in-process cache avoids re-solving
 identical track/vehicle/setup requests. A generation counter prevents old responses
 from replacing a newer selected run. A failed run preserves the last completed lap.
+Track selection also retains its current source/reference until both the selected
+lap and new baseline succeed. A failed run retains its intended track and baseline
+requirement for Retry. Track-file imports reserve a request generation before file
+reading and calculate both laps before adding a source to the local catalog; stale
+completions cannot add tracks or show success. This mirrors portable-project
+activation and prevents partial workspaces when either solve fails.
 
 `apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
 and solves its box constraints. `solver.py` owns geometry, the speed envelope,
