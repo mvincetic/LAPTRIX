@@ -1,5 +1,14 @@
 # Testing and validation
 
+Track diagnostics use analytical closed polylines to check crossing/touch/overlap
+semantics, seam handling and source-height interpolation, including an overlap
+whose minimum gap lies inside the interval. Rotation/translation preserve gaps;
+ordinary joins, parallel lanes and the development circuit produce no contacts.
+The maximum source grid and capped-detail stress case exercise complete counts.
+A real browser imports an original elevated crossing fixture, resamples the lap,
+exports original source diagnostics, and saves/restores at mobile width. See
+TRACK_DIAGNOSTICS.md for scope and `scripts/geometry-qa.mjs` for visual inspection.
+
 Viewer-loading journeys delay and abort the real module request while calculating
 laps, changing setup and using telemetry. Recovery explicitly saves and reloads,
 then checks the restored name, setup and lap. `npm run test:production` rebuilds and

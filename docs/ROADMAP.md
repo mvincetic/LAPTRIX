@@ -58,11 +58,15 @@ preserve that distinction and historical references compare at current gates.
 The WebGL viewer now loads separately from the engineering workspace. Delayed or
 failed downloads preserve simulation and telemetry; production-asset tests cover
 the same recovery behavior as development modules.
+Source geometry diagnostics now report projected crossing/touch/overlap pairs and
+interpolated height gaps. The original-track diagram and report remain independent
+of resampled lap geometry; complete counts survive a 100-pair detail cap.
 
 ## Next highest-value work
 
-1. Add geometry-intersection diagnostics for imported centerlines, reporting
-   projected contacts and source height gaps without claiming bridge clearance.
+1. Make custom-track import activate only after successful calculation. Code
+   inspection found that it clears the current lap/reference before awaiting a
+   helper that handles failures internally, then can show a false success notice.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -70,10 +74,11 @@ the same recovery behavior as development modules.
 
 The local numerical/API suite contains 86 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Thirty-nine TypeScript tests cover
-geometry, alignment, project/reference validation, comparison eligibility, vehicle contracts and clock/data invariants. Twenty-one browser journeys cover the
+extremes and analytical work/grip benchmarks. Forty-seven TypeScript tests cover
+geometry, source contacts, alignment, project/reference validation, comparison
+eligibility, vehicle contracts and clock/data invariants. Twenty-two browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
-audio, aero comparison application/failure/cancellation, viewer downloads and the
+audio, aero comparison application/failure/cancellation, viewer downloads, geometry reports and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

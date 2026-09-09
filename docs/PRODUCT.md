@@ -26,6 +26,9 @@ Older v1 track files retain their distance-based sectors and are labelled as suc
 historical references compare at the current lap's physical source intervals.
 The workspace remains usable while the 3D module downloads. If it fails, users can
 continue working, save locally, and reload to recover the viewer.
+Source geometry inspection identifies projected segment contacts and their height
+gaps, with an original-track diagram and exportable report. It helps review imports
+without implying surveyed road accuracy or validated bridge clearance.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

@@ -81,3 +81,9 @@ If loading fails, the rest of the workspace stays available. The error state nam
 the failed view and provides an explicit Reload page action with a reminder to
 Save first; it does not present an ineffective import retry. No loading overlay
 blocks settings or telemetry.
+Track geometry uses another expandable settings section. A restrained count badge
+signals projected segment contacts; a small top-view source diagram highlights
+the selected pair. The gap is explicitly a source height difference in metres.
+The report action and scope note remain reachable inside the settings scroll area
+and span both settings columns on mobile. No green clearance or safety badge is
+inferred from a positive height gap.

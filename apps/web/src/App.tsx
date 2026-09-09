@@ -719,6 +719,7 @@ export function App() {
           disabled={busy}
           dirty={dirty}
           vehicle={vehicle}
+          track={track}
         />
         <div className="center-column">
           {simulationTrack ? (

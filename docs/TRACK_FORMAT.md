@@ -52,5 +52,8 @@ Rendering uses this data, not per-track conditionals. The UI imports JSON throug
 the actions menu (1.5 MB limit); backend validation remains authoritative.
 
 The API supports custom tracks per request; imports do not modify repository files.
-Save persists the selected custom track on this device. Track crossings, road
-surface clearance at bridges and geodetic coordinate conversion are not validated.
+Save persists the selected custom track on this device. Expand Track geometry for
+source segment contacts and height gaps, with a selectable diagram and local report.
+This diagnostic does not change track acceptance or certify road surface clearance
+at bridges. Geodetic coordinate conversion remains unimplemented. See
+TRACK_DIAGNOSTICS.md for tolerance, pair counts and the bounded-detail contract.

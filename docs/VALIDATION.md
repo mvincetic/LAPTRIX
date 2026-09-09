@@ -180,6 +180,19 @@ label fix. Final QA reports no runtime errors or horizontal overflow at 1600 and
 107.31 kB gzip; the full viewer still downloads as a separate chunk. CI repeats
 the built-asset failure checks in addition to development browser journeys.
 
+Source geometry inspection passes 86 Python / 47 TypeScript / 22 development
+browser tests, lint, typecheck and build, plus both production viewer journeys.
+Eight analytical diagnostics cases cover contact semantics, source heights, rigid
+transforms, seam handling, the maximum source grid and complete counts past the
+detail cap. The new browser journey imports a synthetic crossing, checks the
+independent 7.998 m source gap, resamples, exports the original data and restores
+on mobile. Geometry QA reports no runtime errors or horizontal overflow at 1600
+and 390 px. Desktop/mobile `artifacts/geometry-*.png` were opened and reviewed;
+the selected pair, height gap, scope note and export action remain readable.
+The contact label was shortened after visual review and tiny negative coordinates
+now display as zero. Lint, typecheck and production checks pass after that polish.
+The viewer-split commit's remote CI also passed, including the new production gate.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

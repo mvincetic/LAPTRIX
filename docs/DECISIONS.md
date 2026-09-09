@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Inspect source contacts without changing track acceptance
+
+**Decision:** Report closed-centerline x/z crossing, touch and overlap pairs,
+interpolated source height gaps, a selectable diagram and a source-complete local
+report. Scan every pair up to the existing 2,000-point contract, but retain at most
+100 details with explicit omitted counts. **Alternative:** Reject all projected
+crossings or infer valid bridge clearance from positive height separation.
+**Reasoning:** A crossing can represent vertically separated source paths; road
+surfaces and vehicle clearance require information this model does not have.
+**Consequences:** Source inspection is independent of resampling and physics,
+pair counts need not equal unique locations, and neither a positive gap nor zero
+contacts certifies a physically valid circuit. See TRACK_DIAGNOSTICS.md.
+
 ## 2026-09-09 — Load the WebGL viewer independently
 
 **Decision:** Dynamically import the viewer, retain a loading/error panel, and

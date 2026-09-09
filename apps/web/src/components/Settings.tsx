@@ -1,6 +1,7 @@
 import { ChevronDown, Info, Layers, Sun, RotateCcw } from "lucide-react";
-import type { Setup, Vehicle } from "../../../../packages/shared/schema";
+import type { Setup, Track, Vehicle } from "../../../../packages/shared/schema";
 import { VehicleDetails } from "./VehicleDetails";
+import { TrackDetails } from "./TrackDetails";
 type Props = {
   setup: Setup;
   onChange: (setup: Setup) => void;
@@ -8,6 +9,7 @@ type Props = {
   disabled: boolean;
   dirty: boolean;
   vehicle?: Vehicle;
+  track?: Track | null;
 };
 function Range({
   label,
@@ -65,6 +67,7 @@ export function Settings({
   disabled,
   dirty,
   vehicle,
+  track,
 }: Props) {
   const update = <K extends keyof Setup>(key: K, value: Setup[K]) =>
     onChange({ ...setup, [key]: value });
@@ -235,6 +238,7 @@ export function Settings({
             suspension model.
           </p>
         </details>
+        {track && <TrackDetails track={track} />}
         {vehicle && <VehicleDetails vehicle={vehicle} fuel={setup.fuel} />}
       </fieldset>
       <div className={`setup-state ${dirty ? "dirty" : ""}`}>

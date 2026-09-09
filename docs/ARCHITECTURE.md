@@ -26,6 +26,11 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+`packages/track-engine/diagnostics.ts` separately inspects original centerline
+segments for projected contacts and interpolated height gaps. The settings panel
+memoizes the complete bounded scan on source points and caps retained details at
+100 pairs. Its diagram/export are source inspection tools; they do not modify
+geometry, certify surfaces or feed an alternative trajectory into the solver.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and
