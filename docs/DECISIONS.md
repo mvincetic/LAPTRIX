@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Compare native channels at the same source position
+
+**Decision:** Add optional dashed native-reference traces on current-lap axes, with
+shared channel scales and explicit R readouts. Merge both source-progress grids and
+keep native samples separate from plot coordinates. Gear curves use steps.
+**Alternative:** Overlay raw elapsed-time samples or resample only on current nodes.
+**Reasoning:** Engineering channel comparison needs physical correspondence across
+vehicles and lines, and a sparse current grid must not erase reference events.
+**Consequences:** The existing clock and exports remain authoritative; timing-only
+references cannot supply channels. Paths are memoized. Matching source declarations
+do not authenticate imported telemetry. Shared-time reference ghosts retain their
+separate spatial-comparison semantics. See TELEMETRY_COMPARISON.md.
+
 ## 2026-09-09 — Project naming beyond the desktop header
 
 **Context:** The project-name field is hidden below 1,350 px, leaving smaller-screen

@@ -74,3 +74,8 @@ or grids and keeps the reference sector durations summing to its full lap time.
 Stored timing values are never recalculated by the simulation solver. Legacy
 references without alignment use their original sector durations until a valid
 source-position migration is possible.
+
+Eligible native references can also supply optional **Reference traces** in Lap
+Graphs. Channels compare the same source position on current-lap axes and share
+display units/ranges; timing-only files cannot provide them. This differs from
+shared-elapsed-time ghost comparison. See TELEMETRY_COMPARISON.md.

@@ -57,6 +57,7 @@ the last completed result remains visible if a solve fails.
 - Optional native-reference ghost with independent vehicle styling and shared-time playback.
 - Bounded vehicle JSON import/export, preserved profile provenance and portable restoration.
 - Project naming at every screen width, with draft cancellation and explicit local saving.
+- Optional native-reference channel overlays with shared units and source-position alignment.
 
 ## Checks
 
@@ -82,6 +83,7 @@ node scripts/cursor-qa.mjs
 node scripts/reference-ghost-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
 node scripts/project-name-qa.mjs
+node scripts/telemetry-comparison-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -113,6 +115,10 @@ dragging, corner selection and playback all use the existing shared cursor.
 **Cursor Data** exposes numerical channels at that same position. Enter a time in
 seconds or distance in metres and press **Inspect** to pause and seek exactly.
 Escape discards an unsent entry; switching axis or calculating a new lap resets it.
+Enable **Reference traces** in **Lap Graphs** to compare native reference channels at
+the same source position. Grey dashed curves and R readings share the current lap's
+axes and channel scales. Timing-only files keep this control disabled. See
+[TELEMETRY_COMPARISON](docs/TELEMETRY_COMPARISON.md).
 In **Ghost Car**, enable **Show reference ghost** to compare a native lap in 3D.
 Both vehicles use elapsed seconds from the same start. The current lap sets playback
 duration, and a finished reference holds the line. Timing-only files keep this

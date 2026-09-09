@@ -104,6 +104,11 @@ reference time at the current cursor's source position. Negative means faster,
 positive means slower. Both horizontal axes, pointer seeking and the transport
 share the existing PlaybackClock. The seven physical channel graphs remain
 simulation telemetry; this separate view contains comparison values only.
+Optional native-reference channel curves now share those graph rows. Their merged
+source-progress knots use current-lap plot coordinates while retaining native
+sample values and timing separately. Shared ranges and units allow direct channel
+comparison; gear is stepped in both curves. The cursor maps current time through
+source progress, with no additional playback clock. See TELEMETRY_COMPARISON.md.
 
 New results identify `sectorBasis` as `source-progress` for track v2 or
 `racing-line-distance` for legacy v1. Every sector also carries its actual source

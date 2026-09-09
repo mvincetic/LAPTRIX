@@ -1,82 +1,26 @@
 import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import { Pause, Play, SkipBack, Volume2, VolumeX, Repeat2 } from "lucide-react";
-import type {
-  Lap,
-  Reference,
-  Sample,
+import {
+  isTimingReference,
+  type Lap,
+  type Reference,
 } from "../../../../packages/shared/schema";
 import { TimeDeltaPlot } from "./TimeDeltaPlot";
 import { CursorInspector } from "./CursorInspector";
 import { TabList } from "./TabList";
 import { tabPanelProps } from "./tabs";
 import {
+  canPlotTelemetry,
+  telemetryChannels,
+  telemetryPath,
+} from "../telemetryPlot";
+import "./telemetry-comparison.css";
+import {
   formatTime,
   interpolate,
+  prepareTelemetryComparison,
   type PlaybackClock,
 } from "../../../../packages/telemetry";
-type Channel = {
-  key: keyof Sample;
-  label: string;
-  unit: string;
-  min: number;
-  max: number;
-  color: string;
-  scale?: number;
-};
-const channelDefinitions: Channel[] = [
-  {
-    key: "speed",
-    label: "Speed",
-    unit: "km/h",
-    min: 0,
-    max: 360,
-    color: "#1474f5",
-    scale: 3.6,
-  },
-  {
-    key: "throttle",
-    label: "Throttle",
-    unit: "%",
-    min: 0,
-    max: 100,
-    color: "#1474f5",
-    scale: 100,
-  },
-  {
-    key: "brake",
-    label: "Brake",
-    unit: "%",
-    min: 0,
-    max: 100,
-    color: "#f44751",
-    scale: 100,
-  },
-  {
-    key: "rpm",
-    label: "Engine",
-    unit: "rpm",
-    min: 0,
-    max: 13000,
-    color: "#7c68b5",
-  },
-  { key: "gear", label: "Gear", unit: "", min: 0, max: 8, color: "#45799c" },
-  {
-    key: "lateralG",
-    label: "Lateral G",
-    unit: "G",
-    min: -5,
-    max: 5,
-    color: "#1474f5",
-  },
-  {
-    key: "y",
-    label: "Elevation",
-    unit: "m",
-    min: 0,
-    max: 100,
-    color: "#8c9aab",
-  },
-];
 export function Telemetry({
   lap,
   reference,
@@ -92,44 +36,66 @@ export function Telemetry({
 }) {
   const playback = useSyncExternalStore(clock.subscribe, clock.getSnapshot),
     [axis, setAxis] = useState<"distance" | "time">("distance"),
-    [view, setView] = useState("Lap Graphs");
+    [view, setView] = useState("Lap Graphs"),
+    [showReference, setShowReference] = useState(false);
   const tabsPrefix = useId();
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
+  const comparison = useMemo(
+    () => (lap ? prepareTelemetryComparison(lap, reference) : null),
+    [lap, reference],
+  );
+  const referenceSamples = useMemo(
+    () => comparison?.points.map((point) => point.sample) ?? [],
+    [comparison],
+  );
+  const displayable = useMemo(
+    () => !!comparison && canPlotTelemetry(referenceSamples),
+    [comparison, referenceSamples],
+  );
+  const activeComparison = showReference && displayable ? comparison : null;
+  const overlay = activeComparison !== null;
+  const referenceSample = activeComparison?.atTime(playback.time) ?? null;
   const channels = useMemo(
     () =>
-      channelDefinitions.map((c) => {
-        if (!lap || c.key === "throttle" || c.key === "brake") return c;
-        const values = lap.samples.map((s) => s[c.key] * (c.scale ?? 1));
-        if (c.key === "lateralG") {
-          const max = Math.max(1, Math.ceil(Math.max(...values.map(Math.abs))));
-          return { ...c, min: -max, max };
-        }
-        const step = c.key === "rpm" ? 1000 : c.key === "gear" ? 1 : 10;
-        const min =
-          c.key === "y" ? Math.floor(Math.min(...values) / step) * step : 0;
-        return {
-          ...c,
-          min,
-          max: Math.max(
-            min + step,
-            Math.ceil(Math.max(...values) / step) * step,
-          ),
-        };
-      }),
+      telemetryChannels(
+        overlay
+          ? [...(lap?.samples ?? []), ...referenceSamples]
+          : (lap?.samples ?? []),
+      ),
+    [lap, overlay, referenceSamples],
+  );
+  const currentPoints = useMemo(
+    () =>
+      lap?.samples.map((sample) => ({
+        time: sample.time,
+        distance: sample.distance,
+        sample,
+      })) ?? [],
     [lap],
   );
   const paths = useMemo(() => {
-    if (!lap) return [];
-    const max = axis === "distance" ? lap.length : lap.lapTime;
-    return channels.map((c, row) =>
-      lap.samples
-        .map(
-          (s, i) =>
-            `${i ? "L" : "M"}${((s[axis] / max) * 1000).toFixed(2)},${(row * 33 + 27 - ((s[c.key] * (c.scale ?? 1) - c.min) / (c.max - c.min)) * 24).toFixed(2)}`,
-        )
-        .join(" "),
-    );
-  }, [lap, axis, channels]);
+    if (!lap) return { current: [], reference: [] };
+    const extent = axis === "distance" ? lap.length : lap.lapTime;
+    return {
+      current: channels.map((channel, row) =>
+        telemetryPath(currentPoints, channel, row, axis, extent),
+      ),
+      reference: activeComparison
+        ? channels.map((channel, row) =>
+            telemetryPath(activeComparison.points, channel, row, axis, extent),
+          )
+        : [],
+    };
+  }, [lap, axis, channels, currentPoints, activeComparison]);
+  const referenceReason = !reference
+    ? "No reference selected"
+    : isTimingReference(reference)
+      ? "Timing-only reference · no channels"
+      : !comparison
+        ? "Reference source does not match"
+        : !displayable
+          ? "Reference values exceed the display range"
+          : "Same source position · current-lap axes";
   const progress = lap
     ? axis === "distance"
       ? (sample?.distance ?? 0) / lap.length
@@ -177,6 +143,22 @@ export function Telemetry({
           </button>
         </div>
       </div>
+      {view === "Lap Graphs" && (
+        <div className="telemetry-comparison-controls">
+          <label>
+            <input
+              type="checkbox"
+              checked={overlay}
+              disabled={!displayable}
+              onChange={(event) => setShowReference(event.target.checked)}
+              aria-describedby={`${tabsPrefix}-reference-mode`}
+            />
+            <span className="reference-trace-swatch" aria-hidden="true" />
+            Reference traces
+          </label>
+          <span id={`${tabsPrefix}-reference-mode`}>{referenceReason}</span>
+        </div>
+      )}
       <div
         className="graph-area"
         {...tabPanelProps(tabsPrefix, 0, view === "Lap Graphs")}
@@ -190,20 +172,52 @@ export function Telemetry({
                     {c.label}
                     <small>{c.unit ? `(${c.unit})` : ""}</small>
                   </span>
-                  <b style={{ color: c.color }}>
-                    {sample
-                      ? (sample[c.key] * (c.scale ?? 1)).toFixed(
+                  <span className="channel-values">
+                    <b style={{ color: c.color }}>
+                      {sample
+                        ? (sample[c.key] * (c.scale ?? 1)).toFixed(
+                            c.key === "lateralG" ? 1 : 0,
+                          )
+                        : "—"}
+                    </b>
+                    {referenceSample && (
+                      <small
+                        data-testid={`reference-value-${c.key}`}
+                        aria-label={`Reference ${c.label}`}
+                      >
+                        R{" "}
+                        {(referenceSample[c.key] * (c.scale ?? 1)).toFixed(
                           c.key === "lateralG" ? 1 : 0,
-                        )
-                      : "—"}
-                  </b>
+                        )}
+                      </small>
+                    )}
+                  </span>
                 </div>
               ))}
             </div>
             <div className="plot">
+              <div className="channel-sector-labels" aria-hidden="true">
+                {lap?.sectors.map((sector) => (
+                  <span
+                    key={sector.id}
+                    style={{
+                      left: `${
+                        (axis === "distance"
+                          ? (sector.startDistance + sector.endDistance) /
+                            2 /
+                            lap.length
+                          : (sector.split - sector.time / 2) / lap.lapTime) *
+                        100
+                      }%`,
+                    }}
+                  >
+                    S{sector.id}
+                  </span>
+                ))}
+              </div>
               <svg
                 role="img"
-                aria-label="Synchronized speed, throttle, brake, RPM, gear, lateral G and elevation traces"
+                aria-label={`Synchronized speed, throttle, brake, RPM, gear, lateral G and elevation traces${overlay ? " with source-aligned native reference" : ""}`}
                 viewBox="0 0 1000 251"
                 preserveAspectRatio="none"
                 onPointerDown={(e) => {
@@ -244,12 +258,24 @@ export function Telemetry({
                       strokeWidth={1}
                     />
                     <path
-                      d={paths[i]}
+                      data-testid={`current-trace-${c.key}`}
+                      d={paths.current[i]}
                       fill="none"
                       stroke={c.color}
                       strokeWidth={1.5}
                       vectorEffect="non-scaling-stroke"
                     />
+                    {overlay && (
+                      <path
+                        data-testid={`reference-trace-${c.key}`}
+                        d={paths.reference[i]}
+                        fill="none"
+                        stroke="#687a91"
+                        strokeWidth={1.6}
+                        strokeDasharray="4 3"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )}
                   </g>
                 ))}
                 {lap?.sectors.slice(0, -1).map((s) => {
@@ -269,22 +295,6 @@ export function Telemetry({
                     />
                   );
                 })}
-                {lap?.sectors.map((s) => (
-                  <text
-                    key={s.id}
-                    x={
-                      (axis === "distance"
-                        ? (s.startDistance + s.endDistance) / 2 / lap.length
-                        : (s.split - s.time / 2) / lap.lapTime) * 1000
-                    }
-                    y={10}
-                    textAnchor="middle"
-                    fill="#77859a"
-                    fontSize={10}
-                  >
-                    S{s.id}
-                  </text>
-                ))}
                 <line
                   x1={progress * 1000}
                   x2={progress * 1000}
@@ -297,15 +307,10 @@ export function Telemetry({
                   d={`M${progress * 1000 - 4},0 h8 l-4,6 z`}
                   fill="#15365a"
                 />
+              </svg>
+              <div className="channel-x-ticks">
                 {Array.from({ length: 6 }, (_, i) => (
-                  <text
-                    key={i}
-                    x={i * 200}
-                    y={246}
-                    fill="#718096"
-                    fontSize={10}
-                    textAnchor={i === 0 ? "start" : i === 5 ? "end" : "middle"}
-                  >
+                  <span key={i} style={{ left: `${i * 20}%` }}>
                     {lap
                       ? (
                           ((axis === "distance" ? lap.length : lap.lapTime) *
@@ -313,10 +318,11 @@ export function Telemetry({
                           5
                         ).toFixed(0)
                       : i * 1000}
-                  </text>
+                  </span>
                 ))}
-              </svg>
+              </div>
               <span className="axis-label">
+                {overlay ? "Current lap · " : ""}
                 {axis === "distance" ? "Distance (m)" : "Time (s)"} · click or
                 drag to inspect
               </span>

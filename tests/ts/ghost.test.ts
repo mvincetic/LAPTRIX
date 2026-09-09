@@ -8,7 +8,7 @@ import {
 import {
   ghostPose,
   PlaybackClock,
-  referenceGhostLap,
+  alignedNativeReference,
 } from "../../packages/telemetry";
 
 function lap(scale = 1): Lap {
@@ -125,9 +125,9 @@ describe("shared-clock ghost poses", () => {
     const current = lap(),
       reference = lap(1.4);
     reference.vehicleId = "other-vehicle";
-    expect(referenceGhostLap(current, reference)).toBe(reference);
-    expect(referenceGhostLap(null, reference)).toBeNull();
-    expect(referenceGhostLap(current, null)).toBeNull();
+    expect(alignedNativeReference(current, reference)).toBe(reference);
+    expect(alignedNativeReference(null, reference)).toBeNull();
+    expect(alignedNativeReference(current, null)).toBeNull();
     const timing: TimingReference = {
       format: "laptrix-timing-reference-v1",
       label: "Synthetic timing",
@@ -140,12 +140,12 @@ describe("shared-clock ghost poses", () => {
       alignment: current.alignment!,
       samples: current.samples.map(({ time }) => ({ time })),
     };
-    expect(referenceGhostLap(current, timing)).toBeNull();
+    expect(alignedNativeReference(current, timing)).toBeNull();
     reference.alignment!.trackFingerprint = `sha256:${"b".repeat(64)}`;
-    expect(referenceGhostLap(current, reference)).toBeNull();
+    expect(alignedNativeReference(current, reference)).toBeNull();
     delete reference.alignment;
-    expect(referenceGhostLap(current, reference)).toBeNull();
+    expect(alignedNativeReference(current, reference)).toBeNull();
     delete current.alignment;
-    expect(referenceGhostLap(current, lap())).toBeNull();
+    expect(alignedNativeReference(current, lap())).toBeNull();
   });
 });

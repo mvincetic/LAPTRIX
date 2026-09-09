@@ -19,6 +19,9 @@ the playback duration: a faster reference holds its closing endpoint after it
 finishes, and a slower reference may not finish before current-lap playback loops.
 Pause, exact cursor entry, chart/corner seeking, restart and playback rate all use
 the existing clock. Audio and chase camera continue to follow the current lap.
+Native reference channel overlays instead compare the same source position on
+current-lap axes. This intentional difference separates spatial separation at one
+elapsed time from channel differences at one track position; see TELEMETRY_COMPARISON.md.
 
 `ghostPose` clamps time to the selected lap and derives yaw/grade from a short
 forward lookahead (at most 0.15 s, bounded for very short laps). The lookahead wraps

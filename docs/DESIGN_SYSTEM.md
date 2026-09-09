@@ -50,6 +50,13 @@ Reference import/export lives in Additional actions. The comparison footer expos
 imported source, declared origin and timing resolution, using wrapped text. Invalid
 files retain the prior comparison and present an import-specific retry. Timing-only
 references contribute comparison intervals without inserting invented graph traces.
+Lap Graphs offers an initially unchecked native Reference traces
+checkbox, a grey dashed swatch and a short source-position/current-axis explanation.
+Available overlays share channel scales, use dashed grey curves and prefix their
+numeric cursor readings with R. Timing-only/mismatched references disable the
+control with text. The compact control row wraps on mobile; both gear plots step.
+Horizontal ticks and sector labels use ordinary layout text so their font size
+does not shrink with the SVG on narrow screens.
 
 Time Delta is a separate telemetry tab. A zero baseline, signed seconds, red/green
 trace and text legend distinguish slower/faster intervals. Both horizontal axes

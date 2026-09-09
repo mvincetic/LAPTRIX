@@ -191,8 +191,8 @@ export function signed(value: number, digits = 3) {
   return `${value > 0 ? "+" : ""}${value.toFixed(digits)}`;
 }
 
-/** Native positions are comparable only when both laps identify the same source. */
-export function referenceGhostLap(
+/** Native channels and positions are comparable only on a matching declared source. */
+export function alignedNativeReference(
   current: Lap | null,
   reference: Reference | null,
 ): Lap | null {
@@ -202,6 +202,40 @@ export function referenceGhostLap(
     reference.alignment?.trackFingerprint
     ? reference
     : null;
+}
+
+/** Map native reference channels onto current-lap axes without dropping either grid's knots. */
+export function prepareTelemetryComparison(
+  current: Lap,
+  reference: Reference | null,
+) {
+  const native = alignedNativeReference(current, reference);
+  if (!native) return null;
+  const currentProgress = current.alignment!.progress;
+  const referenceProgress = native.alignment!.progress;
+  const currentTime = current.samples.map((sample) => sample.time);
+  const currentDistance = current.samples.map((sample) => sample.distance);
+  const referenceTime = native.samples.map((sample) => sample.time);
+  const progress = Array.from(
+    new Set([...currentProgress, ...referenceProgress]),
+  ).sort((a, b) => a - b);
+  const atProgress = (position: number) =>
+    interpolate(
+      native.samples,
+      interpolateValues(referenceProgress, referenceTime, position),
+    );
+  const points = progress.map((position) => ({
+    progress: position,
+    sample: atProgress(position),
+    time: interpolateValues(currentProgress, currentTime, position),
+    distance: interpolateValues(currentProgress, currentDistance, position),
+  }));
+  return {
+    reference: native,
+    points,
+    atTime: (time: number) =>
+      atProgress(interpolateValues(currentTime, currentProgress, time)),
+  };
 }
 
 /** A completed ghost holds the finish pose until the shared current-lap clock restarts. */

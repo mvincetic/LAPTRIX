@@ -58,6 +58,10 @@ Project naming is available from Additional actions at all widths. A native dial
 keeps drafts separate until Rename; cancellation restores focus without changing
 the workspace. Naming makes no simulation request and retains pending setup edits,
 references and playback. Saved and exported names follow the existing contract.
+Optional native-reference curves now compare all seven graph channels at matched
+source positions, preserving both grids' events and current-lap axes. Dashed curves
+and R readouts share channel units and ranges with the current lap. Timing-only
+references remain analytical timing data without invented telemetry channels.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

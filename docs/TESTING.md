@@ -1,5 +1,14 @@
 # Testing and validation
 
+Native channel comparison tests use hand-calculated unequal grids, including a
+reference-only speed peak. They check merged knots, native sample/current-axis
+separation, boundary interpolation, discrete gear, units, shared ranges and input
+immutability. Browser journeys independently calculate seven reference readouts
+from real Formula/GT results on source/5 m grids at desktop/mobile widths. Both
+axes, keyboard activation, playback, tab changes and timing-only replacement retain
+the current cursor without simulation requests. `scripts/telemetry-comparison-qa.mjs`
+captures time/distance overlays and unavailable states at 1600/1280/390 px.
+
 Ghost tests independently check sampled position, yaw/grade, unequal lap durations,
 finish holding, shared-clock restart, rigid transforms and native source eligibility.
 Browser journeys switch to a GT current lap with a Formula reference and compare

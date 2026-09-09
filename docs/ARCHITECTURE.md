@@ -102,6 +102,12 @@ reference availability, while timing-only references remain analytical data. The
 pose helper clamps at a lap's finish and keeps the same seam-aware orientation as
 time advances beyond it. Viewer preferences add no stored lap or second clock.
 There is no account system or database.
+`prepareTelemetryComparison` uses the same native-reference eligibility boundary,
+merges source-progress knots and separates current-lap plot coordinates from each
+interpolated native sample. `telemetryPlot.ts` owns channel units, combined ranges
+and stepped gear paths. React memoizes alignment, samples, ranges and SVG paths;
+clock updates interpolate cursor readings without rebuilding full paths. The view
+retains the same canonical Lap and clock. See TELEMETRY_COMPARISON.md.
 `RenameProjectDialog` holds only a local name draft. It closes the native modal
 before callbacks restore focus outside it. Applying a name changes project metadata
 without touching calculation generations, source/vehicle state or the shared clock.

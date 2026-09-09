@@ -44,7 +44,7 @@ import {
 import {
   formatTime,
   interpolate,
-  referenceGhostLap,
+  alignedNativeReference,
   type PlaybackClock,
 } from "../../../../packages/telemetry";
 
@@ -320,7 +320,7 @@ export function TrackView({
     [reset, setReset] = useState(0),
     [ghost, setGhost] = useState(true),
     [showReference, setShowReference] = useState(false);
-  const referenceLap = referenceGhostLap(lap, reference);
+  const referenceLap = alignedNativeReference(lap, reference);
   const referenceVisible = showReference && !!referenceLap;
   const tabsPrefix = useId();
   const panel = useRef<HTMLElement>(null),

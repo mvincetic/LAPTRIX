@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 59 tests pass.
+- Vitest: 66 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 47 development browser journeys pass; two viewer journeys also run
+- Playwright: 49 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 372 kB initial JavaScript / 113 kB
+- Vite production build: pass; approximately 375 kB initial JavaScript / 114 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `6a5550b`; each following milestone reruns CI on push.
+- GitHub Actions passed through `8ee419f`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -305,6 +305,19 @@ Action, modal and applied-state captures are in `artifacts/project-name-*.png`;
 the four modal screenshots at 1600×1000, 1280×900, 390×844 and 780×390 were opened
 and reviewed. The QA report shows no runtime errors or horizontal overflow, with
 the complete dialog inside every viewport. Logs are in `artifacts/project-name-*.log`.
+
+Native channel comparison uses independent unequal-grid checks and real Formula/GT
+browser readouts. The complete 96 Python / 66 TypeScript / 49 development-browser
+suite passes, along with lint, typecheck, build and both production viewer journeys.
+Gate logs are retained as `artifacts/telemetry-comparison-*.log`.
+Visual QA captures workspace, time/distance overlays and timing-only
+unavailability at 1600/1280/390 px. Initial mobile images exposed horizontally scaled
+SVG tick text; ticks and sector labels now use ordinary layout text. Refreshed
+desktop, compact-desktop and mobile images were opened and reviewed, with readable
+axis values, dashed reference curves, stepped gears and R cursor values. The final
+`artifacts/telemetry-comparison-qa.json` records zero runtime errors, exact document
+widths and an unchanged 20-second cursor at each viewport. Both native grids retain
+their closing samples (721 reference / 1,122 current telemetry rows).
 
 ## Scope of the evidence
 

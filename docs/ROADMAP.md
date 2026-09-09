@@ -82,9 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Add optional source-aligned telemetry traces from native references. Preserve
-   units, both sampling grids and current-lap axes; timing-only references must not
-   acquire invented channels.
+1. Add focused sector-range inspection to channel and time-delta plots. Preserve
+   physical alignment, clear axis bounds and the current playback clock, with an
+   explicit return to the full lap.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -96,18 +96,22 @@ and sources remain visibly unverified; see VEHICLE_PROFILES.md.
 Project naming now works at every width through a native dialog with separate
 drafts, explicit application and reliable return focus. It preserves simulation,
 pending setup and playback, and uses the existing Save/export name contract.
+Native-reference channel overlays now preserve both sampling grids and source
+correspondence on current-lap axes. Optional dashed curves share channel scales
+and R cursor readings; timing-only imports cannot acquire channels. Horizontal
+tick and sector text retain their font size on narrow screens.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Fifty-nine TypeScript tests cover
+extremes and analytical work/grip benchmarks. Sixty-six TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts, ghost poses and clock/data invariants. Forty-seven browser journeys cover the
+eligibility, native channel plots, vehicle contracts, ghost poses and clock/data invariants. Forty-nine browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming and the
+precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming, native channel overlays and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
