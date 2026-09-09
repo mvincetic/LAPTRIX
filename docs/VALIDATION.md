@@ -16,10 +16,12 @@ and no main merge, force-push or repository-settings change was made.
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `059e153`. GPX passed its remote code checks, but
-  two attempts stopped at an upstream APT index mismatch before browser tests.
-  `d49c5be` isolates the unused Chrome source; dependency installation now passes
-  and the remote browser run is in progress. See CI.md for the scoped fix.
+- GitHub Actions passed through `d49c5be`, including GPX and the Chrome-source fix.
+  The source-profile run on `ab7ed20` reached the original 15-minute job deadline
+  during browser tests, without a complete verdict. The workflow now has a bounded
+  25-minute job / 20-minute browser budget and explicit per-test progress. A fresh
+  run will validate that configuration; individual test limits are unchanged.
+  See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
 

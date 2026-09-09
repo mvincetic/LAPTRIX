@@ -23,3 +23,11 @@ documents the traditional source filename and also removes that source while
 building the image. [Playwright's browser documentation](https://playwright.dev/docs/browsers)
 describes its version-specific browser binaries and separate system dependencies.
 The mitigation is original workflow code, not copied external implementation.
+
+That fix passed its complete [remote run](https://github.com/mvincetic/LAPTRIX/actions/runs/34386776078).
+The following 59-journey source-profile run reached the original 15-minute job
+limit while still running browser tests. Its buffered output provided no complete
+browser verdict. The job now allows 25 minutes, with a 20-minute global development
+browser budget and explicit list reporting for per-test progress. Individual test
+and assertion limits are unchanged. A global suite timeout can now report failure
+and leave time for artifact upload before the outer job deadline.
