@@ -19,19 +19,17 @@ test("portable project restores its name, custom track, setup and cross-vehicle 
 }) => {
   await page.goto("/");
   await expect(page.getByTestId("lap-time")).toBeVisible();
-  await page
-    .getByLabel("Import track file", { exact: true })
-    .setInputFiles({
-      name: "portable-track.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(
-        JSON.stringify({
-          ...source,
-          id: "portable-elevation-loop",
-          name: "Portable elevation loop",
-        }),
-      ),
-    });
+  await page.getByLabel("Import track file", { exact: true }).setInputFiles({
+    name: "portable-track.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...source,
+        id: "portable-elevation-loop",
+        name: "Portable elevation loop",
+      }),
+    ),
+  });
   await expect(
     page.getByRole("button", { name: "Run Simulation", exact: true }),
   ).toBeEnabled();
@@ -57,19 +55,18 @@ test("portable project restores its name, custom track, setup and cross-vehicle 
     page.getByRole("button", { name: "Run Simulation", exact: true }),
   ).toBeEnabled();
   const exported = await exportProject(page);
-  expect(exported.version).toBe(2);
+  expect(exported.version).toBe(3);
+  expect(exported.vehicleSource).toBe("catalog");
   expect(exported.projectName).toBe("Portable GT study");
   expect(exported.setup.fuel).toBe(110);
   const fresh = await page.context().newPage();
   await fresh.goto("http://127.0.0.1:5173/");
   await expect(fresh.getByTestId("lap-time")).toBeVisible();
-  await fresh
-    .getByLabel("Import project file", { exact: true })
-    .setInputFiles({
-      name: "portable-project.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(exported)),
-    });
+  await fresh.getByLabel("Import project file", { exact: true }).setInputFiles({
+    name: "portable-project.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(exported)),
+  });
   await expect(fresh.getByLabel("Project name")).toHaveValue(
     "Portable GT study",
   );
@@ -112,13 +109,11 @@ test("failed project validation or recalculation leaves the current workspace in
   const project = await exportProject(page);
   project.projectName = "Imported work";
   const upload = async (value: unknown) =>
-    page
-      .getByLabel("Import project file", { exact: true })
-      .setInputFiles({
-        name: "project.json",
-        mimeType: "application/json",
-        buffer: Buffer.from(JSON.stringify(value)),
-      });
+    page.getByLabel("Import project file", { exact: true }).setInputFiles({
+      name: "project.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(value)),
+    });
   await upload({ ...project, version: 99 });
   await expect(page.getByRole("alert")).toContainText("Current workspace kept");
   await expect(page.getByLabel("Project name")).toHaveValue("Original work");

@@ -55,6 +55,7 @@ the last completed result remains visible if a solve fails.
 - Keyboard navigation for actions, viewer tools and telemetry tabs with visible focus.
 - Exact time/distance cursor entry with numerical telemetry and explicit model limits.
 - Optional native-reference ghost with independent vehicle styling and shared-time playback.
+- Bounded vehicle JSON import/export, preserved profile provenance and portable restoration.
 
 ## Checks
 
@@ -78,6 +79,7 @@ node scripts/keyboard-audit.mjs
 node scripts/tabs-qa.mjs
 node scripts/cursor-qa.mjs
 node scripts/reference-ghost-qa.mjs
+node scripts/vehicle-profiles-qa.mjs
 npm run study:solver
 npm run study:sampling
 ```
@@ -96,7 +98,10 @@ Advanced settings also offers **Spatial sampling**; the imported source remains
 unchanged. See [SAMPLING](docs/SAMPLING.md) for the grid and reference contract.
 Changing **Car profile** runs that vehicle and retains the selected reference.
 Expand **Vehicle data & assumptions** to inspect model parameters and specification
-anchors. Both vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md).
+anchors. Both bundled vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md).
+Use **Export vehicle JSON** as an editable template and **Import vehicle JSON** to
+calculate user-supplied inputs. Parameters and declared sources remain unverified,
+visible and saved with the project. See [VEHICLE_PROFILES](docs/VEHICLE_PROFILES.md).
 **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
@@ -111,7 +116,7 @@ Both vehicles use elapsed seconds from the same start. The current lap sets play
 duration, and a finished reference holds the line. Timing-only files keep this
 option disabled; see [GHOST_PLAYBACK](docs/GHOST_PLAYBACK.md).
 **Export project** and **Import project JSON** move the whole setup and reference
-between workspaces. Import recalculates with the installed vehicle and retains the
+between workspaces. Import recalculates with its catalog or embedded vehicle and retains the
 prior workspace if validation or calculation fails. See [PROJECT_FILES](docs/PROJECT_FILES.md).
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need

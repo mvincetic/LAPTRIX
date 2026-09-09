@@ -3,6 +3,7 @@ import {
   lapSchema,
   type Setup,
   type Track,
+  type Vehicle,
 } from "../../../packages/shared/schema";
 async function request(url: string, init?: RequestInit) {
   let response: Response;
@@ -41,6 +42,7 @@ export async function runSimulation(
   setup: Setup,
   custom = false,
   signal?: AbortSignal,
+  vehicle?: Vehicle,
 ) {
   return lapSchema.parse(
     await request("/api/simulate", {
@@ -52,6 +54,7 @@ export async function runSimulation(
         vehicleId,
         setup,
         ...(custom ? { track } : {}),
+        ...(vehicle ? { vehicle } : {}),
       }),
     }),
   );

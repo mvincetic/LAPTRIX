@@ -11,18 +11,47 @@ import {
 } from "../../../packages/shared/schema";
 import { trackFingerprint } from "../../../packages/track-engine";
 import { restoreReference } from "./reference";
+import {
+  prepareVehicleProfile,
+  vehicleProfileSchema,
+} from "../../../packages/shared/vehicle-profile";
 
 export const projectFileSchema = z
   .object({
-    version: z.union([z.literal(1), z.literal(2)]),
+    version: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    vehicleSource: z.enum(["catalog", "embedded"]).optional(),
     projectName: z.string().max(80).default("Imported workspace"),
     track: trackSchema,
-    vehicle: vehicleSchema,
+    vehicle: z.unknown(),
     setup: setupSchema,
     lap: lapSchema.nullable().optional(),
     reference: z.unknown().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((file, context) => {
+    if ((file.version === 3) !== (file.vehicleSource !== undefined))
+      context.addIssue({
+        code: "custom",
+        path: ["vehicleSource"],
+        message:
+          "Version 3 requires a vehicle source; earlier versions must omit it",
+      });
+  })
+  .transform((file, context) => {
+    // Validate editable profiles before the archival reader can apply defaults
+    // or discard unknown fields, including nested source/power-curve fields.
+    const schema =
+      file.version === 3 && file.vehicleSource === "embedded"
+        ? vehicleProfileSchema
+        : vehicleSchema;
+    const validation = schema.safeParse(file.vehicle);
+    if (!validation.success) {
+      for (const issue of validation.error.issues)
+        context.addIssue({ ...issue, path: ["vehicle", ...issue.path] });
+      return z.NEVER;
+    }
+    return { ...file, vehicle: validation.data };
+  });
 
 const physicsKeys = [
   "mass",
@@ -43,6 +72,49 @@ const physicsKeys = [
 const physicsSignature = (vehicle: Vehicle) =>
   JSON.stringify(physicsKeys.map((key) => vehicle[key]));
 
+const savedProjectSchema = z.object({
+  version: z.literal(1),
+  projectName: z.unknown().optional(),
+  trackId: z.string().optional(),
+  vehicleId: z.string().optional(),
+  setup: setupSchema,
+  customTrack: trackSchema.optional(),
+  customVehicle: vehicleProfileSchema.optional(),
+  reference: z.unknown().optional(),
+});
+
+/** Adapt local saves through the same collision/validation boundary as portable files. */
+export async function prepareSavedProject(value: unknown, catalog: Catalog) {
+  const saved = savedProjectSchema.parse(value);
+  const track =
+    saved.customTrack ??
+    catalog.tracks.find((item) => item.id === saved.trackId) ??
+    catalog.tracks[0];
+  const vehicle =
+    saved.customVehicle ??
+    catalog.vehicles.find((item) => item.id === saved.vehicleId) ??
+    catalog.vehicles[0];
+  const reference =
+    saved.reference == null
+      ? null
+      : await restoreReference(parseReference(saved.reference), track);
+  return prepareProject(
+    {
+      version: 3,
+      vehicleSource: saved.customVehicle ? "embedded" : "catalog",
+      projectName:
+        typeof saved.projectName === "string"
+          ? saved.projectName.slice(0, 80)
+          : "Development workspace",
+      track,
+      vehicle,
+      setup: saved.setup,
+      reference,
+    },
+    catalog,
+  );
+}
+
 /** Validate everything before any workspace state changes or network calculation. */
 export async function prepareProject(value: unknown, catalog: Catalog) {
   const validation = projectFileSchema.safeParse(value);
@@ -54,11 +126,26 @@ export async function prepareProject(value: unknown, catalog: Catalog) {
         .join("; "),
     );
   const file = validation.data;
-  const vehicle = catalog.vehicles.find((v) => v.id === file.vehicle.id);
-  if (!vehicle || physicsSignature(vehicle) !== physicsSignature(file.vehicle))
-    throw new Error(
-      "The exported vehicle physics do not match an installed profile. Import its lap as a reference to compare it with the current models.",
-    );
+  const embedded = file.version === 3 && file.vehicleSource === "embedded";
+  let vehicle: Vehicle;
+  let addVehicle = false,
+    renamedVehicle = false;
+  if (embedded) {
+    const profile = await prepareVehicleProfile(file.vehicle, catalog.vehicles);
+    vehicle = profile.vehicle;
+    addVehicle = profile.addVehicle;
+    renamedVehicle = profile.renamedVehicle;
+  } else {
+    const installed = catalog.vehicles.find((v) => v.id === file.vehicle.id);
+    if (
+      !installed ||
+      physicsSignature(installed) !== physicsSignature(file.vehicle)
+    )
+      throw new Error(
+        "The exported vehicle physics do not match an installed profile. Import its lap as a reference to compare it with the current models.",
+      );
+    vehicle = installed;
+  }
   if (file.lap && !(await restoreReference(file.lap, file.track)))
     throw new Error(
       "The archived lap does not match the project's source track.",
@@ -101,6 +188,9 @@ export async function prepareProject(value: unknown, catalog: Catalog) {
     projectName: file.projectName,
     track: existing ?? track,
     vehicle,
+    embeddedVehicle: embedded ? vehicle : undefined,
+    addVehicle,
+    renamedVehicle,
     setup: file.setup,
     reference,
     addTrack: !existing,

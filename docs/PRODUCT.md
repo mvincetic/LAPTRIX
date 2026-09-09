@@ -49,6 +49,11 @@ clock. Visibility is independent of the blue current ghost, and each uses its ow
 vehicle snapshot. Timing-only files retain analytical comparison without a drawn
 vehicle. Current-lap playback determines the duration and a finished reference waits
 at the line; see GHOST_PLAYBACK.md.
+Vehicle JSON import/export supports bounded user-supplied parameters through the
+same solver. Imports activate after successful calculation, retain references and
+declared sources/assumptions, and resolve occupied IDs without replacing built-in
+profiles. Imported inputs are visibly unverified. Save and portable v3 projects
+preserve the selected embedded profile; older files retain their original rules.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

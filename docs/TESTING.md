@@ -62,11 +62,24 @@ both development and production browser gates. API tests accept exact preview
 origins and reject other ports and hostname suffixes. `scripts/viewer-load-qa.mjs`
 captures both placeholder states at desktop/mobile widths and checks recovery.
 
-Portable-project tests verify v1/v2 bundles, names, installed vehicle physics,
+Portable-project tests verify v1/v2/v3 bundles, names, installed vehicle physics,
 reference identity, source-ID collisions and repeated imports without mutation.
 Browser coverage opens a custom-track GT study with a Formula reference on a fresh
 page, then saves/reloads it. Separate invalid-file and unavailable-API cases retain
 the previous project/lap and exercise the import-specific retry action.
+Embedded-profile tests reject missing declarations, unknown nested fields and
+out-of-bounds inputs before archival defaults apply. Pure local preparation checks
+combined source/vehicle collisions, repeat imports and save fallback rules. API
+tests prove inline physics and cache separation without server-catalog writes.
+Browser journeys exercise template export, collision renaming, literal references,
+reruns, save/reload and fresh portable restoration. Every track baseline, aero row
+and project solve is checked for its inline profile. Invalid files, API failures,
+cancellation, superseded imports and either failing embedded-project solve retain
+the workspace and avoid registering partial entries. `vehicle-profiles-qa.mjs`
+captures actions, details, comparison and errors at 1600/1280/390 px in isolation.
+Maximum-length unbroken metadata also exercises panel widths. A regression checks
+details, lap/reference labels, ghost controls and aero context at all three widths;
+the visual report records both document and panel overflow measurements.
 
 Delta-plot tests use hand-calculated unequal grids to verify retained breakpoints,
 positive/negative deltas, boundary clamps and cursor interpolation. A real browser
@@ -124,6 +137,9 @@ between unequal sample arrays; rigid map transforms preserve the searched lap.
 
 Visual QA uses actual browser screenshots, reviewed by an agent, at desktop and
 mobile sizes.
+Keep application source unchanged during browser gates. A watched-module edit can
+trigger a Vite reload and invalidate an otherwise valid response/interaction; rerun
+the affected gate with source fixed rather than weakening its assertions.
 Run visual QA separately from the browser regression suite on machines using
 software WebGL. Simultaneous renderers can consume enough CPU to delay ordinary
 API/UI assertions. Aero-study completion waits allow 30 seconds for five sequential

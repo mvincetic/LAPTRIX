@@ -18,13 +18,13 @@ import {
   defaultSetup,
   parseReference,
   isTimingReference,
-  setupSchema,
   trackSchema,
   type Catalog,
   type Lap,
   type Reference,
   type Setup,
   type Track,
+  type Vehicle,
 } from "../../../packages/shared/schema";
 import { normalizeTrack } from "../../../packages/track-engine";
 import {
@@ -40,7 +40,8 @@ import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
 import { restoreReference } from "./reference";
-import { prepareProject } from "./project";
+import { prepareProject, prepareSavedProject } from "./project";
+import { prepareVehicleProfile } from "../../../packages/shared/vehicle-profile";
 import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { download } from "./download";
 
@@ -63,13 +64,19 @@ export function App() {
     [menu, setMenu] = useState(false),
     [audio, setAudio] = useState(false);
   const [errorAction, setErrorAction] = useState<
-    "retry" | "import-reference" | "import-project" | "import-track"
+    | "retry"
+    | "import-reference"
+    | "import-project"
+    | "import-track"
+    | "import-vehicle"
   >("retry");
   const fileInput = useRef<HTMLInputElement>(null),
     referenceInput = useRef<HTMLInputElement>(null),
     projectInput = useRef<HTMLInputElement>(null),
+    vehicleInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const customTracks = useRef(new Set<string>());
+  const customVehicles = useRef(new Map<string, Vehicle>());
   const retryTarget = useRef<{ track: Track; makeReference: boolean } | null>(
     null,
   );
@@ -126,6 +133,7 @@ export function App() {
       setErrorAction("retry");
       try {
         const custom = customTracks.current.has(selectedTrack.id);
+        const inlineVehicle = customVehicles.current.get(selectedVehicle);
         const [result, baseline] = await Promise.all([
           runSimulation(
             selectedTrack,
@@ -133,6 +141,7 @@ export function App() {
             selectedSetup,
             custom,
             signal,
+            inlineVehicle,
           ),
           makeReference
             ? runSimulation(
@@ -141,6 +150,7 @@ export function App() {
                 { ...selectedSetup, solver: "centerline" },
                 custom,
                 signal,
+                inlineVehicle,
               )
             : Promise.resolve(null),
         ]);
@@ -196,44 +206,42 @@ export function App() {
       .then(async (data) => {
         if (!active) return;
         const parsed = catalogSchema.parse(data);
-        let chosen = parsed.tracks[0],
-          initialSetup = defaultSetup,
-          chosenVehicle = parsed.vehicles[0].id;
-        let restoredReference: Reference | null = null;
+        let prepared:
+          Awaited<ReturnType<typeof prepareSavedProject>> | undefined;
+        let restoreNotice = "";
         try {
           const raw = localStorage.getItem(storageKey);
           if (raw) {
-            const saved = JSON.parse(raw);
-            if (saved.version !== 1)
-              throw new Error("Unsupported saved project");
-            if (typeof saved.projectName === "string")
-              setProjectName(saved.projectName.slice(0, 80));
-            initialSetup = setupSchema.parse(saved.setup);
-            chosen =
-              parsed.tracks.find((t) => t.id === saved.trackId) ?? chosen;
-            chosenVehicle =
-              parsed.vehicles.find((v) => v.id === saved.vehicleId)?.id ??
-              chosenVehicle;
-            if (saved.customTrack) {
-              const imported = trackSchema.parse(saved.customTrack);
-              customTracks.current.add(imported.id);
-              parsed.tracks.push(imported);
-              chosen = imported;
-            }
-            if (saved.reference) {
-              const ref = parseReference(saved.reference);
-              restoredReference = await restoreReference(ref, chosen);
-            }
-            setNotice("Saved local project restored");
+            prepared = await prepareSavedProject(JSON.parse(raw), parsed);
+            restoreNotice =
+              prepared.renamedTrack || prepared.renamedVehicle
+                ? "Saved project restored · colliding IDs renamed locally"
+                : "Saved local project restored";
           }
         } catch {
-          chosen = parsed.tracks[0];
-          initialSetup = defaultSetup;
-          chosenVehicle = parsed.vehicles[0].id;
-          restoredReference = null;
-          setNotice("Saved project could not be read. Default setup loaded.");
+          prepared = undefined;
+          restoreNotice =
+            "Saved project could not be read. Default setup loaded.";
         }
         if (!active) return;
+        customTracks.current.clear();
+        customVehicles.current.clear();
+        if (prepared?.addTrack) {
+          parsed.tracks.push(prepared.track);
+          customTracks.current.add(prepared.track.id);
+        }
+        if (prepared?.addVehicle) parsed.vehicles.push(prepared.vehicle);
+        if (prepared?.embeddedVehicle)
+          customVehicles.current.set(
+            prepared.vehicle.id,
+            prepared.embeddedVehicle,
+          );
+        const chosen = prepared?.track ?? parsed.tracks[0];
+        const chosenVehicle = prepared?.vehicle.id ?? parsed.vehicles[0].id;
+        const initialSetup = prepared?.setup ?? defaultSetup;
+        const restoredReference = prepared?.reference ?? null;
+        setProjectName(prepared?.projectName ?? "Development workspace");
+        setNotice(restoreNotice);
         setReference(restoredReference);
         setCatalog(parsed);
         setTrack(chosen);
@@ -285,6 +293,7 @@ export function App() {
           setup,
           reference,
           customTrack: customTracks.current.has(track.id) ? track : undefined,
+          customVehicle: customVehicles.current.get(vehicleId),
         }),
       );
       setNotice("Project saved on this device");
@@ -319,13 +328,21 @@ export function App() {
         );
       if (id !== generation.current) return;
       const [result, baseline] = await Promise.all([
-        runSimulation(imported, vehicleId, setup, true, signal),
+        runSimulation(
+          imported,
+          vehicleId,
+          setup,
+          true,
+          signal,
+          customVehicles.current.get(vehicleId),
+        ),
         runSimulation(
           imported,
           vehicleId,
           { ...setup, solver: "centerline" },
           true,
           signal,
+          customVehicles.current.get(vehicleId),
         ),
       ]);
       if (id !== generation.current) return;
@@ -349,6 +366,61 @@ export function App() {
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const importVehicle = async (file: File) => {
+    if (!catalog || !track) return;
+    const { id, signal } = beginCalculation();
+    setNotice("");
+    setMenu(false);
+    try {
+      if (file.size > 256_000)
+        throw new Error("Vehicle file must be smaller than 256 kB.");
+      const prepared = await prepareVehicleProfile(
+        JSON.parse(await file.text()),
+        catalog.vehicles,
+      );
+      if (id !== generation.current) return;
+      const imported = prepared.vehicle;
+      const custom = customTracks.current.has(track.id);
+      const [result, baseline] = await Promise.all([
+        runSimulation(track, imported.id, setup, custom, signal, imported),
+        reference
+          ? Promise.resolve(null)
+          : runSimulation(
+              track,
+              imported.id,
+              { ...setup, solver: "centerline" },
+              custom,
+              signal,
+              imported,
+            ),
+      ]);
+      if (id !== generation.current) return;
+      customVehicles.current.set(imported.id, imported);
+      if (prepared.addVehicle)
+        setCatalog((c) =>
+          c ? { ...c, vehicles: [...c.vehicles, imported] } : c,
+        );
+      setVehicleId(imported.id);
+      setLap(result);
+      if (baseline) setReference(baseline);
+      setSelectedCorner(null);
+      clock.configure(result.lapTime);
+      setNotice(
+        prepared.renamedVehicle
+          ? "Vehicle imported and simulated · colliding ID renamed locally"
+          : "Vehicle imported and simulated · reference retained",
+      );
+    } catch (e) {
+      if (id === generation.current) {
+        setErrorAction("import-vehicle");
+        setError(
+          `Vehicle import failed: ${e instanceof Error ? e.message : "Invalid vehicle JSON"}. Current workspace kept.`,
+        );
+      }
+    } finally {
+      finishCalculation(id);
+    }
+  };
   const importProject = async (file: File) => {
     if (!catalog) return;
     const { id, signal } = beginCalculation();
@@ -363,6 +435,9 @@ export function App() {
       if (id !== generation.current) return;
       const custom =
         prepared.addTrack || customTracks.current.has(prepared.track.id);
+      const inlineVehicle =
+        prepared.embeddedVehicle ??
+        customVehicles.current.get(prepared.vehicle.id);
       const [result, baseline] = await Promise.all([
         runSimulation(
           prepared.track,
@@ -370,6 +445,7 @@ export function App() {
           prepared.setup,
           custom,
           signal,
+          inlineVehicle,
         ),
         prepared.reference
           ? Promise.resolve(null)
@@ -379,13 +455,29 @@ export function App() {
               { ...prepared.setup, solver: "centerline" },
               custom,
               signal,
+              inlineVehicle,
             ),
       ]);
       if (id !== generation.current) return;
-      if (prepared.addTrack) {
-        customTracks.current.add(prepared.track.id);
+      if (prepared.addTrack) customTracks.current.add(prepared.track.id);
+      if (prepared.embeddedVehicle)
+        customVehicles.current.set(
+          prepared.vehicle.id,
+          prepared.embeddedVehicle,
+        );
+      if (prepared.addTrack || prepared.addVehicle) {
         setCatalog((c) =>
-          c ? { ...c, tracks: [...c.tracks, prepared.track] } : c,
+          c
+            ? {
+                ...c,
+                tracks: prepared.addTrack
+                  ? [...c.tracks, prepared.track]
+                  : c.tracks,
+                vehicles: prepared.addVehicle
+                  ? [...c.vehicles, prepared.vehicle]
+                  : c.vehicles,
+              }
+            : c,
         );
       }
       setProjectName(prepared.projectName);
@@ -397,9 +489,13 @@ export function App() {
       setSelectedCorner(null);
       clock.configure(result.lapTime);
       setNotice(
-        prepared.renamedTrack
-          ? "Project imported · colliding track ID renamed locally"
-          : "Project imported and recalculated",
+        prepared.renamedVehicle
+          ? prepared.renamedTrack
+            ? "Project imported · colliding track and vehicle IDs renamed locally"
+            : "Project imported · colliding vehicle ID renamed locally"
+          : prepared.renamedTrack
+            ? "Project imported · colliding track ID renamed locally"
+            : "Project imported and recalculated",
       );
     } catch (e) {
       if (id === generation.current) {
@@ -632,6 +728,25 @@ export function App() {
                     Import track JSON
                   </button>
                   <button
+                    disabled={!track || !catalog || busy}
+                    onClick={() => vehicleInput.current?.click()}
+                  >
+                    <Upload size={14} /> Import vehicle JSON
+                  </button>
+                  <button
+                    disabled={!vehicle}
+                    onClick={() => {
+                      if (vehicle)
+                        download(
+                          "laptrix-vehicle.json",
+                          JSON.stringify(vehicle, null, 2),
+                        );
+                      setMenu(false);
+                    }}
+                  >
+                    <Download size={14} /> Export vehicle JSON
+                  </button>
+                  <button
                     disabled={!track || busy}
                     onClick={() => referenceInput.current?.click()}
                   >
@@ -651,7 +766,7 @@ export function App() {
                                 resultVehicle?.name ?? lap.vehicleId,
                               origin: "external-simulation",
                               source:
-                                "LAPTRIX Development Physics Model; synthetic inputs, not measured telemetry.",
+                                "LAPTRIX Development Physics Model; simulated timing, not measured telemetry.",
                               trackId: lap.trackId,
                               lapTime: lap.lapTime,
                               units: { time: "s", progress: "fraction" },
@@ -714,7 +829,10 @@ export function App() {
                         "laptrix-project.json",
                         JSON.stringify(
                           {
-                            version: 2,
+                            version: 3,
+                            vehicleSource: customVehicles.current.has(vehicleId)
+                              ? "embedded"
+                              : "catalog",
                             projectName,
                             track,
                             vehicle,
@@ -746,6 +864,18 @@ export function App() {
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) void importTrack(file);
+            e.target.value = "";
+          }}
+        />
+        <input
+          ref={vehicleInput}
+          type="file"
+          accept=".json,application/json"
+          hidden
+          aria-label="Import vehicle file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void importVehicle(file);
             e.target.value = "";
           }}
         />
@@ -796,6 +926,8 @@ export function App() {
                 projectInput.current?.click();
               else if (errorAction === "import-track")
                 fileInput.current?.click();
+              else if (errorAction === "import-vehicle")
+                vehicleInput.current?.click();
               else if (track)
                 void run(
                   retryTarget.current?.track ?? track,
@@ -812,7 +944,9 @@ export function App() {
                 ? "Import reference again"
                 : errorAction === "import-project"
                   ? "Import project again"
-                  : "Import track again"}
+                  : errorAction === "import-vehicle"
+                    ? "Import vehicle again"
+                    : "Import track again"}
           </button>
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={15} />
@@ -828,6 +962,7 @@ export function App() {
           dirty={dirty}
           vehicle={vehicle}
           track={track}
+          customVehicle={customVehicles.current.has(vehicleId)}
         />
         <div className="center-column">
           {simulationTrack ? (
@@ -891,7 +1026,7 @@ export function App() {
         </span>
         <span>
           {vehicle
-            ? `${vehicle.mass} kg base · ${vehicle.powerKw} kW · synthetic vehicle`
+            ? `${vehicle.mass} kg base · ${vehicle.powerKw} kW · ${customVehicles.current.has(vehicleId) ? "user-supplied · unverified" : vehicle.synthetic ? "synthetic vehicle" : "development vehicle"}`
             : "Local simulation service"}
         </span>
         <span>
@@ -907,6 +1042,7 @@ export function App() {
           projectName={projectName}
           setup={setup}
           custom={customTracks.current.has(track.id)}
+          customVehicle={customVehicles.current.has(vehicleId)}
           onClose={closeAeroComparison}
           onApply={(result) => {
             setSetup(result.setup);

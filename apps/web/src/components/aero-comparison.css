@@ -61,6 +61,7 @@
   font-size: 12px;
 }
 .aero-context {
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   gap: 5px;

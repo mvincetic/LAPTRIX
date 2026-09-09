@@ -41,9 +41,13 @@
 - Procedural audio is a synchronization foundation, not realistic engine sampling.
 - Project saving is device-local browser storage. There are no accounts, cloud
   synchronization, access controls or production hosting configuration.
-- Portable projects support v1/v2 JSON bundles and matching installed vehicle
-  physics. Import recalculates with the current solver and requires the local API;
+- Portable v3 projects distinguish catalog and embedded vehicle data; v1/v2 retain
+  installed-physics matching. Import recalculates and requires the local API;
   it does not promise numerical reproduction across future solver revisions.
+- Vehicle JSON supports bounded parameters, not measured calibration or spreadsheet/
+  CAD conversion. Sources and synthetic flags are unverified. Accepted bounds do not
+  guarantee physical validity or convergence. Only the saved selected custom profile
+  survives reload; export other session-local profiles or projects to retain them.
 - The API cache is bounded and process-local. This is a trusted local development
   service, not a hardened multi-user compute system.
 - Cancel closes active browser calculation requests and discards their results.

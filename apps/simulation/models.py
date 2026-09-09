@@ -1,6 +1,6 @@
 """Validated SI-unit contracts. Coordinates: x east, y up, z south."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
@@ -104,6 +104,46 @@ class Vehicle(StrictModel):
         return self
 
 
+class ProfilePowerPoint(PowerPoint):
+    model_config = ConfigDict(strict=True)
+    rpm: float = Field(gt=0, le=30_000)
+
+
+class ProfileSource(VehicleSource):
+    model_config = ConfigDict(strict=True)
+    title: str = Field(min_length=1, max_length=200)
+    fields: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(
+        min_length=1, max_length=32
+    )
+
+
+class VehicleProfile(Vehicle):
+    """Bounded editable input; archived Vehicle snapshots keep their existing reader."""
+
+    model_config = ConfigDict(strict=True)
+    id: str = Field(pattern=r"^[a-z0-9-]{1,64}$")
+    name: str = Field(min_length=1, max_length=100)
+    description: str = Field(min_length=1, max_length=1000)
+    sources: list[ProfileSource] = Field(default_factory=list, max_length=16)
+    assumptions: list[Annotated[str, Field(min_length=1, max_length=500)]] = Field(
+        min_length=1, max_length=32
+    )
+    mass: float = Field(gt=100, le=4000)
+    powerKw: float = Field(ge=1, le=2000)
+    powerCurve: list[ProfilePowerPoint] = Field(min_length=2, max_length=128)
+    dragArea: float = Field(ge=0.1, le=10)
+    downforceArea: float = Field(ge=0, le=20)
+    friction: float = Field(ge=0.3, le=3)
+    maxBrakeG: float = Field(ge=0.3, le=8)
+    gearRatios: list[Annotated[float, Field(ge=0.1, le=20)]] = Field(min_length=1, max_length=12)
+    finalDrive: float = Field(ge=0.1, le=20)
+    wheelRadius: float = Field(ge=0.15, le=0.6)
+    wheelbase: float = Field(ge=1, le=5)
+    idleRpm: float = Field(ge=100, le=5000)
+    maxRpm: float = Field(ge=1000, le=25_000)
+    width: float = Field(ge=0.8, le=3)
+
+
 class Setup(StrictModel):
     tire: Literal["soft", "medium", "hard"] = "soft"
     fuel: float = Field(default=15, ge=0, le=110)
@@ -121,3 +161,4 @@ class SimulationRequest(StrictModel):
     vehicleId: str = "formula-development"
     setup: Setup = Field(default_factory=Setup)
     track: Track | None = None
+    vehicle: VehicleProfile | None = None

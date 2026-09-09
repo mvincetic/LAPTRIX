@@ -119,3 +119,10 @@ reference. Blue CURRENT and grey REF labels identify the two schematic vehicles
 when reference playback is enabled. The panel explains shared elapsed time, current
 lap duration and finish holding. Timing-only data gets a disabled reference control
 with an explicit no-positions explanation. Both bodies retain the 3× display scale.
+Vehicle import and template export use the existing Additional actions disclosure.
+Imported profiles show a user-supplied/unverified label in their data panel and
+status bar; links identify declared anchors. Errors retain the workspace and offer
+Import vehicle again. Collision notices explain local renaming.
+Long unbroken profile text wraps in the data panel, lap labels, reference footer,
+ghost tools and aero context. Accepted metadata must remain readable without
+horizontal scrolling inside those panels.

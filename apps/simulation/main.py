@@ -72,7 +72,7 @@ def cached_solve(track_json: str, vehicle_json: str, setup_json: str):
 def simulate(request: SimulationRequest):
     tracks, vehicles = catalog()
     track = request.track or next((t for t in tracks if t.id == request.trackId), None)
-    vehicle = next((v for v in vehicles if v.id == request.vehicleId), None)
+    vehicle = request.vehicle or next((v for v in vehicles if v.id == request.vehicleId), None)
     if track is None or vehicle is None:
         raise HTTPException(404, "Unknown track or vehicle")
     try:
@@ -86,3 +86,10 @@ def simulate(request: SimulationRequest):
 @app.get("/api/schema/track")
 def track_schema():
     return json.loads(json.dumps(Track.model_json_schema()))
+
+
+@app.get("/api/schema/vehicle")
+def vehicle_schema():
+    from .models import VehicleProfile
+
+    return VehicleProfile.model_json_schema()

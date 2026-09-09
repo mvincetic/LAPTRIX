@@ -4,9 +4,11 @@ import type { Vehicle } from "../../../../packages/shared/schema";
 export function VehicleDetails({
   vehicle,
   fuel,
+  imported = false,
 }: {
   vehicle: Vehicle;
   fuel: number;
+  imported?: boolean;
 }) {
   return (
     <details className="vehicle-details">
@@ -15,6 +17,11 @@ export function VehicleDetails({
       </summary>
       <div className="vehicle-details-body">
         <strong>{vehicle.name}</strong>
+        {imported && (
+          <p className="vehicle-data-label">
+            User-supplied profile · unverified parameters and sources
+          </p>
+        )}
         <p>{vehicle.description}</p>
         <dl>
           <div>
@@ -68,7 +75,10 @@ export function VehicleDetails({
             <a href={source.url} target="_blank" rel="noreferrer">
               {source.title}
             </a>
-            <p>Anchors: {source.fields.join("; ")}.</p>
+            <p>
+              {imported ? "Declared anchors" : "Anchors"}:{" "}
+              {source.fields.join("; ")}.
+            </p>
           </div>
         ))}
       </div>

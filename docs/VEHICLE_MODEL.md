@@ -62,3 +62,12 @@ Tests cover both drivetrains at gear boundaries, torque-to-power conversion, GT
 force-demand checks, line bounds and refinement accounting. Real browser journeys
 cover cross-vehicle save/reload/export and failure/retry. These establish numerical
 and workflow consistency, not calibration against measured vehicle telemetry.
+
+## User-supplied profiles
+
+Plain vehicle JSON can be exported as a template and imported through the same
+solver. Editable bounds and required assumptions are documented in VEHICLE_PROFILES.md.
+Profile declarations remain unverified; accepted combinations are not guaranteed
+to converge or describe a physical vehicle. Built-in inputs and historical snapshots
+remain unchanged. Reruns, baselines and aero studies carry the complete inline
+profile, which is also retained by local/project saves.

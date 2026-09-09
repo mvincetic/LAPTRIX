@@ -104,11 +104,20 @@ time advances beyond it. Viewer preferences add no stored lap or second clock.
 There is no account system or database.
 
 Portable project bundles use a separate versioned reader in `apps/web/src/project.ts`.
-It validates source/reference identity and installed vehicle physics, resolves
-local track-ID collisions, and returns a prepared workspace without mutation.
+It validates source/reference identity and catalog or embedded vehicle inputs,
+resolves local track/vehicle-ID collisions, and returns a workspace without mutation.
 The app recalculates it before committing any project state. File and API failures
 therefore preserve the prior workspace. Archived laps remain artifacts rather
 than an alternative source for active simulation output.
+Portable v3 requires an explicit vehicle source; v1/v2 retain installed-physics
+matching. Editable profiles are validated before archival defaults or unknown-field
+stripping can weaken their contract. `prepareSavedProject` adapts device-local v1
+records through this same boundary. Catalog registration checks the active startup
+effect or successful import generation. A ref-held profile map supplies inline
+vehicles to every calculation path without making startup depend on catalog state.
+Full vehicle JSON already participates in the bounded cache. Python `VehicleProfile`
+and shared `vehicleProfileSchema` add strict bounded inputs while preserving the
+broader archived `Vehicle` reader. See VEHICLE_PROFILES.md.
 Track v2 fixes timing gates to source progress, while v1 remains distance-based.
 Project reuse checks track version in addition to geometry fingerprint. New laps
 report gate basis and source intervals; the reference comparison already evaluates

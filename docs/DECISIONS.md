@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Bounded inline vehicles and explicit portable provenance
+
+**Decision:** Accept strict bounded vehicle JSON through the existing endpoint and
+cache. Commit imported profiles after successful generation-checked solves. Keep
+declared metadata, use deterministic local IDs for content collisions and preserve
+native reference snapshots literally. **Reasoning:** User parameters should flow
+through existing calculations without changing installed profiles or adding another
+solver. Editable bounds must not narrow historical readers. **Consequences:** New
+v3 projects explicitly choose catalog or embedded data; v1/v2 retain installed-physics
+checks. Device-local saves share pure preparation. Imported parameters and sources
+are labelled unverified; these bounds do not establish measured calibration.
+
 ## 2026-09-09 — Compare native ghosts at shared elapsed time
 
 **Decision:** Render an optional grey native-reference vehicle beside the current

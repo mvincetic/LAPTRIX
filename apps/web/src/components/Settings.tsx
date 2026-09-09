@@ -9,6 +9,7 @@ type Props = {
   disabled: boolean;
   dirty: boolean;
   vehicle?: Vehicle;
+  customVehicle?: boolean;
   track?: Track | null;
 };
 function Range({
@@ -67,6 +68,7 @@ export function Settings({
   disabled,
   dirty,
   vehicle,
+  customVehicle,
   track,
 }: Props) {
   const update = <K extends keyof Setup>(key: K, value: Setup[K]) =>
@@ -239,7 +241,13 @@ export function Settings({
           </p>
         </details>
         {track && <TrackDetails track={track} />}
-        {vehicle && <VehicleDetails vehicle={vehicle} fuel={setup.fuel} />}
+        {vehicle && (
+          <VehicleDetails
+            vehicle={vehicle}
+            fuel={setup.fuel}
+            imported={customVehicle}
+          />
+        )}
       </fieldset>
       <div className={`setup-state ${dirty ? "dirty" : ""}`}>
         <span className="status-dot" />

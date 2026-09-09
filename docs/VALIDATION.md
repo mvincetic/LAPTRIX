@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 51 tests pass.
-- Python numerical/API tests: 86 tests pass.
-- Playwright: 38 development browser journeys pass; two viewer journeys also run
+- Vitest: 59 tests pass.
+- Python numerical/API tests: 96 tests pass.
+- Playwright: 45 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 365 kB initial JavaScript / 111 kB
+- Vite production build: pass; approximately 371 kB initial JavaScript / 113 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `109bc88`; each following milestone reruns CI on push.
+- GitHub Actions passed through `3dc6575`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -273,6 +273,26 @@ now captures the draft before editing, and Escape captures the current value aga
 Both cursor regressions explicitly wait for playback to advance while the focused
 value remains fixed. The subsequent full 38-journey browser run passes. Original
 failure and corrected-run logs remain in local `artifacts/ghost-e2e*.log`.
+
+Bounded vehicle profiles pass the complete 96 Python / 59 TypeScript / 45
+development-browser gates, lint, typecheck and build, plus both production viewer
+journeys. Inline API requests preserve full inputs and cache separation without
+changing the server catalog. Tests cover v1/v2/v3 project rules, strict nested
+validation, collision reuse and pure local save preparation. Seven browser journeys
+cover template export, native reference preservation, reruns, track baselines,
+aero studies, save/reload, fresh portable restoration, either failed project solve,
+cancellation, superseded imports and maximum-length metadata.
+
+Profile actions, details, comparisons and error screenshots at 1600/1280/390 px
+were opened and reviewed. Long unbroken names/descriptions initially clipped inside
+panels; explicit wrapping and a regression now protect details, lap/reference labels,
+ghost tools and aero context. Refreshed images were reviewed, including the complete
+mobile details panel after dismissing its temporary notice. Final
+`artifacts/vehicle-profiles-qa.json` records zero runtime errors, exact viewport
+widths and matching content/scroll widths for the inspected panels. The initial
+browser run was interrupted by a watched-source edit during refinement; the clean
+source-frozen rerun passes all 45 journeys. Logs remain in local
+`artifacts/vehicle-profile-*.log`.
 
 ## Scope of the evidence
 

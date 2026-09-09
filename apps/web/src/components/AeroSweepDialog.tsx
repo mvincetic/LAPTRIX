@@ -24,6 +24,7 @@ type Props = {
   projectName: string;
   setup: Setup;
   custom: boolean;
+  customVehicle?: boolean;
   onClose: () => void;
   onApply: (lap: Lap) => void;
 };
@@ -35,6 +36,7 @@ export function AeroSweepDialog({
   projectName,
   setup,
   custom,
+  customVehicle = false,
   onClose,
   onApply,
 }: Props) {
@@ -97,6 +99,7 @@ export function AeroSweepDialog({
           { ...setup, aero: row.aero },
           custom,
           abort.signal,
+          customVehicle ? vehicle : undefined,
         );
         if (abort.signal.aborted || !alive.current) break;
         results[i] = { ...row, lap };

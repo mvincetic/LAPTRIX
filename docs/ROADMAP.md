@@ -38,8 +38,8 @@ use matched physical intervals. Measured channel overlays and automatic logger
 alignment remain separate future work; imported timing never fabricates channels.
 A synchronized Time Delta view now retains both grids' breakpoints and supports
 either horizontal axis, shared seeking, playback and reference changes.
-Portable v2 project files now preserve names, selected setup, custom source and
-references; the v1 reader remains supported. Imports validate and recalculate
+Portable project files preserve names, selected setup, custom source and
+references; the v1/v2 readers remain supported. Imports validate and recalculate
 before activating state, and track-ID collisions preserve existing geometry.
 A bounded aero study now compares five or six settings through the existing
 solver, exposes progress and numerical eligibility, and applies only a selected
@@ -82,28 +82,28 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Support bounded user-supplied vehicle profiles through the existing solver,
-   preserving profile provenance and transactional project import/save behavior.
+1. Make project naming accessible on narrow screens, where the desktop header
+   currently hides that field. Preserve keyboard focus and save/export behavior.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
-Vehicle import should send a bounded inline profile through the same solver and
-cache, retain built-in profiles unchanged, and activate a new profile only after a
-successful calculation. Preserve names, declared sources and assumptions in saved
-projects. Resolve local ID collisions deliberately, retain legacy installed-profile
-validation, and distinguish user-supplied parameters from measured calibration.
+Bounded vehicle JSON import/export is implemented through the existing solver and
+cache. Activation is transactional; metadata, references, built-ins and pending edits
+survive failures/cancellation. Local saves and portable v3 retain embedded profiles,
+resolve collisions and preserve v1/v2 installed-profile rules. Declared parameters
+and sources remain visibly unverified; see VEHICLE_PROFILES.md.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 86 passing tests, including coupled quadratic
+The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Fifty-one TypeScript tests cover
+extremes and analytical work/grip benchmarks. Fifty-nine TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts, ghost poses and clock/data invariants. Thirty-eight browser journeys cover the
+eligibility, vehicle contracts, ghost poses and clock/data invariants. Forty-five browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
-precise cursor inspection, reference ghosts and the
+precise cursor inspection, reference ghosts, embedded vehicle profiles and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
