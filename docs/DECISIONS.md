@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Keep actions as a native-button disclosure
+
+**Decision:** Retain native Tab navigation, remove the pointer backdrop from tab
+order, close on focus leaving, and restore trigger focus on Escape or activation.
+Expose the visible action group through the disclosure trigger's controls relation.
+**Alternative:** Add ARIA menu roles and an additional arrow-key menu implementation.
+**Reasoning:** The existing list consists of ordinary actions; the
+[W3C disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) fits
+its show/hide behavior. **Consequences:** Keyboard users reach real actions first,
+can leave in either direction, and retain predictable focus after exports and file
+pickers. This bounded correction is not a whole-application accessibility claim.
+
 ## 2026-09-09 — Cancel browser calculations while retaining completed work
 
 **Decision:** Share a request controller across a run/import's selected lap and

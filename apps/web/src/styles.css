@@ -1667,6 +1667,9 @@ select {
   font-size: 11px;
   white-space: nowrap;
 }
+.actions-menu > button:focus-visible {
+  outline-offset: -1px;
+}
 .spin {
   animation: spin 1s linear infinite;
 }

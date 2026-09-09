@@ -71,6 +71,7 @@ node scripts/viewer-load-qa.mjs
 node scripts/geometry-qa.mjs
 node scripts/track-failure-qa.mjs
 node scripts/cancellation-qa.mjs
+node scripts/keyboard-audit.mjs
 npm run study:solver
 npm run study:sampling
 ```

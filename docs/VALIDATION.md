@@ -10,13 +10,13 @@ and no main merge, force-push or repository-settings change was made.
 - TypeScript strict typecheck: pass.
 - Vitest: 47 tests pass.
 - Python numerical/API tests: 86 tests pass.
-- Playwright: 29 development browser journeys pass; two viewer journeys also run
+- Playwright: 32 development browser journeys pass; two viewer journeys also run
   against built production assets.
 - Vite production build: pass; approximately 360 kB initial JavaScript / 110 kB
   gzip, plus a separate 950 kB viewer / 253 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `12add6e`; each following milestone reruns CI on push.
+- GitHub Actions passed through `8eecef1`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -221,6 +221,19 @@ data, no runtime errors and no overflow at 1600 and 390 px. Visual review found
 narrow mobile notifications; content-based width with a viewport cap and fixed
 icon sizing fixes the wrapping. Lint, build and production checks pass after that
 CSS polish, and the refreshed cancelled-state images were reviewed again.
+
+Actions keyboard correction passes the full 86 Python / 47 TypeScript / 32
+development browser suite, lint, typecheck and build, plus both production viewer
+journeys. The baseline audit showed an invisible backdrop tab stop and ineffective
+Escape at both widths. Three new journeys check native keyboard entry/exit,
+Escape, focus after export/file-picker return and named visible controls. Final
+audit results in `artifacts/keyboard-audit.json` show the first real action focused
+and Escape restoring the closed disclosure trigger at 1600 and 390 px. Focused
+screenshots were opened and reviewed; an inset outline fixes overlap from adjacent
+buttons. Lint/build/production checks pass after the CSS polish, and refreshed
+`artifacts/keyboard-actions-*.png` images were reviewed again. The audit now waits
+for the viewer canvas and a brief visual settle before its screenshots. This
+bounded review does not establish whole-application accessibility compliance.
 
 ## Scope of the evidence
 

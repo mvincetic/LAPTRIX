@@ -106,6 +106,10 @@ export function App() {
   };
   const [aeroComparison, setAeroComparison] = useState(false);
   const actionsButton = useRef<HTMLButtonElement>(null);
+  const closeActions = () => {
+    setMenu(false);
+    actionsButton.current?.focus();
+  };
   const closeAeroComparison = () => {
     setAeroComparison(false);
     actionsButton.current?.focus();
@@ -561,12 +565,26 @@ export function App() {
             <Save size={16} />
             <span>Save</span>
           </button>
-          <div className="menu-wrap">
+          <div
+            className="menu-wrap"
+            onKeyDown={(event) => {
+              if (menu && event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+                closeActions();
+              }
+            }}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget))
+                setMenu(false);
+            }}
+          >
             <button
               className="icon-button"
               aria-label="Additional actions"
               ref={actionsButton}
               aria-expanded={menu}
+              aria-controls={menu ? "workspace-actions" : undefined}
               onClick={() => setMenu(!menu)}
             >
               <MoreHorizontal size={19} />
@@ -576,9 +594,19 @@ export function App() {
                 <button
                   className="menu-dismiss"
                   aria-label="Close actions"
-                  onClick={() => setMenu(false)}
+                  tabIndex={-1}
+                  onClick={closeActions}
                 />
-                <div className="actions-menu">
+                <div
+                  className="actions-menu"
+                  id="workspace-actions"
+                  role="group"
+                  aria-label="Workspace actions"
+                  onClick={(event) => {
+                    const action = (event.target as Element).closest("button");
+                    if (action && !action.disabled) closeActions();
+                  }}
+                >
                   <button
                     disabled={busy || !track || !vehicle}
                     onClick={() => {

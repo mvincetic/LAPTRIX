@@ -1,5 +1,11 @@
 # Testing and validation
 
+Keyboard journeys cover actions disclosure activation with Enter/Space, forward
+and backward Tab exits, Escape, downloads and empty file-picker return at desktop
+and mobile widths. A separate check looks for unnamed visible controls on the default
+screen. The repeatable keyboard audit records first focus and Escape outcome and
+captures focused-action screenshots. See ACCESSIBILITY.md for its limited scope.
+
 Cancellation journeys hold real browser requests and verify requestfailed events
 arrive from Cancel before the test releases its network gate. Normal runs and
 both track/project import requests are covered. Complete project exports remain

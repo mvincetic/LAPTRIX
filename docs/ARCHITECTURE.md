@@ -55,6 +55,11 @@ signal. Cancel invalidates the request generation before aborting and re-enables
 controls without replacing completed workspace data. File preparation checks its
 generation before sending requests. Unmount aborts the current calculation too.
 Cancellation closes browser requests; the synchronous server worker may finish.
+Additional actions remains a disclosure of native buttons. Its wrapper closes on
+focus leaving, Escape restores the trigger, and action activation restores focus
+before any new native modal takes over. The pointer backdrop is not a tab stop.
+Accessible group/trigger relationships do not introduce a separate keyboard menu
+implementation. Scope and remaining review are documented in ACCESSIBILITY.md.
 
 `apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
 and solves its box constraints. `solver.py` owns geometry, the speed envelope,

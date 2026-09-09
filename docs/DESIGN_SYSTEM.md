@@ -99,3 +99,7 @@ was kept and server work may finish. Pending setup edits remain visibly unapplie
 Notifications use their content width capped at 90% of the viewport; icons and the
 dismiss button retain their size so longer mobile notices wrap across a usable
 text area rather than a narrow column.
+Additional actions preserves native Tab order through its enabled controls. The
+pointer backdrop has no keyboard stop, Escape returns to the opener, and leaving
+the disclosure closes it without stealing focus. A visible focus outline identifies
+the current action. The opener remains the return point after an action completes.
