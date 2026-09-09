@@ -1,11 +1,13 @@
 import { ChevronDown, Info, Layers, Sun, RotateCcw } from "lucide-react";
-import type { Setup } from "../../../../packages/shared/schema";
+import type { Setup, Vehicle } from "../../../../packages/shared/schema";
+import { VehicleDetails } from "./VehicleDetails";
 type Props = {
   setup: Setup;
   onChange: (setup: Setup) => void;
   onReset: () => void;
   disabled: boolean;
   dirty: boolean;
+  vehicle?: Vehicle;
 };
 function Range({
   label,
@@ -56,7 +58,14 @@ function Range({
     </label>
   );
 }
-export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
+export function Settings({
+  setup,
+  onChange,
+  onReset,
+  disabled,
+  dirty,
+  vehicle,
+}: Props) {
   const update = <K extends keyof Setup>(key: K, value: Setup[K]) =>
     onChange({ ...setup, [key]: value });
   return (
@@ -226,6 +235,7 @@ export function Settings({ setup, onChange, onReset, disabled, dirty }: Props) {
             suspension model.
           </p>
         </details>
+        {vehicle && <VehicleDetails vehicle={vehicle} fuel={setup.fuel} />}
       </fieldset>
       <div className={`setup-state ${dirty ? "dirty" : ""}`}>
         <span className="status-dot" />

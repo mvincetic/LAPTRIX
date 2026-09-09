@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Documented GT profile and persistent vehicle references
+
+**Decision:** Add a synthetic GT profile with selected published numerical anchors
+and explicit estimates, retain vehicle snapshots in results, and preserve the
+selected reference across profile changes. Both profiles use the same solver.
+**Alternatives:** Presenting an uncalibrated model as a real vehicle, or replacing
+the reference automatically when changing cars.
+**Reasoning:** A second drivetrain/grip regime expands model checks and makes the
+vehicle selector useful. Visible provenance separates sourced facts from estimates.
+**Consequences:** Drivetrain validation now requires descending gears, an idle-to-
+redline curve and consistent peak power. Legacy snapshots remain optional. GT
+rendering is original schematic geometry; fixed aero and point-mass limits remain.
+
 ## 2026-09-09 — Local React/Vite + Python vertical slice
 
 **Context:** Empty repository; the requested deliverable includes a locally runnable

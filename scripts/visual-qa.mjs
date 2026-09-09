@@ -20,7 +20,20 @@ await page.goto("http://127.0.0.1:5173/");
 await page.getByTestId("lap-time").waitFor({ timeout: 60000 });
 const refined = process.argv.includes("--refinement");
 const sampled = process.argv.includes("--sampling");
-const prefix = `${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+const gt = process.argv.includes("--gt");
+const prefix = `${gt ? "gt-" : ""}${sampled ? "sampling-" : ""}${refined ? "refinement-" : ""}`;
+if (gt) {
+  await page
+    .getByRole("button", { name: "Set reference", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Car profile" })
+    .selectOption("gt-development");
+  await page
+    .getByTestId("result-vehicle")
+    .filter({ hasText: "GT Development 01" })
+    .waitFor({ timeout: 60000 });
+}
 if (sampled) {
   await page.locator(".advanced summary").click();
   await page
@@ -78,6 +91,13 @@ console.log(
   "Mobile width",
   await page.evaluate(() => document.body.scrollWidth),
 );
+if (gt) {
+  await page.locator(".vehicle-details summary").click();
+  await page.screenshot({
+    path: `artifacts/${prefix}mobile-vehicle-details.png`,
+    fullPage: true,
+  });
+}
 await page.setViewportSize({ width: 1600, height: 1000 });
 await page
   .getByRole("button", { name: "Select corner 2", exact: true })

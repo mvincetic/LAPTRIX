@@ -14,6 +14,14 @@ values are illustrative, not official vehicle specifications. Terrain, trees and
 the simple ghost mesh are procedural original geometry. The supplied UI screenshot
 is retained only as design documentation, not shipped as the app's rendered scene.
 
+GT Development 01 is also synthetic. It uses selected numeric specification anchors
+from the [Porsche EU 911 GT3 RS technical sheet, August 2022](https://newsroom.porsche.com/dam/jcr:1d390f77-93c3-49c0-89c7-634f5f02b26a/S22_3515_en.pdf)
+alongside explicitly estimated parameters. The vehicle JSON records the URL,
+anchored fields and assumptions, and the UI exposes them. See VEHICLE_MODEL.md
+for the distinction between the published DIN mass and the independent base-mass
+estimate. No manufacturer images, CAD, branding, measured telemetry or audio were
+copied. The source document itself is linked, not redistributed.
+
 ## External research, inspected 2026-09-09
 
 - [TUMFTM global racetrajectory optimization](https://github.com/TUMFTM/global_racetrajectory_optimization)
@@ -31,6 +39,19 @@ Neither repository's code, telemetry, vehicle parameters, geometry nor audio has
 been copied or vendored. No integration license obligations are implied by this
 evaluation. Any future integration must recheck the selected revision's license,
 maintenance state and transitive dependencies, and isolate the adapter.
+
+## Track-data evaluation, 2026-09-09
+
+[TUMFTM racetrack-database](https://github.com/TUMFTM/racetrack-database) was
+reviewed as a potential geometry source. Its README describes smoothed
+OpenStreetMap-derived centerlines and widths extracted from satellite imagery,
+and warns that quality varies by location. Its format contains two horizontal
+coordinates and widths, with no elevation channel. GitHub labels the repository
+LGPL-3.0; a redistribution decision would require checking the selected revision
+and underlying source-data terms. No dataset files have been copied or shipped.
+It remains a candidate for explicitly approximate 2D imports, not a replacement
+for independently documented 3D geometry. The original elevation circuit remains
+the bundled source until appropriate data is identified.
 
 ## Application dependencies
 

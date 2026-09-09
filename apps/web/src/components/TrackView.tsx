@@ -28,7 +28,8 @@ import {
   Flag,
   MousePointer2,
 } from "lucide-react";
-import type { Lap, Track } from "../../../../packages/shared/schema";
+import type { Lap, Track, Vehicle } from "../../../../packages/shared/schema";
+import { VehicleMesh } from "./VehicleMesh";
 import {
   normalizeTrack,
   ribbonGeometry,
@@ -196,10 +197,12 @@ function Ghost({
   lap,
   clock,
   marker,
+  vehicle,
 }: {
   lap: Lap;
   clock: PlaybackClock;
   marker: boolean;
+  vehicle?: Vehicle;
 }) {
   const ref = useRef<Group>(null);
   useFrame(() => {
@@ -209,39 +212,17 @@ function Ghost({
         lap.samples,
         (clock.getSnapshot().time + 0.15) % lap.lapTime,
       );
-    ref.current.position.set(s.x, s.y + 2, s.z);
-    ref.current.rotation.y = Math.atan2(next.x - s.x, next.z - s.z);
+    ref.current.position.set(s.x, s.y + 0.3, s.z);
+    ref.current.rotation.set(
+      -Math.atan2(next.y - s.y, Math.hypot(next.x - s.x, next.z - s.z)),
+      Math.atan2(next.x - s.x, next.z - s.z),
+      0,
+      "YXZ",
+    );
   });
   return (
     <group ref={ref} scale={3}>
-      <mesh position={[0, 0.4, 0]}>
-        <boxGeometry args={[0.75, 0.65, 3.8]} />
-        <meshStandardMaterial color="#0866ec" metalness={0.3} roughness={0.3} />
-      </mesh>
-      <mesh position={[0, 0.25, 2]}>
-        <boxGeometry args={[1.95, 0.13, 0.6]} />
-        <meshStandardMaterial color="#0866ec" />
-      </mesh>
-      <mesh position={[0, 0.7, -1.9]}>
-        <boxGeometry args={[1.7, 0.18, 0.6]} />
-        <meshStandardMaterial color="#142746" />
-      </mesh>
-      <mesh position={[0, 0.82, -0.3]}>
-        <sphereGeometry args={[0.34, 12, 8]} />
-        <meshStandardMaterial color="#142746" />
-      </mesh>
-      {[-0.85, 0.85].flatMap((x) =>
-        [-1.25, 1.3].map((z) => (
-          <mesh
-            key={`${x}${z}`}
-            position={[x, 0.35, z]}
-            rotation={[0, 0, Math.PI / 2]}
-          >
-            <cylinderGeometry args={[0.4, 0.4, 0.4, 12]} />
-            <meshStandardMaterial color="#202b39" />
-          </mesh>
-        )),
-      )}
+      <VehicleMesh vehicle={vehicle} />
       {marker && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
           <ringGeometry args={[3.2, 3.7, 32]} />
@@ -352,6 +333,7 @@ class SceneBoundary extends Component<
 export function TrackView({
   track,
   lap,
+  vehicle,
   clock,
   onCorner,
   selectedCorner,
@@ -359,6 +341,7 @@ export function TrackView({
 }: {
   track: Track;
   lap: Lap | null;
+  vehicle?: Vehicle;
   clock: PlaybackClock;
   onCorner: (id: number) => void;
   selectedCorner: number | null;
@@ -585,7 +568,12 @@ export function TrackView({
               </div>
             </Html>
             {lap && ghost && (
-              <Ghost lap={lap} clock={clock} marker={mode !== "chase"} />
+              <Ghost
+                lap={lap}
+                clock={clock}
+                marker={mode !== "chase"}
+                vehicle={vehicle}
+              />
             )}
             <CameraRig
               track={track}

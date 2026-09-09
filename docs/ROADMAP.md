@@ -9,7 +9,7 @@ consumes genuine solver output. See DECISIONS.md for the ordering rationale.
 | M1 Track data | Validated local schema, original 720-sample circuit, SI units and derived frames |
 | M2–M3 Procedural viewer | Indexed road mesh, synthetic terrain, interactive orbit/top views, layers |
 | M4–M5 Racing line | Sparse bounded curvature approximation, convergence diagnostics, optional vehicle-aware lap-time refinement |
-| M6–M8 Vehicle/speed/time | Synthetic configurable Formula car, periodic envelope, integrated lap time |
+| M6–M8 Vehicle/speed/time | Synthetic Formula/GT profiles with provenance, periodic envelope, integrated lap time |
 | M9–M10 Analysis/telemetry | Braking, turn-in, apex, throttle events; canonical closed-lap telemetry |
 | M11–M13 Playback/dashboard | Ghost playback, seven synchronized plots, light engineering layout |
 | M14–M15 Comparison | Corner inspection, sector reference deltas, explicit reference selection |
@@ -26,23 +26,27 @@ lap-time refinement with visible seed gains and exportable diagnostics.
 Controlled source/5 m/3 m sampling, source-progress comparison across grids,
 verified reference migration, and independent circle/power/rigid-transform
 benchmarks are now implemented too. The source geometry remains unchanged.
+The second vehicle milestone adds documented GT specification anchors, visible
+assumptions, stricter drivetrain contracts and cross-vehicle references with
+immutable result snapshots. A public 2D track dataset was evaluated; it does not
+provide the independently documented elevation needed for a bundled 3D circuit.
 
 ## Next highest-value work
 
-1. Evaluate reusable track data and add a second independently documented vehicle,
-   with comparisons and benchmarks that expose the current model's assumptions.
-2. Extend gradient, transient and calibration benchmarks before claiming greater
+1. Extend gradient and energy-balance benchmarks before claiming greater
    physical accuracy. Controlled resampling remains subject to grid sensitivity.
-3. Add user telemetry import using the established source-alignment contract plus
+2. Add user telemetry import using the established source-alignment contract plus
    explicit units, provenance and import validation.
+3. Evaluate measured calibration data and reusable 3D track geometry; add transient
+   dynamics only with independent benchmarks and suitable parameter sources.
 
 ## Stabilization evidence
 
-The local numerical suite contains 54 passing tests, including coupled quadratic
+The local numerical suite contains 64 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Seventeen TypeScript tests cover
-geometry, alignment and clock/data invariants. Eight browser journeys cover the
-core workflow, refinement, resampling, reference restore, imports,
+extremes and analytical work/grip benchmarks. Nineteen TypeScript tests cover
+geometry, alignment, vehicle contracts and clock/data invariants. Ten browser journeys cover the
+core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio and the optional structured-tool contract. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 

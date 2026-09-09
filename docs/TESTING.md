@@ -1,5 +1,11 @@
 # Testing and validation
 
+Vehicle coverage includes two catalog profiles, drivetrain contract rejection,
+gear-boundary RPM/power constraints, GT specification arithmetic, numerical force
+checks and bounded refinement. Browser tests retain a Formula reference while
+simulating GT, verify corner correspondence and snapshot export, restore the saved
+comparison, switch back, and exercise a failed vehicle change followed by retry.
+
 Numerical regression tests live in `tests/python`. They cover track validation,
 local frame orthogonality, full-loop distance, racing-line bounds and objective
 reduction, strict telemetry ordering, closing endpoint, sector partitioning, lap

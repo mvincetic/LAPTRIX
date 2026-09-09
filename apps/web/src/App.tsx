@@ -163,11 +163,7 @@ export function App() {
             }
             if (saved.reference) {
               const ref = lapSchema.parse(saved.reference);
-              restoredReference = await restoreReference(
-                ref,
-                chosen,
-                chosenVehicle,
-              );
+              restoredReference = await restoreReference(ref, chosen);
               if (restoredReference) setReference(restoredReference);
             }
             setNotice("Saved local project restored");
@@ -204,7 +200,10 @@ export function App() {
     const timer = setTimeout(() => setNotice(""), 4000);
     return () => clearTimeout(timer);
   }, [notice]);
-  const dirty = !!lap && JSON.stringify(setup) !== JSON.stringify(lap.setup);
+  const dirty =
+    !!lap &&
+    (vehicleId !== lap.vehicleId ||
+      JSON.stringify(setup) !== JSON.stringify(lap.setup));
   const onCorner = (id: number) => {
     setSelectedCorner(id);
     const c = lap?.corners.find((c) => c.id === id);
@@ -267,6 +266,11 @@ export function App() {
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const resultVehicle =
+    lap?.vehicle ?? catalog?.vehicles.find((v) => v.id === lap?.vehicleId);
+  const referenceVehicle =
+    reference?.vehicle ??
+    catalog?.vehicles.find((v) => v.id === reference?.vehicleId);
   const simulationTrack = useMemo(
     () =>
       track && lap?.sampling
@@ -326,7 +330,7 @@ export function App() {
             value={vehicleId}
             onChange={(e) => {
               setVehicleId(e.target.value);
-              if (track) void run(track, e.target.value, setup, true);
+              if (track) void run(track, e.target.value, setup, !reference);
             }}
           >
             {catalog?.vehicles.map((v) => (
@@ -493,6 +497,7 @@ export function App() {
           onReset={() => setSetup({ ...defaultSetup })}
           disabled={busy}
           dirty={dirty}
+          vehicle={vehicle}
         />
         <div className="center-column">
           {simulationTrack ? (
@@ -500,6 +505,7 @@ export function App() {
               calculating={busy}
               track={simulationTrack}
               lap={lap}
+              vehicle={resultVehicle}
               clock={clock}
               onCorner={onCorner}
               selectedCorner={selectedCorner}
@@ -529,6 +535,8 @@ export function App() {
         <Analysis
           lap={lap}
           reference={reference}
+          currentVehicleName={resultVehicle?.name}
+          referenceVehicleName={referenceVehicle?.name}
           onReference={() => {
             if (lap) {
               setReference(lap);
@@ -550,7 +558,7 @@ export function App() {
         </span>
         <span>
           {vehicle
-            ? `${vehicle.mass} kg dry · ${vehicle.powerKw} kW · synthetic vehicle`
+            ? `${vehicle.mass} kg base · ${vehicle.powerKw} kW · synthetic vehicle`
             : "Local simulation service"}
         </span>
         <span>

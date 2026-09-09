@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, model_validator
 
 
 class StrictModel(BaseModel):
@@ -58,10 +58,20 @@ class PowerPoint(StrictModel):
     powerKw: float = Field(gt=0, le=2000)
 
 
+class VehicleSource(StrictModel):
+    title: str
+    url: HttpUrl
+    fields: list[str] = Field(min_length=1)
+
+
 class Vehicle(StrictModel):
     id: str
     name: str
     synthetic: bool
+    bodyStyle: Literal["formula", "coupe"] = "formula"
+    description: str = "Synthetic development vehicle. No measured calibration."
+    sources: list[VehicleSource] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
     mass: float = Field(gt=100)
     powerKw: float = Field(gt=0)
     powerCurve: list[PowerPoint] = Field(min_length=2)
@@ -81,10 +91,16 @@ class Vehicle(StrictModel):
     def drivetrain(self):
         if any(r <= 0 for r in self.gearRatios):
             raise ValueError("Gear ratios must be positive")
+        if any(a <= b for a, b in zip(self.gearRatios, self.gearRatios[1:])):
+            raise ValueError("Forward gear ratios must decrease")
         if self.maxRpm <= self.idleRpm:
             raise ValueError("Redline must exceed idle RPM")
         if any(a.rpm >= b.rpm for a, b in zip(self.powerCurve, self.powerCurve[1:])):
             raise ValueError("Power curve RPM must increase")
+        if self.powerCurve[0].rpm > self.idleRpm or self.powerCurve[-1].rpm < self.maxRpm:
+            raise ValueError("Power curve must cover idle through redline")
+        if abs(max(p.powerKw for p in self.powerCurve) - self.powerKw) > 1e-6:
+            raise ValueError("Rated peak power must equal the power curve maximum")
         return self
 
 

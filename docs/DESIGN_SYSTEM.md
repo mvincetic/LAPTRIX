@@ -39,3 +39,9 @@ Spatial sampling lives in Advanced settings. Its options distinguish the origina
 grid from target spacings, with a visible sample cap and accuracy caveat. Results
 show the actual count and mean spacing. Reference comparisons align to source
 track progress, so choosing a different grid does not discard a valid reference.
+
+Vehicle details use an expandable section in the existing settings column. It
+shows base/run mass, power, aero, grip, braking and drivetrain values followed by
+assumptions and source links. The lap result and reference footer identify their
+own vehicle, including during a failed change. Original formula/coupe meshes share
+the same telemetry position and grade; both remain visibly schematic at 3× scale.

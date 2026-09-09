@@ -15,6 +15,8 @@ import {
 export function Analysis({
   lap,
   reference,
+  currentVehicleName,
+  referenceVehicleName,
   onReference,
   onCorner,
   onSeek,
@@ -22,6 +24,8 @@ export function Analysis({
 }: {
   lap: Lap | null;
   reference: Lap | null;
+  currentVehicleName?: string;
+  referenceVehicleName?: string;
   onReference: () => void;
   onCorner: (id: number) => void;
   onSeek: (time: number) => void;
@@ -66,6 +70,9 @@ export function Analysis({
               </span>
             )}
           </div>
+          <small data-testid="result-vehicle">
+            {currentVehicleName ?? lap.vehicleId}
+          </small>
           <small>Approximate · {lap.optimization.method}</small>
           {lap.sampling && (
             <small data-testid="sampling-summary">
@@ -284,9 +291,11 @@ export function Analysis({
           })}
         </div>
         <div className="comparison-foot">
-          {reference?.setup.solver === "centerline"
-            ? "Reference: centerline · initial setup"
-            : "Reference: saved simulation"}
+          <span data-testid="reference-vehicle">
+            {reference
+              ? `Reference: ${referenceVehicleName ?? reference.vehicleId} · ${reference.setup.solver === "centerline" ? "centerline" : reference.setup.solver === "lap-time" ? "lap-time refinement" : "minimum curvature"}`
+              : "No reference selected"}
+          </span>
           {delta !== null && (
             <strong className={delta <= 0 ? "positive" : "negative"}>
               {signed((delta / (reference?.lapTime ?? lap.lapTime)) * 100, 2)}%

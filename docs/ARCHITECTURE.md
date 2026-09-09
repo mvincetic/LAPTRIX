@@ -50,6 +50,12 @@ source-progress alignment. The Lap response carries effective points for renderi
 the project retains the original imported track. Reference restoration verifies
 source geometry independently of the selected solver resolution.
 
+Every new Lap also contains its validated vehicle snapshot, including provenance
+and model assumptions. Reference selection survives a vehicle change on the same
+source track. Result names and ghost body style come from the completed Lap, so a
+failed profile change cannot relabel old telemetry. Legacy references without a
+snapshot fall back to the catalog name or their stored vehicle ID.
+
 Device-local project state lives in versioned browser storage, with explicit Save.
 Telemetry exports remain on the user's device. Imports use the same validated
 custom-track contract. There is no account system, database or external telemetry.

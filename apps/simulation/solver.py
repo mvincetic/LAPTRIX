@@ -361,6 +361,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         schemaVersion=1,
         trackId=track.id,
         vehicleId=vehicle.id,
+        vehicle=vehicle.model_dump(mode="json"),
         setup=setup.model_dump(),
         model="Development Physics Model",
         lapTime=lap_time,

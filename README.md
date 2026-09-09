@@ -37,6 +37,8 @@ the last completed result remains visible if a solve fails.
 - Optional vehicle-aware lap-time refinement with a fixed, reported candidate budget.
 - Controlled 5 m / 3 m resampling with geometry checks and comparison across grids.
 - Grip, fuel mass, downforce, drag, power curve, gears, braking and gradient.
+- Formula and GT development profiles with inspectable parameters, sources and assumptions.
+- Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
 - Orbit, top and chase cameras; configurable analysis layers.
@@ -51,6 +53,7 @@ npx playwright install chromium
 npm run test:e2e
 node scripts/visual-qa.mjs
 node scripts/visual-qa.mjs --refinement
+node scripts/visual-qa.mjs --gt
 npm run study:solver
 npm run study:sampling
 ```
@@ -64,6 +67,9 @@ See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Selec
 seed under the same vehicle/setup. The default remains minimum curvature.
 Advanced settings also offers **Spatial sampling**; the imported source remains
 unchanged. See [SAMPLING](docs/SAMPLING.md) for the grid and reference contract.
+Changing **Car profile** runs that vehicle and retains the selected reference.
+Expand **Vehicle data & assumptions** to inspect model parameters and specification
+anchors. Both vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md).
 
 `npm run build` produces `dist/`. It does not bundle Python: deployment would need
 both a static frontend and a separately hosted simulation service. This MVP is

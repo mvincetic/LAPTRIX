@@ -2,15 +2,22 @@
   "id": "formula-development",
   "name": "Formula Development 01",
   "synthetic": true,
+  "bodyStyle": "formula",
+  "description": "Original high-downforce Formula development profile. Illustrative parameters, without real-team calibration.",
+  "sources": [],
+  "assumptions": [
+    "Every physical parameter and the power curve is synthetic. Mass excludes the separately configured fuel load.",
+    "Fixed aero, constant tyre grip and instantaneous gear shifts use the shared development solver."
+  ],
   "mass": 790,
   "powerKw": 610,
   "powerCurve": [
-    {"rpm": 4000, "powerKw": 180},
-    {"rpm": 6500, "powerKw": 330},
-    {"rpm": 8500, "powerKw": 490},
-    {"rpm": 10500, "powerKw": 590},
-    {"rpm": 11500, "powerKw": 610},
-    {"rpm": 12500, "powerKw": 570}
+    { "rpm": 4000, "powerKw": 180 },
+    { "rpm": 6500, "powerKw": 330 },
+    { "rpm": 8500, "powerKw": 490 },
+    { "rpm": 10500, "powerKw": 590 },
+    { "rpm": 11500, "powerKw": 610 },
+    { "rpm": 12500, "powerKw": 570 }
   ],
   "dragArea": 1.12,
   "downforceArea": 3.6,

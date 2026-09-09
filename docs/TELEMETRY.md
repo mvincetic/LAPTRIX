@@ -60,3 +60,10 @@ source fingerprint and a strictly increasing progress array paired with telemetr
 including 0 at the start and 1 at the closing endpoint. Runtime validation checks
 array lengths and ordering. These blocks are optional for old exports; new results
 always include them. SAMPLING.md describes their geometry and migration contract.
+
+New results include a `vehicle` snapshot with physical parameters and provenance;
+its ID must equal `vehicleId`. It is optional when reading old exports. Reference
+comparison permits different vehicles on the same source. Results preserve the
+snapshot used at calculation time, so later catalog changes cannot rename or
+replace those inputs. Setup and vehicle changes are both marked pending until a
+new solve succeeds. The reference footer identifies its vehicle and solver mode.

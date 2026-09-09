@@ -8,11 +8,9 @@ import {
 export async function restoreReference(
   reference: Lap,
   track: Track,
-  vehicleId: string,
 ): Promise<Lap | null> {
   if (
     reference.trackId !== track.id ||
-    reference.vehicleId !== vehicleId ||
     reference.sectors.length !== track.sectorFractions.length
   )
     return null;

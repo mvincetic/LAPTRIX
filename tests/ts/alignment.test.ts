@@ -129,10 +129,10 @@ describe("physical track alignment across solver grids", () => {
   it("restores a different-resolution reference only for the matching source", async () => {
     const ref = lap([0, 0.5, 1], [0, 5, 10]);
     ref.sectors = [...ref.sectors, { ...ref.sectors[1], id: 3 }];
-    expect(await restoreReference(ref, track, ref.vehicleId)).toBe(ref);
+    expect(await restoreReference(ref, track)).toBe(ref);
     const changed = structuredClone(track);
     changed.points[0].widthRight -= 1;
-    expect(await restoreReference(ref, changed, ref.vehicleId)).toBeNull();
+    expect(await restoreReference(ref, changed)).toBeNull();
   });
   it("verifies actual legacy positions before migrating their index correspondence", async () => {
     const progress = Array.from(
@@ -148,10 +148,10 @@ describe("physical track alignment across solver grids", () => {
       Object.assign(s, track.points[i % track.points.length]),
     );
     ref.sectors = [...ref.sectors, { ...ref.sectors[1], id: 3 }];
-    const restored = await restoreReference(ref, track, ref.vehicleId);
+    const restored = await restoreReference(ref, track);
     expect(restored?.alignment?.trackFingerprint).toBe(fingerprint);
     expect(restored?.alignment?.progress.at(-1)).toBe(1);
     ref.samples[20].x += 1;
-    expect(await restoreReference(ref, track, ref.vehicleId)).toBeNull();
+    expect(await restoreReference(ref, track)).toBeNull();
   });
 });

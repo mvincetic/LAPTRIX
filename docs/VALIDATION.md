@@ -8,12 +8,12 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 17 tests pass.
-- Python numerical/API tests: 54 tests pass.
-- Playwright: eight browser journeys pass against running local services.
-- Vite production build: pass; approximately 1.27 MB JavaScript / 351 kB gzip.
+- Vitest: 19 tests pass.
+- Python numerical/API tests: 64 tests pass.
+- Playwright: ten browser journeys pass against running local services.
+- Vite production build: pass; approximately 1.28 MB JavaScript / 354 kB gzip.
 - Runtime npm dependency audit: zero reported vulnerabilities at this check.
-- GitHub Actions passed through `cf91692`; each following milestone reruns CI on push.
+- GitHub Actions passed through `87b1543`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -47,6 +47,14 @@ QA reports no runtime errors or horizontal overflow at 1600, 1280, 900 and 390 p
 Desktop, 1280 px, mobile and corner-inspection images were opened and reviewed;
 the controls, grid diagnostics and reference results remain usable. Local evidence
 is saved as `artifacts/sampling-refinement-*.png`.
+
+The vehicle continuation adds two journeys for cross-vehicle reference persistence,
+snapshot export and failed-selection recovery. All ten browser journeys pass,
+alongside 64 Python and 19 TypeScript checks. GT visual QA reports no runtime errors
+or horizontal overflow at 1600, 1280, 900 and 390 px. Desktop, expanded mobile vehicle
+details and chase images were opened and reviewed. The provenance text is readable,
+references identify the original Formula run, and the original coupe ghost follows
+GT telemetry. Local evidence is saved as `artifacts/gt-*.png`.
 
 The optional WebMCP hook is feature-detected. Its registration, shared-cursor action
 and invalid-input behavior were tested through a registry stub in Playwright.

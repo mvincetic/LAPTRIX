@@ -80,27 +80,59 @@ export const defaultSetup: Setup = {
   airDensity: 1.225,
   sampling: "source",
 };
-export const vehicleSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  synthetic: z.boolean(),
-  mass: finite.positive(),
-  powerKw: finite.positive(),
-  powerCurve: z.array(
-    z.object({ rpm: finite.positive(), powerKw: finite.positive() }),
-  ),
-  dragArea: finite.positive(),
-  downforceArea: finite.nonnegative(),
-  friction: finite.positive(),
-  maxBrakeG: finite.positive(),
-  gearRatios: z.array(finite.positive()),
-  finalDrive: finite.positive(),
-  wheelRadius: finite.positive(),
-  wheelbase: finite.positive(),
-  idleRpm: finite.positive(),
-  maxRpm: finite.positive(),
-  width: finite.positive(),
-});
+export const vehicleSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    synthetic: z.boolean(),
+    mass: finite.positive(),
+    bodyStyle: z.enum(["formula", "coupe"]).default("formula"),
+    description: z
+      .string()
+      .default("Synthetic development vehicle. No measured calibration."),
+    sources: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.url({ protocol: /^https?$/ }),
+          fields: z.array(z.string()).min(1),
+        }),
+      )
+      .default([]),
+    assumptions: z.array(z.string()).default([]),
+    powerKw: finite.positive(),
+    powerCurve: z
+      .array(z.object({ rpm: finite.positive(), powerKw: finite.positive() }))
+      .min(2),
+    dragArea: finite.positive(),
+    downforceArea: finite.nonnegative(),
+    friction: finite.positive(),
+    maxBrakeG: finite.positive(),
+    gearRatios: z.array(finite.positive()).min(1),
+    finalDrive: finite.positive(),
+    wheelRadius: finite.positive(),
+    wheelbase: finite.positive(),
+    idleRpm: finite.positive(),
+    maxRpm: finite.positive(),
+    width: finite.positive(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.powerCurve.length < 2 || v.gearRatios.length < 1) return;
+    if (
+      v.maxRpm <= v.idleRpm ||
+      v.powerCurve.some((p, i) => i > 0 && p.rpm <= v.powerCurve[i - 1].rpm) ||
+      v.powerCurve[0].rpm > v.idleRpm ||
+      v.powerCurve.at(-1)!.rpm < v.maxRpm ||
+      Math.abs(Math.max(...v.powerCurve.map((p) => p.powerKw)) - v.powerKw) >
+        1e-6 ||
+      v.gearRatios.some((r, i) => i > 0 && r >= v.gearRatios[i - 1])
+    )
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Vehicle drivetrain must have ordered gears, a complete RPM range and consistent peak power",
+      });
+  });
 export type Vehicle = z.infer<typeof vehicleSchema>;
 export const sampleSchema = z.object({
   distance: finite.nonnegative(),
@@ -128,6 +160,7 @@ export const lapSchema = z
     schemaVersion: z.literal(1),
     trackId: z.string(),
     vehicleId: z.string(),
+    vehicle: vehicleSchema.optional(),
     setup: setupSchema,
     model: z.string(),
     lapTime: finite.positive(),
@@ -212,6 +245,11 @@ export const lapSchema = z
     ),
   })
   .superRefine((lap, ctx) => {
+    if (lap.vehicle && lap.vehicle.id !== lap.vehicleId)
+      ctx.addIssue({
+        code: "custom",
+        message: "Vehicle snapshot must match the solved lap",
+      });
     if (lap.alignment) {
       const p = lap.alignment.progress;
       if (

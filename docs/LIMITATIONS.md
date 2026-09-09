@@ -1,7 +1,8 @@
 # Known limitations
 
-- Geometry, vehicle and environmental responses are synthetic. The result is not
-  an official lap prediction or calibration for a real Formula car.
+- Geometry, vehicle and environmental responses are synthetic. Selected GT
+  specification anchors do not calibrate estimated grip, mass, aero or power-curve
+  shape. Neither profile is an official lap prediction for a real vehicle.
 - Minimum curvature is a small-offset approximation. Optional lap-time refinement
   searches 78 local candidates, not all trajectories or a global minimum.
 - Grid density changes calculated lap time. The measured 720-to-1,440 point change

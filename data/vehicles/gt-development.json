@@ -1,0 +1,48 @@
+{
+  "id": "gt-development",
+  "name": "GT Development 01",
+  "synthetic": true,
+  "bodyStyle": "coupe",
+  "description": "Synthetic track coupe with selected published specification anchors. It is not a calibrated replica of the source vehicle.",
+  "sources": [
+    {
+      "title": "Porsche 911 GT3 RS technical data · EU · August 2022",
+      "url": "https://newsroom.porsche.com/dam/jcr:1d390f77-93c3-49c0-89c7-634f5f02b26a/S22_3515_en.pdf",
+      "fields": [
+        "386 kW at 8,500 RPM",
+        "465 Nm at 6,300 RPM (306.777 kW)",
+        "9,000 RPM redline",
+        "seven gear ratios and final drive",
+        "0.862 m² drag area",
+        "1.900 m width and 2.457 m wheelbase"
+      ]
+    }
+  ],
+  "assumptions": [
+    "The 1,400 kg base mass excludes fuel and is an independent estimate. It is not the source vehicle's 1,450 kg DIN unladen mass.",
+    "Fixed 2.2 m² downforce area, 1.35 tyre friction, 2.1 g braking cap and 0.36 m loaded wheel radius are estimates. Active aero is omitted.",
+    "Only the 6,300 and 8,500 RPM power points are specification anchors. Other curve points and 1,000 RPM idle are estimates; shifts have no interruption."
+  ],
+  "mass": 1400,
+  "powerKw": 386,
+  "powerCurve": [
+    { "rpm": 1000, "powerKw": 25 },
+    { "rpm": 3000, "powerKw": 120 },
+    { "rpm": 5000, "powerKw": 235 },
+    { "rpm": 6300, "powerKw": 306.777 },
+    { "rpm": 7500, "powerKw": 355 },
+    { "rpm": 8500, "powerKw": 386 },
+    { "rpm": 9000, "powerKw": 365 }
+  ],
+  "dragArea": 0.862,
+  "downforceArea": 2.2,
+  "friction": 1.35,
+  "maxBrakeG": 2.1,
+  "gearRatios": [3.75, 2.38, 1.72, 1.34, 1.11, 0.96, 0.84],
+  "finalDrive": 4.27,
+  "wheelRadius": 0.36,
+  "wheelbase": 2.457,
+  "idleRpm": 1000,
+  "maxRpm": 9000,
+  "width": 1.9
+}
