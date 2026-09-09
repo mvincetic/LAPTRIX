@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useId, useMemo, useState, useSyncExternalStore } from "react";
 import { Pause, Play, SkipBack, Volume2, VolumeX, Repeat2 } from "lucide-react";
 import type {
   Lap,
@@ -6,6 +6,8 @@ import type {
   Sample,
 } from "../../../../packages/shared/schema";
 import { TimeDeltaPlot } from "./TimeDeltaPlot";
+import { TabList } from "./TabList";
+import { tabPanelProps } from "./tabs";
 import {
   formatTime,
   interpolate,
@@ -90,6 +92,7 @@ export function Telemetry({
   const playback = useSyncExternalStore(clock.subscribe, clock.getSnapshot),
     [axis, setAxis] = useState<"distance" | "time">("distance"),
     [view, setView] = useState("Lap Graphs");
+  const tabsPrefix = useId();
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
   const channels = useMemo(
     () =>
@@ -143,185 +146,196 @@ export function Telemetry({
     <section className="panel telemetry-panel" aria-label="Telemetry graphs">
       <div className="panel-tabs">
         <h2>TELEMETRY GRAPHS</h2>
-        <div
-          className="tabs compact"
-          role="tablist"
-          aria-label="Telemetry view"
-        >
-          {["Lap Graphs", "Sector Analysis", "Time Delta"].map((t) => (
-            <button
-              key={t}
-              role="tab"
-              aria-selected={view === t}
-              className={view === t ? "active" : ""}
-              onClick={() => setView(t)}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <TabList
+          label="Telemetry view"
+          prefix={tabsPrefix}
+          options={["Lap Graphs", "Sector Analysis", "Time Delta"]}
+          value={view}
+          onChange={setView}
+          compact
+        />
         <div className="segmented axis-toggle">
           <button
             className={axis === "distance" ? "active" : ""}
+            aria-pressed={axis === "distance"}
             onClick={() => setAxis("distance")}
           >
             Distance
           </button>
           <button
             className={axis === "time" ? "active" : ""}
+            aria-pressed={axis === "time"}
             onClick={() => setAxis("time")}
           >
             Time
           </button>
         </div>
       </div>
-      {view === "Lap Graphs" ? (
-        <div className="graph-area">
-          <div className="channel-labels">
-            {channels.map((c) => (
-              <div key={c.key}>
-                <span>
-                  {c.label}
-                  <small>{c.unit ? `(${c.unit})` : ""}</small>
-                </span>
-                <b style={{ color: c.color }}>
-                  {sample
-                    ? (sample[c.key] * (c.scale ?? 1)).toFixed(
-                        c.key === "lateralG" ? 1 : 0,
-                      )
-                    : "—"}
-                </b>
-              </div>
-            ))}
-          </div>
-          <div className="plot">
-            <svg
-              role="img"
-              aria-label="Synchronized speed, throttle, brake, RPM, gear, lateral G and elevation traces"
-              viewBox="0 0 1000 251"
-              preserveAspectRatio="none"
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId);
-                const r = e.currentTarget.getBoundingClientRect();
-                seek(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)));
-              }}
-              onPointerMove={(e) => {
-                if (e.buttons === 1) {
+      <div
+        className="graph-area"
+        {...tabPanelProps(tabsPrefix, 0, view === "Lap Graphs")}
+      >
+        {view === "Lap Graphs" && (
+          <>
+            <div className="channel-labels">
+              {channels.map((c) => (
+                <div key={c.key}>
+                  <span>
+                    {c.label}
+                    <small>{c.unit ? `(${c.unit})` : ""}</small>
+                  </span>
+                  <b style={{ color: c.color }}>
+                    {sample
+                      ? (sample[c.key] * (c.scale ?? 1)).toFixed(
+                          c.key === "lateralG" ? 1 : 0,
+                        )
+                      : "—"}
+                  </b>
+                </div>
+              ))}
+            </div>
+            <div className="plot">
+              <svg
+                role="img"
+                aria-label="Synchronized speed, throttle, brake, RPM, gear, lateral G and elevation traces"
+                viewBox="0 0 1000 251"
+                preserveAspectRatio="none"
+                onPointerDown={(e) => {
+                  e.currentTarget.setPointerCapture(e.pointerId);
                   const r = e.currentTarget.getBoundingClientRect();
                   seek(
                     Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)),
                   );
-                }
-              }}
-            >
-              {Array.from({ length: 11 }, (_, i) => (
-                <line
-                  key={`x${i}`}
-                  x1={i * 100}
-                  y1={0}
-                  x2={i * 100}
-                  y2={231}
-                  stroke="#e8edf3"
-                  strokeWidth={1}
-                />
-              ))}
-              {channels.map((c, i) => (
-                <g key={c.key}>
+                }}
+                onPointerMove={(e) => {
+                  if (e.buttons === 1) {
+                    const r = e.currentTarget.getBoundingClientRect();
+                    seek(
+                      Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)),
+                    );
+                  }
+                }}
+              >
+                {Array.from({ length: 11 }, (_, i) => (
                   <line
-                    x1={0}
-                    y1={i * 33 + 31}
-                    x2={1000}
-                    y2={i * 33 + 31}
-                    stroke="#dce3eb"
+                    key={`x${i}`}
+                    x1={i * 100}
+                    y1={0}
+                    x2={i * 100}
+                    y2={231}
+                    stroke="#e8edf3"
                     strokeWidth={1}
                   />
-                  <path
-                    d={paths[i]}
-                    fill="none"
-                    stroke={c.color}
-                    strokeWidth={1.5}
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </g>
-              ))}
-              {lap?.sectors.slice(0, -1).map((s) => {
-                const p =
-                  (axis === "distance"
-                    ? s.endDistance / lap.length
-                    : s.split / lap.lapTime) * 1000;
-                return (
-                  <line
-                    key={s.id}
-                    x1={p}
-                    x2={p}
-                    y1={0}
-                    y2={231}
-                    stroke="#a3b4c9"
-                    strokeDasharray="4 4"
-                  />
-                );
-              })}
-              {lap?.sectors.map((s) => (
-                <text
-                  key={s.id}
-                  x={
+                ))}
+                {channels.map((c, i) => (
+                  <g key={c.key}>
+                    <line
+                      x1={0}
+                      y1={i * 33 + 31}
+                      x2={1000}
+                      y2={i * 33 + 31}
+                      stroke="#dce3eb"
+                      strokeWidth={1}
+                    />
+                    <path
+                      d={paths[i]}
+                      fill="none"
+                      stroke={c.color}
+                      strokeWidth={1.5}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </g>
+                ))}
+                {lap?.sectors.slice(0, -1).map((s) => {
+                  const p =
                     (axis === "distance"
-                      ? (s.startDistance + s.endDistance) / 2 / lap.length
-                      : (s.split - s.time / 2) / lap.lapTime) * 1000
-                  }
-                  y={10}
-                  textAnchor="middle"
-                  fill="#77859a"
-                  fontSize={10}
-                >
-                  S{s.id}
-                </text>
-              ))}
-              <line
-                x1={progress * 1000}
-                x2={progress * 1000}
-                y1={0}
-                y2={231}
-                stroke="#15365a"
-                strokeWidth={1.2}
-              />
-              <path d={`M${progress * 1000 - 4},0 h8 l-4,6 z`} fill="#15365a" />
-              {Array.from({ length: 6 }, (_, i) => (
-                <text
-                  key={i}
-                  x={i * 200}
-                  y={246}
-                  fill="#718096"
-                  fontSize={10}
-                  textAnchor={i === 0 ? "start" : i === 5 ? "end" : "middle"}
-                >
-                  {lap
-                    ? (
-                        ((axis === "distance" ? lap.length : lap.lapTime) * i) /
-                        5
-                      ).toFixed(0)
-                    : i * 1000}
-                </text>
-              ))}
-            </svg>
-            <span className="axis-label">
-              {axis === "distance" ? "Distance (m)" : "Time (s)"} · click or
-              drag to inspect
-            </span>
-          </div>
-        </div>
-      ) : view === "Time Delta" ? (
-        <TimeDeltaPlot
-          lap={lap}
-          reference={reference}
-          axis={axis}
-          time={playback.time}
-          progress={progress}
-          onSeek={seek}
-        />
-      ) : (
-        <div className="sector-analysis-grid">
-          {lap?.sectors.map((s) => {
+                      ? s.endDistance / lap.length
+                      : s.split / lap.lapTime) * 1000;
+                  return (
+                    <line
+                      key={s.id}
+                      x1={p}
+                      x2={p}
+                      y1={0}
+                      y2={231}
+                      stroke="#a3b4c9"
+                      strokeDasharray="4 4"
+                    />
+                  );
+                })}
+                {lap?.sectors.map((s) => (
+                  <text
+                    key={s.id}
+                    x={
+                      (axis === "distance"
+                        ? (s.startDistance + s.endDistance) / 2 / lap.length
+                        : (s.split - s.time / 2) / lap.lapTime) * 1000
+                    }
+                    y={10}
+                    textAnchor="middle"
+                    fill="#77859a"
+                    fontSize={10}
+                  >
+                    S{s.id}
+                  </text>
+                ))}
+                <line
+                  x1={progress * 1000}
+                  x2={progress * 1000}
+                  y1={0}
+                  y2={231}
+                  stroke="#15365a"
+                  strokeWidth={1.2}
+                />
+                <path
+                  d={`M${progress * 1000 - 4},0 h8 l-4,6 z`}
+                  fill="#15365a"
+                />
+                {Array.from({ length: 6 }, (_, i) => (
+                  <text
+                    key={i}
+                    x={i * 200}
+                    y={246}
+                    fill="#718096"
+                    fontSize={10}
+                    textAnchor={i === 0 ? "start" : i === 5 ? "end" : "middle"}
+                  >
+                    {lap
+                      ? (
+                          ((axis === "distance" ? lap.length : lap.lapTime) *
+                            i) /
+                          5
+                        ).toFixed(0)
+                      : i * 1000}
+                  </text>
+                ))}
+              </svg>
+              <span className="axis-label">
+                {axis === "distance" ? "Distance (m)" : "Time (s)"} · click or
+                drag to inspect
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+      <div {...tabPanelProps(tabsPrefix, 2, view === "Time Delta")}>
+        {view === "Time Delta" && (
+          <TimeDeltaPlot
+            lap={lap}
+            reference={reference}
+            axis={axis}
+            time={playback.time}
+            progress={progress}
+            onSeek={seek}
+          />
+        )}
+      </div>
+      <div
+        className="sector-analysis-grid"
+        {...tabPanelProps(tabsPrefix, 1, view === "Sector Analysis")}
+      >
+        {view === "Sector Analysis" &&
+          lap?.sectors.map((s) => {
             const samples = lap.samples.filter(
               (p) =>
                 p.distance >= s.startDistance && p.distance <= s.endDistance,
@@ -354,8 +368,7 @@ export function Telemetry({
               </div>
             );
           })}
-        </div>
-      )}
+      </div>
       <div className="playback">
         <button
           className="icon-button"

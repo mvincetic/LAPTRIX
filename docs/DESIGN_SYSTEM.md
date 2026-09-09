@@ -103,3 +103,8 @@ Additional actions preserves native Tab order through its enabled controls. The
 pointer backdrop has no keyboard stop, Escape returns to the opener, and leaving
 the disclosure closes it without stealing focus. A visible focus outline identifies
 the current action. The opener remains the return point after an action completes.
+Viewer/telemetry strips use one keyboard tab stop with Left/Right and Home/End
+selection. Tab reaches the next control or active panel, whose focus outline sits
+inside its border. Inactive panels are hidden; the canvas stays mounted. The chase
+legend reappears when its panel receives keyboard focus. Camera and axis controls
+keep their compact selected styling and also expose pressed state semantically.

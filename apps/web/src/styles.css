@@ -605,6 +605,17 @@ select {
   background: #13a389;
   flex-shrink: 0;
 }
+[hidden] {
+  display: none !important;
+}
+[role="tabpanel"]:focus-visible {
+  outline: 2px solid #0866ec;
+  outline-offset: -2px;
+}
+.chase-legend:not(:focus-within) {
+  opacity: 0;
+  pointer-events: none;
+}
 .scene {
   position: relative;
   min-height: 380px;
@@ -612,7 +623,8 @@ select {
   isolation: isolate;
   background: #f0f3f3;
 }
-.scene > div:first-child {
+.scene > .scene-canvas,
+.scene > .scene-error {
   position: absolute !important;
   inset: 0;
 }

@@ -60,6 +60,12 @@ focus leaving, Escape restores the trigger, and action activation restores focus
 before any new native modal takes over. The pointer backdrop is not a tab stop.
 Accessible group/trigger relationships do not introduce a separate keyboard menu
 implementation. Scope and remaining review are documented in ACCESSIBILITY.md.
+Viewer and telemetry use a shared `TabList` with stable component IDs and matching
+panel attributes. Active tabs are the strip's only tab stop; focus activates local
+content immediately. Viewer tools are separate mounted panels before the shared
+canvas in document order, so selecting a tab does not recreate the WebGL context.
+Telemetry panel shells retain their relationships while mounting only the selected
+plot. Their shared axis state and playback clock remain outside that selection.
 
 `apps/simulation/numerics.py` builds a sparse, distance-weighted curvature quadratic
 and solves its box constraints. `solver.py` owns geometry, the speed envelope,

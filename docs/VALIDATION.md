@@ -10,13 +10,13 @@ and no main merge, force-push or repository-settings change was made.
 - TypeScript strict typecheck: pass.
 - Vitest: 47 tests pass.
 - Python numerical/API tests: 86 tests pass.
-- Playwright: 32 development browser journeys pass; two viewer journeys also run
+- Playwright: 34 development browser journeys pass; two viewer journeys also run
   against built production assets.
-- Vite production build: pass; approximately 360 kB initial JavaScript / 110 kB
+- Vite production build: pass; approximately 361 kB initial JavaScript / 110 kB
   gzip, plus a separate 950 kB viewer / 253 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `8eecef1`; each following milestone reruns CI on push.
+- GitHub Actions passed through `0f7446e`; each following milestone reruns CI on push.
 
 ## Browser evidence
 
@@ -234,6 +234,15 @@ buttons. Lint/build/production checks pass after the CSS polish, and refreshed
 `artifacts/keyboard-actions-*.png` images were reviewed again. The audit now waits
 for the viewer canvas and a brief visual settle before its screenshots. This
 bounded review does not establish whole-application accessibility compliance.
+
+The tab milestone passes 86 Python / 47 TypeScript / 34 development browser
+journeys, lint, typecheck and build, plus both production viewer journeys. Two new
+journeys exercise keyboard tab selection, panel relationships/focus, layer toggles,
+camera/axis pressed states and retained canvas/playback at 1600 and 390 px. Visual
+QA in `artifacts/tabs-qa.json` records no runtime errors or horizontal overflow.
+Focused layers, chase legend, delta and sector screenshots were opened and reviewed
+at both widths. The active panel's inset outline remains visible, the chase legend
+appears on focus, and numerical content remains readable on mobile.
 
 ## Scope of the evidence
 

@@ -37,6 +37,9 @@ Cancellation preserves the completed workspace and edited setup, pauses playback
 and permits a new run or import. Already executing server work may still finish.
 Additional actions supports native keyboard navigation, Escape dismissal and
 predictable focus after exports or file selection.
+Viewer and telemetry tabs support arrow-key selection and direct panel access.
+Camera and axis choices expose their selected state, while tab changes retain
+the existing 3D canvas, layer settings and playback position.
 
 Success means all 16 MVP actions in the founding brief work end to end: launch,
 track and vehicle selection, procedural interactive 3D, simulation, optimized

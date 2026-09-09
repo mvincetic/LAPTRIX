@@ -1,5 +1,11 @@
 # Testing and validation
 
+Tab journeys at 1600/390 px check roving focus, arrow wrapping, Home/End, reciprocal
+tab/panel relationships and hidden inactive panels. They operate layers and camera
+buttons by keyboard, check axis pressed state, and retain both the canvas element
+and the shared playback position across view changes. `scripts/tabs-qa.mjs` captures
+focused layer, chase-legend, delta and sector layouts for visual inspection.
+
 Keyboard journeys cover actions disclosure activation with Enter/Space, forward
 and backward Tab exits, Escape, downloads and empty file-picker return at desktop
 and mobile widths. A separate check looks for unnamed visible controls on the default

@@ -1,6 +1,7 @@
 import {
   Component,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -21,15 +22,15 @@ import {
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
   Expand,
-  Layers,
   RotateCcw,
   Navigation,
-  Eye,
   Flag,
   MousePointer2,
 } from "lucide-react";
 import type { Lap, Track, Vehicle } from "../../../../packages/shared/schema";
 import { VehicleMesh } from "./VehicleMesh";
+import { TabList } from "./TabList";
+import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import {
   normalizeTrack,
   ribbonGeometry,
@@ -61,7 +62,8 @@ const initialLayers: ViewLayers = {
   boundaries: false,
   terrain: true,
 };
-type CameraMode = "orbit" | "top" | "chase";
+export type CameraMode = "orbit" | "top" | "chase";
+const viewerTabs = ["Track View", "Analysis Layers", "Ghost Car", "Camera"];
 
 function Ribbon({
   track,
@@ -352,6 +354,7 @@ export function TrackView({
     [mode, setMode] = useState<CameraMode>("orbit"),
     [reset, setReset] = useState(0),
     [ghost, setGhost] = useState(true);
+  const tabsPrefix = useId();
   const panel = useRef<HTMLElement>(null),
     frame = useMemo(() => normalizeTrack(track), [track]);
   const widths = useMemo(
@@ -387,26 +390,31 @@ export function TrackView({
       aria-label="Interactive track viewer"
     >
       <div className="panel-tabs">
-        <div className="tabs" role="tablist" aria-label="Viewer tools">
-          {["Track View", "Analysis Layers", "Ghost Car", "Camera"].map((t) => (
-            <button
-              role="tab"
-              aria-selected={tab === t}
-              className={tab === t ? "active" : ""}
-              key={t}
-              onClick={() => setTab(t)}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <TabList
+          label="Viewer tools"
+          prefix={tabsPrefix}
+          options={viewerTabs}
+          value={tab}
+          onChange={setTab}
+        />
         <span className="tiny muted desktop-only">
           <span className="status-dot" /> 3D workspace
         </span>
       </div>
       <div className="scene">
+        <ViewerToolsPanels
+          prefix={tabsPrefix}
+          active={viewerTabs.indexOf(tab)}
+          layers={layers}
+          onLayers={setLayers}
+          ghost={ghost}
+          onGhost={setGhost}
+          mode={mode}
+          onMode={setMode}
+        />
         <SceneBoundary>
           <Canvas
+            className="scene-canvas"
             camera={{ position: [0, 1800, 1500], fov: 45, near: 1, far: 12000 }}
             dpr={[1, 1.5]}
             gl={{ antialias: true, powerPreference: "high-performance" }}
@@ -598,97 +606,6 @@ export function TrackView({
           <Navigation size={24} strokeWidth={1.3} />
           <span>N</span>
         </div>
-        {tab === "Track View" && mode !== "chase" && (
-          <div className="legend">
-            <span>
-              <i className="line-key blue" />
-              Racing line
-            </span>
-            <span>
-              <i className="line-key red" />
-              Braking zone
-            </span>
-            <span>
-              <i className="dot-key" />
-              Apex point
-            </span>
-            <span>
-              <i className="number-key">1</i>Corner number
-            </span>
-          </div>
-        )}
-        {tab === "Analysis Layers" && (
-          <div className="viewer-popover">
-            <h3>
-              <Layers size={14} /> Analysis layers
-            </h3>
-            {Object.entries(layers).map(([key, value]) => (
-              <label key={key}>
-                <input
-                  type="checkbox"
-                  checked={value}
-                  onChange={() => setLayers({ ...layers, [key]: !value })}
-                />
-                {
-                  (
-                    {
-                      racingLine: "Racing line",
-                      braking: "Braking zones",
-                      apex: "Apex points",
-                      corners: "Corner numbers",
-                      sectors: "Sector labels",
-                      centerline: "Centerline debug",
-                      boundaries: "Track boundaries",
-                      terrain: "Terrain & trees",
-                    } as Record<string, string>
-                  )[key]
-                }
-              </label>
-            ))}
-          </div>
-        )}
-        {tab === "Ghost Car" && (
-          <div className="viewer-popover">
-            <h3>
-              <Eye size={14} /> Telemetry ghost
-            </h3>
-            <label>
-              <input
-                type="checkbox"
-                checked={ghost}
-                onChange={(e) => setGhost(e.target.checked)}
-              />
-              Show ghost vehicle
-            </label>
-            <p>
-              Playback follows the calculated lap. Use the transport below to
-              play or seek.
-            </p>
-            <span className="tiny muted">
-              Vehicle shown at 3× scale for visibility.
-            </span>
-          </div>
-        )}
-        {tab === "Camera" && (
-          <div className="viewer-popover">
-            <h3>Camera mode</h3>
-            {(["orbit", "top", "chase"] as CameraMode[]).map((m) => (
-              <button
-                className={`option-button ${mode === m ? "active" : ""}`}
-                key={m}
-                onClick={() => setMode(m)}
-              >
-                {
-                  {
-                    orbit: "Orbit · perspective",
-                    top: "Top · engineering",
-                    chase: "Chase · telemetry",
-                  }[m]
-                }
-              </button>
-            ))}
-          </div>
-        )}
         <div className="scene-bottom">
           <div className="track-caption">
             <strong>{track.name}</strong>
@@ -705,6 +622,7 @@ export function TrackView({
                   key={m}
                   onClick={() => setMode(m)}
                   className={mode === m ? "active" : ""}
+                  aria-pressed={mode === m}
                 >
                   {m === "orbit"
                     ? "3D View"

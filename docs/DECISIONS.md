@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-09 — Share tab navigation while retaining the viewer
+
+**Decision:** Use one roving-tab implementation with immediate activation on focus,
+stable tab/panel relationships and hidden inactive panels. Put viewer tools before
+the canvas in document order, retaining the same canvas across tab changes.
+**Reasoning:** The [W3C tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
+fits locally available content; recreating the scene would reset useful state and
+add unnecessary work. **Consequences:** Arrow keys/Home/End select views, Tab enters
+the active panel or adjacent controls, and explicit focus outlines expose location.
+Camera and axis buttons report pressed state. Telemetry mounts only its selected
+plot and continues using the existing clock. No new UI dependency is introduced.
+
 ## 2026-09-09 — Keep actions as a native-button disclosure
 
 **Decision:** Retain native Tab navigation, remove the pointer backdrop from tab

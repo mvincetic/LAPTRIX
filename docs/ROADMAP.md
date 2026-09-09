@@ -70,11 +70,14 @@ ignores late results. It does not claim to stop an already executing server work
 The actions disclosure now supports predictable keyboard entry/exit and Escape,
 with focus restoration after actions and no invisible backdrop tab stop. A bounded
 default-screen audit checks accessible control names at desktop/mobile widths.
+Viewer and telemetry tabs now share arrow/Home/End navigation, labelled panels and
+visible focus. Camera/axis controls expose selected state; tab changes retain the
+canvas, layer choices and playback position.
 
 ## Next highest-value work
 
-1. Complete viewer/telemetry tab keyboard behavior and panel relationships, and
-   expose the selected state of compact axis/view controls to assistive technology.
+1. Add precise time/distance cursor entry and readable telemetry values so keyboard
+   users can inspect a specific position without repeated slider adjustments.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -84,10 +87,10 @@ The local numerical/API suite contains 86 passing tests, including coupled quadr
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Forty-seven TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
-eligibility, vehicle contracts and clock/data invariants. Thirty-two browser journeys cover the
+eligibility, vehicle contracts and clock/data invariants. Thirty-four browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
-reports, failed/superseded track activation, calculation cancellation, keyboard actions and the
+reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
