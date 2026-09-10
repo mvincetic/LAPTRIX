@@ -82,12 +82,19 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for reviewed timing CSV and the bounded actions menu. Terrain
-   clearance passes all preceding 119 development journeys remotely.
-2. Add a flat CSV export of the existing source-aligned comparison for external
-   analysis, preserving explicit units, independent timing and channel availability.
+1. Verify remote CI for the bounded actions menu and comparison CSV export.
+   Reviewed timing CSV passes all preceding 126 development journeys remotely.
+2. Profile upper-bound CSV import and comparison-export work in the browser,
+   then address demonstrated responsiveness or memory issues within existing limits.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+Time Delta now exports flat CSV rows from the same full-lap comparison report.
+Forty canonical-unit columns preserve independent times, deltas and paired channels,
+with empty cells for unavailable data. JSON retains provenance/input snapshots.
+Numerical checks cover units, full precision, known zeros and the maximum row grid;
+desktop/phone browser exports retain the complete inspected workspace. See
+COMPARISON_EXPORT.md.
 
 The actions disclosure now fits beneath its actual opener and scrolls internally
 on short screens. Native Tab navigation no longer moves the whole page to reach
@@ -264,7 +271,7 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 246 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 251 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,

@@ -50,7 +50,7 @@ the last completed result remains visible if a solve fails.
 - Closed corner event windows and reference timing across start/finish.
 - Synchronized Overview and Loads & elevation graph groups, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
-- Full-lap comparison JSON with matched timing/channels, units and original input snapshots.
+- Full-lap comparison JSON with input snapshots, plus flat CSV with matched timing/channels and units.
 - Orbit, top and chase cameras; configurable analysis layers.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
 - Camera-derived north direction and stable reset after orbiting.

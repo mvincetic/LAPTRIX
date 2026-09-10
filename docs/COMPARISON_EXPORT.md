@@ -1,6 +1,7 @@
 # Exporting a source-aligned comparison
 
-Open **Time Delta → Export full-lap JSON** to download `laptrix-comparison.json`.
+Open **Time Delta → Export full-lap JSON** to download `laptrix-comparison.json`,
+or **Export full-lap CSV** for `laptrix-comparison.csv`.
 The control is available when the current Lap and selected reference share their
 declared source fingerprint. It exports the complete lap even when the graph shows
 one sector. Export does not seek, pause, change an active loop, run a simulation,
@@ -40,7 +41,7 @@ Throttle and brake remain fractions; RPM remains revolutions per minute. Acceler
 ratios use the development model's `g0 = 9.81 m/s²`; normal load is a ratio to vehicle
 weight. Track gradient is rise divided by 3D distance, matching the native telemetry
 contract. These are declared canonical units; display conversions such as km/h and
-percent are not applied. JSON retains numeric precision rather than plotted rounding.
+percent are not applied. JSON and CSV retain numeric precision rather than plotted rounding.
 Plot display-range limits do not remove otherwise valid native values from the
 report; field availability describes the stored data and declared vertical model.
 
@@ -68,3 +69,36 @@ then an explicitly downsampled timing fixture. They verify complete input equali
 all source knots, full-lap endpoints and keyboard activation while preserving the
 sector, axis, paused cursor, active loop, pending fuel and project, with no new API
 request. See VALIDATION.md for the final gates and visual review.
+
+## Flat numeric CSV
+
+CSV serializes the same report rows without a second interpolation or alignment
+pass. Its fixed 40-column header begins with `source_progress_fraction`,
+`current_time_s`, `reference_time_s` and `delta_time_s`. The remaining columns pair
+current/reference distance, X/Y/Z, speed, RPM, gear, throttle, brake, steering,
+longitudinal/lateral/vertical G, normal load, gradient, corner/sector IDs and offset.
+Names carry canonical units, such as `current_speed_m_per_s`,
+`reference_brake_fraction`, `current_normal_load_vehicle_weight_ratio` and
+`reference_track_gradient_rise_per_3d_distance`. G0 means 9.81 m/s²; IDs/gears are
+integers. Delta is current minus reference, in seconds.
+
+Missing timing-only channels and undeclared historical load channels have empty
+cells in their fixed columns. Known numeric zero remains `0`. Data cells contain
+only numbers or blanks; metadata and user-authored text are not inserted into CSV.
+Records use commas and CRLF, including a final newline, without display rounding.
+Readers should preserve empty cells as missing values and accept scientific notation.
+
+This flat analysis export omits source fingerprints, metadata, provenance and input
+snapshots. Use JSON to retain those details, or Export project for the whole workspace.
+CSV is not an archival project/reference bundle. Reusing its time/progress columns
+in reviewed timing import still requires explicit units, source/provenance
+declarations and the importer's strict bounds; the merged 21,999-row maximum can
+exceed that importer's 20,000-record limit. No automatic round trip is promised.
+
+Five additional unit cases cover units, independent unequal-grid values, exact
+numeric precision, known zeros, timing-only blanks, both legacy load directions,
+metadata exclusion and immutable reports. The existing maximum-grid case also
+serializes all 21,999 CSV rows. Both browser export journeys now download JSON and
+CSV for native and timing-only references and compare actual rows while preserving
+the complete inspected workspace. `node scripts/comparison-export-qa.mjs` reviews
+both controls at four viewport sizes and saves `artifacts/comparison-csv-*` evidence.

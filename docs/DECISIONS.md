@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-10 — Serialize aligned comparisons as a numeric CSV table
+
+**Decision:** Build the existing full-lap report on explicit activation and export
+its exact rows through a fixed 40-column canonical-unit header. Missing timing-only
+or historical load channels remain blank; known zero remains numeric zero.
+**Reasoning:** External analysis can use flat columns without rebuilding source
+correspondence from nested JSON. **Alternatives:** Another interpolator or embedding
+unstructured metadata in spreadsheet rows. **Consequence:** JSON retains metadata,
+source fingerprint and original snapshots; CSV contains numeric analysis only.
+No new persistence format or automatic reference-import round trip is introduced.
+
 ## 2026-09-10 — Bound the actions disclosure to available height
 
 **Decision:** Measure the open menu's actual top edge before paint, refresh on

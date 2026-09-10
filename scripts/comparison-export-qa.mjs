@@ -81,26 +81,67 @@ try {
         reference: expected.reference,
       });
       expect(downloaded.value.scope).toBe("full-lap");
+      const csvControl = page.getByRole("button", {
+        name: "Export full-lap comparison CSV",
+        exact: true,
+      });
+      const csvPending = page.waitForEvent("download");
+      await csvControl.focus();
+      await page.keyboard.press("Enter");
+      const csvFile = await csvPending;
+      expect(csvFile.suggestedFilename()).toBe("laptrix-comparison.csv");
+      const csvChunks = [];
+      for await (const chunk of await csvFile.createReadStream())
+        csvChunks.push(chunk);
+      const csv = Buffer.concat(csvChunks).toString();
+      const csvLines = csv.split("\r\n");
+      expect(csvLines.pop()).toBe("");
+      const csvHeader = csvLines.shift().split(",");
+      expect(csvHeader).toHaveLength(40);
+      expect(csvLines).toHaveLength(downloaded.value.samples.length);
+      expect(csvLines.map((line) => line.split(",").slice(0, 4))).toEqual(
+        downloaded.value.samples.map((row) =>
+          [
+            row.progress,
+            row.current.time,
+            row.reference.time,
+            row.deltaTime,
+          ].map(String),
+        ),
+      );
       await expect(
         page.getByRole("slider", { name: "Lap playback position" }),
       ).toHaveAttribute("value", "40.31");
       const metrics = await page
         .locator(".telemetry-panel")
         .evaluate((panel) => {
-          const button = panel.querySelector(".comparison-export");
-          const box = button.getBoundingClientRect(),
-            bounds = panel.getBoundingClientRect();
+          const buttons = [...panel.querySelectorAll(".comparison-export")];
+          const boxes = buttons.map((button) => button.getBoundingClientRect());
+          const bounds = panel.getBoundingClientRect();
           const chart = panel
             .querySelector(".delta-chart")
             .getBoundingClientRect();
           return {
             scrollWidth: document.documentElement.scrollWidth,
-            buttonWidth: box.width,
-            buttonHeight: box.height,
-            buttonContained:
-              box.left >= bounds.left &&
-              box.right <= bounds.right &&
-              button.scrollWidth <= button.clientWidth,
+            buttons: boxes.map((box, i) => ({
+              width: box.width,
+              height: box.height,
+              contained:
+                box.left >= bounds.left &&
+                box.right <= bounds.right &&
+                buttons[i].scrollWidth <= buttons[i].clientWidth,
+            })),
+            buttonOverlap:
+              Math.max(
+                0,
+                Math.min(boxes[0].right, boxes[1].right) -
+                  Math.max(boxes[0].left, boxes[1].left),
+              ) *
+              Math.max(
+                0,
+                Math.min(boxes[0].bottom, boxes[1].bottom) -
+                  Math.max(boxes[0].top, boxes[1].top),
+              ),
             chartHeight: chart.height,
             chartWidth: chart.width,
             glError: document
@@ -110,21 +151,22 @@ try {
           };
         });
       expect(metrics.scrollWidth).toBe(width);
-      expect(metrics.buttonContained).toBe(true);
+      expect(metrics.buttons).toHaveLength(2);
+      expect(metrics.buttons.every((button) => button.contained)).toBe(true);
+      expect(metrics.buttonOverlap).toBe(0);
       expect(metrics.chartHeight).toBeGreaterThan(100);
       expect(metrics.glError).toBe(0);
-      await page
-        .locator(".telemetry-panel")
-        .screenshot({
-          path: `artifacts/comparison-export-${width}-${state}.png`,
-        });
+      await page.locator(".telemetry-panel").screenshot({
+        path: `artifacts/comparison-csv-${width}-${state}.png`,
+      });
       await writeFile(
-        `artifacts/comparison-export-${width}-${state}.json`,
+        `artifacts/comparison-csv-${width}-${state}.json`,
         downloaded.text,
       );
+      await writeFile(`artifacts/comparison-csv-${width}-${state}.csv`, csv);
       if ((width === 1600 || width === 390) && state === "native-full")
         await page.screenshot({
-          path: `artifacts/comparison-export-${width}-workspace.png`,
+          path: `artifacts/comparison-csv-${width}-workspace.png`,
           fullPage: true,
         });
       findings.push({
@@ -133,6 +175,7 @@ try {
         state,
         rows: downloaded.value.samples.length,
         bytes: Buffer.byteLength(downloaded.text),
+        csvBytes: Buffer.byteLength(csv),
         ...metrics,
       });
     }
@@ -182,7 +225,7 @@ try {
     await page.close();
   }
   await writeFile(
-    "artifacts/comparison-export-qa.json",
+    "artifacts/comparison-csv-qa.json",
     JSON.stringify(findings, null, 2),
   );
   console.log(JSON.stringify(findings, null, 2));

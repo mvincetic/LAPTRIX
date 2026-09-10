@@ -171,3 +171,9 @@ passes through `7f50e91`: all 119 development journeys (60 in 10.4 minutes and
 59 in 10.2 minutes), 211 TypeScript tests, 146 Python tests (40.37 seconds), all
 quality gates and four production journeys (28.3 seconds). Both sparse/sloped
 road-visibility checks pass alongside the existing rendering regressions.
+
+The [reviewed-CSV run](https://github.com/mvincetic/LAPTRIX/actions/runs/34515158371)
+passes through `7bf1be6`: all 126 development journeys (64 in 11.8 minutes and
+62 in 10.5 minutes), 246 TypeScript tests, 146 Python tests (42.61 seconds), all
+quality gates and four production journeys (29.4 seconds). All seven CSV mapping,
+ordering, cancellation, persistence and live-playback cases pass remotely.

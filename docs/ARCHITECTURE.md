@@ -229,6 +229,11 @@ It clones both completed inputs and omits undeclared legacy vertical channels fr
 derived rows. TimeDeltaPlot builds/downloads the report only on explicit activation;
 no clock, calculation, project or reference action is dispatched. The report is a
 separate versioned artifact, not another accepted import format.
+`comparison-csv.ts` serializes those exact report rows into a fixed 40-column
+numeric table. Canonical-unit headers pair both sides' channels, and omitted
+channels become blank cells. Serialization retains numeric precision and CRLF
+records; no new alignment, interpolation, inferred channel or sample grid is added.
+CSV omits arbitrary metadata/input snapshots, which remain available in JSON.
 `TelemetryGhost` now renders either the current or eligible native reference Lap.
 Both call the pure `ghostPose` helper with the same elapsed clock time; each uses
 its own samples and vehicle snapshot. Source fingerprint matching gates native

@@ -262,6 +262,9 @@ visible label states scope even in a sector plot. The readout/action row wraps o
 phones while the existing chart height remains usable; the button has a specific
 accessible comparison-export name and native keyboard activation. The current
 delta, reference caption, graph axes and loop strip remain in their existing roles.
+The adjacent **Export full-lap CSV** action uses the same compact style and its
+own explicit accessible name. The action row wraps both controls at narrow widths;
+tooltips distinguish complete JSON inputs from numeric CSV rows and blank channels.
 
 Timing CSV uses a native modal with fixed heading/actions and a scrolling body.
 Paired column/unit controls have explicit accessible names; the converted preview

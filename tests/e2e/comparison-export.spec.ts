@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import type { Lap, TimingReference } from "../../packages/shared/schema";
+import type { ComparisonReport } from "../../packages/telemetry/comparison-csv";
 
 async function jsonDownload(page: Page, action: () => Promise<void>) {
   const pending = page.waitForEvent("download");
@@ -20,6 +21,73 @@ async function project(page: Page) {
       page.getByRole("button", { name: "Export project", exact: true }).click(),
     )
   ).value;
+}
+
+async function assertCsv(page: Page, report: ComparisonReport) {
+  const pending = page.waitForEvent("download");
+  await page
+    .getByRole("button", {
+      name: "Export full-lap comparison CSV",
+      exact: true,
+    })
+    .focus();
+  await page.keyboard.press("Enter");
+  const file = await pending;
+  expect(file.suggestedFilename()).toBe("laptrix-comparison.csv");
+  const chunks = [];
+  for await (const chunk of (await file.createReadStream())!)
+    chunks.push(chunk);
+  const lines = Buffer.concat(chunks).toString().split("\r\n");
+  expect(lines.pop()).toBe("");
+  const headers = lines.shift()!.split(",");
+  expect(headers).toHaveLength(40);
+  expect(lines).toHaveLength(report.samples.length);
+  const rows = lines.map((line) => {
+    const cells = line.split(",");
+    expect(cells).toHaveLength(40);
+    return Object.fromEntries(headers.map((name, i) => [name, cells[i]]));
+  });
+  const columns = {
+    source_progress_fraction: (row: ComparisonReport["samples"][number]) =>
+      row.progress,
+    current_time_s: (row: ComparisonReport["samples"][number]) =>
+      row.current.time,
+    reference_time_s: (row: ComparisonReport["samples"][number]) =>
+      row.reference.time,
+    delta_time_s: (row: ComparisonReport["samples"][number]) => row.deltaTime,
+    current_speed_m_per_s: (row: ComparisonReport["samples"][number]) =>
+      row.current.speed,
+    current_brake_fraction: (row: ComparisonReport["samples"][number]) =>
+      row.current.brake,
+    current_vertical_g0: (row: ComparisonReport["samples"][number]) =>
+      row.current.verticalG,
+    current_gear_integer: (row: ComparisonReport["samples"][number]) =>
+      row.current.gear,
+  };
+  for (const [column, value] of Object.entries(columns))
+    expect(rows.map((row) => row[column])).toEqual(
+      report.samples.map((row) => value(row)?.toString() ?? ""),
+    );
+  if (report.referenceKind === "timing-only") {
+    const unavailable = headers.filter(
+      (name) => name.startsWith("reference_") && name !== "reference_time_s",
+    );
+    expect(unavailable).toHaveLength(18);
+    expect(
+      rows.every((row) => unavailable.every((name) => row[name] === "")),
+    ).toBe(true);
+  } else {
+    expect(rows.map((row) => row.reference_speed_m_per_s)).toEqual(
+      report.samples.map((row) =>
+        (row.reference as { speed: number }).speed.toString(),
+      ),
+    );
+    expect(rows.map((row) => row.reference_distance_m)).toEqual(
+      report.samples.map((row) =>
+        (row.reference as { distance: number }).distance.toString(),
+      ),
+    );
+  }
 }
 
 for (const width of [1600, 390]) {
@@ -120,6 +188,7 @@ for (const width of [1600, 390]) {
     );
     expect(report.availableFields.current).toContain("normalLoadG");
     expect(report.availableFields.reference).toContain("speed");
+    await assertCsv(page, report);
     expect(await project(page)).toEqual(before);
 
     const indices = [
@@ -173,6 +242,7 @@ for (const width of [1600, 390]) {
       ),
     ).toBe(true);
     expect(timingReport.summary.deltaTime).toBeCloseTo(-0.1 * lap.lapTime, 10);
+    await assertCsv(page, timingReport);
     expect(await project(page)).toEqual(timingBefore);
     await expect(cursor).toHaveAttribute("value", time);
     await expect(range).toHaveValue("2");

@@ -12,6 +12,7 @@ import {
 } from "../../../../packages/telemetry";
 import { plotTickLabel, type PlotViewport } from "../plotViewport";
 import { buildComparisonReport } from "../../../../packages/telemetry/comparison-report";
+import { comparisonReportCsv } from "../../../../packages/telemetry/comparison-csv";
 import { download } from "../download";
 import "./comparison-export.css";
 
@@ -75,6 +76,21 @@ export function TimeDeltaPlot({
   const label = isTimingReference(reference)
     ? reference.label
     : (reference.vehicle?.name ?? reference.vehicleId);
+  const exportComparison = (format: "json" | "csv") => {
+    const report = buildComparisonReport(
+      lap,
+      reference,
+      new Date().toISOString(),
+    );
+    if (report)
+      download(
+        `laptrix-comparison.${format}`,
+        format === "csv"
+          ? comparisonReportCsv(report)
+          : JSON.stringify(report, null, 2),
+        format === "csv" ? "text/csv" : "application/json",
+      );
+  };
   return (
     <div className="delta-analysis">
       <div className="delta-readout">
@@ -93,20 +109,17 @@ export function TimeDeltaPlot({
             className="text-button comparison-export"
             aria-label="Export full-lap comparison JSON"
             title="Download source-aligned timing, available channels and both original inputs"
-            onClick={() => {
-              const report = buildComparisonReport(
-                lap,
-                reference,
-                new Date().toISOString(),
-              );
-              if (report)
-                download(
-                  "laptrix-comparison.json",
-                  JSON.stringify(report, null, 2),
-                );
-            }}
+            onClick={() => exportComparison("json")}
           >
             <Download size={13} /> Export full-lap JSON
+          </button>
+          <button
+            className="text-button comparison-export"
+            aria-label="Export full-lap comparison CSV"
+            title="Download aligned numeric rows in canonical units; unavailable channels are empty"
+            onClick={() => exportComparison("csv")}
+          >
+            <Download size={13} /> Export full-lap CSV
           </button>
         </div>
       </div>

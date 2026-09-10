@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 246 tests pass.
+- Vitest: 251 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -204,6 +204,27 @@ and no main merge, force-push or repository-settings change was made.
   Evidence is `artifacts/actions-height-regressions.log`.
   All four production loading/restoration journeys pass in 20.5 seconds;
   evidence is `artifacts/actions-height-production.log`.
+  Flat comparison CSV adds five numerical serialization cases and extends the
+  maximum-grid test to all 21,999 rows (40 columns). The full gate passes with 251
+  TypeScript and 146 Python tests (40.97 seconds), lint, typecheck and build.
+  Both expanded native/timing browser exports pass in 17.2 seconds, comparing
+  downloaded CSV columns against the actual JSON report and preserving sector,
+  loop, axis, cursor, pending fuel and complete project contents.
+  Twelve visual states cover native full-lap, native sector and timing sector at
+  1600/1280/390 px and 780 × 390 landscape. Both export controls remain separate,
+  contained and untruncated, charts retain more than 100 px height, and there is
+  no horizontal overflow, WebGL error or console/runtime error. CSV timing rows
+  match JSON in every capture, with zero simulation requests and unchanged
+  workspace/cursor. Desktop full-lap, phone timing-sector and short-landscape
+  native-sector screenshots were opened and reviewed. Evidence is
+  `artifacts/comparison-csv-{unit,browser,check,qa}.log`,
+  `comparison-csv-qa.json` and `comparison-csv-*-*` screenshots/downloads.
+  All 11 relevant comparison/custom-window/delta/sector-loop/reference-trace
+  browser journeys pass together in 1.5 minutes; evidence is
+  `artifacts/comparison-csv-regressions.log`. The suite remains at 128 development
+  journeys because the existing two export scenarios were strengthened.
+  All four production loading/restoration journeys pass in 20.8 seconds;
+  evidence is `artifacts/comparison-csv-production.log`.
 - Vite production build: pass; approximately 427 kB initial JavaScript / 129 kB
   gzip, plus a separate 966 kB viewer / 259 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package

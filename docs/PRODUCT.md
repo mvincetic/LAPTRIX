@@ -94,7 +94,9 @@ and vehicle poses retain their existing behavior. See GHOST_LABELS.md.
 Time Delta now exports the full source-aligned comparison as JSON, with both
 completed inputs, explicit units and every knot from either sampling grid. Native
 channels retain independent distances/times; timing-only references contribute
-only timing. Export preserves the current inspection, loop, project and pending
+only timing. A flat CSV export uses the same rows with explicit canonical units
+and empty unavailable-channel cells; the JSON remains the metadata/input archive.
+Export preserves the current inspection, loop, project and pending
 setup. See COMPARISON_EXPORT.md.
 The paused workspace now also stops the playback clock's animation requests once
 the viewer settles. Play resumes from the inspected time, and paused seeking or
