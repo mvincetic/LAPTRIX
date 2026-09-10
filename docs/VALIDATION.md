@@ -8,22 +8,38 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 140 tests pass.
+- Vitest: 148 tests pass.
 - Python numerical/API tests: 130 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
   all 15 relevant browser regressions (2.5 minutes); 84 are now discovered.
-  Its final placement revision passes both focused journeys (30.6 seconds) and
-  both production viewer checks (10.4 seconds).
-- Vite production build: pass; approximately 400 kB initial JavaScript / 122 kB
-  gzip, plus a separate 954 kB viewer / 255 kB gzip.
+  Loads & elevation adds three journeys (87 now discovered). Its relevant run
+  passes 15 of 16 journeys; the remaining case hit a screenshot-only race against
+  an expiring notification. After replacing that click with a hidden-state wait,
+  all five graph/cursor journeys pass (1.7 minutes), completing the 18 relevant
+  journeys across both runs without changing application code or timeouts.
+  Both production viewer checks also pass (12.0 seconds).
+- Vite production build: pass; approximately 404 kB initial JavaScript / 123 kB
+  gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `15e1255` (run 34470528022), including vertical-load
-  physics/compatibility, the Chrome-source fix and the bounded browser budget. Each following
+- GitHub Actions passed through `7f78ce0` (run 34472973538), including vertical-load
+  physics/compatibility, corner-callout placement and all 84 browser journeys. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
+
+Loads & elevation visual QA passes 21 states: Overview, current-only loads, native
+distance/time overlays, sector inspection, partial legacy references and timing-only
+references at 1600/1280/390 px. Every state keeps the 20-second cursor, seven current
+traces, the expected seven/five/zero reference traces, zero horizontal overflow and
+no runtime errors. Complete project exports and zero additional solve requests are
+checked by the script. Desktop/1280 full workspaces and phone native, sector and
+legacy panels were opened and reviewed: names, scales, guides, wrapped explanations
+and transport remain readable. Evidence is in `artifacts/load-graphs-qa.json`,
+`load-graphs-qa-*.png`, `load-graphs-browser-final.log` and `load-graphs-check.log`.
+The initial legacy-option assertion and expiring-notification failures remain
+documented in `load-graphs-browser-focused.log` and `load-graphs-browser-regression.log`.
 
 `scripts/visual-qa.mjs` writes current screenshots into the ignored `artifacts/`
 directory. Desktop and mobile images were opened and visually reviewed. Responsive

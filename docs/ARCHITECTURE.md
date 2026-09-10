@@ -174,6 +174,13 @@ interpolated native sample. `telemetryPlot.ts` owns channel units, combined rang
 and stepped gear paths. React memoizes alignment, samples, ranges and SVG paths;
 clock updates interpolate cursor readings without rebuilding full paths. The view
 retains the same canonical Lap and clock. See TELEMETRY_COMPARISON.md.
+That helper also defines the Overview and Loads & elevation channel groups.
+Per-channel reference eligibility requires finite converted values and, for
+vertical/load channels, declared vertical-model metadata. Only eligible reference
+values contribute to each shared range. Missing values break paths instead of
+creating zero samples. Group preference lives in Telemetry, outside individual tab
+contents, and falls back to Overview for an undeclared current lap. It adds no
+serialized data, API request or playback subscription. See LOAD_GRAPHS.md.
 `ChannelPlot` owns channel presentation while `Telemetry` retains view state and
 playback controls. `ChannelScales` renders ordinary HTML scale text; a shared CSS
 height maps its rows to the SVG coordinates at each breakpoint. `channelFraction`

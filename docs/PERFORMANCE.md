@@ -1,5 +1,13 @@
 # Performance
 
+Loads & elevation brings the entry to 403.77 kB JavaScript (122.60 kB gzip) and
+main CSS to 50.14 kB (10.80 kB gzip). The deferred viewer remains 957.77 kB
+(256.45 kB gzip), plus its 0.26 kB CSS. Channel availability, shared ranges and
+paths are memoized on data, group and axis changes; playback only updates cursor
+readouts. The additional view uses the existing seven-row SVG, interpolation and
+clock, with no simulation calls or new dependencies. These are local build sizes,
+not network-latency or frame-rate guarantees.
+
 The corner-callout update keeps the layout/projector in the deferred viewer chunk:
 957.77 kB JavaScript (256.45 kB gzip) plus 0.26 kB CSS (0.17 kB gzip). The entry is
 400.57 kB (121.66 kB gzip). Only camera/projection/viewport/event or relevant UI

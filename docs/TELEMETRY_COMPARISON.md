@@ -5,6 +5,12 @@ reference. Seven grey dashed curves share the current lap's speed, throttle, bra
 RPM, gear, lateral-G and elevation rows. Current curves retain their channel colors;
 reference cursor readings use an **R** prefix. The selected reference and its
 provenance remain identified in Lap Comparison.
+**Graph channels → Loads & elevation** selects a second seven-row group with
+longitudinal/vertical G, tyre load and gradient. References without declared
+vertical dynamics retain their five available rows, with missing curves omitted
+and R — readings explained above the plot. Only eligible values contribute to
+each shared scale. Overview keeps its original all-channel display eligibility.
+See [LOAD_GRAPHS](LOAD_GRAPHS.md) for precision, bounds and the 1× weight guide.
 
 ## Alignment and units
 

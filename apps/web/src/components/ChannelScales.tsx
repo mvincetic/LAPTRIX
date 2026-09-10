@@ -18,11 +18,17 @@ export function ChannelScales({ channels }: { channels: Channel[] }) {
           channel.min < 0 && channel.max > 0
             ? channelFraction(0, channel)
             : null;
+        const guide =
+          channel.guide !== undefined &&
+          channel.guide > channel.min &&
+          channel.guide < channel.max
+            ? channelFraction(channel.guide, channel)
+            : null;
         return (
           <div
             key={channel.key}
             role="group"
-            aria-label={`${channel.label} scale: ${channel.min} to ${channel.max}${channel.unit ? ` ${channel.unit}` : ""}`}
+            aria-label={`${channel.label} scale: ${channel.min} to ${channel.max}${channel.unit ? ` ${channel.unit}` : ""}${guide === null ? "" : `; dashed guide at ${channel.guide} ${channel.unit}`}`}
             data-testid={`channel-scale-${channel.key}`}
           >
             <span
@@ -47,6 +53,17 @@ export function ChannelScales({ channels }: { channels: Channel[] }) {
                 }}
               >
                 0
+              </span>
+            )}
+            {guide !== null && guide >= 1 / 3 && guide <= 2 / 3 && (
+              <span
+                aria-hidden="true"
+                title={`${channel.guide} ${channel.unit}`}
+                style={{
+                  top: `calc(var(--telemetry-svg-height) * ${27 - guide * 24} / 251)`,
+                }}
+              >
+                {channel.guide}×
               </span>
             )}
           </div>

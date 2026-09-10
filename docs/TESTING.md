@@ -1,5 +1,15 @@
 # Testing and validation
 
+Loads & elevation adds eight channel-math cases and three browser journeys.
+Independent interpolation of real unequal-grid Formula/GT output checks all seven
+current/reference readings on both axes, with exact-clock vertical/load readouts
+after playback. Group/tab/range changes preserve complete project exports and
+pending setup without simulation requests. Legacy references retain five curves,
+timing-only imports retain none, and a legacy current result disables the new
+group through native option semantics and keyboard behavior. Scale tests cover
+fractional G, weight guides, missing data and extreme finite values. The reusable
+`scripts/load-graphs-qa.mjs` captures seven states at three widths. See LOAD_GRAPHS.md.
+
 Corner-callout layout tests cover coincident events at viewport edges, occupied
 space, preserved anchors/order, offscreen data and insufficient room. A browser
 regression first reproduces the old world-offset label overlap. The new desktop/

@@ -4,6 +4,8 @@
 Time Delta. Selecting a range changes the horizontal view only. The current
 cursor, play/pause state, reference choice, channel scales and setup remain intact.
 Both views retain the same selected sector across axis and tab changes.
+Overview and Loads & elevation also share this range. Changing graph channels
+retains the cursor and sector, with full-lap scales for the selected group.
 
 **Inspect start** pauses and seeks the existing clock to the selected sector's
 start. **Full lap** restores the complete view without moving that clock. The

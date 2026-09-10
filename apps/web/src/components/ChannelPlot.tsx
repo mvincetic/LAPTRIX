@@ -1,6 +1,12 @@
 import type { Lap, Sample } from "../../../../packages/shared/schema";
 import { viewportFraction, type PlotViewport } from "../plotViewport";
-import { channelFraction, type Channel } from "../telemetryPlot";
+import {
+  channelDigits,
+  channelFraction,
+  channelValue,
+  type Channel,
+  type TelemetryGroup,
+} from "../telemetryPlot";
 import { ChannelScales } from "./ChannelScales";
 import "./channel-scales.css";
 
@@ -16,6 +22,7 @@ export function ChannelPlot({
   onSeek,
   progress,
   cursorInside,
+  group,
 }: {
   lap: Lap | null;
   channels: Channel[];
@@ -23,43 +30,52 @@ export function ChannelPlot({
   referenceSample: Sample | null;
   viewport: PlotViewport;
   overlay: boolean;
-  paths: { current: string[]; reference: string[] };
+  paths: { current: string[]; reference: (string | null)[] };
   axis: "time" | "distance";
   onSeek: (fraction: number) => void;
   progress: number;
   cursorInside: boolean;
+  group: TelemetryGroup;
 }) {
   return (
-    <div className="graph-area">
+    <div className={`graph-area${group === "loads" ? " load-graphs" : ""}`}>
       <div className="channel-labels">
-        {channels.map((c) => (
-          <div key={c.key}>
-            <span>
-              {c.label}
-              <small>{c.unit ? `(${c.unit})` : ""}</small>
-            </span>
-            <span className="channel-values">
-              <b style={{ color: c.color }}>
-                {sample
-                  ? (sample[c.key] * (c.scale ?? 1)).toFixed(
-                      c.key === "lateralG" ? 1 : 0,
-                    )
-                  : "—"}
-              </b>
-              {referenceSample && (
-                <small
-                  data-testid={`reference-value-${c.key}`}
-                  aria-label={`Reference ${c.label}`}
+        {channels.map((c, index) => {
+          const currentValue = sample ? channelValue(sample, c) : undefined;
+          const referenceValue =
+            referenceSample && paths.reference[index]
+              ? channelValue(referenceSample, c)
+              : undefined;
+          return (
+            <div key={c.key}>
+              <span>
+                {c.label}
+                <small>{c.unit ? `(${c.unit})` : ""}</small>
+              </span>
+              <span className="channel-values">
+                <b
+                  style={{ color: c.color }}
+                  data-testid={`current-value-${c.key}`}
                 >
-                  R{" "}
-                  {(referenceSample[c.key] * (c.scale ?? 1)).toFixed(
-                    c.key === "lateralG" ? 1 : 0,
-                  )}
-                </small>
-              )}
-            </span>
-          </div>
-        ))}
+                  {currentValue === undefined
+                    ? "—"
+                    : currentValue.toFixed(channelDigits(c))}
+                </b>
+                {referenceSample && (
+                  <small
+                    data-testid={`reference-value-${c.key}`}
+                    aria-label={`Reference ${c.label}${referenceValue === undefined ? " unavailable" : ""}`}
+                  >
+                    R{" "}
+                    {referenceValue === undefined
+                      ? "—"
+                      : referenceValue.toFixed(channelDigits(c))}
+                  </small>
+                )}
+              </span>
+            </div>
+          );
+        })}
       </div>
       <ChannelScales channels={channels} />
       <div className="plot">
@@ -89,7 +105,7 @@ export function ChannelPlot({
         </div>
         <svg
           role="img"
-          aria-label={`Synchronized speed, throttle, brake, RPM, gear, lateral G and elevation traces${overlay ? " with source-aligned native reference" : ""}`}
+          aria-label={`Synchronized ${group === "loads" ? "speed, longitudinal G, lateral G, vertical G, normal tyre load, track gradient and elevation" : "speed, throttle, brake, RPM, gear, lateral G and elevation"} traces${overlay ? " with source-aligned native reference" : ""}`}
           viewBox={`${viewport.x} 0 ${viewport.width} 251`}
           preserveAspectRatio="none"
           onPointerDown={(e) => {
@@ -143,6 +159,19 @@ export function ChannelPlot({
                   vectorEffect="non-scaling-stroke"
                 />
               )}
+              {c.guide !== undefined && c.guide > c.min && c.guide < c.max && (
+                <line
+                  data-testid={`channel-guide-${c.key}`}
+                  x1={0}
+                  x2={1000}
+                  y1={i * 33 + 27 - channelFraction(c.guide, c) * 24}
+                  y2={i * 33 + 27 - channelFraction(c.guide, c) * 24}
+                  stroke="#8d9fb6"
+                  strokeDasharray="3 3"
+                  strokeWidth={1}
+                  vectorEffect="non-scaling-stroke"
+                />
+              )}
               <line
                 x1={0}
                 y1={i * 33 + 31}
@@ -160,7 +189,7 @@ export function ChannelPlot({
                 strokeWidth={1.5}
                 vectorEffect="non-scaling-stroke"
               />
-              {overlay && (
+              {overlay && paths.reference[i] && (
                 <path
                   data-testid={`reference-trace-${c.key}`}
                   d={paths.reference[i]}

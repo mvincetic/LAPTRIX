@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-10 — Inspect declared load channels in a separate graph group
+
+**Decision:** Retain the seven-channel Overview and add a seven-row Loads &
+elevation view using the same channel renderer, source alignment and playback
+clock. Determine reference availability separately for each load-group channel.
+**Reasoning:** Vertical acceleration and tyre load are now meaningful solver
+outputs, while older references have no declared vertical model. Rejecting all
+their graphs loses useful comparisons; drawing reserved zeros invents meaning.
+**Consequences:** Eligible curves alone contribute to shared scales; unavailable
+rows show R — and an explanation. Legacy current laps retain Overview. Signed
+small-G ranges use tenths, tyre load uses multiples of weight with a 1× guide,
+and gradient explicitly means rise / 3D distance. Group choice is a local view
+preference without new project fields or simulation work. See LOAD_GRAPHS.md.
+
 ## 2026-09-10 — Separate scene callout layout from event geometry
 
 **Decision:** Lay out selected-corner event buttons in CSS pixels and connect them

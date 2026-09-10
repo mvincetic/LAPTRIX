@@ -1,0 +1,23 @@
+.graph-channel-choice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  font-size: 10px;
+  color: #61758e;
+}
+.graph-channel-choice select {
+  width: 135px;
+  padding: 3px 5px;
+  font-size: 10px;
+}
+.load-graph-note {
+  padding: 6px 12px;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #61758e;
+  border-bottom: 1px solid #e7edf4;
+}
+.graph-area.load-graphs .channel-labels {
+  width: 120px;
+}

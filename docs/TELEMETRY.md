@@ -46,6 +46,10 @@ are rejected. Old native references retain their original data and interpretatio
 Optional normal load interpolates only when both endpoints contain it. Vertical G
 is neither world-Y acceleration nor suspension travel or accelerometer output.
 See VERTICAL_LOAD.md for equations, the road-contact reserve and model bounds.
+Lap Graphs exposes these channels through Loads & elevation alongside the original
+Overview. It shares source alignment, axes, range and the existing clock, with
+per-channel legacy-reference availability and no serialized view state. See
+LOAD_GRAPHS.md for display units and scale semantics.
 
 `PlaybackClock` is the only source of playback time. Play, pause, seeking, speed
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers

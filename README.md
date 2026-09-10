@@ -44,7 +44,7 @@ the last completed result remains visible if a solve fails.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Readable selected-corner callouts with leader lines to authoritative event positions.
-- Seven synchronized telemetry traces, time/distance inspection and ghost playback.
+- Synchronized Overview and Loads & elevation graph groups, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Orbit, top and chase cameras; configurable analysis layers.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
@@ -92,6 +92,7 @@ node scripts/reference-ghost-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
 node scripts/project-name-qa.mjs
 node scripts/telemetry-comparison-qa.mjs
+node scripts/load-graphs-qa.mjs
 node scripts/plot-range-qa.mjs
 npm run study:solver
 npm run study:sampling
@@ -133,6 +134,10 @@ Escape discards an unsent entry; switching axis or calculating a new lap resets 
 New laps expose signed road-normal acceleration and total tyre load separately,
 with explicit legacy-file semantics. See [VERTICAL_LOAD](docs/VERTICAL_LOAD.md)
 for the quasi-steady model, contact bound and independent benchmarks.
+In **Lap Graphs**, choose **Graph channels → Loads & elevation** to inspect speed,
+longitudinal/lateral/vertical G, total tyre load, gradient and elevation over the lap.
+The original seven channels remain under **Overview**. Older references retain
+their available curves with explicit missing load channels. See [LOAD_GRAPHS](docs/LOAD_GRAPHS.md).
 Enable **Reference traces** in **Lap Graphs** to compare native reference channels at
 the same source position. Grey dashed curves and R readings share the current lap's
 axes and channel scales. Timing-only files keep this control disabled. See

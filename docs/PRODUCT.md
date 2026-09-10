@@ -57,6 +57,11 @@ Inspect pauses playback at the entered position; invalid or unsent entries leave
 the clock unchanged. It reports the development model's channels and explicitly
 identifies road-normal vertical acceleration and total tyre load separately. Old
 current telemetry retains its explicit unmodelled state; see VERTICAL_LOAD.md.
+Lap Graphs now offers Overview and Loads & elevation channel groups. The latter
+adds whole-lap vertical acceleration, normal tyre load and gradient alongside speed
+and longitudinal/lateral G. Both groups retain the same cursor, axes and sector
+range. Older references keep available channels with explicit missing load data;
+legacy current laps retain Overview. See LOAD_GRAPHS.md for units and availability.
 An optional grey native-reference ghost compares vehicles on the same elapsed-time
 clock. Visibility is independent of the blue current ghost, and each uses its own
 vehicle snapshot. Timing-only files retain analytical comparison without a drawn

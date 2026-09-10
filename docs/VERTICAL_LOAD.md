@@ -70,6 +70,9 @@ existing interpolation and playback clock. Legacy current telemetry instead show
 Vertical dynamics / Not modelled. The optional normal-load channel interpolates
 only when both endpoints supply it; missing data stays missing. The seven default
 graph channels are unchanged.
+The optional Loads & elevation group now exposes whole-lap curves with declared
+native-reference availability, shared scales and a 1× weight guide. Legacy reference
+zeros remain unmodelled; see LOAD_GRAPHS.md.
 
 ## Independent checks
 

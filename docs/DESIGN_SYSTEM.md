@@ -197,3 +197,10 @@ text above its recovery and dismissal controls.
 Audio-start failures use **Enable audio again** in that same banner. Successful
 activation clears only an audio warning; normal transport mute/enable controls
 remain the ongoing audio interaction.
+Lap Graphs places a native **Graph channels** selector before Plot range. The
+controls wrap into readable rows on phones. Loads & elevation retains seven fixed
+plot rows and widens the label column to 120 px for full channel names and three-
+decimal G/load readings. A compact note explains vertical acceleration, tyre load,
+the dashed 1× weight guide and gradient units. Missing reference channels show
+R — and a text explanation while available curves remain visible. Overview keeps
+its original channel names and precision. See LOAD_GRAPHS.md.

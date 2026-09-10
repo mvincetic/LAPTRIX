@@ -18,11 +18,14 @@ import { TabList } from "./TabList";
 import { tabId, tabPanelProps } from "./tabs";
 import {
   canPlotTelemetry,
+  referenceChannelKeys,
   telemetryChannels,
   telemetryPath,
+  type TelemetryGroup,
 } from "../telemetryPlot";
 import "./telemetry-comparison.css";
 import "./plot-range.css";
+import "./load-graphs.css";
 import {
   formatTime,
   interpolate,
@@ -45,7 +48,13 @@ export function Telemetry({
   const playback = useSyncExternalStore(clock.subscribe, clock.getSnapshot),
     [axis, setAxis] = useState<"distance" | "time">("distance"),
     [view, setView] = useState("Lap Graphs"),
+    [groupPreference, setGroupPreference] =
+      useState<TelemetryGroup>("overview"),
     [showReference, setShowReference] = useState(false);
+  const group =
+    groupPreference === "loads" && !lap?.verticalDynamics
+      ? "overview"
+      : groupPreference;
   const tabsPrefix = useId();
   const [rangeSelection, setRangeSelection] = useState<{
     lap: Lap;
@@ -68,9 +77,22 @@ export function Telemetry({
     () => comparison?.points.map((point) => point.sample) ?? [],
     [comparison],
   );
+  const referenceKeys = useMemo(
+    () =>
+      referenceChannelKeys(
+        comparison?.reference ?? null,
+        referenceSamples,
+        group,
+      ),
+    [comparison, referenceSamples, group],
+  );
   const displayable = useMemo(
-    () => !!comparison && canPlotTelemetry(referenceSamples),
-    [comparison, referenceSamples],
+    () =>
+      !!comparison &&
+      (group === "overview"
+        ? canPlotTelemetry(referenceSamples)
+        : referenceKeys.length > 0),
+    [comparison, referenceSamples, referenceKeys, group],
   );
   const activeComparison = showReference && displayable ? comparison : null;
   const overlay = activeComparison !== null;
@@ -78,11 +100,13 @@ export function Telemetry({
   const channels = useMemo(
     () =>
       telemetryChannels(
+        lap?.samples ?? [],
+        group,
         overlay
-          ? [...(lap?.samples ?? []), ...referenceSamples]
-          : (lap?.samples ?? []),
+          ? { samples: referenceSamples, keys: referenceKeys }
+          : undefined,
       ),
-    [lap, overlay, referenceSamples],
+    [lap, overlay, referenceSamples, referenceKeys, group],
   );
   const currentPoints = useMemo(
     () =>
@@ -102,11 +126,22 @@ export function Telemetry({
       ),
       reference: activeComparison
         ? channels.map((channel, row) =>
-            telemetryPath(activeComparison.points, channel, row, axis, extent),
+            referenceKeys.includes(channel.key)
+              ? telemetryPath(
+                  activeComparison.points,
+                  channel,
+                  row,
+                  axis,
+                  extent,
+                )
+              : null,
           )
         : [],
     };
-  }, [lap, axis, channels, currentPoints, activeComparison]);
+  }, [lap, axis, channels, currentPoints, activeComparison, referenceKeys]);
+  const missingReference = channels
+    .filter((channel) => !referenceKeys.includes(channel.key))
+    .map((channel) => channel.label);
   const referenceReason = !reference
     ? "No reference selected"
     : isTimingReference(reference)
@@ -115,7 +150,9 @@ export function Telemetry({
         ? "Reference source does not match"
         : !displayable
           ? "Reference values exceed the display range"
-          : "Same source position · current-lap axes";
+          : missingReference.length
+            ? `Reference unavailable: ${missingReference.join(", ")}`
+            : "Same source position · current-lap axes";
   const progress = lap
     ? axis === "distance"
       ? (sample?.distance ?? 0) / lap.length
@@ -183,6 +220,20 @@ export function Telemetry({
         {view === "Lap Graphs" && (
           <>
             <div className="plot-controls">
+              <label className="graph-channel-choice">
+                Graph channels
+                <select
+                  value={group}
+                  onChange={(event) =>
+                    setGroupPreference(event.target.value as TelemetryGroup)
+                  }
+                >
+                  <option value="overview">Overview</option>
+                  <option value="loads" disabled={!lap?.verticalDynamics}>
+                    Loads &amp; elevation
+                  </option>
+                </select>
+              </label>
               {rangeControls}
               <div className="telemetry-comparison-controls">
                 <label>
@@ -201,7 +252,20 @@ export function Telemetry({
                 </span>
               </div>
             </div>
+            {group === "loads" && (
+              <p className="load-graph-note">
+                Vertical G is road-normal acceleration excluding gravity. Tyre
+                load includes gravity, curvature and downforce; its dashed guide
+                is 1× weight. Gradient is rise / 3D distance.
+              </p>
+            )}
+            {lap && !lap.verticalDynamics && (
+              <p className="load-graph-note">
+                Vertical/load telemetry is unavailable for this lap.
+              </p>
+            )}
             <ChannelPlot
+              group={group}
               lap={lap}
               channels={channels}
               sample={sample}
