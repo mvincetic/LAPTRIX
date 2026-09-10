@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-10 — Bound the actions disclosure to available height
+
+**Decision:** Measure the open menu's actual top edge before paint, refresh on
+viewport/header resizing, and use internal scrolling with fixed-size native
+buttons. **Reasoning:** The 456 px menu exceeded a 390 px viewport and native
+Tab navigation moved the whole page, hiding its opener. **Alternatives:** Fixed
+viewport offsets, smaller action rows or new menu keyboard semantics.
+**Consequence:** The menu retains its original anchor, action order and focus
+behavior; no application data, playback or simulation work is introduced.
+
 ## 2026-09-10 — Review CSV into the existing timing-reference contract
 
 **Decision:** Parse bounded local comma-separated records, ask for explicit time/

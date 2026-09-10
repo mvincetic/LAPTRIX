@@ -64,7 +64,8 @@ The primary action becomes Cancel during calculations and track/project imports.
 Cancellation preserves the completed workspace and edited setup, pauses playback,
 and permits a new run or import. Already executing server work may still finish.
 Additional actions supports native keyboard navigation, Escape dismissal and
-predictable focus after exports or file selection.
+predictable focus after exports or file selection. Short viewports scroll the
+actions within the disclosure so the opener and workspace remain in place.
 Viewer and telemetry tabs support arrow-key selection and direct panel access.
 Camera and axis choices expose their selected state, while tab changes retain
 the existing 3D canvas, layer settings and playback position.

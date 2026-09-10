@@ -17,6 +17,17 @@ focus to its trigger. Action activation and pointer dismissal also restore trigg
 focus; a newly opened native modal then handles its own focus. Export and an empty
 file-picker return are covered by browser regression tests.
 
+The disclosure is bounded by its measured top edge and the viewport's lower
+12 px gutter. Its action rows keep their original size and scroll internally.
+At 780 × 390, the earlier menu extended to y518 and keyboard navigation scrolled
+the page by 231 px, hiding the opener. It now ends at y378 and visiting every
+action keeps the page at its original scroll position. Desktop and portrait
+phone layouts keep their full menu height when it fits. The resize/wheel journey
+also checks 390 × 300, contained overscroll, reopening and unchanged project,
+pending settings and clock. Native focus and dismissal semantics stay the same.
+`node scripts/actions-menu-qa.mjs` captures initial, final-action and reopened
+states across five viewport sizes after the actual viewer loads.
+
 The baseline audit found the invisible dismiss overlay received the first Tab,
 Escape did nothing and focus stayed away from the trigger. The corrected audit
 finds Compare aero settings first, a closed disclosure after Escape and trigger

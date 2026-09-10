@@ -151,8 +151,12 @@ signal. Cancel invalidates the request generation before aborting and re-enables
 controls without replacing completed workspace data. File preparation checks its
 generation before sending requests. Unmount aborts the current calculation too.
 Cancellation closes browser requests; the synchronous server worker may finish.
-Additional actions remains a disclosure of native buttons. Its wrapper closes on
-focus leaving, Escape restores the trigger, and action activation restores focus
+Additional actions remains a disclosure of native buttons. `useActionsMenuHeight`
+measures the open menu before paint and observes viewport/header size changes to fit it below
+the opener with a 12 px lower gutter. CSS provides internal vertical scrolling,
+contained overscroll and fixed-size rows. No timer or playback subscription is
+added; the observer/listener are removed when the disclosure closes. Its wrapper
+closes on focus leaving, Escape restores the trigger, and action activation restores focus
 before any new native modal takes over. The pointer backdrop is not a tab stop.
 Accessible group/trigger relationships do not introduce a separate keyboard menu
 implementation. Scope and remaining review are documented in ACCESSIBILITY.md.

@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
 
-for (const width of [1600, 390]) {
-  test(`actions disclosure has usable keyboard focus and dismissal at ${width}px`, async ({
+for (const [width, height] of [
+  [1600, 1000],
+  [390, 1000],
+  [780, 390],
+]) {
+  test(`actions disclosure has usable keyboard focus and dismissal at ${width} × ${height}`, async ({
     page,
   }) => {
-    await page.setViewportSize({ width, height: 1000 });
+    await page.setViewportSize({ width, height });
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
     const trigger = page.getByRole("button", {
@@ -39,9 +43,20 @@ for (const width of [1600, 390]) {
       .getByRole("group", { name: "Workspace actions" })
       .getByRole("button");
     const count = await actions.count();
+    const group = page.getByRole("group", { name: "Workspace actions" });
+    const bounds = await group.boundingBox();
+    expect(bounds!.y).toBeGreaterThanOrEqual(0);
+    expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(height - 12);
+    const scroll = await page.evaluate(() => window.scrollY);
     for (let i = 0; i < count; i++) {
       await page.keyboard.press("Tab");
       await expect(actions.nth(i)).toBeFocused();
+      const box = await actions.nth(i).boundingBox();
+      expect(box!.y).toBeGreaterThanOrEqual(bounds!.y);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(
+        bounds!.y + bounds!.height,
+      );
+      expect(await page.evaluate(() => window.scrollY)).toBe(scroll);
     }
     await page.keyboard.press("Tab");
     await expect(

@@ -156,6 +156,11 @@ Additional actions preserves native Tab order through its enabled controls. The
 pointer backdrop has no keyboard stop, Escape returns to the opener, and leaving
 the disclosure closes it without stealing focus. A visible focus outline identifies
 the current action. The opener remains the return point after an action completes.
+The open disclosure uses its actual top edge and viewport height to retain a
+12 px lower gutter. On short screens its contents scroll vertically; action rows
+and focus outlines retain their size. Keyboard focus scrolls the list, and wheel
+overscroll stays within it. Ordinary desktop/phone portrait menus retain their
+full content height when it fits. Header resizing updates the available height.
 Viewer/telemetry strips use one keyboard tab stop with Left/Right and Home/End
 selection. Tab reaches the next control or active panel, whose focus outline sits
 inside its border. Inactive panels are hidden; the canvas stays mounted. The chase

@@ -50,6 +50,7 @@ import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { RenameProjectDialog } from "./components/RenameProjectDialog";
 import { GpxImportDialog, type GpxDraft } from "./components/GpxImportDialog";
 import { download } from "./download";
+import { useActionsMenuHeight } from "./useActionsMenuHeight";
 import { TimingCsvDialog } from "./components/TimingCsvDialog";
 import {
   timingCsvReference,
@@ -154,6 +155,8 @@ export function App() {
   const [gpxImport, setGpxImport] = useState(false);
   const [gpxDraft, setGpxDraft] = useState<GpxDraft | null>(null);
   const actionsButton = useRef<HTMLButtonElement>(null);
+  const actionsMenu = useRef<HTMLDivElement>(null);
+  useActionsMenuHeight(menu, actionsMenu);
   const closeActions = () => {
     setMenu(false);
     actionsButton.current?.focus();
@@ -829,6 +832,7 @@ export function App() {
                   onClick={closeActions}
                 />
                 <div
+                  ref={actionsMenu}
                   className="actions-menu"
                   id="workspace-actions"
                   role="group"

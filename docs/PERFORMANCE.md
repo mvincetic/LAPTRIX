@@ -5,8 +5,8 @@ completion. Both widths previously executed 32 animation callbacks in a half-sec
 despite zero WebGL draws; the strengthened settled-workspace tests now require zero
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
-all browser/audio processing. Entry JavaScript is 426.51 kB (128.90 kB gzip); main
-CSS is 55.89 kB (11.73 kB gzip) and deferred viewer JavaScript is 966.27 kB
+all browser/audio processing. Entry JavaScript is 426.91 kB (129.09 kB gzip); main
+CSS is 55.97 kB (11.76 kB gzip) and deferred viewer JavaScript is 966.27 kB
 (259.05 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
 The track key observes only a compact-scene predicate and reuses existing layout

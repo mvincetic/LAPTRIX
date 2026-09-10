@@ -182,6 +182,28 @@ and no main merge, force-push or repository-settings change was made.
   `timing-csv-keyboard-startup-trace.zip` and `timing-csv-keyboard-recheck.log`.
   All four production loading/restoration journeys pass in 21.3 seconds;
   evidence is `artifacts/timing-csv-production.log`.
+  Bounded actions-menu height passes the full gate with 246 TypeScript and 146
+  Python tests (42.18 seconds), lint/typecheck and production build. The new QA
+  script also passes its final targeted lint check. Two additional browser cases
+  bring discovery to 128 development journeys; all five focused keyboard/resize/
+  wheel checks pass in 21.9 seconds. At 780 × 390 the menu bottom moves from y518
+  to y378, and final-action Tab navigation no longer scrolls the page by 231 px.
+  Initial geometry probing found the existing viewer download fallback in one
+  short-screen capture; its evidence establishes menu bounds only. Final visual
+  QA explicitly waits for the actual canvas and records zero console/runtime
+  errors in all 15 initial/final-action/reopened states across 1600/1280/390 px,
+  780 × 390 and 390 × 300. Menu bounds/focused rows remain visible, horizontal
+  overflow is absent, and each sequence retains canvas identity, pending fuel 21,
+  cursor 20 and zero simulation requests. Desktop initial, short-landscape final
+  action and short-phone initial screenshots were opened and reviewed.
+  Evidence is `artifacts/actions-height-{before,after}.json`,
+  `actions-height-browser.log`, `actions-menu-qa.{json,log}` and
+  `actions-menu-*-*-*.png`.
+  All 20 relevant keyboard/resize/GPX/rename/CSV journeys then pass together in
+  2.2 minutes, including delayed reference work and native modal focus transfer.
+  Evidence is `artifacts/actions-height-regressions.log`.
+  All four production loading/restoration journeys pass in 20.5 seconds;
+  evidence is `artifacts/actions-height-production.log`.
 - Vite production build: pass; approximately 427 kB initial JavaScript / 129 kB
   gzip, plus a separate 966 kB viewer / 259 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package

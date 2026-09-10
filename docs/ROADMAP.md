@@ -82,12 +82,17 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for reviewed timing CSV. Terrain clearance passes all preceding
-   119 development journeys remotely; the CSV milestone adds seven journeys.
-2. Inspect the growing actions disclosure at short viewport heights and improve
-   access to all actions if its measured bounds exceed the visible workspace.
+1. Verify remote CI for reviewed timing CSV and the bounded actions menu. Terrain
+   clearance passes all preceding 119 development journeys remotely.
+2. Add a flat CSV export of the existing source-aligned comparison for external
+   analysis, preserving explicit units, independent timing and channel availability.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+The actions disclosure now fits beneath its actual opener and scrolls internally
+on short screens. Native Tab navigation no longer moves the whole page to reach
+the final action; resizing and wheel boundaries preserve the workspace. See
+ACCESSIBILITY.md for measured bounds and the retained focus behavior.
 
 Reviewed CSV timing now maps explicit time/source-progress columns and units into
 the existing reference schema. Converted first/final records, duration, provenance
@@ -265,7 +270,7 @@ eligibility, native channel plots/scales, sector viewport mapping, vehicle contr
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and twenty-six browser journeys cover the
+One hundred and twenty-eight browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

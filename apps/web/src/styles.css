@@ -1725,8 +1725,12 @@ select {
   box-shadow: 0 5px 25px #192d471f;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: 6px;
 }
 .actions-menu > button {
+  flex-shrink: 0;
   justify-content: flex-start;
   border: 0;
   padding: 10px;
