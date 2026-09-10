@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 194 tests pass.
+- Vitest: 197 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -76,6 +76,14 @@ and no main merge, force-push or repository-settings change was made.
   tool/export/restoration journeys pass in 51.2 seconds. All four production viewer
   journeys pass in 19.9 seconds. The complete local run passes all 101 development
   browser journeys in 10.9 minutes.
+  Audio activation ordering passes the full quality gate with 197 TypeScript and
+  146 Python tests (48.31 seconds for Python). Two of three new engine cases fail
+  before the change; all three pass afterward. All four new desktop/phone browser
+  cases also fail before the change, exposing stale enabled state or an obsolete
+  startup warning. The ten ordering/retry/import/audio/tool journeys pass together
+  after the fix (38.6 seconds). All four production viewer journeys pass in 19.8
+  seconds. Seven nearby project/storage/idle-playback journeys pass in 1.0 minute.
+  The suite now discovers 105 development journeys.
 - Vite production build: pass; approximately 412 kB initial JavaScript / 125 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -112,6 +120,19 @@ and no main merge, force-push or repository-settings change was made.
   journeys (27.2 seconds), including both revised sector-loop cases.
 
 ## Browser evidence
+
+Audio ordering passes eight enabled/muted states at 1600×1000, 1280×900, 390×844
+and 780×390, plus four whole-workspace captures. Desktop muted and phone enabled
+images were opened and reviewed: transport controls remain visible and contained,
+with no obsolete banner after completion. Every state retains the complete project,
+20-second paused cursor and pending 21 kg fuel, using one context across two resume
+attempts and making no additional solve. No runtime/console error or horizontal
+overflow was observed. Evidence: `artifacts/audio-ordering-unit-before.log`,
+`audio-ordering-unit.log`, `audio-ordering-browser-before.log`,
+`audio-ordering-browser.log`, `audio-ordering-check.log`, `audio-ordering-qa.log`,
+`audio-ordering-qa.json`, `audio-ordering-*.png`, `audio-ordering-production.log`
+and `audio-ordering-nearby.log`.
+See AUDIO_ENGINE.md.
 
 The existing ghost-label visual workflow was repeated with a separate `clock-idle`
 artifact prefix after the clock change. All 16 orbit/top/chase/tool states at

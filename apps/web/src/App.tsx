@@ -50,6 +50,8 @@ import { download } from "./download";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
+const audioEnabledNotice =
+  "Procedural engine audio enabled · play the lap to listen";
 const storageKey = "laptrix.project.v1";
 
 type WorkspaceError = {
@@ -95,6 +97,7 @@ export function App() {
     vehicleInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const referenceGeneration = useRef(0);
+  const audioGeneration = useRef(0);
   const customTracks = useRef(new Set<string>());
   const customVehicles = useRef(new Map<string, Vehicle>());
   const retryTarget = useRef<{ track: Track; makeReference: boolean } | null>(
@@ -214,22 +217,32 @@ export function App() {
     update();
     return clock.subscribe(update);
   }, [lap, audio]);
-  useEffect(() => () => audioEngine.dispose(), []);
+  useEffect(
+    () => () => {
+      audioGeneration.current++;
+      audioEngine.dispose();
+    },
+    [],
+  );
   const toggleAudio = async () => {
+    const id = ++audioGeneration.current;
     if (audio) {
       audioEngine.mute();
       setAudio(false);
+      setNotice((current) => (current === audioEnabledNotice ? "" : current));
       return;
     }
     setNotice("");
     try {
       await audioEngine.enable();
+      if (id !== audioGeneration.current) return;
       setAudio(true);
       setError((current) =>
         current?.action === "enable-audio" ? null : current,
       );
-      setNotice("Procedural engine audio enabled · play the lap to listen");
+      setNotice(audioEnabledNotice);
     } catch {
+      if (id !== audioGeneration.current) return;
       setError({
         action: "enable-audio",
         message:

@@ -13,8 +13,10 @@ export class TelemetryAudioEngine {
   private previousGear = 0;
   private previousTime = 0;
   private enabled = false;
+  private activation = 0;
 
   async enable() {
+    const activation = ++this.activation;
     if (!this.context) {
       this.context = new AudioContext();
       const ctx = this.context;
@@ -70,10 +72,12 @@ export class TelemetryAudioEngine {
       noise.start();
     }
     await this.context.resume();
+    if (activation !== this.activation) return;
     this.enabled = true;
     this.previousGear = 0;
   }
   mute() {
+    this.activation++;
     this.enabled = false;
     if (this.context && this.master)
       this.master.gain.setTargetAtTime(0, this.context.currentTime, 0.025);
@@ -114,6 +118,7 @@ export class TelemetryAudioEngine {
     this.previousTime = sample.time;
   }
   dispose() {
+    this.activation++;
     if (this.context) void this.context.close();
     this.context = null;
     this.master = null;

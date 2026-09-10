@@ -155,6 +155,8 @@ without recalculation or changing the previous save. A later successful Save cle
 that warning; unrelated failures retain their own recovery actions.
 Audio-start failures similarly offer Enable audio again. The retry preserves the
 workspace and playback, and delayed success retains a newer unrelated error.
+Overlapping audio starts respect the latest action: an older completion cannot
+undo mute or replace a newer successful activation with an obsolete warning.
 An offline analytic elevation study now records complete inputs and results for
 30 source-phase/grid cases. It demonstrates how small missing elevation waves can
 alter the road-following model despite passing numerical checks. This strengthens

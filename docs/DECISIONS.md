@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Preserve the latest explicit audio activation
+
+**Decision:** Guard asynchronous activation in both the engine and workspace with
+generations advanced by enable, mute and cleanup. **Reasoning:** Controlled native
+resume delays reproduced an older success undoing mute and an older rejection
+overwriting a successful activation at both desktop and phone widths. Engine tests
+also exposed activation of a replacement context by its disposed predecessor.
+**Consequences:** The existing context, synthesis and telemetry subscription remain;
+only the current attempt can activate output or update completion UI. Active
+failures still retry normally, unrelated errors survive recovery, and mute clears
+only its obsolete success notice. See AUDIO_ENGINE.md.
+
 ## 2026-09-10 — Sleep the shared playback scheduler while paused
 
 **Decision:** Queue clock frames only during owned active playback, cancel at

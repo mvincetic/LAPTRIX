@@ -82,10 +82,11 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for the sleeping playback scheduler; all 101 local browser
-   journeys pass alongside the quality and production gates.
-2. Reproduce overlapping audio-enable completion after a newer mute or successful
-   activation, then preserve the latest explicit audio intent if confirmed.
+1. Verify remote CI for the sleeping playback scheduler and audio activation
+   ordering; local quality, related browser and production gates pass.
+2. Add explicit time-bounded graph windows for inspecting events smaller than a
+   sector, preserving canonical endpoint positions across both axes and keeping
+   existing native/reference curves, project contents and playback state intact.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -156,7 +157,10 @@ playback and the previous device save. Successful Save clears only its storage
 warning, leaving other failures' recovery actions available. See PROJECT_FILES.md.
 Workspace errors now keep messages and recovery actions together. Audio startup
 has its own explicit retry, reusing its context and preserving the project/clock.
-Delayed successful audio activation retains newer unrelated errors. See AUDIO_ENGINE.md.
+Delayed successful audio activation retains newer unrelated errors. Separate engine
+and workspace generations also reject obsolete success/failure after a newer
+activation, mute or disposal; muted output and replacement contexts stay protected.
+See AUDIO_ENGINE.md.
 Quasi-steady crest/compression load now feeds tyre grip and total rolling loss in
 every solver mode. An independent contact-speed cap also constrains straight crests.
 Declared vertical/load telemetry, matching minima and exact cursor readouts preserve
@@ -222,13 +226,13 @@ checks now require zero idle animation callbacks as well as zero WebGL draws.
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 194 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 197 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and one browser journeys cover the
+One hundred and five browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

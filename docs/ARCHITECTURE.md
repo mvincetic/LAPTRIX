@@ -83,6 +83,10 @@ Workspace errors store their message and recovery action in one typed value.
 Every failure must choose its action; clearing an error removes both. Audio-start
 failure retries the existing audio engine, and asynchronous success uses the
 current error state to clear only an audio warning, preserving newer failures.
+Separate audio generations in the workspace and synthesis engine reject obsolete
+enable completions. Mute and disposal invalidate pending activation; a late
+success/rejection cannot replace newer audio intent, UI state or a replacement
+context's activation. See AUDIO_ENGINE.md.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and

@@ -25,3 +25,21 @@ seeking or editing the project. A successful retry clears its own warning and
 retains any newer unrelated failure. Muting remains available through the transport.
 The native AudioContext is reused after a failed resume; no replacement synthesis
 graph is required for that recovery.
+
+Overlapping enable attempts respect the latest explicit audio action. Each enable,
+mute and disposal invalidates older pending activation in the engine; a late
+`resume()` completion cannot restore output after mute or activate a replacement
+context before its own resume finishes. The workspace separately guards completion
+messages and button state, including late rejection. Muting clears an obsolete
+audio-enabled notification while retaining unrelated notifications. Active startup
+failures still offer retry through the same context.
+
+Three deterministic engine cases cover ordinary reuse, delayed activation after
+mute and disposal/replacement. Before the change, both ordering cases scheduled
+positive master gain from an obsolete completion. Four real-browser cases at
+1600 and 390 px reproduce the corresponding stale button and error-banner behavior;
+the completed project, pending setup, paused cursor and simulation request count
+remain unchanged. The existing startup-retry and unrelated-error cases remain
+part of the audio gate. `scripts/audio-ordering-qa.mjs` reviews the resulting
+enabled/muted controls at four responsive sizes. This changes activation ordering,
+not the synthesis model, AudioContext suspension policy or telemetry clock.
