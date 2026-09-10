@@ -65,6 +65,7 @@ the last completed result remains visible if a solve fails.
 - Keyboard navigation for actions, viewer tools and telemetry tabs with visible focus.
 - Exact time/distance cursor entry with numerical telemetry and explicit model limits.
 - Optional native-reference ghost with independent vehicle styling and shared-time playback.
+- Ghost names avoid timing badges and controls, with leaders attached to actual car positions.
 - Bounded vehicle JSON import/export, preserved profile provenance and portable restoration.
 - Project naming at every screen width, with draft cancellation and explicit local saving.
 - Optional native-reference channel overlays with shared units and source-position alignment.
@@ -93,6 +94,7 @@ node scripts/keyboard-audit.mjs
 node scripts/tabs-qa.mjs
 node scripts/cursor-qa.mjs
 node scripts/reference-ghost-qa.mjs
+node scripts/ghost-labels-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
 node scripts/project-name-qa.mjs
 node scripts/telemetry-comparison-qa.mjs

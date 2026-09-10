@@ -1,5 +1,13 @@
 # Performance
 
+Ghost-name placement keeps the entry at 409.90 kB JavaScript (124.36 kB gzip) and
+main CSS at 51.51 kB (11.05 kB gzip). The deferred viewer is 962.28 kB (257.66 kB
+gzip), with 0.53 kB deferred CSS (0.25 kB gzip). Two bounded label searches run
+after the existing frame's HTML updates. Static obstacle bounds are reused while
+only vehicles move; unchanged anchors/layout return early. The subscription is
+cleaned up on changes/unmount and adds no scheduler. Both desktop/phone demand
+tests retain zero settled WebGL draws with reference names enabled.
+
 Explicit sector looping brings the entry to 409.90 kB JavaScript (124.36 kB gzip)
 and main CSS to 51.51 kB (11.05 kB gzip). The deferred viewer remains 958.27 kB
 (256.61 kB gzip). Sector time bounds are memoized per Lap; repeating uses the

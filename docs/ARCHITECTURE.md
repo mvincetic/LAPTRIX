@@ -187,6 +187,14 @@ its own samples and vehicle snapshot. Source fingerprint matching gates native
 reference availability, while timing-only references remain analytical data. The
 pose helper clamps at a lap's finish and keeps the same seam-aware orientation as
 time advances beyond it. Viewer preferences add no stored lap or second clock.
+Stable Group refs let `GhostLabels` project the rendered vehicle matrices after
+pose updates. A pure bounded layout moves name rectangles around static scene
+obstacles while keeping their anchors exact. Separate HTML portals put leaders
+below badges and names above the canvas. Camera/result/layout/visible-node changes
+refresh obstacle bounds; vehicle movement reuses them. A cleaned-up Fiber
+`addAfterEffect` subscription observes final HTML positions even after corner
+portals remount. Root attachment invalidates the demand renderer, with no second
+scheduler. See GHOST_LABELS.md.
 There is no account system or database.
 `gpx.ts` reads a bounded geometry subset through native `DOMParser`; `geographic.ts`
 converts WGS84 surface coordinates into a local east/north frame while retaining

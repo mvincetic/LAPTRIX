@@ -54,6 +54,13 @@ Corner callouts explicitly invalidate when their HTML root attaches or their eve
 layout or viewport inputs change. Their DOM content is mounted through a separate
 HTML portal, so it can become ready after the Fiber tree's initial commit. Existing
 placement caching and native exact-seek buttons remain intact.
+Ghost names likewise invalidate when their portals attach. Their `addAfterEffect`
+subscription runs after all pose/HTML updates and is removed on input changes or
+unmount. This keeps remounted corner portals from updating after name placement.
+The layout reuses static obstacle bounds during playback
+and notices late visible portal nodes before returning from its cache. The two
+settled-viewer journeys now enable both ghost names throughout zero-draw, seek,
+playback, orbit/reset and non-looping-finish checks. See GHOST_LABELS.md.
 
 ## Evidence and limits
 

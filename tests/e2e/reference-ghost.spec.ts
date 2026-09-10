@@ -3,8 +3,18 @@ import type { Lap, TimingReference } from "../../packages/shared/schema";
 
 async function position(node: Locator) {
   return node.evaluate((element) => {
-    const box = element.getBoundingClientRect();
-    return { x: box.x + window.scrollX, y: box.y + window.scrollY };
+    const x = element.getAttribute("data-anchor-x");
+    const y = element.getAttribute("data-anchor-y");
+    if (!x || !y || !Number.isFinite(Number(x)) || !Number.isFinite(Number(y)))
+      throw new Error("Rendered vehicle anchor is unavailable");
+    const box = element
+      .closest(".scene")!
+      .querySelector("canvas")!
+      .getBoundingClientRect();
+    return {
+      x: box.x + Number(x) + window.scrollX,
+      y: box.y + Number(y) + window.scrollY,
+    };
   });
 }
 

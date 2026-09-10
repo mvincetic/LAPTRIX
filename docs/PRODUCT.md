@@ -85,6 +85,9 @@ clock. Visibility is independent of the blue current ghost, and each uses its ow
 vehicle snapshot. Timing-only files retain analytical comparison without a drawn
 vehicle. Current-lap playback determines the duration and a finished reference waits
 at the line; see GHOST_PLAYBACK.md.
+CURRENT/REF names now avoid timing badges and controls while leaders retain each
+car's actual position. Crowded or offscreen names may be omitted; numerical data
+and vehicle poses retain their existing behavior. See GHOST_LABELS.md.
 Vehicle JSON import/export supports bounded user-supplied parameters through the
 same solver. Imports activate after successful calculation, retain references and
 declared sources/assumptions, and resolve occupied IDs without replacing built-in

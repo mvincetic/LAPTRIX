@@ -227,3 +227,8 @@ keyboard activation. A compact strip above transport names the active sector in
 all telemetry tabs, provides **Full-lap loop**, and explains outside seeking. It
 wraps across phone rows; expanded panels keep their existing vertical scrolling
 and plot text sizes. Changing the plotted sector does not move this selection.
+CURRENT/REF names use fixed 56×20 px boxes, their existing blue/grey colors and
+thin leaders to vehicle anchors. Names avoid timing, event labels and controls;
+leaders run below badges so they do not cross over timing text. The overlay does
+not capture pointer input. Offscreen or crowded names are omitted when a nearby
+clear placement is unavailable. See GHOST_LABELS.md.

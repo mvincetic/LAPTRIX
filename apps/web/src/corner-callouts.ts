@@ -21,7 +21,20 @@ export function layoutEventCallouts(
   width: number,
   height: number,
   obstacles: ScreenRect[] = [],
+  dimensions = {
+    width: CALLOUT_WIDTH,
+    height: CALLOUT_HEIGHT,
+    gap: CALLOUT_GAP,
+  },
 ) {
+  const { width: labelWidth, height: labelHeight, gap: labelGap } = dimensions;
+  if (
+    ![labelWidth, labelHeight, labelGap].every(Number.isFinite) ||
+    labelWidth <= 0 ||
+    labelHeight <= 0 ||
+    labelGap < 0
+  )
+    return [];
   const visible = points.filter(
     (point) =>
       Number.isFinite(point.x) &&
@@ -33,8 +46,8 @@ export function layoutEventCallouts(
   );
   if (!visible.length) return [];
   const groupHeight =
-    visible.length * CALLOUT_HEIGHT + (visible.length - 1) * CALLOUT_GAP;
-  if (width < CALLOUT_WIDTH + padding * 2 || height < groupHeight + padding * 2)
+    visible.length * labelHeight + (visible.length - 1) * labelGap;
+  if (width < labelWidth + padding * 2 || height < groupHeight + padding * 2)
     return [];
   const xs = visible.map((point) => point.x),
     ys = visible.map((point) => point.y);
@@ -46,9 +59,9 @@ export function layoutEventCallouts(
     centerY = (minY + maxY) / 2;
   const candidates = [
     { x: maxX + 16, y: centerY - groupHeight / 2 },
-    { x: minX - 16 - CALLOUT_WIDTH, y: centerY - groupHeight / 2 },
-    { x: centerX - CALLOUT_WIDTH / 2, y: minY - 16 - groupHeight },
-    { x: centerX - CALLOUT_WIDTH / 2, y: maxY + 16 },
+    { x: minX - 16 - labelWidth, y: centerY - groupHeight / 2 },
+    { x: centerX - labelWidth / 2, y: minY - 16 - groupHeight },
+    { x: centerX - labelWidth / 2, y: maxY + 16 },
   ];
   const occupied = [
     ...obstacles,
@@ -59,15 +72,12 @@ export function layoutEventCallouts(
       height: 8,
     })),
   ];
-  const lastX = width - padding - CALLOUT_WIDTH;
+  const lastX = width - padding - labelWidth;
   const lastY = height - padding - groupHeight;
   const preferredY =
     visible.reduce(
       (sum, point, index) =>
-        sum +
-        point.y -
-        index * (CALLOUT_HEIGHT + CALLOUT_GAP) -
-        CALLOUT_HEIGHT / 2,
+        sum + point.y - index * (labelHeight + labelGap) - labelHeight / 2,
       0,
     ) / visible.length;
   // Search vertical free intervals at bounded horizontal candidates. Combining
@@ -76,17 +86,17 @@ export function layoutEventCallouts(
     new Set([
       ...candidates.map((point) => clamp(point.x, padding, lastX)),
       ...occupied
-        .flatMap((rect) => [rect.x - CALLOUT_WIDTH, rect.x + rect.width])
+        .flatMap((rect) => [rect.x - labelWidth, rect.x + rect.width])
         .map((x) => clamp(x, padding, lastX)),
     ]),
   ).sort(
     (a, b) =>
-      Math.abs(a + CALLOUT_WIDTH / 2 - centerX) -
-      Math.abs(b + CALLOUT_WIDTH / 2 - centerX),
+      Math.abs(a + labelWidth / 2 - centerX) -
+      Math.abs(b + labelWidth / 2 - centerX),
   );
   for (const x of new Set([padding, lastX, ...horizontal.slice(0, 62)])) {
     const intervals = occupied
-      .filter((rect) => x < rect.x + rect.width && x + CALLOUT_WIDTH > rect.x)
+      .filter((rect) => x < rect.x + rect.width && x + labelWidth > rect.x)
       .map((rect) => ({
         start: rect.y - groupHeight,
         end: rect.y + rect.height,
@@ -119,9 +129,9 @@ export function layoutEventCallouts(
     distance: number;
   } | null = null;
   for (const candidate of candidates) {
-    const x = clamp(candidate.x, padding, width - padding - CALLOUT_WIDTH);
+    const x = clamp(candidate.x, padding, width - padding - labelWidth);
     const y = clamp(candidate.y, padding, height - padding - groupHeight);
-    const group = { x, y, width: CALLOUT_WIDTH, height: groupHeight };
+    const group = { x, y, width: labelWidth, height: groupHeight };
     const obstruction = occupied.reduce(
       (sum, rect) => sum + overlap(group, rect),
       0,
@@ -129,12 +139,8 @@ export function layoutEventCallouts(
     const distance = visible.reduce(
       (sum, point, index) =>
         sum +
-        (point.x - x - CALLOUT_WIDTH / 2) ** 2 +
-        (point.y -
-          y -
-          index * (CALLOUT_HEIGHT + CALLOUT_GAP) -
-          CALLOUT_HEIGHT / 2) **
-          2,
+        (point.x - x - labelWidth / 2) ** 2 +
+        (point.y - y - index * (labelHeight + labelGap) - labelHeight / 2) ** 2,
       0,
     );
     if (
@@ -146,13 +152,14 @@ export function layoutEventCallouts(
   }
   return visible.map((point, index) => {
     const x = selected!.x,
-      y = selected!.y + index * (CALLOUT_HEIGHT + CALLOUT_GAP);
+      y = selected!.y + index * (labelHeight + labelGap);
     return {
       ...point,
+      obstruction: selected!.obstruction,
       labelX: x,
       labelY: y,
-      leaderX: clamp(point.x, x, x + CALLOUT_WIDTH),
-      leaderY: clamp(point.y, y, y + CALLOUT_HEIGHT),
+      leaderX: clamp(point.x, x, x + labelWidth),
+      leaderY: clamp(point.y, y, y + labelHeight),
     };
   });
 }

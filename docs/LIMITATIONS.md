@@ -68,6 +68,9 @@
 - Reference ghosts share current-lap elapsed time and duration. Faster references
   hold the finish; slower ones may not finish before the current clock loops. This
   is visual telemetry interpolation and does not add transient vehicle dynamics.
+- Ghost-name placement is a bounded screen-space heuristic. Offscreen anchors,
+  crowded views or a required leader over 120 px can omit a name; vehicle poses
+  remain unchanged. See GHOST_LABELS.md.
 - Terrain and trees are contextual generated scenery. The ghost is intentionally
   enlarged three times for engineering visibility, not a physically scaled asset.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.

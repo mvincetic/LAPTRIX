@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 169 tests pass.
+- Vitest: 179 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -53,8 +53,17 @@ and no main merge, force-push or repository-settings change was made.
   discovers 97 development journeys. The final Python gate took 59.64 seconds;
   its 167 TypeScript cases were followed by 169 passing cases after adding first/
   final-sector boundary oracles. Final typechecking and production build also pass.
+  Ghost-name placement adds ten geometry cases and two browser journeys (99 now
+  discovered). The full lint/type/unit/API/build gate passes with 179 TypeScript
+  and 146 Python tests (48.42 seconds for Python). After the visual review exposed
+  equal-priority frame ordering, final lint/type/unit/build checks pass again and
+  all ten related browser journeys pass in 1.5 minutes, including corner callouts,
+  ghost names, reference finish holding, zero idle draws and graphics restoration.
+  All four final production viewer journeys pass in 19.3 seconds.
+  The final two reference journeys pass again (10.1 seconds) after requiring
+  finite rendered-anchor coordinates explicitly.
 - Vite production build: pass; approximately 410 kB initial JavaScript / 124 kB
-  gzip, plus a separate 958 kB viewer / 256 kB gzip.
+  gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
 - GitHub Actions passed through `7f78ce0` (run 34472973538), including vertical-load
@@ -77,8 +86,35 @@ and no main merge, force-push or repository-settings change was made.
   159 TypeScript/136 Python tests, lint/type/build and four production journeys.
   Closed-corner run 34490067249 passes all 95 development journeys (49/46),
   161 TypeScript/146 Python tests, lint/type/build and four production journeys.
+  Sector-loop run 34492384734 passes all 97 development journeys (49/48),
+  169 TypeScript/146 Python tests, lint/type/build and four production journeys.
 
 ## Browser evidence
+
+Ghost labels pass 16 scene states at 1600×1000, 1280×900, 390×844 and 780×390:
+orbit, selected-corner top view, chase and open Ghost Car tools after returning
+from chase. Every visible name stays contained and clear of inspected badges,
+event labels, controls and the other name. The offscreen reference name is omitted
+in phone chase. All states retain the 40.31-second cursor, complete exported project,
+pending 21 kg fuel and reference, with zero new solve requests, errors, WebGL errors
+or horizontal overflow. Desktop orbit/chase, compact desktop top, phone top/chase/
+tools and short-landscape tools images were opened and reviewed.
+
+The original overlap probe measures 813.25 CSS-pixel squared overlap between
+CURRENT and Sector 2; both initial browser regressions fail before implementation.
+The first visual script needed to restore its intended cursor after corner
+selection, which correctly seeks the apex. Wider QA then exposed stale ghost-name
+positions under corner callouts after chase at phone width (1772.35 overlap). Moving
+layout to Fiber's after-render phase fixes that ordering; the browser regression
+now includes that exact camera/tool sequence. No application timeout was changed.
+Evidence: `artifacts/ghost-label-before.json`, `ghost-label-browser-before.log`,
+`ghost-label-math.log`, `ghost-label-check.log`, `ghost-label-tests-final.log`,
+`ghost-label-build-final.log`, `ghost-label-production.log`, `ghost-label-browser.log`,
+`ghost-label-browser-final.log`, `ghost-label-qa-investigation.log`,
+`ghost-label-anchor-browser.log`,
+`ghost-labels-390-tools-failure.json`, `ghost-labels-390-tools-failure.png`,
+`ghost-label-qa-release.log`, `ghost-labels-qa.json` and `ghost-labels-*.png`.
+See GHOST_LABELS.md for placement bounds and lifetime behavior.
 
 Sector loops pass 16 workspace states plus four control details at 1600×1000,
 1280×900, 390×844 and 780×390, with GT current data, Formula reference ghost and
@@ -92,8 +128,8 @@ Evidence: `artifacts/sector-loop-before.log`, `sector-loop-clock.log`,
 `sector-loop-browser.log`, `sector-loop-browser-final.log`, `sector-loop-regressions.log`,
 `sector-loop-production.log`, `sector-loop-qa.log`, `sector-loop-qa.json` and
 `sector-loop-*.png`. PLAYBACK_LOOPS.md records the clock/inspection contract.
-The captures also expose a pre-existing overlap between ghost name and sector
-timing labels; the next viewer work addresses placement without changing poses.
+Those captures exposed the pre-existing ghost-name/sector-time overlap addressed
+by the following viewer milestone above, without changing vehicle poses.
 
 Closed corner windows pass 12 event states and three detail-panel captures across
 1600/1280/390 px. Desktop and phone workspaces and the phone detail were opened and

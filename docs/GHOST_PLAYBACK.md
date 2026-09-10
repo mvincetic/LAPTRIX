@@ -3,7 +3,9 @@
 The Ghost Car tool panel independently toggles the blue current vehicle and an
 optional grey reference vehicle. Reference display is off initially. When it is
 enabled, CURRENT and REF tags identify the schematic vehicles. Both retain the
-existing 3× display scale; their bodies are original procedural geometry.
+existing 3× display scale; their bodies are original procedural geometry. The tags
+now avoid timing badges and controls with leaders to the actual car transforms.
+Crowded/offscreen names can be omitted; see GHOST_LABELS.md.
 
 A reference can be drawn only when it is a native Lap with the same source-track
 fingerprint as the current Lap. Different vehicles, line choices and sample grids
@@ -36,7 +38,7 @@ measured accuracy is inferred from a ghost being drawable.
 
 Unit tests cover interpolation/orientation, independent elapsed-time progress,
 finish holding, clock restart, rigid coordinate transforms and reference eligibility.
-Browser journeys compare actual projected ghost-label positions after a reference
+Browser journeys compare actual projected vehicle anchors after a reference
 finishes while the current car advances, and exercise independent visibility and
 timing-only replacement at desktop/mobile widths. Run
 `node scripts/reference-ghost-qa.mjs` for controls, orbit/top/chase, finish and

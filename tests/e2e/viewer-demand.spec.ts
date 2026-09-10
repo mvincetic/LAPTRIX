@@ -47,6 +47,12 @@ for (const width of [1600, 390]) {
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
+    await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+    await page
+      .getByRole("checkbox", { name: "Show reference ghost", exact: true })
+      .check();
+    await page.getByRole("tab", { name: "Track View", exact: true }).click();
+    await expect(page.locator(".ghost-tag")).toHaveCount(2);
     const draws = () =>
       page.evaluate(
         () =>

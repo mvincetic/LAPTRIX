@@ -99,3 +99,8 @@ The [closed-corner run](https://github.com/mvincetic/LAPTRIX/actions/runs/344900
 passes through `e3e25ef`: all 95 development journeys (49 in 9.7 minutes and 46
 in 7.2 minutes), 161 TypeScript tests, 146 Python tests, lint/type/build and all
 four production journeys (27.0 seconds). Both new seam journeys pass remotely.
+
+The [sector-loop run](https://github.com/mvincetic/LAPTRIX/actions/runs/34492384734)
+passes through `64b11af`: all 97 development journeys (49 in 9.5 minutes and 48
+in 6.3 minutes), 169 TypeScript tests, 146 Python tests, lint/type/build and all
+four production journeys (26.2 seconds). Both real-time sector-loop cases pass.

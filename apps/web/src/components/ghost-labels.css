@@ -1,0 +1,20 @@
+.ghost-labels {
+  position: absolute;
+  pointer-events: none;
+}
+.ghost-labels svg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.ghost-labels .ghost-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ghost-labels .ghost-tag[hidden] {
+  display: none;
+}

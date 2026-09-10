@@ -19,6 +19,7 @@ import {
   Object3D,
   PerspectiveCamera,
   Vector3,
+  type Group,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { Expand, RotateCcw, Flag, MousePointer2 } from "lucide-react";
@@ -31,6 +32,7 @@ import {
 } from "../../../../packages/shared/schema";
 import { TelemetryGhost } from "./TelemetryGhost";
 import { CornerCallouts } from "./CornerCallouts";
+import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
@@ -367,6 +369,28 @@ export function TrackView({
     [showReference, setShowReference] = useState(false);
   const referenceLap = alignedNativeReference(lap, reference);
   const referenceVisible = showReference && !!referenceLap;
+  const currentGhost = useRef<Group>(null);
+  const referenceGhost = useRef<Group>(null);
+  const ghostLabels = useMemo(() => {
+    const labels: GhostLabelSpec[] = [];
+    if (lap && ghost && referenceVisible)
+      labels.push({
+        id: "current",
+        group: currentGhost,
+        text: "CURRENT",
+        name: `Current ghost: ${vehicle?.name ?? lap.vehicleId}`,
+        color: "#0866ec",
+      });
+    if (referenceVisible && referenceLap)
+      labels.push({
+        id: "reference",
+        group: referenceGhost,
+        text: "REF",
+        name: `Reference ghost: ${referenceVehicle?.name ?? referenceLap.vehicleId}`,
+        color: "#78879c",
+      });
+    return labels;
+  }, [lap, ghost, referenceVisible, referenceLap, vehicle, referenceVehicle]);
   const tabsPrefix = useId();
   const northIndicator = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null),
@@ -581,7 +605,7 @@ export function TrackView({
                 clock={clock}
                 marker={mode !== "chase"}
                 vehicle={vehicle}
-                label={referenceVisible}
+                groupRef={currentGhost}
               />
             )}
             {referenceVisible && referenceLap && (
@@ -591,7 +615,7 @@ export function TrackView({
                 marker
                 vehicle={referenceVehicle}
                 reference
-                label
+                groupRef={referenceGhost}
               />
             )}
             <CameraRig
@@ -608,6 +632,12 @@ export function TrackView({
                 cornerId={selectedCorner}
                 clock={clock}
                 layoutKey={`${tab}:${layers.sectors}:${layers.corners}`}
+              />
+            )}
+            {ghostLabels.length > 0 && (
+              <GhostLabels
+                labels={ghostLabels}
+                layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${selectedCorner}:${mode}`}
               />
             )}
           </Canvas>

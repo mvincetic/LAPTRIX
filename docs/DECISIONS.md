@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-10 — Place ghost names around scene information
+
+**Decision:** Project existing rendered car transforms into separate bounded name
+boxes and leaders. Reuse corner-callout placement with explicit dimensions and
+unchanged corner defaults. **Reasoning:** The sector-loop visual review exposed
+CURRENT covering Sector 2's time for GT/Formula comparison. **Consequences:** Car
+poses and timing stay authoritative; reference-finish checks measure anchors
+separately from movable labels. Names may be omitted in crowded/offscreen views
+instead of gaining misleading long leaders. Portal-aware caching retains demand
+rendering without another clock or per-frame React state. See GHOST_LABELS.md.
+
 ## 2026-09-10 — Repeat selected sectors through the canonical playback clock
 
 **Decision:** Add an explicit Loop sector toggle, optional validated clock interval
