@@ -1,5 +1,9 @@
 # Performance
 
+The graphics-restoration listener brings the deferred viewer to 958.27 kB
+(256.61 kB gzip); the entry remains 405.50 kB (123.06 kB gzip). The listener requests
+a frame on restoration and adds no polling or renderer instance. See RENDERING.md.
+
 The demand-rendering update keeps the initial JavaScript at 405.50 kB (123.06 kB
 gzip); the deferred viewer is 958.10 kB (256.57 kB gzip). A settled paused scene
 issues no new WebGL draw calls in the desktop/phone regression's observation

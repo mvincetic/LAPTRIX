@@ -28,6 +28,10 @@ and no main merge, force-push or repository-settings change was made.
   fixture updates. All 153 TypeScript and 136 Python tests pass with lint, typecheck
   and build; numerical test time was 47.69 seconds. Both production viewer journeys
   also pass (9.0 seconds).
+  The graphics-restoration follow-up retains 153 TypeScript/136 Python passes and
+  adds two browser journeys (93 now discovered). All seven relevant browser
+  regressions pass (1.1 minutes); the expanded four-case production suite passes
+  in 19.7 seconds. Its complete lint/type/unit/API/build gate also passes.
 - Vite production build: pass; approximately 405 kB initial JavaScript / 123 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -46,6 +50,21 @@ and no main merge, force-push or repository-settings change was made.
   continuation strengthens that fixture's visible, contained, separate predicate.
 
 ## Browser evidence
+
+Graphics restoration passes nine visual states: before loss and after each of two
+restores at 1600/1280/390 px, using a GT current lap, Formula reference ghost,
+selected corner, load graphs and pending fuel. Each width retains exactly the same
+blue-pixel count through both restores (7,004/5,789/2,118 respectively), the
+20-second cursor, both ghost tags and three event controls. No extra solve request,
+overflow or runtime/WebGL error was observed. Final desktop and phone workspaces
+were opened and reviewed with the recovered circuit, labels and graphs visible.
+Evidence: `artifacts/context-restore-before-fix.json`,
+`context-restore-before-fix.png`, `viewer-recovery-before.log`,
+`viewer-recovery-focused.log`, `viewer-recovery-check.log`,
+`viewer-recovery-production.log`, `viewer-recovery-qa.log`,
+`context-restore-qa.json` and `context-restored-*.png`. The initial probe and browser
+regression reproduced the blank paused scene; RENDERING.md explains the fix and
+the scope of simulated graphics restoration.
 
 Demand rendering passes the complete suite in `artifacts/viewer-demand-browser-final.log`.
 `viewer-demand-final-check.log` records the full quality gate. The initial focused

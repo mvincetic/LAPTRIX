@@ -21,6 +21,27 @@ applying its pose. Fiber also handles scene-property and canvas-size changes.
 No polling timer, second clock, lower-resolution mode or renderer recreation is
 introduced.
 
+## Graphics context restoration
+
+`PlaybackFrames` also listens for the canvas's `webglcontextrestored` event and
+requests a frame. Three.js restores its internal graphics resources first; the
+requested render then repopulates the paused scene. The listener is removed with
+the component. The canvas, camera, selected corner, project and playback position
+remain intact, with no solve, reload or user interaction required after restoration.
+
+A local probe of the preceding implementation counted 7,276 visible blue pixels
+before loss and zero after restoration, while the cursor remained at 20 seconds.
+The captured image showed retained HTML labels over a blank canvas. Two browser
+journeys now repeat loss/restoration twice at desktop/phone widths and require
+rendered line pixels before any action can wake the viewer. They retain the same
+canvas, exact cursor, compass, corner labels, pending fuel and complete project;
+playback must still work afterwards. Both also run against production assets.
+
+Tests use the [Khronos context-loss extension](https://registry.khronos.org/webgl/extensions/WEBGL_lose_context/)
+and await the actual lost/restored events. This validates application recovery
+when the browser restores its context; it cannot force recovery from a permanent
+graphics-device failure.
+
 ## Frame ordering and HTML labels
 
 OrbitControls updates at priority -1. Telemetry ghosts and CameraRig update their

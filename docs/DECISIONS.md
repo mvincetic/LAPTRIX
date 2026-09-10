@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-10 — Redraw a paused scene after graphics restoration
+
+**Decision:** Request a Fiber frame when the canvas receives `webglcontextrestored`.
+**Reasoning:** A bounded context-loss probe showed the paused circuit stayed blank
+after Three restored its resources, until another interaction requested a frame.
+**Consequences:** A cleaned-up listener redraws the existing scene without changing
+the project, clock or camera. Repeated restoration is tested on desktop/phone and
+against production assets. The browser still determines whether a lost graphics
+context can be restored. See RENDERING.md.
+
 ## 2026-09-10 — Let a settled paused viewer stop drawing
 
 **Decision:** Use Fiber's demand rendering with existing-clock invalidation and

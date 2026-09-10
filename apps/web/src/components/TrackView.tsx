@@ -72,10 +72,16 @@ const viewerTabs = ["Track View", "Analysis Layers", "Ghost Car", "Camera"];
 
 function PlaybackFrames({ clock }: { clock: PlaybackClock }) {
   const invalidate = useThree((state) => state.invalidate);
+  const canvas = useThree((state) => state.gl.domElement);
   useEffect(() => {
     invalidate();
     return clock.subscribe(invalidate);
   }, [clock, invalidate]);
+  useEffect(() => {
+    const restored = () => invalidate();
+    canvas.addEventListener("webglcontextrestored", restored);
+    return () => canvas.removeEventListener("webglcontextrestored", restored);
+  }, [canvas, invalidate]);
   useFrame(() => {
     if (clock.getSnapshot().playing) invalidate();
   });

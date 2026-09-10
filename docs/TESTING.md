@@ -1,5 +1,11 @@
 # Testing and validation
 
+Two graphics-restoration journeys run in both development and production. Each
+repeats actual context loss/restoration twice and requires visible line pixels
+without an intervening user action. Canvas identity, cursor, compass, corner labels,
+full project exports and pending fuel survive; no extra simulation request is made.
+Subsequent playback still works. See RENDERING.md.
+
 Two rendering journeys count actual WebGL draw calls at desktop/phone widths.
 They require zero draws after a settled pause and new draws after seeking,
 playback, orbiting or reset, then cover a non-looping finish and final idle state.

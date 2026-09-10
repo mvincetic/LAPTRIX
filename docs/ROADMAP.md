@@ -82,7 +82,7 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards for the idle-rendering/finish-state milestone.
+1. Verify both remote CI shards for the rendering/graphics-restoration milestones.
    Continue bounded runtime recovery checks before expanding the product further.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
@@ -184,6 +184,9 @@ The paused viewer now renders on demand after camera motion settles, waking thro
 the same playback clock and existing controls. Camera and ghost poses update before
 HTML projection. Non-looping completion also always publishes its stopped state,
 even inside the normal notification interval. See RENDERING.md.
+Browser graphics restoration now requests a redraw without replacing the canvas,
+camera, project or clock. Repeated restoration passes at desktop/phone widths and
+in production, with full project preservation and no additional solves.
 
 ## Stabilization evidence
 
@@ -195,7 +198,7 @@ eligibility, native channel plots/scales, sector viewport mapping, vehicle contr
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-Ninety-one browser journeys cover the
+Ninety-three browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -207,8 +210,8 @@ ordering of delayed reference reads/hashes including asynchronous read rejection
 neutral displayed deltas with full-precision reference preservation,
 device-storage and audio-start recovery, declared/legacy load telemetry, separate
 corner event callouts through camera/layer changes, and the
-optional structured-tool contract. Two viewer journeys also run against production
-assets. See VALIDATION.md
+optional structured-tool contract. Four viewer loading/restoration journeys also run
+against production assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy

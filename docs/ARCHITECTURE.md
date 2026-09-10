@@ -31,6 +31,9 @@ clock requests frames after actions; active playback continues the existing Fibe
 frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes
 the scene. Pose updates precede HTML projection, and callout portal attachment
 requests layout. See RENDERING.md for ordering and idle-work checks.
+The same rendering bridge requests a frame after the browser restores the WebGL
+context and removes its event listener on unmount. Existing scene objects, camera,
+project data and playback are retained; both development and production test this.
 `camera-framing.ts` fits original source/road edges in camera coordinates using the
 canvas aspect ratio. It derives reachable orbit limits and source-scaled clipping
 planes, including bounded terrain context. CameraRig applies the fit and projection

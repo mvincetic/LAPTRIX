@@ -29,6 +29,8 @@ continue working, save locally, and reload to recover the viewer.
 The paused viewer stops drawing once camera motion settles and wakes for playback,
 inspection or scene changes. Scene detail and the shared playback timing remain
 unchanged. See RENDERING.md.
+If the browser restores a lost graphics context, the paused circuit redraws
+automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,
 including large imported circuits. Source-scaled clipping and reachable zoom bounds
 preserve road visibility on reset without altering a result or the shared clock.
