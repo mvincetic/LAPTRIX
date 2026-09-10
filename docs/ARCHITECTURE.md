@@ -34,6 +34,11 @@ requests layout. See RENDERING.md for ordering and idle-work checks.
 The same rendering bridge requests a frame after the browser restores the WebGL
 context and removes its event listener on unmount. Existing scene objects, camera,
 project data and playback are retained; both development and production test this.
+The deferred viewer's isolated FullscreenControl derives state from native
+fullscreen events and handles rejected or unavailable API calls locally. Generations
+invalidate obsolete errors after newer requests/transitions and cleanup removes
+the listener. Fullscreen scene sizing can shrink under a fixed header/footer,
+retaining the existing Canvas and camera mode. See FULLSCREEN.md.
 `track-engine/vertical-profile.ts` derives signed three-point source curvature from
 the original profile's closed chords, independently of Lap playback and resampling.
 SourceProfile memoizes it with the existing geometry profile, shares source-segment

@@ -101,6 +101,17 @@ and no main merge, force-push or repository-settings change was made.
   Final lint and all 203 TypeScript tests pass after the boundary correction.
   The final typechecked production build and all four loading/restoration journeys
   pass (20.6 seconds). Their evidence is `plot-window-production-final.log`.
+  Fullscreen recovery passes the quality gate with 203 TypeScript and 146 Python
+  tests (47.20 seconds for Python). Five initial browser cases fail before the
+  control update, then pass afterward (22.4 seconds). A separate short-landscape
+  case reproduces clipped controls; all six pass after the fullscreen height fix
+  (24.8 seconds). Fifteen final fullscreen/callout/ghost/idle/restoration journeys
+  pass together in 1.8 minutes, including a seventh fullscreen case for obsolete
+  rejection after a newer native transition. The cleanup counter now uses explicit
+  assignment, removing the ref-cleanup lint warning without suppressing the rule.
+  Final lint is clean; the typechecked production build and all four viewer
+  loading/restoration journeys pass in 20.0 seconds.
+  The suite now discovers 114 development journeys.
 - Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -140,8 +151,26 @@ and no main merge, force-push or repository-settings change was made.
   (31.7 seconds). Audio-ordering run 34501927841 passes all 105 development journeys
   (53/52), 197 TypeScript/146 Python tests, quality gates and four production
   journeys (23.9 seconds), including all new ordering and existing recovery cases.
+  Custom-window run 34504379221 passes all 107 development journeys (55/52),
+  203 TypeScript/146 Python tests, quality gates and four production journeys
+  (29.5 seconds), including both exact-boundary window cases.
 
 ## Browser evidence
+
+Fullscreen visual QA passes 16 states at 1600×1000, 1280×900, 390×844 and 780×390:
+rejected entry, native entry, rejected exit and restoration. All retain the same
+Canvas, selected corner, reference ghost, Top View, paused 20-second cursor and
+pending 21 kg fuel. Completed project exports are equal before and after the
+transitions, with no additional simulation request, runtime/console error or
+horizontal overflow. Fullscreen header, controls and footer remain inside the
+viewport, including a 778×322 px canvas in the 780×390 case. The failed short-screen
+image was opened first; final phone entry feedback, short-landscape fullscreen and
+desktop exit feedback images were opened and reviewed. Evidence:
+`artifacts/fullscreen-browser-before.log`, `fullscreen-browser.log`,
+`fullscreen-short-before.log`, `fullscreen-short-before.png`,
+`fullscreen-browser-final.log`, `fullscreen-check.log`, `fullscreen-regressions.log`,
+`fullscreen-qa.log`, `fullscreen-qa.json`, `fullscreen-*.png`,
+`fullscreen-lint-final.log` and `fullscreen-production.log`. See FULLSCREEN.md.
 
 Custom-window visual QA initially passes 20 states at 1600×1000, 1280×900, 390×844 and
 780×390, plus two workspace captures. The editor, native distance/time curves,

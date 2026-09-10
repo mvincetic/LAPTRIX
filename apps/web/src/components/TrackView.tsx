@@ -22,7 +22,7 @@ import {
   type Group,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import { Expand, RotateCcw, Flag, MousePointer2 } from "lucide-react";
+import { RotateCcw, Flag, MousePointer2 } from "lucide-react";
 import {
   isTimingReference,
   type Lap,
@@ -35,6 +35,7 @@ import { CornerCallouts } from "./CornerCallouts";
 import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
+import { FullscreenControl } from "./FullscreenControl";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
@@ -702,16 +703,7 @@ export function TrackView({
             >
               <RotateCcw size={15} />
             </button>
-            <button
-              className="icon-button"
-              aria-label="Fullscreen viewer"
-              onClick={() => {
-                if (document.fullscreenElement) void document.exitFullscreen();
-                else void panel.current?.requestFullscreen();
-              }}
-            >
-              <Expand size={15} />
-            </button>
+            <FullscreenControl target={panel} />
           </div>
         </div>
         {!lap && (

@@ -947,7 +947,12 @@ select {
   line-height: 1.7;
 }
 .track-panel:fullscreen .scene {
-  height: calc(100vh - 70px);
+  height: auto;
+  min-height: 0;
+}
+.track-panel:fullscreen > .panel-tabs,
+.track-panel:fullscreen > .scene-footer {
+  flex-shrink: 0;
 }
 .telemetry-panel {
   flex: 0 0 auto;

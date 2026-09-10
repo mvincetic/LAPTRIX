@@ -32,6 +32,11 @@ Overview framing includes source road edges and shoulders, with the same camera
 directions and margin at every width. Large sources use expanded clipping planes;
 small or tall sources have reachable zoom bounds. Reset restores the full fit
 without changing playback. See CAMERA_FRAMING.md for the rendering contract.
+The fullscreen control shows its actual pressed state and an Exit fullscreen name
+after entry. Failed/unavailable requests use a compact dismissible message anchored
+above the control; the normal workspace stays visible. In fullscreen, the scene can
+shrink around its header and footer so short screens retain camera and exit access.
+See FULLSCREEN.md.
 Selected-corner event buttons retain readable CSS-pixel dimensions across zoom
 levels. Red/amber/green leaders and dots connect Brake, Turn-in and Throttle labels
 to their actual samples. A compact ordered group avoids mutual label overlap;

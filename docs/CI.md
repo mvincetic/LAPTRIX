@@ -141,3 +141,9 @@ passes through `7ecbc68`: all 105 development journeys (53 in 7.7 minutes and
 52 in 8.7 minutes), 197 TypeScript tests, 146 Python tests (29.56 seconds), all
 quality gates and four production journeys (23.9 seconds). The four new delayed
 activation cases and existing startup-retry/unrelated-error cases all pass.
+
+The [custom-window run](https://github.com/mvincetic/LAPTRIX/actions/runs/34504379221)
+passes through `1a8c64d`: all 107 development journeys (55 in 10.3 minutes and
+52 in 8.6 minutes), 203 TypeScript tests, 146 Python tests (42.52 seconds), all
+quality gates and four production journeys (29.5 seconds). Both custom-window
+journeys include the exact-boundary visibility regression and pass.

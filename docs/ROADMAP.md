@@ -82,10 +82,11 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for exact custom graph windows; local quality, relevant browser
-   journeys and final production checks pass. Clock/audio milestones pass remote CI.
-2. Review fullscreen viewer entry/exit and browser rejection recovery, preserving
-   the existing scene, camera, playback and workspace through each transition.
+1. Verify remote CI for fullscreen recovery and short-screen controls; local quality,
+   15 relevant browser journeys and four production checks pass. Custom windows
+   pass all 107 development journeys in remote CI.
+2. Review how fixed viewer overlays affect corner-marker visibility across compact
+   and fullscreen views; preserve the meaning and positions of canonical events.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -226,6 +227,10 @@ and maps the same positions across axes. Explicit Inspect start seeks the stored
 time directly; Loop window reuses the existing clock interval. Six numerical cases
 and desktop/phone browser journeys cover precision, recovery, looping and project
 preservation. See CUSTOM_WINDOWS.md.
+Fullscreen controls now follow actual browser transitions and show local recovery
+for rejected or unavailable requests. Native entry/exit, external exit, obsolete
+errors and short landscape sizing preserve the existing viewer, project and clock.
+Seven fullscreen journeys join the existing rendering regressions. See FULLSCREEN.md.
 
 ## Stabilization evidence
 
@@ -237,7 +242,7 @@ eligibility, native channel plots/scales, sector viewport mapping, vehicle contr
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and seven browser journeys cover the
+One hundred and fourteen browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

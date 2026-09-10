@@ -97,6 +97,9 @@ The paused workspace now also stops the playback clock's animation requests once
 the viewer settles. Play resumes from the inspected time, and paused seeking or
 camera changes still redraw immediately. This reduces idle browser work without
 adding another clock or changing simulation output.
+Fullscreen entry and exit now reflect the browser's actual state, recover rejected
+requests through the same control and keep camera/exit actions visible on short
+landscape screens. The existing scene, selection and playback are preserved.
 Vehicle JSON import/export supports bounded user-supplied parameters through the
 same solver. Imports activate after successful calculation, retain references and
 declared sources/assumptions, and resolve occupied IDs without replacing built-in

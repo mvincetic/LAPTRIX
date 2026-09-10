@@ -72,6 +72,7 @@ the last completed result remains visible if a solve fails.
 - Optional native-reference channel overlays with shared units and source-position alignment.
 - Sector-focused graph inspection with shared seeking, clear range bounds and full-lap reset.
 - Explicit sector playback loops with keyboard toggling and a persistent active-loop indicator.
+- Native fullscreen controls with rejection recovery and reachable camera/exit actions on short screens.
 
 ## Checks
 

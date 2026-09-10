@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-10 — Recover viewer fullscreen transitions locally
+
+**Decision:** Derive fullscreen controls from actual browser events, catch failed
+entry/exit locally, ignore obsolete completion errors and permit the fullscreen
+scene to shrink around its header/footer. **Reasoning:** Browser cases reproduced
+missing failure feedback and stale control state; short-landscape review also
+exposed camera/exit controls clipped below the viewport. **Consequences:** The same
+Canvas, camera mode, selected corner, ghost options and canonical clock remain.
+Native transitions need no new dependency or global error handler, and the ordinary
+workspace retains its minimum scene height. See FULLSCREEN.md.
 ## 2026-09-10 — Inspect exact custom telemetry windows
 
 **Decision:** Extend the existing plot viewport with exact current-lap time bounds,

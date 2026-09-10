@@ -94,3 +94,6 @@
   An already executing synchronous server solve may still finish; no backend job
   cancellation or worker preemption is claimed.
 - Browser numerical/visual checks do not substitute for real-world model validation.
+- Fullscreen availability depends on the browser and embedding policy. Rejected or
+  unavailable requests retain the viewer and offer local feedback; the application
+  does not change browser permissions. See FULLSCREEN.md.
