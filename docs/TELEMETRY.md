@@ -57,7 +57,10 @@ reference overlays are shown. See LOAD_EXTREMA.md.
 
 `PlaybackClock` is the only source of playback time. Play, pause, seeking, speed
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers
-receive approximately 30 Hz updates. After a new simulation the clock resets and
+receive approximately 30 Hz updates. Non-looping completion always publishes its
+final stopped state, including inside that normal interval; subsequent idle frames
+remain silent. The viewer uses these same notifications to wake demand rendering.
+See RENDERING.md. After a new simulation the clock resets and
 pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
 
 Optional native-reference playback also reads this elapsed time, never normalized

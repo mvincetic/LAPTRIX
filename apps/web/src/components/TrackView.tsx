@@ -70,6 +70,18 @@ const initialLayers: ViewLayers = {
 export type CameraMode = "orbit" | "top" | "chase";
 const viewerTabs = ["Track View", "Analysis Layers", "Ghost Car", "Camera"];
 
+function PlaybackFrames({ clock }: { clock: PlaybackClock }) {
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    invalidate();
+    return clock.subscribe(invalidate);
+  }, [clock, invalidate]);
+  useFrame(() => {
+    if (clock.getSnapshot().playing) invalidate();
+  });
+  return null;
+}
+
 function Ribbon({
   track,
   left,
@@ -221,7 +233,7 @@ function CameraRig({
     angle: number | null;
     label: string;
   } | null>(null);
-  const { camera, size } = useThree();
+  const { camera, size, invalidate } = useThree();
   const fit = useMemo(
     () =>
       fitTrackCamera(
@@ -249,7 +261,8 @@ function CameraRig({
     }
     orbit?.target.set(...fit.target);
     orbit?.update();
-  }, [camera, fit, reset]);
+    invalidate();
+  }, [camera, fit, reset, invalidate]);
   useFrame(() => {
     if (mode === "chase" && lap) {
       const state = clock.getSnapshot(),
@@ -284,7 +297,7 @@ function CameraRig({
       node.title = label;
     }
     lastNorth.current = { node, angle, label };
-  });
+  }, -0.5);
   return (
     <OrbitControls
       ref={controls}
@@ -424,6 +437,7 @@ export function TrackView({
         <SceneBoundary>
           <Canvas
             className="scene-canvas"
+            frameloop="demand"
             camera={{
               position: [0, 1800, 1500],
               fov: CAMERA_FOV,
@@ -433,6 +447,7 @@ export function TrackView({
             dpr={[1, 1.5]}
             gl={{ antialias: true, powerPreference: "high-performance" }}
           >
+            <PlaybackFrames clock={clock} />
             <color attach="background" args={["#f0f3f3"]} />
             <ambientLight intensity={1.65} />
             <directionalLight position={[-800, 1800, 700]} intensity={2.1} />

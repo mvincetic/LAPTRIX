@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 152 tests pass.
+- Vitest: 153 tests pass.
 - Python numerical/API tests: 136 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -23,6 +23,11 @@ and no main merge, force-push or repository-settings change was made.
   (1.9 minutes), nine nearby regressions (1.7 minutes), the complete quality gate
   and both production viewer checks (11.6 seconds). The suite now discovers 89
   development journeys.
+  The demand-rendering continuation passes all 91 development journeys in one
+  complete run (10.1 minutes), including the final clock, visibility and callout
+  fixture updates. All 153 TypeScript and 136 Python tests pass with lint, typecheck
+  and build; numerical test time was 47.69 seconds. Both production viewer journeys
+  also pass (9.0 seconds).
 - Vite production build: pass; approximately 405 kB initial JavaScript / 123 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -34,9 +39,38 @@ and no main merge, force-push or repository-settings change was made.
   69 passed, one timed out and 17 not run. Its phone trace reached every assertion
   but included slow successful captures. `83c65ad` separates those captures into
   visual QA and splits the complete suite across two isolated runners. Functional
-  assertions and individual deadlines are retained; remote validation is pending.
+  assertions and individual deadlines are retained. Its complete run 34478677019
+  passed all 87 journeys (45/42) plus quality and production gates. The following
+  extrema run 34479735229 passed 88 of 89 journeys, including both extrema cases,
+  but exposed hidden-portal readiness in the corner-label test. The rendering
+  continuation strengthens that fixture's visible, contained, separate predicate.
 
 ## Browser evidence
+
+Demand rendering passes the complete suite in `artifacts/viewer-demand-browser-final.log`.
+`viewer-demand-final-check.log` records the full quality gate. The initial focused
+eight journeys passed in 1.0 minute; a broader attempt then exposed the old
+framebuffer-read assumption and was stopped while correcting that fixture and the
+independently reproduced finish-notification bug. `viewer-demand-before.log` and
+`playback-finish-before.log` preserve the failing behavioral regressions. The final
+finish journeys pass at both widths; malformed off-step slider input in their
+earlier draft was corrected without changing native slider behavior. All browser
+deadlines remain unchanged. RENDERING.md explains the final implementation and
+the separate corner-portal readiness issue found remotely.
+The final 36-state corner visual run passes with no overlap or runtime errors at
+1600/1280/390 px in orbit and top views. Desktop and phone full workspaces, a 1280 px
+orbit event scene and a phone top-view event scene were opened and reviewed: track,
+labels, graph cursor, controls and responsive hierarchy remain visible and readable.
+The resource probe completes ten states with no runtime errors; three repeated
+Formula/GT switches restore the same live-object counts. Formula finishes with
+81 buffers, 21 vertex arrays, eight programs and five textures in one context.
+The final two paused observations both count 1,701 draws, confirming no new draws
+over the final two-second settled interval. These are bounded local observations,
+not GPU byte counts or a long-term memory guarantee. Evidence:
+`artifacts/viewer-demand-callouts-qa.log`, `corner-callouts-qa.json`,
+`corner-callouts-scene-*.png`, `render-lifetime-probe-before.json`,
+`render-lifetime-probe.json`, `render-lifetime-probe-after.log`,
+`rendering-workspace-*.png` and `viewer-demand-production.log`.
 
 Load-extrema visual QA passes all 24 graph states at 1600/1280/390 px, adding the
 expanded four-card disclosure to each width. Every state retains the 20-second

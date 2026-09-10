@@ -33,6 +33,7 @@ the last completed result remains visible if a solve fails.
 
 - A validated, data-driven 720-sample circuit with width and elevation.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.
+- A paused viewer that stops drawing once settled and wakes for playback or inspection.
 - Bounded minimum-curvature optimization and a closed-loop speed envelope.
 - Optional vehicle-aware lap-time refinement with a fixed, reported candidate budget.
 - Controlled 5 m / 3 m resampling with geometry checks and comparison across grids.

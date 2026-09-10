@@ -26,6 +26,11 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+The Fiber canvas renders on demand when paused. A subscription to the existing
+clock requests frames after actions; active playback continues the existing Fiber
+frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes
+the scene. Pose updates precede HTML projection, and callout portal attachment
+requests layout. See RENDERING.md for ordering and idle-work checks.
 `camera-framing.ts` fits original source/road edges in camera coordinates using the
 canvas aspect ratio. It derives reachable orbit limits and source-scaled clipping
 planes, including bounded terrain context. CameraRig applies the fit and projection

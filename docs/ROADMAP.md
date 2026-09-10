@@ -82,8 +82,8 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify complete remote browser coverage across the new isolated CI shards and
-   resolve any remaining runtime failures before expanding the product further.
+1. Verify both remote CI shards for the idle-rendering/finish-state milestone.
+   Continue bounded runtime recovery checks before expanding the product further.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -178,19 +178,24 @@ vertical G in a collapsed disclosure. Inspect pauses at the original sample and
 restores Full lap while retaining reference and project contents. See LOAD_EXTREMA.md.
 The growing browser suite reached its 20-minute serial CI budget. Two isolated
 runner shards now preserve complete coverage and per-test deadlines; successful
-graph screenshots stay in visual QA. Remote validation is in progress; see CI.md.
+graph screenshots stay in visual QA. The first sharded run passed all 87 journeys
+at `83c65ad`, plus quality and production gates; see CI.md.
+The paused viewer now renders on demand after camera motion settles, waking through
+the same playback clock and existing controls. Camera and ghost poses update before
+HTML projection. Non-looping completion also always publishes its stopped state,
+even inside the normal notification interval. See RENDERING.md.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 136 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 152 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 153 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-Eighty-nine browser journeys cover the
+Ninety-one browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

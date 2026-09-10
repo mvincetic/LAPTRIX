@@ -63,3 +63,19 @@ numbers so parallel jobs retain separate evidence without naming collisions.
 This follows [Playwright's documented file-level sharding](https://playwright.dev/docs/test-sharding).
 No tests are excluded, retries added, timeouts raised or repository settings changed.
 Local test discovery verifies that both shard lists form the exact complete suite.
+
+The [first complete sharded run](https://github.com/mvincetic/LAPTRIX/actions/runs/34478677019)
+passed through `83c65ad`: 45 development journeys in 11.5 minutes on shard 1 and
+42 in 10.0 minutes on shard 2, covering all 87 at that revision. Shard 1 also passed
+148 TypeScript tests, 136 Python tests, lint/type/build checks and both production
+viewer journeys (14.6 seconds). The formerly slow graph journeys passed in
+22.9/19.5 seconds at desktop/phone widths. These are observations from that run,
+not per-run time guarantees.
+
+The following [extrema run](https://github.com/mvincetic/LAPTRIX/actions/runs/34479735229)
+passed both extrema journeys and 88 of 89 development journeys overall. Shard 1
+failed an existing corner-label check when returning from chase: three newly
+mounted hidden rectangles passed its separation predicate, before a bounding-box
+read returned null. The rendering continuation strengthens that fixture to require
+all three visible rectangles, containment and separation in one polled measurement.
+Individual deadlines are retained. Complete remote validation follows the next push.

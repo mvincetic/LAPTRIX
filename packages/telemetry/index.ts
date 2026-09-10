@@ -356,7 +356,10 @@ export class PlaybackClock {
       const wasPlaying = this.snapshot.playing;
       this.advance(this.last ? Math.min((now - this.last) / 1000, 0.1) : 0);
       this.last = now;
-      if (wasPlaying && now - this.emitted > 1000 / 30) {
+      if (
+        wasPlaying &&
+        (!this.snapshot.playing || now - this.emitted > 1000 / 30)
+      ) {
         this.emit();
         this.emitted = now;
       }

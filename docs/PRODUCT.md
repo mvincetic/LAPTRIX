@@ -26,6 +26,9 @@ Older v1 track files retain their distance-based sectors and are labelled as suc
 historical references compare at the current lap's physical source intervals.
 The workspace remains usable while the 3D module downloads. If it fails, users can
 continue working, save locally, and reload to recover the viewer.
+The paused viewer stops drawing once camera motion settles and wakes for playback,
+inspection or scene changes. Scene detail and the shared playback timing remain
+unchanged. See RENDERING.md.
 Overview cameras now fit accepted source extents at responsive canvas proportions,
 including large imported circuits. Source-scaled clipping and reachable zoom bounds
 preserve road visibility on reset without altering a result or the shared clock.

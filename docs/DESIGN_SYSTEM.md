@@ -20,6 +20,9 @@ Numerical deltas include signed values; color is not the only distinction. Conte
 such as SI units, pending setup changes and approximate physics is visible where
 it affects interpretation. No decorative animation is added; reduced motion is
 honored for the loading spinner.
+Paused scenes render when their content or camera changes and rest after settling.
+Playback and orbit motion retain the same detail; this policy adds no visible mode
+or user setting. See RENDERING.md.
 
 Below 1100 px, the right column moves below the workspace. On narrow screens the
 track/telemetry appear first, settings become two columns and analysis stacks.

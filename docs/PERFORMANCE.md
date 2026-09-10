@@ -1,5 +1,12 @@
 # Performance
 
+The demand-rendering update keeps the initial JavaScript at 405.50 kB (123.06 kB
+gzip); the deferred viewer is 958.10 kB (256.57 kB gzip). A settled paused scene
+issues no new WebGL draw calls in the desktop/phone regression's observation
+windows, while playback, seeking and camera interaction wake rendering. Geometry,
+resolution and the existing playback scheduler remain intact. This is an idle-work
+measurement, not a hardware frame-rate or battery-life claim. See RENDERING.md.
+
 The load-extrema disclosure brings the entry to 405.48 kB JavaScript (123.06 kB
 gzip). Its four extrema are scanned once per current Lap and retain exact sample
 objects; the disclosure adds no timer or solver work. The separate viewer remains

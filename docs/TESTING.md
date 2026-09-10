@@ -1,5 +1,14 @@
 # Testing and validation
 
+Two rendering journeys count actual WebGL draw calls at desktop/phone widths.
+They require zero draws after a settled pause and new draws after seeking,
+playback, orbiting or reset, then cover a non-looping finish and final idle state.
+The camera visibility helper reads composited canvas pixels with HTML overlays
+hidden, since a presented WebGL drawing buffer can be discarded while paused.
+A deterministic clock test covers a finish within the 30 Hz notification interval
+and confirms one final stopped notification without later idle notifications.
+See RENDERING.md.
+
 Four load-extrema tests check exact independent channels, original sample identity,
 first-sample ties, preserved inputs and unavailable data. Two desktop/phone browser
 journeys use actual GT telemetry with Formula overlays and pending fuel edits;
@@ -26,7 +35,8 @@ pending setup without simulation requests. Legacy references retain five curves,
 timing-only imports retain none, and a legacy current result disables the new
 group through native option semantics and keyboard behavior. Scale tests cover
 fractional G, weight guides, missing data and extreme finite values. The reusable
-`scripts/load-graphs-qa.mjs` captures seven states at three widths. See LOAD_GRAPHS.md.
+`scripts/load-graphs-qa.mjs` now captures eight states at three widths, including
+expanded extrema. See LOAD_GRAPHS.md.
 
 Corner-callout layout tests cover coincident events at viewport edges, occupied
 space, preserved anchors/order, offscreen data and insufficient room. A browser

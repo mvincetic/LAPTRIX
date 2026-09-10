@@ -75,8 +75,10 @@ line pixels and then returns to the original source. Complete project contents,
 pending setup and the shared playback cursor remain unchanged by camera actions.
 
 Pixel checks establish that the track is rendered; they are not exact image
-snapshots or a substitute for geometric projection tests. The helper reads the
-WebGL framebuffer without changing it, excluding HTML labels from the count.
+snapshots or a substitute for geometric projection tests. The helper inspects a
+composited canvas screenshot with HTML overlays temporarily hidden. This continues
+to work after a demand-rendered frame is presented and the default WebGL drawing
+buffer is discarded. It also retains the context's error check. See RENDERING.md.
 `node --experimental-strip-types scripts/camera-framing-qa.mjs` captures original
 and large source orbit/top/chase views at 1600, 1280 and 390 px. Images and numerical
 findings are retained locally in ignored `artifacts/`.

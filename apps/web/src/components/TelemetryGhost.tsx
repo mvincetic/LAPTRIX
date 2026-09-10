@@ -29,7 +29,7 @@ export function TelemetryGhost({
     const pose = ghostPose(lap, clock.getSnapshot().time);
     ref.current.position.set(pose.sample.x, pose.sample.y + 0.3, pose.sample.z);
     ref.current.rotation.set(pose.pitch, pose.yaw, 0, "YXZ");
-  });
+  }, -0.5);
   return (
     <group
       ref={ref}

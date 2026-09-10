@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Matrix4, Vector3 } from "three";
@@ -24,8 +24,15 @@ export function CornerCallouts({
   clock: PlaybackClock;
   layoutKey: string;
 }) {
-  const { camera, gl, size } = useThree();
+  const { camera, gl, size, invalidate } = useThree();
   const root = useRef<HTMLDivElement>(null);
+  const attachRoot = useCallback(
+    (node: HTMLDivElement | null) => {
+      root.current = node;
+      if (node) invalidate();
+    },
+    [invalidate],
+  );
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const leaders = useRef<(SVGGElement | null)[]>([]);
   const events = useMemo(() => {
@@ -52,6 +59,9 @@ export function CornerCallouts({
     events: null as typeof events | null,
     layoutKey: "",
   });
+  useEffect(() => {
+    invalidate();
+  }, [events, layoutKey, size.width, size.height, invalidate]);
 
   useFrame(() => {
     if (
@@ -146,7 +156,7 @@ export function CornerCallouts({
       style={{ pointerEvents: "none" }}
     >
       <div
-        ref={root}
+        ref={attachRoot}
         className="corner-callouts"
         role="group"
         aria-label="Selected corner events"

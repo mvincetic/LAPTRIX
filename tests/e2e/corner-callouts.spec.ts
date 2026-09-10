@@ -55,35 +55,40 @@ for (const width of [1600, 390]) {
     async function assertSeparated() {
       await expect
         .poll(async () =>
-          callouts.evaluateAll((nodes) => {
+          page.locator(".scene").evaluate((scene) => {
+            const canvas = scene
+              .querySelector("canvas")!
+              .getBoundingClientRect();
+            const nodes = Array.from(
+              scene.querySelectorAll<HTMLButtonElement>(".event-marker"),
+            );
             const boxes = nodes.map((node) => node.getBoundingClientRect());
-            return boxes.every((a, i) =>
-              boxes
-                .slice(i + 1)
-                .every(
-                  (b) =>
-                    a.right <= b.left ||
-                    b.right <= a.left ||
-                    a.bottom <= b.top ||
-                    b.bottom <= a.top,
-                ),
+            return (
+              nodes.length === 3 &&
+              nodes.every(
+                (node, i) =>
+                  !node.hidden && boxes[i].width > 0 && boxes[i].height > 0,
+              ) &&
+              boxes.every(
+                (a, i) =>
+                  a.left >= canvas.left &&
+                  a.top >= canvas.top &&
+                  a.right <= canvas.right &&
+                  a.bottom <= canvas.bottom &&
+                  boxes
+                    .slice(i + 1)
+                    .every(
+                      (b) =>
+                        a.right <= b.left ||
+                        b.right <= a.left ||
+                        a.bottom <= b.top ||
+                        b.bottom <= a.top,
+                    ),
+              )
             );
           }),
         )
         .toBe(true);
-      const scene = await page.locator("canvas").boundingBox();
-      for (const button of await callouts.all()) {
-        const box = await button.boundingBox();
-        expect(box).not.toBeNull();
-        expect(box!.x).toBeGreaterThanOrEqual(scene!.x);
-        expect(box!.y).toBeGreaterThanOrEqual(scene!.y);
-        expect(box!.x + box!.width).toBeLessThanOrEqual(
-          scene!.x + scene!.width,
-        );
-        expect(box!.y + box!.height).toBeLessThanOrEqual(
-          scene!.y + scene!.height,
-        );
-      }
     }
     await assertSeparated();
     const corner = lap.corners.find((corner) => corner.id === 2)!;

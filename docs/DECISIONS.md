@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-10 — Let a settled paused viewer stop drawing
+
+**Decision:** Use Fiber's demand rendering with existing-clock invalidation and
+continuous frames only during playback or camera movement. Update camera/ghost
+poses before HTML projection and invalidate callouts when their portal becomes
+ready. **Reasoning:** Instrumented WebGL calls showed continuous idle rendering
+despite a stationary paused scene. Existing Drei controls already invalidate camera
+changes. **Consequences:** Geometry, resolution and authoritative time are retained;
+single-frame seeks must update projected labels correctly. Browser checks measure
+actual draws and cover wake/settle behavior without claiming hardware frame-rate
+or battery guarantees. See RENDERING.md.
+The clock also publishes non-looping completion even inside its normal 30 Hz
+notification interval, preventing subscribers from retaining a stale playing state.
+
 ## 2026-09-10 — Seek sampled current-lap load extrema through the existing clock
 
 **Decision:** Add a collapsed disclosure for full-lap minimum/maximum tyre load
