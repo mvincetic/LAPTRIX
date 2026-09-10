@@ -94,6 +94,10 @@ The theoretical result is an approximation. Minimum curvature does not establish
 a globally fastest lap. Synthetic inputs and development physics must remain
 visible in the interface and exported data. Precision in formatting is useful for
 repeatable comparisons, not evidence of real-world accuracy.
+Slope forces now consistently affect normal grip, rolling loss and lateral speed,
+including braking while accelerating downhill. Numerical checks continue to flag
+infeasible results separately from convergence; crest and suspension dynamics
+remain outside the development model.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

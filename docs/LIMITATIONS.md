@@ -19,8 +19,10 @@
   Long circuits may reach the 2,000-point budget before reaching the target spacing.
 - The point-mass model omits transient yaw, axle load transfer, tyre temperature/
   wear, suspension, braking lockup, slip, shift delays, hybrid energy and fuel burn.
-- Banking is reserved but rejected; vertical G is a reserved zero field. Elevation
-  affects gradient forces, not suspension compression or vertical road curvature.
+- Banking is reserved but rejected; vertical G is a reserved zero field. Slope
+  affects normal weight, horizontal lateral speed, rolling loss and longitudinal
+  gravity. Suspension compression and vertical-curvature loads remain unmodelled.
+  Downforce is assumed road-normal; aerodynamic tyre rolling losses are omitted.
 - Detected corners use curvature prominence; gradual turns may be combined.
   Seam-adjacent event windows are clipped to the canonical lap interval.
 - Track imports accept local JSON and a reviewed GPX 1.1 geometry subset. GPX

@@ -9,14 +9,14 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 92 tests pass.
-- Python numerical/API tests: 96 tests pass.
+- Python numerical/API tests: 103 tests pass.
 - Playwright: 62 development browser journeys pass; two viewer journeys also run
   against built production assets.
 - Vite production build: pass; approximately 398 kB initial JavaScript / 121 kB
   gzip, plus a separate 954 kB viewer / 255 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `90631c9`, including source-scaled camera framing,
+- GitHub Actions passed through `19fc232`, including camera north and stable reset,
   the Chrome-source fix and the expanded bounded browser budget. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
@@ -433,6 +433,35 @@ reviewed. The arrow is legible and follows the changed view; playback remains at
 20 seconds until explicitly seeking 40. Evidence is `artifacts/north-*.png` and
 `north-indicator-qa.json`; gate logs use `north-indicator-*`. The initial failing
 reset evidence remains in `north-reset-before.log` and `north-reset-before-390.png`.
+
+Slope-force verification adds six original circular-ramp cases and a seventh
+adversarial low-speed case. The former independently solve steady uphill/downhill
+force bounds, project horizontal lateral acceleration and reconstruct integrated
+wheel demand at every node. Four graded cases fail before correction, while the
+flat cases pass. At slope sine 0.29, the prior lateral error is 9.1822% and the
+zero-downforce ramp reports demand ratio 1.148551 despite convergence. The corrected
+case reports approximately 1.0 and meets its independent speed/force tolerances.
+
+The additional accepted star fixture exposed a reversed braking bracket when its
+0.776 m/s lateral cap lay below the propagation floor. The final bracket preserves
+that cap and finite telemetry while retaining the fixture's failed force diagnostic.
+All 103 Python and 92 TypeScript tests pass, along with lint, typecheck and build.
+The live API's source fingerprint matches the final implementation recorded in
+SOLVER_STUDY.md; it returns the corrected default Formula lap of 71.513686 s.
+
+The source/5 m/3 m study was repeated through the production solver after the
+bracket correction. All nine cases converge with demand ratios at approximately
+1.0 and retain source identity; current numbers and model limits are documented
+in SOLVER_STUDY.md and PHYSICS_BENCHMARKS.md. GT/refinement visual QA at desktop,
+1280, 900 and phone widths records zero runtime errors and no horizontal overflow.
+Desktop and full phone screenshots were opened and reviewed; the 1:31.322 result,
+Formula reference, updated lateral trace and playback controls remain readable.
+Local evidence includes `slope-live-api.json`, `slope-check-final.log`,
+`slope-sampling-study-final.log`, `slope-visual.log` and `gt-refinement-*.png` in
+`artifacts/`. No external track or vehicle data was introduced.
+The final source, including the low-speed bracket regression, also passes all
+62 development browser journeys (11.8 minutes) and both production viewer journeys.
+Those final gate logs are `slope-e2e-final.log` and `slope-production-final.log`.
 
 ## Scope of the evidence
 

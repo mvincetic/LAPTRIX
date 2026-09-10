@@ -93,6 +93,11 @@ and solves its box constraints. `solver.py` owns geometry, the speed envelope,
 optional local lap-time refinement and result assembly. Refinement repeatedly calls
 the same vehicle/setup speed envelope; accepted positions and the matching profile
 are returned together. No renderer or UI computes an independent optimized path.
+The envelope resolves slope-normal weight and horizontal lateral velocity from
+the same outgoing chord grade. Its signed lateral acceleration feeds both sampled
+telemetry and corner summaries. Backward braking retains signed net deceleration,
+including gravity-driven acceleration; convergence and force feasibility remain
+separate diagnostics. See SIMULATION_MODEL.md for the bounded approximation.
 Numerical demand diagnostics and refinement accounting cross the existing Lap API.
 Before that solve, `sampling.py` prepares a checked source or uniform grid and
 source-progress alignment. The Lap response carries effective points for rendering;

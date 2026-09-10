@@ -45,7 +45,12 @@ def test_gt_aero_study_respects_exact_power_and_force_budget(aero):
     wheel_force = (
         mass * (np.roll(speeds, -1) ** 2 - speeds**2) / (2 * ds)
         + 0.5 * setup.airDensity * vehicle.dragArea * (1 + aero * 0.045) * speeds**2
-        + mass * G * (0.015 + np.array([s["trackGradient"] for s in samples]))
+        + mass
+        * G
+        * (
+            0.015 * np.linalg.norm(np.roll(points, -1, axis=0)[:, [0, 2]] - points[:, [0, 2]], axis=1) / ds
+            + np.array([s["trackGradient"] for s in samples])
+        )
     )
     available_force = 0.94 * vehicle_state(vehicle, speeds)[2] / np.maximum(speeds, 4)
     assert np.max(np.maximum(wheel_force, 0) / available_force) <= 1 + 1e-8

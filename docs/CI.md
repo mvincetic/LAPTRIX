@@ -36,3 +36,5 @@ passed the complete source-profile milestone, including development and producti
 browser checks.
 The subsequent [source-scaled camera run](https://github.com/mvincetic/LAPTRIX/actions/runs/34440831541)
 also passed all remote gates through `90631c9`.
+The [camera-derived north/reset run](https://github.com/mvincetic/LAPTRIX/actions/runs/34442541217)
+passed through `19fc232`, including all 62 development browser journeys.

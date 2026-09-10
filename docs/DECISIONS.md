@@ -1,5 +1,20 @@
 # Decision log
 
+## 2026-09-10 — Resolve slope forces and preserve signed downhill braking
+
+**Decision:** Use slope-normal weight in grip and rolling loss, horizontal projected
+speed with horizontal curvature, and one signed lateral-acceleration array for the
+envelope and telemetry. Keep road-normal aero and omit vertical/transient dynamics.
+Allow negative net deceleration during backward propagation and check start-node
+braking on accelerating descents too. **Reasoning:** Independent graded circular
+ramps exposed a 9.18% lateral error and a converged lap with demand ratio 1.148551.
+The old zero clamp and downstream-speed bisection bracket excluded the physically
+required descending case. **Consequences:** Graded lap values change; flat analytic
+cases remain stable. Existing convergence limits, minimum-speed floor and failed
+force diagnostics remain explicit. Updated work/energy benchmarks and six ramp
+cases cover the correction. See SIMULATION_MODEL.md and PHYSICS_BENCHMARKS.md for
+equations, assumptions, sources and accuracy limits.
+
 ## 2026-09-10 — Project north from the actual camera and clear reset inertia
 
 **Decision:** Replace the fixed compass rotation with the projection of track

@@ -46,7 +46,7 @@ def test_uphill_and_downhill_terminal_speeds_match_independent_work_balance(grad
             lambda v: (
                 0.94 * 150000
                 - 0.5 * setup.airDensity * vehicle.dragArea * v**3
-                - vehicle.mass * G * (0.015 + direction * grade) * v
+                - vehicle.mass * G * (0.015 * np.cos(np.arcsin(grade)) + direction * grade) * v
             ),
             1,
             110,
@@ -83,7 +83,8 @@ def test_exported_actuator_work_balances_resistance_over_closed_elevation_lap(ve
         engine_power = np.interp(
             rpm, [p.rpm for p in vehicle.powerCurve], [p.powerKw * 1000 for p in vehicle.powerCurve]
         )
-        normal_load = mass * G + 0.5 * setup.airDensity * vehicle.downforceArea * v**2
+        cosine = np.linalg.norm((p[i + 1] - p[i])[[0, 2]]) / distances[i]
+        normal_load = mass * G * cosine + 0.5 * setup.airDensity * vehicle.downforceArea * v**2
         friction_force = vehicle.friction * normal_load
         lateral_force = mass * abs(sample["lateralG"]) * G
         longitudinal_capacity = np.sqrt(max(0, friction_force**2 - lateral_force**2))
@@ -91,9 +92,9 @@ def test_exported_actuator_work_balances_resistance_over_closed_elevation_lap(ve
         brake_force = min(vehicle.maxBrakeG * mass * G, longitudinal_capacity)
         drive_work += sample["throttle"] * drive_force * distances[i]
         brake_work += sample["brake"] * brake_force * distances[i]
-        resistance_work += (0.5 * setup.airDensity * vehicle.dragArea * v**2 + 0.015 * mass * G) * distances[
-            i
-        ]
+        resistance_work += (
+            0.5 * setup.airDensity * vehicle.dragArea * v**2 + 0.015 * mass * G * cosine
+        ) * distances[i]
         gravity_work += mass * G * (p[i + 1, 1] - p[i, 1])
     assert abs(gravity_work) < 1e-6
     assert drive_work > brake_work > 0

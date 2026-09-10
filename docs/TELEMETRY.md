@@ -13,10 +13,10 @@ the complete seam. Distances and timestamps strictly increase.
 | `speed` | m/s, converted to km/h only in the UI |
 | `rpm`, `gear` | Engine revolutions/minute; one-based gear |
 | `throttle`, `brake` | Normalized 0–1 requests |
-| `steering` | Approximate road-wheel angle in radians |
-| `longitudinalG`, `lateralG` | Acceleration / 9.80665; lateral is signed |
+| `steering` | Schematic plan-view road-wheel angle in radians |
+| `longitudinalG`, `lateralG` | Acceleration / 9.80665; lateral is signed and uses horizontal projected speed |
 | `verticalG` | Reserved zero; vertical dynamics are not solved |
-| `trackGradient` | Local rise / segment length |
+| `trackGradient` | Local rise / 3D outgoing segment length, the sine of slope angle |
 | `cornerId`, `sectorId` | Zero means no detected corner; sectors start at one |
 | `offset` | Metres laterally from centerline |
 

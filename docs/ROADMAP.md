@@ -82,10 +82,11 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Resolve slope-normal weight, projected lateral speed and downhill braking
-   consistently in the quasi-steady model. Independent circular-ramp experiments
-   expose incorrect lateral acceleration and a descending force-demand violation;
-   promote the tested isolated correction with updated work-balance benchmarks.
+1. Apply the existing refined-candidate geometry limits to the initial optimized
+   line too. A valid source at slope ratio 0.29 can produce a converged seed above
+   0.30, and a flat wide source can produce reversed intervals. Reject these before
+   the speed envelope with a recoverable Centerline-mode explanation. Preserve
+   the valid source and completed workspace on failure.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -125,10 +126,17 @@ The north arrow now projects track north through the actual camera, including
 manual orbit and shared-clock chase. Reset drains residual orbit damping before
 applying its fit. Direction labels are accessible, and camera actions retain the
 complete workspace. See CAMERA_FRAMING.md for projection and reset evidence.
+Slope-normal weight, projected horizontal speed and signed downhill braking now
+use consistent quasi-steady equations. Six independent circular-ramp cases protect
+the correction alongside updated uphill/downhill and actuator-work checks. An
+adversarial sub-1 m/s case protects the braking bracket from increasing a lateral
+cap and retains its failed force diagnostic. Flat analytic cases remain stable;
+the current production sampling study reports the
+changed graded laps and unchanged source identity. See PHYSICS_BENCHMARKS.md.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 96 passing tests, including coupled quadratic
+The local numerical/API suite contains 103 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
 extremes and analytical work/grip benchmarks. Ninety-two TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison

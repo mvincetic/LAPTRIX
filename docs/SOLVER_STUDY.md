@@ -1,12 +1,12 @@
-# Solver grid study — 2026-09-09
+# Solver grid study — updated 2026-09-10
 
 This is a numerical study of the original synthetic Ardennes Development Circuit
 and Formula Development 01 at the default setup. It establishes model behavior,
 not accuracy against a real circuit or car.
 
 The first table records commit `cf91692`. The subsequent controlled-sampling update
-changed the refinement anchor after an orientation-invariance test; current results
-are in the second table below. The older numbers remain a historical baseline.
+changed the refinement anchor after an orientation-invariance test. Those tables
+remain historical baselines; the final section records the slope-force correction.
 
 Reproduce with `npm run study:solver`. The script writes full diagnostics to
 `artifacts/solver-study.json`. Coordinates are periodically cubic-interpolated in
@@ -67,3 +67,28 @@ Every seed and speed envelope converged; maximum demand ratio remained below
 displacement was 0.242 m, below the 0.50 m guard; neither run reached the point cap.
 These are discrete-model observations, not a rigorous error bound. Added samples
 remain interpolations of synthetic geometry, not new measurements.
+
+## Current sampling study after slope-force correction
+
+On 2026-09-10, the same production-path sampling study was rerun after correcting
+slope-normal weight, horizontal lateral speed and signed downhill braking. The
+track, default Formula profile/setup and sampling policy are unchanged.
+
+| Sampling | Grid points | Centerline (s) | Curvature (s) | Refined (s) | Gain (s) | Seed / refined runtime (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Original | 720 | 74.473 | 71.514 | 71.374 | 0.140 | 165 / 3,443 |
+| 5 m target | 1,121 | 74.441 | 71.649 | 71.506 | 0.143 | 345 / 5,542 |
+| 3 m target | 1,869 | 74.425 | 71.606 | 71.462 | 0.144 | 638 / 9,075 |
+
+All nine envelopes and their curvature seeds converge; every maximum demand ratio
+is within floating-point roundoff of 1.0. Source fingerprints remain equal across
+grids. The 5 m/3 m refined difference remains about 0.044 s, so the numerical
+resolution caveat still applies. Runtime values are single local observations.
+The current report is `artifacts/sampling-study.json` with its gate log at
+`artifacts/slope-sampling-study-final.log`. New solver outputs carry source fingerprint
+`sha256:9b6df677035dea8a13656277c923140953d2454b7cdb05684a9017aac20ebf61`.
+
+At original resolution the Formula centerline/curvature laps change by -0.0129 /
+-0.0181 s. GT centerline changes from 94.759842 to 94.745802 s and curvature from
+91.468502 to 91.454362 s. These differences correct the declared development
+equations; they do not establish a closer match to a measured real lap.

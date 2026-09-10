@@ -83,13 +83,18 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     lift = vehicle.downforceArea * (1 + setup.aero * 0.055)
     drag = vehicle.dragArea * (1 + setup.aero * 0.045)
     grade = (np.roll(points[:, 1], -1) - points[:, 1]) / ds
-    k = np.abs(curvature)
+    # Grade is sin(slope). Curvature and lateral direction are horizontal;
+    # road speed projects into that plane by cos(slope). Aero acts road-normal.
+    cosine = np.sqrt(np.maximum(0, 1 - grade**2))
+    normal_gravity = G * cosine
+    k = np.abs(curvature) * cosine**2
     max_speed = (
         vehicle.maxRpm / (vehicle.gearRatios[-1] * vehicle.finalDrive) * 2 * np.pi / 60 * vehicle.wheelRadius
     )
     # Reserve 2% of lateral capacity for sustaining speed against resistance/gradient.
     limit = np.minimum(
-        max_speed, np.sqrt(0.98 * mu * G / np.maximum(k - 0.98 * mu * rho * lift / (2 * mass), 1e-6))
+        max_speed,
+        np.sqrt(0.98 * mu * normal_gravity / np.maximum(k - 0.98 * mu * rho * lift / (2 * mass), 1e-6)),
     )
     speeds = limit.copy()
     # Evaluate each gear's curve exactly, preserving discontinuities at redline.
@@ -97,10 +102,10 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     bias_efficiency = max(0.7, 1 - abs(setup.brakeBias - 56) * 0.012)
 
     def capacities(v, i):
-        grip = mu * (G + rho * lift * v * v / (2 * mass))
+        grip = mu * (normal_gravity[i] + rho * lift * v * v / (2 * mass))
         lateral = v * v * k[i]
         remaining = np.sqrt(max(0.0, grip * grip - lateral * lateral))
-        resistance = rho * drag * v * v / (2 * mass) + 0.015 * G
+        resistance = rho * drag * v * v / (2 * mass) + 0.015 * normal_gravity[i]
         drive = min(power_at_speed(v) * 0.94 / (mass * max(v, 4)), remaining)
         brake = min(vehicle.maxBrakeG * G * bias_efficiency, remaining)
         return drive - resistance - G * grade[i], brake + resistance + G * grade[i]
@@ -110,14 +115,15 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         before = speeds.copy()
         for i in range(len(speeds) - 1, -1, -1):
             j = (i + 1) % len(speeds)
-            available = max(0, capacities(speeds[j], j)[1])
+            # On a steep descent, gravity can exceed braking even at full command.
+            # Negative net deceleration constrains the upstream speed too.
+            available = capacities(speeds[j], j)[1]
             candidate = min(speeds[i], np.sqrt(max(1, speeds[j] ** 2 + 2 * available * ds[i])))
             # Downstream grip alone can overestimate braking at the segment's start.
             # Enforce the integrated demand against its own start-node capacity too.
-            if candidate > speeds[j] and (
-                candidate**2 - speeds[j] ** 2 > 2 * capacities(candidate, i)[1] * ds[i]
-            ):
-                low, high = speeds[j], candidate
+            if candidate**2 - speeds[j] ** 2 > 2 * capacities(candidate, i)[1] * ds[i]:
+                # A lateral cap can itself lie below the propagation floor.
+                low, high = min(1.0, candidate), candidate
                 for _ in range(24):
                     mid = (low + high) / 2
                     if mid**2 - speeds[j] ** 2 > 2 * capacities(mid, i)[1] * ds[i]:
@@ -136,9 +142,9 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     dt = 2 * ds / (speeds + next_speed)
     acceleration = (next_speed**2 - speeds**2) / (2 * ds)
     gear, rpm, power = vehicle_state(vehicle, speeds)
-    resistance = rho * drag * speeds**2 / (2 * mass) + 0.015 * G
+    resistance = rho * drag * speeds**2 / (2 * mass) + 0.015 * normal_gravity
     wheel_acc = acceleration + resistance + G * grade
-    grip = mu * (G + rho * lift * speeds**2 / (2 * mass))
+    grip = mu * (normal_gravity + rho * lift * speeds**2 / (2 * mass))
     remaining = np.sqrt(np.maximum(0, grip**2 - (speeds**2 * k) ** 2))
     drive = np.minimum(power * 0.94 / (mass * np.maximum(speeds, 4)), remaining)
     braking = np.minimum(vehicle.maxBrakeG * G * bias_efficiency, remaining)
@@ -158,6 +164,7 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         speed=speeds,
         curvature=curvature,
         grade=grade,
+        lateral=speeds**2 * curvature * cosine**2,
         acceleration=acceleration,
         gear=gear,
         rpm=rpm,
@@ -310,7 +317,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
                 entrySpeed=float(profile["speed"][lo]),
                 minSpeed=float(profile["speed"][minimum]),
                 exitSpeed=float(profile["speed"][hi]),
-                lateralG=float(profile["speed"][apex] ** 2 * curvature[apex] / G),
+                lateralG=float(abs(profile["lateral"][apex]) / G),
                 brakingDistance=float(distances[apex] - distances[brake_start]),
                 time=float(times[hi] - times[lo]),
             )
@@ -336,7 +343,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
                 brake=float(profile["brake"][j]),
                 steering=float(np.arctan(vehicle.wheelbase * profile["curvature"][j])),
                 longitudinalG=float(profile["acceleration"][j] / G),
-                lateralG=float(profile["speed"][j] ** 2 * profile["curvature"][j] / G),
+                lateralG=float(profile["lateral"][j] / G),
                 verticalG=0.0,
                 trackGradient=float(profile["grade"][j]),
                 cornerId=int(corner_ids[j]),

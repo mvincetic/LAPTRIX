@@ -46,15 +46,22 @@ seed time, actual gain, candidate counts, accepted/rejected changes and status.
 ## Speed envelope
 
 Horizontal Menger curvature gives a lateral speed cap from tyre friction plus
-speed-dependent downforce. The model reserves 2% of lateral capacity for sustaining
-speed against drag and gradient. The top speed is also bounded by top gear redline.
+speed-dependent downforce. For slope angle `theta`, road speed `v` projects to
+horizontal speed `v cos(theta)`, so lateral acceleration is
+`v² cos²(theta) curvature`. Gravity-supported normal load is `m g cos(theta)`;
+the aerodynamic downforce term is assumed to act normal to the road. The initial
+cap reserves 2% of lateral capacity, with the full longitudinal force balance
+enforced by the sweeps below. Top speed is also bounded by top gear redline.
 
 Closed-loop backward braking and forward acceleration sweeps propagate constraints
 through the start/finish seam until the envelope converges or 80 sweeps finish.
 Longitudinal grip uses the residual of a friction circle after lateral demand.
 Acceleration is limited by interpolated power, 94% efficiency and grip; braking by
 the configured maximum and grip. Drag, a 0.015 rolling coefficient and gravity along
-the local gradient are included. The aerodynamic terms use the selected air density.
+the local gradient are included. Rolling loss applies to gravity-supported normal
+load only (`0.015 m g cos(theta)`); aerodynamic tyre rolling losses are omitted.
+Longitudinal gravity remains `m g sin(theta)`, with the outgoing source/solved chord
+defining `sin(theta) = rise / 3D length`. The aerodynamic terms use selected air density.
 Power is evaluated separately on each gear's piecewise-linear RPM curve before
 taking the maximum valid value. `drivetrain.py` precomputes interval slopes for
 scalar sweep evaluation. It preserves the discontinuity when a gear exceeds
@@ -64,6 +71,13 @@ the equivalent vector calculation, with breakpoint and redline-side tests checki
 agreement. Both paths retain the same idle clamp and redline rules.
 Backward propagation also verifies start-node braking capacity with a bounded
 scalar solve; downstream grip alone can overestimate available deceleration.
+Net deceleration may be negative on a steep descent: full braking need not prevent
+acceleration. Backward propagation retains that sign, and the start-node check
+applies even when upstream speed is below downstream speed. Its 24-step bisection
+starts at the existing 1 m/s propagation floor, or at the candidate when its
+lateral cap is already lower. Its bracket can never increase that cap. The floor
+can leave such very-low-speed inputs infeasible; the force diagnostic still fails
+in that case. Convergence alone is not an eligibility guarantee.
 
 Per-segment time is `2 * ds / (v_start + v_end)`, corresponding to constant segment
 acceleration. The complete closing segment contributes to lap time. Throttle and
@@ -95,3 +109,7 @@ SAMPLING.md. Analytical benchmarks include circular aero/grip limits, nonuniform
 circle resampling and power-limited terminal speed from an independent work balance.
 PHYSICS_BENCHMARKS.md records uphill/downhill steady-speed equations and closed-lap
 wheel-work checks reconstructed from exported controls for both vehicles.
+It also documents independent circular-ramp checks for slope-normal load, projected
+lateral acceleration and descending braking. Corner lateral G and sampled lateral G
+reuse the same signed acceleration used by the speed envelope. Steering remains the
+existing schematic plan-view bicycle estimate, not solved steering dynamics.
