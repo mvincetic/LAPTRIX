@@ -107,6 +107,9 @@ source identity; source geometry and recorded timing remain unchanged.
 Reference-file reads and hashes now respect the latest import, explicit reference
 choice or workspace calculation. Late superseded results and errors cannot replace
 that choice; active failures still preserve the existing reference and offer retry.
+Comparison signs and colors now match displayed precision. Values shown as zero
+are neutral; resolvable gains/losses stay distinct, and full-precision timing and
+exports remain available. Percentage change uses its own displayed precision.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

@@ -234,6 +234,12 @@ and count simulation calls. Coverage includes malformed/valid overlaps, a reject
 asynchronous file read that directly exercises stale error handling, mobile
 Set reference, a current failure with retry, and a completed vehicle calculation.
 
+Sixteen display tests cover exact/signed zero, interpolation-sized residuals,
+subnormal values, both sides of the rounding boundary and percentage precision.
+Desktop/mobile browser tests compare a lap to itself, preserve a nonzero
+sub-millisecond reference in exported data, distinguish percent/seconds precision,
+and verify meaningful gains/losses without recalculation or cursor movement.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

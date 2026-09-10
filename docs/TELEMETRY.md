@@ -104,6 +104,12 @@ reference time at the current cursor's source position. Negative means faster,
 positive means slower. Both horizontal axes, pointer seeking and the transport
 share the existing PlaybackClock. The seven physical channel graphs remain
 simulation telemetry; this separate view contains comparison values only.
+Comparison displays use shared signed formatting and semantic tones at their shown
+precision: three decimals for seconds, two for percentage change. Values that round
+to zero and absent comparisons are neutral; clear negative/positive differences
+remain faster/slower. If the entire delta trace rounds to zero, its stroke is
+neutral too. This changes presentation only: full-precision comparison values,
+path coordinates, axis bounds, seeking and exported samples remain unchanged.
 Optional native-reference channel curves now share those graph rows. Their merged
 source-progress knots use current-lap plot coordinates while retaining native
 sample values and timing separately. Shared ranges and units allow direct channel

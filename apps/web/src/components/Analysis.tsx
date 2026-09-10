@@ -5,6 +5,7 @@ import {
   TrendingUp,
   BookmarkPlus,
   ChevronRight,
+  Minus,
 } from "lucide-react";
 import {
   isTimingReference,
@@ -16,6 +17,7 @@ import {
   formatTime,
   signed,
   referenceSectorTimes,
+  comparisonTone,
 } from "../../../../packages/telemetry";
 export function Analysis({
   lap,
@@ -50,6 +52,9 @@ export function Analysis({
       </aside>
     );
   const delta = reference ? lap.lapTime - reference.lapTime : null;
+  const deltaTone = comparisonTone(delta);
+  const percentDelta =
+    delta === null || !reference ? null : (delta / reference.lapTime) * 100;
   const referenceSectors = referenceSectorTimes(lap, reference);
   const corner = lap.corners.find((c) => c.id === selectedCorner);
   const refinement = lap.optimization.refinement;
@@ -68,10 +73,8 @@ export function Analysis({
           <div>
             <strong data-testid="lap-time">{formatTime(lap.lapTime)}</strong>
             {delta !== null && (
-              <span
-                className={`delta-badge ${delta <= 0 ? "positive" : "negative"}`}
-              >
-                <ArrowDownRight size={14} />
+              <span className={`delta-badge ${deltaTone}`}>
+                {deltaTone !== "neutral" && <ArrowDownRight size={14} />}
                 {signed(delta)} s
               </span>
             )}
@@ -132,9 +135,7 @@ export function Analysis({
                 <tr key={s.id}>
                   <td>S{s.id}</td>
                   <td>{s.time.toFixed(3)}</td>
-                  <td
-                    className={d !== null && d <= 0 ? "positive" : "negative"}
-                  >
+                  <td className={comparisonTone(d)}>
                     {d === null ? "—" : signed(d)}
                   </td>
                   <td>{formatTime(s.split)}</td>
@@ -144,11 +145,7 @@ export function Analysis({
             <tr className="total-row">
               <td>Lap</td>
               <td>{formatTime(lap.lapTime)}</td>
-              <td
-                className={
-                  delta !== null && delta <= 0 ? "positive" : "negative"
-                }
-              >
+              <td className={deltaTone}>
                 {delta === null ? "—" : signed(delta)}
               </td>
               <td>{(lap.length / 1000).toFixed(3)} km</td>
@@ -236,9 +233,7 @@ export function Analysis({
                     <td>{(c.exitSpeed * 3.6).toFixed(0)}</td>
                     <td>
                       {d !== null ? (
-                        <span className={d <= 0 ? "positive" : "negative"}>
-                          {signed(d)}
-                        </span>
+                        <span className={comparisonTone(d)}>{signed(d)}</span>
                       ) : (
                         <ChevronRight size={12} />
                       )}
@@ -292,9 +287,7 @@ export function Analysis({
                     <span>{r?.toFixed(3)}</span>
                   </div>
                 </div>
-                <span
-                  className={d !== null && d <= 0 ? "positive" : "negative"}
-                >
+                <span className={comparisonTone(d)}>
                   {d === null ? "—" : signed(d)}
                 </span>
                 <b>S{s.id}</b>
@@ -310,9 +303,9 @@ export function Analysis({
                 : `Reference: ${referenceVehicleName ?? reference.vehicleId} · ${reference.setup.solver === "centerline" ? "centerline" : reference.setup.solver === "lap-time" ? "lap-time refinement" : "minimum curvature"}`
               : "No reference selected"}
           </span>
-          {delta !== null && (
-            <strong className={delta <= 0 ? "positive" : "negative"}>
-              {signed((delta / (reference?.lapTime ?? lap.lapTime)) * 100, 2)}%
+          {percentDelta !== null && (
+            <strong className={comparisonTone(percentDelta, 2)}>
+              {signed(percentDelta, 2)}%
             </strong>
           )}
         </div>
@@ -374,10 +367,12 @@ export function Analysis({
           </span>
         </div>
         <div className="insight">
-          <ArrowDownRight size={19} />
-          <strong
-            className={delta !== null && delta <= 0 ? "positive" : "negative"}
-          >
+          {deltaTone === "neutral" ? (
+            <Minus size={19} />
+          ) : (
+            <ArrowDownRight size={19} />
+          )}
+          <strong className={deltaTone}>
             {delta === null ? "—" : `${signed(delta)} s`}
           </strong>
           <span>Lap change vs reference</span>

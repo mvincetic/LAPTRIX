@@ -82,10 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Make displayed zero comparison deltas neutral at their shown precision. A lap
-   compared with its own export currently shows red `+0.000` and green `-0.000`
-   sector differences from interpolation roundoff. Preserve full-precision data
-   while keeping displayed signs, colors and labels consistent.
+1. Verify recovery actions when device-local Save fails. Inspect whether the
+   shared error action points to project preservation, especially after an earlier
+   import error, and test that recovery retains pending setup and saved data.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -146,17 +145,21 @@ generation through file reads, hashes and errors. New imports, explicit referenc
 selection and calculations supersede older work without stale data or feedback.
 Current failures retain retry, playback and completed reference data. Seven browser
 cases cover delayed reads/hashes and newer choices; see REFERENCE_IMPORT.md.
+Displayed comparison signs and tones now share their actual decimal precision.
+Zero and missing differences are neutral, including percentage changes and whole
+sub-resolution delta traces; meaningful gains/losses remain distinct. Full-precision
+comparison data, trace paths, exports and aero ranking remain unchanged.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 116 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. The 101 TypeScript tests cover
+extremes and analytical work/grip benchmarks. The 117 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
-north direction, verified signed-zero migration and clock/data invariants.
-Seventy-one browser journeys cover the
+north direction, verified signed-zero migration, display precision and clock/data invariants.
+Seventy-three browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -164,7 +167,8 @@ precise cursor inspection, reference ghosts, embedded vehicle profiles, project 
 native channel overlays, sector graph inspection, reviewed GPX import, source
 profile inspection/export, large-track camera visibility, orbit/reset/chase north,
 unsupported optimized-line recovery, signed-zero reference/project round trips,
-ordering of delayed reference reads/hashes including asynchronous read rejection, and the
+ordering of delayed reference reads/hashes including asynchronous read rejection,
+neutral displayed deltas with full-precision reference preservation, and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

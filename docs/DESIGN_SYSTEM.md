@@ -176,3 +176,8 @@ undefined projection hides the arrow and explains the viewing-axis case.
 At phone widths, error messages occupy a full-width 12 px text row, with recovery
 and dismissal controls below. Long geometry explanations remain readable without
 squeezing the text beside buttons or introducing horizontal overflow.
+Comparison signs and colors follow the precision actually displayed: three decimal
+places for seconds, two for percentage change. Displayed zero and missing values
+use neutral slate `#526379`; zero badges use a pale neutral background with no
+directional icon. Resolvable gains remain green and losses red. A time-delta trace whose whole
+range rounds to zero uses the same neutral stroke while retaining its original path.

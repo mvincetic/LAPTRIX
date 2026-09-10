@@ -13,6 +13,10 @@ and speed convergence plus maximum force demand within the solver's reported
 tolerance. Missing diagnostics and failed checks exclude a result from selection.
 An excluded or failed starting run leaves deltas unavailable. Failed requests
 remain inspectable while the rest of the bounded queue continues.
+Displayed deltas share the dashboard's millisecond precision: rounded zero and
+missing values are neutral; resolvable gains/losses retain their sign and color.
+Ranking, eligibility and exported deltas use full precision, so displayed ties
+can still have a distinct fastest checked result.
 
 The fastest eligible result is selected after completion or stopping. It is best
 only among the checked candidates, not proof of a global optimum. Users may

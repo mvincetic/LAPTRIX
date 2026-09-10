@@ -530,6 +530,29 @@ Both production viewer journeys pass (14.0 seconds), recorded in
 `artifacts/reference-ordering-production.log`. Final test-helper edits also pass
 lint and typecheck; the application source stayed fixed through these gates.
 
+Comparison display precision passes lint, typecheck, build, all 117 TypeScript and
+116 Python tests. Six original formatting assertions fail before correction; the
+final 16-case suite covers signed/exact zero, tiny residuals, subnormal values,
+millisecond and percentage rounding boundaries, and missing comparison values.
+
+Eleven relevant browser journeys pass (2.0 minutes): new desktop/mobile display
+checks, time-delta synchronization, reference import, aero workflows, resampling
+and cross-vehicle comparisons. The new cases retain exact exported reference data
+for a positive 0.4 ms difference, show a 2 ms loss independently of its rounded-zero
+percentage, and preserve meaningful faster/slower directions without recalculation
+or cursor movement. They do not round simulation or comparison data.
+
+Visual review removed a potentially ambiguous dash from zero lap badges. The final
+desktop/mobile recheck passes (30.7 seconds), additionally verifying neutral trace
+strokes, absence of directional zero-badge icons and document widths. Final neutral
+desktop/phone screenshots and the meaningful phone gain state were opened and
+reviewed. Notification overlays are dismissed for clear inspection. Both production
+viewer journeys pass (11.8 seconds); final UI edits also pass lint and typecheck.
+This presentation change used targeted browser coverage rather than another full
+suite invocation. Evidence: `artifacts/delta-display-check.log`,
+`delta-display-browser.log`, `delta-display-final-ui.log`,
+`delta-display-production.log` and `delta-display-*.png`.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

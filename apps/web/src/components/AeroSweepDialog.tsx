@@ -6,7 +6,11 @@ import type {
   Track,
   Vehicle,
 } from "../../../../packages/shared/schema";
-import { formatTime } from "../../../../packages/telemetry";
+import {
+  comparisonTone,
+  formatTime,
+  signed,
+} from "../../../../packages/telemetry";
 import { runSimulation } from "../api";
 import {
   aeroCandidates,
@@ -242,10 +246,8 @@ export function AeroSweepDialog({
                 row.lap && baseline && !comparisonIssue(baseline)
                   ? row.lap.lapTime - baseline.lapTime
                   : null;
-              const deltaText =
-                delta === null
-                  ? "—"
-                  : `${delta < -0.0005 ? "−" : delta >= 0.0005 ? "+" : ""}${Math.abs(delta).toFixed(3)}`;
+              const deltaText = delta === null ? "—" : signed(delta);
+              const tone = comparisonTone(delta);
               return (
                 <tr
                   key={row.aero}
@@ -275,11 +277,11 @@ export function AeroSweepDialog({
                   </td>
                   <td
                     className={
-                      delta !== null && delta < -0.0005
+                      tone === "positive"
                         ? "aero-faster"
-                        : delta !== null && delta > 0.0005
+                        : tone === "negative"
                           ? "aero-slower"
-                          : ""
+                          : "neutral"
                     }
                   >
                     {deltaText}

@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Classify comparison displays at their visible precision
+
+**Decision:** Suppress the sign of a displayed zero and share comparison-tone
+classification using the same `toFixed` precision. Use neutral styling for zero or
+missing comparisons across tables, badges, cursor readouts and aero rows. Percentage
+change uses its own two-decimal value. A wholly sub-resolution time-delta trace
+retains its path with neutral stroke. **Reasoning:** Comparing a lap to its own
+export produced red `+0.000` and green `-0.000` sector differences from interpolation
+roundoff. Separate aero thresholds also disagreed at the negative rounding boundary.
+**Consequences:** Full-precision timing, interpolation, trace coordinates, ranking,
+eligibility and exports remain unchanged. Neutral presentation means no difference
+at the displayed precision, not a claim of exact numerical or physical equality.
+
 ## 2026-09-10 — Keep reference imports ordered through reads and hashes
 
 **Decision:** Give reference-file imports a separate request counter, checked with

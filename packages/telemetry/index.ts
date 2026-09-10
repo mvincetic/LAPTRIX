@@ -188,7 +188,16 @@ export function prepareTimeComparison(
   return { atTime, atDistance, samples };
 }
 export function signed(value: number, digits = 3) {
-  return `${value > 0 ? "+" : ""}${value.toFixed(digits)}`;
+  const text = value.toFixed(digits);
+  return Number(text) === 0
+    ? (0).toFixed(digits)
+    : `${value > 0 ? "+" : ""}${text}`;
+}
+
+/** Negative comparison deltas mean improvement; tone follows visible precision. */
+export function comparisonTone(value: number | null, digits = 3) {
+  if (value === null || Number(value.toFixed(digits)) === 0) return "neutral";
+  return value < 0 ? "positive" : "negative";
 }
 
 /** Native channels and positions are comparable only on a matching declared source. */

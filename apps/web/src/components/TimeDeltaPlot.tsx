@@ -4,7 +4,11 @@ import {
   type Lap,
   type Reference,
 } from "../../../../packages/shared/schema";
-import { prepareTimeComparison, signed } from "../../../../packages/telemetry";
+import {
+  comparisonTone,
+  prepareTimeComparison,
+  signed,
+} from "../../../../packages/telemetry";
 import { viewportFraction, type PlotViewport } from "../plotViewport";
 
 export function TimeDeltaPlot({
@@ -31,8 +35,11 @@ export function TimeDeltaPlot({
   );
   const plot = useMemo(() => {
     if (!comparison || !lap) return null;
-    const bound =
-      Math.max(0.1, ...comparison.samples.map((s) => Math.abs(s.delta))) * 1.1;
+    const maxDelta = Math.max(
+      0,
+      ...comparison.samples.map((s) => Math.abs(s.delta)),
+    );
+    const bound = Math.max(0.1, maxDelta) * 1.1;
     const max = axis === "distance" ? lap.length : lap.lapTime;
     const path = comparison.samples
       .map(
@@ -40,7 +47,12 @@ export function TimeDeltaPlot({
           `${i ? "L" : "M"}${((s[axis] / max) * 1000).toFixed(3)},${(100 - (s.delta / bound) * 90).toFixed(3)}`,
       )
       .join(" ");
-    return { bound, max, path };
+    return {
+      bound,
+      max,
+      path,
+      neutral: comparisonTone(maxDelta) === "neutral",
+    };
   }, [comparison, lap, axis]);
   if (!lap || !reference || !comparison || !plot)
     return (
@@ -64,10 +76,7 @@ export function TimeDeltaPlot({
       <div className="delta-readout">
         <div>
           <span>Time delta at cursor</span>
-          <strong
-            className={delta <= 0 ? "positive" : "negative"}
-            data-testid="cursor-delta"
-          >
+          <strong className={comparisonTone(delta)} data-testid="cursor-delta">
             {signed(delta)} s
           </strong>
         </div>
@@ -155,7 +164,7 @@ export function TimeDeltaPlot({
             <path
               d={plot.path}
               fill="none"
-              stroke="#f3424e"
+              stroke={plot.neutral ? "#526379" : "#f3424e"}
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
               clipPath={`url(#${id}-slower)`}
@@ -163,7 +172,7 @@ export function TimeDeltaPlot({
             <path
               d={plot.path}
               fill="none"
-              stroke="#079e71"
+              stroke={plot.neutral ? "#526379" : "#079e71"}
               strokeWidth="2"
               vectorEffect="non-scaling-stroke"
               clipPath={`url(#${id}-faster)`}

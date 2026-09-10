@@ -99,6 +99,9 @@ small,
 .negative {
   color: var(--red) !important;
 }
+.neutral {
+  color: #526379 !important;
+}
 .application {
   min-height: 100vh;
   display: flex;
@@ -1242,6 +1245,9 @@ select {
 }
 .delta-badge.negative {
   background: #fff0f0;
+}
+.delta-badge.neutral {
+  background: #eef2f6;
 }
 .delta-badge.negative svg {
   transform: rotate(-90deg);
