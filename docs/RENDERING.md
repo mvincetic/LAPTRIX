@@ -21,6 +21,15 @@ applying its pose. Fiber also handles scene-property and canvas-size changes.
 No polling timer, second clock, lower-resolution mode or renderer recreation is
 introduced.
 
+Road-shoulder width arrays now share the track-keyed memo already used for asphalt.
+Previously, inline array creation defeated Ribbon's geometry memo on unrelated
+renders. A desktop/phone WebGL probe measured three buffer deletions and three
+uploads totalling 51,840 bytes after each pending-fuel edit, key toggle, viewer tab
+and Top View change. The mesh dimensions and contents did not change. Existing
+browser checks now count actual buffer allocation/deletion as well as draws and
+frames, requiring unchanged buffers after pending edits and key toggles. A new
+track still creates fresh width arrays and follows normal geometry disposal.
+
 ## Shared clock lifetime
 
 `PlaybackClock` now schedules animation callbacks only while playing and owned by

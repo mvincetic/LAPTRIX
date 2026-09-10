@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-10 — Retain unchanged shoulder geometry
+
+**Decision:** Memoize shoulder widths beside the existing asphalt widths by track
+identity. **Reasoning:** Inline expanded-width arrays caused every pending setup,
+key, tab and camera change to delete three GPU buffers and upload 51,840 bytes
+again on the source-grid scene. **Consequences:** Ribbon's existing geometry memo
+now survives ordinary renders. Dimensions, materials, disposal on replacement,
+sampling and solver data retain the same behavior. Real buffer counters extend
+the existing demand-render checks; no additional cache or dependency is introduced.
+
+
 ## 2026-09-10 — Expose short-scene markers through a collapsible key
 
 **Decision:** Make the track key a native disclosure, initially collapsed below

@@ -123,11 +123,27 @@ and no main merge, force-push or repository-settings change was made.
   Added per-step fuel assertions pass in the isolated case and all nine repeated
   desktop/phone/short journeys (55.0 seconds); no application fix is claimed for
   that observation. The log remains as evidence for further investigation.
+  A subsequent native-input trace repeats nine sequences across all three sizes,
+  including one round at six-times CPU slowdown. All retain fuel 21, with only the
+  intentional fill producing Fuel load input/change events. No cause is inferred
+  from the non-reproduction. The ignored read-only harness and records are
+  `artifacts/fullscreen-input-probe.mjs`, `.json` and `.log`.
   The final compact-width implementation passes all 16 relevant browser journeys
   together (2.0 minutes), including the strengthened per-step fuel, label separation
   and zero-idle-frame assertions.
   All four final production loading/restoration journeys pass in 20.2 seconds;
   evidence is `artifacts/track-key-production-final.log`.
+  Stable shoulder widths retain 203 TypeScript and 146 Python passes (42.25 seconds
+  for Python), lint/typechecking and build. The initial buffer probe wrapper's
+  TypeScript overload mismatch was corrected with an explicit variadic forwarding
+  signature; the application change is limited to memoized width arrays.
+  Both strengthened buffer-retention browser checks fail before the application
+  correction. All eight relevant demand/key/import-framing/restoration journeys
+  then pass together (1.5 minutes). The separate settled GPU probe records zero
+  uploads and deletions for all eight desktop/phone UI interactions, replacing
+  three deletions and 51,840 bytes of uploads per interaction before the change.
+  All four final production loading/restoration journeys pass in 19.9 seconds,
+  recorded in `artifacts/shoulder-buffers-production.log`.
 - Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -208,6 +224,16 @@ to pointer hit testing. Final desktop, phone and short fullscreen captures were
 opened and reviewed, including deliberate expansion in the crowded short view.
 Evidence is `artifacts/track-key-qa-final.log`, `track-key-qa.json` and
 `track-key-*.png`.
+The shoulder-width refinement repeats all 20 visual states successfully. The
+desktop and phone default PNG files match their pre-change SHA-256 hashes exactly;
+the desktop scene was also reopened and reviewed. This confirms the existing
+rendered result for those captures while removing buffer replacement work.
+Evidence is `artifacts/shoulder-buffers-before.log`, `shoulder-buffers-browser.log`,
+`shoulder-buffers-check-final.log`, `shoulder-buffers-qa.log`,
+`geometry-churn-before.json`, `geometry-churn-probe.json` and
+`geometry-churn-after-settled.log`. An earlier probe sampled a phone still uploading
+its initial scene; it is retained in `geometry-churn-after-unsettled.json`. The
+final probe explicitly awaits a populated and settled renderer before counting.
 
 Custom-window visual QA initially passes 20 states at 1600×1000, 1280×900, 390×844 and
 780×390, plus two workspace captures. The editor, native distance/time curves,

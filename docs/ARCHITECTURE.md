@@ -26,6 +26,9 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+Road and shoulder widths share the existing track-keyed memo. Ordinary setup or
+viewer-state renders retain Ribbon geometry and its GPU buffers; track replacement
+still derives fresh widths and disposes replaced geometry normally.
 The Fiber canvas renders on demand when paused. A subscription to the existing
 clock requests frames after actions; active playback continues the existing Fiber
 frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes

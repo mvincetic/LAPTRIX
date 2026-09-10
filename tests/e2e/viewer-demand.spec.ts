@@ -6,7 +6,7 @@ for (const width of [1600, 390]) {
   }) => {
     await page.setViewportSize({ width, height: 1000 });
     await page.addInitScript(() => {
-      const stats = { draws: 0, frames: 0 };
+      const stats = { draws: 0, frames: 0, uploads: 0, deletions: 0 };
       Object.assign(window, { laptrixRenderProbe: stats });
       const request = window.requestAnimationFrame.bind(window);
       window.requestAnimationFrame = (callback) =>
@@ -28,6 +28,19 @@ for (const width of [1600, 390]) {
           return context;
         seen.add(context);
         const gl = context as WebGL2RenderingContext;
+        const upload = gl.bufferData;
+        gl.bufferData = function (
+          this: WebGL2RenderingContext,
+          ...values: unknown[]
+        ) {
+          stats.uploads++;
+          return Reflect.apply(upload, this, values);
+        };
+        const remove = gl.deleteBuffer;
+        gl.deleteBuffer = function (...values) {
+          stats.deletions++;
+          return Reflect.apply(remove, this, values);
+        };
         for (const name of [
           "drawArrays",
           "drawElements",
@@ -88,6 +101,19 @@ for (const width of [1600, 390]) {
     }
     await expect.poll(draws).toBeGreaterThan(0);
     await settled();
+    const buffers = () =>
+      page.evaluate(() => {
+        const { uploads, deletions } = (
+          window as unknown as {
+            laptrixRenderProbe: { uploads: number; deletions: number };
+          }
+        ).laptrixRenderProbe;
+        return { uploads, deletions };
+      });
+    const existingBuffers = await buffers();
+    await page.getByRole("slider", { name: "Fuel load" }).fill("21");
+    await settled();
+    expect(await buffers()).toEqual(existingBuffers);
     for (let toggle = 0; toggle < 2; toggle++) {
       const beforeKey = await draws();
       await page
@@ -95,6 +121,7 @@ for (const width of [1600, 390]) {
         .click();
       await expect.poll(draws).toBeGreaterThan(beforeKey);
       await settled();
+      expect(await buffers()).toEqual(existingBuffers);
     }
     const cursor = page.getByRole("slider", { name: "Lap playback position" });
     let previous = await draws();

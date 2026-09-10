@@ -415,6 +415,8 @@ export function TrackView({
     () => ({
       left: track.points.map((p) => p.widthLeft),
       right: track.points.map((p) => p.widthRight),
+      shoulderLeft: track.points.map((p) => p.widthLeft + 4),
+      shoulderRight: track.points.map((p) => p.widthRight + 4),
     }),
     [track],
   );
@@ -502,8 +504,8 @@ export function TrackView({
             {layers.terrain && <Landscape track={track} />}
             <Ribbon
               track={track}
-              left={widths.left.map((w) => w + 4)}
-              right={widths.right.map((w) => w + 4)}
+              left={widths.shoulderLeft}
+              right={widths.shoulderRight}
               color="#f9faf9"
               lift={0.25}
             />

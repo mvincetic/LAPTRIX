@@ -82,11 +82,13 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for the compact track key; 117 development journeys are now
-   discovered. Fullscreen recovery passes all 114 preceding journeys remotely.
-2. Investigate a single pending-fuel change observed during the initial short-screen
-   resize journey. Per-step assertions, nine repeated cases and the final relevant
-   browser run pass; the cause has not been established. Preserve its evidence.
+1. Verify remote CI for the compact key and stable shoulder geometry. There are
+   117 development journeys; fullscreen recovery passes all 114 preceding journeys
+   remotely. The updated local buffer-retention checks pass.
+2. Review synthetic terrain visibility against the rendered road in close cameras
+   and valid sloped imports. Retain original source geometry and keep the synthetic
+   surroundings explicit. The single prior fuel observation remains documented;
+   nine additional native-event traces, including slowed runs, did not reproduce it.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -95,6 +97,9 @@ explicit choices across viewer transitions. Browser/visual QA confirms the obser
 corner-1 obstruction is removed in those compact defaults, while expanded state
 remains an optional overlay. Canonical marker positions and the same demand
 renderer remain. See TRACK_KEY.md for thresholds and bounded evidence.
+Shoulder width arrays now retain their identity until track data changes, removing
+unchanged GPU buffer replacements after ordinary setup and viewer interactions.
+The existing renderer and disposal path remain; see RENDERING.md.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
 cache. Activation is transactional; metadata, references, built-ins and pending edits
