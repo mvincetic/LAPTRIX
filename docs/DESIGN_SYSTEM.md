@@ -29,6 +29,11 @@ Overview framing includes source road edges and shoulders, with the same camera
 directions and margin at every width. Large sources use expanded clipping planes;
 small or tall sources have reachable zoom bounds. Reset restores the full fit
 without changing playback. See CAMERA_FRAMING.md for the rendering contract.
+Selected-corner event buttons retain readable CSS-pixel dimensions across zoom
+levels. Red/amber/green leaders and dots connect Brake, Turn-in and Throttle labels
+to their actual samples. A compact ordered group avoids mutual label overlap;
+placement considers legends, captions and other scene labels. Accessible button
+names include event distance. See CORNER_CALLOUTS.md for crowded-view limits.
 Channel plots reserve a 36 px scale column beside the live readings. Neutral 9 px
 HTML limits align with faint upper/lower row guides; signed ranges add a dashed
 zero guide. A zero label appears only where it fits between the bounds. Large

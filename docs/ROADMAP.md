@@ -82,12 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Resolve overlapping selected-corner event callouts observed in the final GT
-   refinement view, preserving their authoritative positions and numeric controls.
-2. Extend whole-lap inspection of the new vertical acceleration and tyre-load data,
+1. Extend whole-lap inspection of the new vertical acceleration and tyre-load data,
    including explicit availability when comparing older references. Preserve the
    shared source alignment, units, cursor and existing seven-channel overview.
-3. Revisit measured calibration and reusable 3D data when complete inputs are
+2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
@@ -163,18 +161,21 @@ every solver mode. An independent contact-speed cap also constrains straight cre
 Declared vertical/load telemetry, matching minima and exact cursor readouts preserve
 legacy references without invented channels. Fourteen analytical Python cases and
 both vehicles on source/5 m/3 m grids check the correction; see VERTICAL_LOAD.md.
+Selected-corner event callouts now use screen-space placement and leader lines to
+their unchanged telemetry anchors. Native buttons retain exact seeking while
+camera/layer changes update the layout. See CORNER_CALLOUTS.md.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 130 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip/contact benchmarks. The 132 TypeScript tests cover
+extremes and analytical work/grip/contact benchmarks. The 140 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
-contracts and clock/data invariants.
-Eighty-two browser journeys cover the
+contracts, corner-callout placement and clock/data invariants.
+Eighty-four browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -184,7 +185,8 @@ profile inspection/export, large-track camera visibility, orbit/reset/chase nort
 unsupported optimized-line recovery, signed-zero reference/project round trips,
 ordering of delayed reference reads/hashes including asynchronous read rejection,
 neutral displayed deltas with full-precision reference preservation,
-device-storage and audio-start recovery, declared/legacy load telemetry, and the
+device-storage and audio-start recovery, declared/legacy load telemetry, separate
+corner event callouts through camera/layer changes, and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

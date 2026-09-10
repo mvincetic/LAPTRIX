@@ -1,5 +1,13 @@
 # Performance
 
+The corner-callout update keeps the layout/projector in the deferred viewer chunk:
+957.77 kB JavaScript (256.45 kB gzip) plus 0.26 kB CSS (0.17 kB gzip). The entry is
+400.57 kB (121.66 kB gzip). Only camera/projection/viewport/event or relevant UI
+changes trigger projection and occupied-rectangle measurement; stable frames reuse
+the result. Free-space search considers at most 64 horizontal positions with one
+nearest free vertical position per column. There are at most three event controls and no additional
+playback timer. These bundle figures are from the final local production build.
+
 At the vertical-load milestone, the production entry is 400.41 kB (121.55 kB gzip),
 the separately loaded viewer 953.50 kB (254.82 kB gzip), and CSS 49.80 kB (10.74 kB
 gzip). Curvature and normal load are computed once per speed envelope and exported

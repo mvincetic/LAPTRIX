@@ -32,6 +32,12 @@ planes, including bounded terrain context. CameraRig applies the fit and project
 matrix after source/mode/size changes or reset; chase still consumes the shared
 telemetry clock. The helper remains inside the deferred viewer dependency graph.
 See CAMERA_FRAMING.md for bounds and independent projection checks.
+Selected-corner callouts project exact event samples within the existing viewer
+frame loop. A bounded CSS-pixel layout keeps buttons separate and connects them to
+their anchors with SVG leaders, considering visible UI rectangles. Camera/data/
+viewport/layer changes invalidate cached placement; stable frames do not rebuild it.
+Native buttons seek the existing clock, and the component remains deferred with
+the viewer. See CORNER_CALLOUTS.md for limits and regression evidence.
 CameraRig clears residual orbit damping before fitting. The north indicator
 projects `-z` through the actual camera quaternion after its existing frame update;
 only changed arrow angles and accessible direction labels write to the DOM.

@@ -1,0 +1,20 @@
+.corner-callouts {
+  position: absolute;
+  pointer-events: none;
+}
+.corner-callouts svg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.corner-callouts .event-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 76px;
+  height: 24px;
+  padding: 3px;
+  white-space: nowrap;
+  pointer-events: auto;
+  font-size: 8px;
+}

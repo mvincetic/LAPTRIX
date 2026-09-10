@@ -8,17 +8,19 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 132 tests pass.
+- Vitest: 140 tests pass.
 - Python numerical/API tests: 130 tests pass.
-- Playwright: all 82 development journeys pass (13.4 minutes), including the new
-  load-telemetry contracts. Five focused cursor/compatibility journeys also pass.
-  Both viewer journeys pass against built production assets (10.9 seconds).
+- Playwright: the preceding vertical-load milestone passes all 82 development
+  journeys (13.4 minutes). The corner-callout update adds two journeys and passes
+  all 15 relevant browser regressions (2.5 minutes); 84 are now discovered.
+  Its final placement revision passes both focused journeys (30.6 seconds) and
+  both production viewer checks (10.4 seconds).
 - Vite production build: pass; approximately 400 kB initial JavaScript / 122 kB
   gzip, plus a separate 954 kB viewer / 255 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `86edfa2` (run 34461731682), including typed workspace
-  recovery, the Chrome-source fix and the expanded bounded browser budget. Each following
+- GitHub Actions passed through `15e1255` (run 34470528022), including vertical-load
+  physics/compatibility, the Chrome-source fix and the bounded browser budget. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
@@ -641,9 +643,9 @@ errors. The 1280 px panel, its scrolled state and phone panel were opened and
 reviewed. GT + 5 m sampling + lap-time refinement was visually exercised at
 1600/1280/900/390 px; the desktop, full phone and selected-corner images were opened.
 The displayed 91.445 s result and 0.072 s seed gain agree with the numerical study.
-An existing selected-corner issue remains visible: nearby event callouts can overlap
-in the scene, although the labelled numerical event controls remain usable. This
-is recorded for the following interface-quality work.
+That review identified overlapping selected-corner event callouts in the scene;
+the labelled numerical controls remained usable. The following callout milestone
+addresses the observed issue.
 
 A real-browser export check compares every numeric field of all 721 CSV rows with
 the JSON samples: all 19 channels agree exactly, including vertical acceleration
@@ -657,6 +659,49 @@ Evidence: `artifacts/vertical-load-check-final.log`,
 `vertical-load-oracles-final.log`, `vertical-load-formula-sampling.json`,
 `vertical-load-gt-sampling.json` and `vertical-load-cursor-*.png`.
 The preceding workspace-error milestone passed remote CI run 34461731682.
+
+## Corner-callout continuation
+
+The original GT 5 m refined-lap overlap is reproduced by a desktop browser
+regression in `artifacts/corner-callouts-before.log`, with its screenshot/trace in
+`artifacts/corner-callouts-before-results`. The corrected layout passes all eight
+new geometry cases and the complete 140-test TypeScript / 130-test Python suites,
+lint, strict typecheck and build in `artifacts/corner-callouts-check-release.log`.
+
+Both new browser journeys pass first in 25.3 seconds. Expanded final checks verify
+that leader anchors move after top/orbit camera changes, labels remain contained
+and separate, reset works, chase suppresses the group, and returning/re-enabling
+sector labels preserves a usable layout. Every event button seeks its exact
+exported sample time. The complete exported project and pending 21 kg fuel remain
+unchanged with zero new simulation requests. All 15 relevant browser journeys pass
+in 2.5 minutes, including camera framing, north/reset, dashboard, cursor, keyboard
+tabs and viewer loading. This interface change uses targeted browser coverage.
+Evidence is `artifacts/corner-callouts-browser-final.log`.
+
+The new desktop/full-phone selected-corner screenshots were opened and reviewed.
+The labels are separate, and leader lines connect them to distinct points on the
+track. On the phone, limited space can place the group farther from its anchors;
+the numerical controls remain in the analysis panel. CORNER_CALLOUTS.md documents
+the placement heuristic and crowded/offscreen limits.
+
+The wider QA initially found event groups covering other scene labels in some
+phone views, despite mutual separation. The refined layout searches free vertical
+gaps at up to 64 horizontal positions; an additional geometry regression requires
+displacement on both axes. Final QA inspects all six GT corners in orbit/top views
+at 1600/1280/390 px: all 36 states retain contained, separate event buttons with zero
+overlap against the inspected labels/controls, zero horizontal overflow and no
+runtime errors. Final phone orbit/top and 1280 px top-view screenshots were opened
+and reviewed. The earlier evidence is retained in `corner-callouts-qa-before.json`
+and `corner-callouts-obstacle-before.png`; final records are
+`artifacts/corner-callouts-qa.json`, `corner-callouts-qa-final.log` and
+`corner-callouts-scene-*.png`.
+
+The final desktop/phone interaction journeys pass again in 30.6 seconds and both
+production viewer journeys in 10.4 seconds. Evidence is
+`artifacts/corner-callouts-browser-release.log` and
+`corner-callouts-production-release.log`. No physics, source data or project-format
+change is part of this interface milestone. Vertical-load commit `15e1255` also
+passed remote CI run 34470528022.
 
 ## Scope of the evidence
 

@@ -43,6 +43,7 @@ the last completed result remains visible if a solve fails.
 - Formula and GT development profiles with inspectable parameters, sources and assumptions.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
+- Readable selected-corner callouts with leader lines to authoritative event positions.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Orbit, top and chase cameras; configurable analysis layers.

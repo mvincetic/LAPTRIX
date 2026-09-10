@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-10 — Separate scene callout layout from event geometry
+
+**Decision:** Lay out selected-corner event buttons in CSS pixels and connect them
+to projected sample positions with SVG leaders. Reuse the viewer frame loop and
+cache placement between relevant changes. **Reasoning:** Final GT visual review
+showed that world-metre label offsets collapse into overlapping text when zoomed
+out. A browser regression reproduces the overlap. **Consequences:** Events retain
+their exact samples/times and existing seek actions. Buttons stay separate and
+inside supported canvas bounds, while a bounded heuristic reduces overlap with
+other visible UI. A wider phone review exposed collisions with other labels;
+the layout now searches free vertical gaps at up to 64 horizontal positions.
+Offscreen events are omitted; no source location is invented.
+This adds no simulation state or independent playback timing. See CORNER_CALLOUTS.md.
+
 ## 2026-09-10 — Model quasi-steady crest/compression contact load explicitly
 
 **Decision:** Derive signed vertical curvature from adjacent horizontal-distance/

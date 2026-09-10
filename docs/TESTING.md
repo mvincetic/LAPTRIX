@@ -1,5 +1,12 @@
 # Testing and validation
 
+Corner-callout layout tests cover coincident events at viewport edges, occupied
+space, preserved anchors/order, offscreen data and insufficient room. A browser
+regression first reproduces the old world-offset label overlap. The new desktop/
+phone journeys use an actual GT 5 m refined lap, check separate contained controls,
+verify each exact event time, and retain pending fuel and the full project through
+camera/layer actions with no simulation requests. See CORNER_CALLOUTS.md.
+
 Vertical-load coverage includes fourteen Python cases for exact circular arcs,
 nonuniform straight grades, three independently differentiated smooth height waves
 and a straight crest requiring the separate contact bound. Existing slope,

@@ -31,6 +31,9 @@ including large imported circuits. Source-scaled clipping and reachable zoom bou
 preserve road visibility on reset without altering a result or the shared clock.
 The north arrow follows actual orbit and chase orientation, with an accessible
 screen-direction label. Reset clears residual drag motion before restoring the fit.
+Selected-corner event labels now stay separate at overview scale, with leader lines
+back to their actual telemetry positions. Their buttons pause and seek the same
+clock; existing numerical event controls remain available. See CORNER_CALLOUTS.md.
 Source geometry inspection identifies projected segment contacts and their height
 gaps, with an original-track diagram and exportable report. It helps review imports
 without implying surveyed road accuracy or validated bridge clearance.

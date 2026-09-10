@@ -30,6 +30,7 @@ import {
   type Vehicle,
 } from "../../../../packages/shared/schema";
 import { TelemetryGhost } from "./TelemetryGhost";
+import { CornerCallouts } from "./CornerCallouts";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
@@ -518,41 +519,6 @@ export function TrackView({
               );
             })}
             {lap &&
-              selectedCorner &&
-              mode !== "chase" &&
-              lap.corners
-                .filter((c) => c.id === selectedCorner)
-                .flatMap((c) =>
-                  (
-                    ["brakingIndex", "turnInIndex", "throttleIndex"] as const
-                  ).map((event, i) => {
-                    const sample = lap.samples[c[event]],
-                      normal = frame.normals[c[event]];
-                    return (
-                      <Html
-                        key={event}
-                        center
-                        zIndexRange={[11, 1]}
-                        position={[
-                          sample.x - normal[0] * 28,
-                          sample.y + 20 + i * 14,
-                          sample.z - normal[2] * 28,
-                        ]}
-                      >
-                        <button
-                          className={`event-marker event-${i}`}
-                          onClick={() => {
-                            clock.play(false);
-                            clock.seek(sample.time);
-                          }}
-                        >
-                          {["BRAKE", "TURN-IN", "THROTTLE"][i]}
-                        </button>
-                      </Html>
-                    );
-                  }),
-                )}
-            {lap &&
               layers.sectors &&
               mode !== "chase" &&
               lap.sectors.map((s) => {
@@ -615,6 +581,14 @@ export function TrackView({
               clock={clock}
               northIndicator={northIndicator}
             />
+            {lap && selectedCorner && mode !== "chase" && (
+              <CornerCallouts
+                lap={lap}
+                cornerId={selectedCorner}
+                clock={clock}
+                layoutKey={`${tab}:${layers.sectors}:${layers.corners}`}
+              />
+            )}
           </Canvas>
         </SceneBoundary>
         <div className="scene-top-left">
