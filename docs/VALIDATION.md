@@ -225,7 +225,22 @@ and no main merge, force-push or repository-settings change was made.
   journeys because the existing two export scenarios were strengthened.
   All four production loading/restoration journeys pass in 20.8 seconds;
   evidence is `artifacts/comparison-csv-production.log`.
-- Vite production build: pass; approximately 427 kB initial JavaScript / 129 kB
+  CSV workload profiling records three repetitions of eight original helper
+  workloads at normal and synthetic six-times CPU slowdown. The first 64-column
+  draft exceeded 5 MB and was rejected by the harness; the corrected fixture fits
+  all import limits. Explicit browser-global declarations resolve the new script's
+  initial lint errors. Final baseline/follow-up runs preserve every output row's
+  timing values and document substantial large-input processing costs.
+  The allocation correction removes nested CSV field-pair arrays, reducing the
+  maximum serializer from 105.5–111.6 ms to 42.5–53.1 ms locally and from
+  957.9–981.8 ms to 328.8–334.2 ms under slowdown. No UI, schema, data, units or
+  interpolation changed. The full gate passes 251 TypeScript and 146 Python tests
+  (41.52 seconds), lint, typecheck and build; both actual native/timing CSV/JSON
+  browser export journeys pass in 17.2 seconds. See CSV_WORKLOADS.md for limits,
+  artifact paths and remaining synchronous work. The prior visual layout remains.
+  All four production loading/restoration journeys pass in 21.6 seconds;
+  evidence is `artifacts/csv-allocation-production.log`.
+- Vite production build: pass; approximately 428 kB initial JavaScript / 130 kB
   gzip, plus a separate 966 kB viewer / 259 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.

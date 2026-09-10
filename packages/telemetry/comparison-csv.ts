@@ -44,22 +44,22 @@ export const comparisonCsvHeaders = [
 
 /** Serialize the existing full-lap comparison; absent channels stay empty, not zero. */
 export function comparisonReportCsv(report: ComparisonReport): string {
-  return [
-    comparisonCsvHeaders.join(","),
-    ...report.samples.map((row) =>
-      [
-        row.progress,
-        row.current.time,
-        row.reference.time,
-        row.deltaTime,
-        ...channels.flatMap((field) =>
-          sides.map((side) => {
-            const sample: Partial<Sample> = row[side];
-            return sample[field] ?? "";
-          }),
-        ),
-      ].join(","),
-    ),
-    "",
-  ].join("\r\n");
+  const lines = new Array<string>(report.samples.length + 2);
+  lines[0] = comparisonCsvHeaders.join(",");
+  for (let index = 0; index < report.samples.length; index++) {
+    const row = report.samples[index];
+    const current: Partial<Sample> = row.current;
+    const reference: Partial<Sample> = row.reference;
+    const cells: (number | string)[] = [
+      row.progress,
+      row.current.time,
+      row.reference.time,
+      row.deltaTime,
+    ];
+    for (const field of channels)
+      cells.push(current[field] ?? "", reference[field] ?? "");
+    lines[index + 1] = cells.join(",");
+  }
+  lines[lines.length - 1] = "";
+  return lines.join("\r\n");
 }

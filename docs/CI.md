@@ -177,3 +177,9 @@ passes through `7bf1be6`: all 126 development journeys (64 in 11.8 minutes and
 62 in 10.5 minutes), 246 TypeScript tests, 146 Python tests (42.61 seconds), all
 quality gates and four production journeys (29.4 seconds). All seven CSV mapping,
 ordering, cancellation, persistence and live-playback cases pass remotely.
+
+The [bounded-actions run](https://github.com/mvincetic/LAPTRIX/actions/runs/34516267889)
+passes through `a5cad17`: all 128 development journeys (64 in 7.8 minutes and
+64 in 11.1 minutes), 246 TypeScript tests, 146 Python tests (24.36 seconds), all
+quality gates and four production journeys (21.0 seconds). Short-menu keyboard,
+resize and contained-wheel checks pass alongside CSV and native modal workflows.

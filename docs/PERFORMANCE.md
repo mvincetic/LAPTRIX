@@ -5,7 +5,7 @@ completion. Both widths previously executed 32 animation callbacks in a half-sec
 despite zero WebGL draws; the strengthened settled-workspace tests now require zero
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
-all browser/audio processing. Entry JavaScript is 428.09 kB (129.46 kB gzip); main
+all browser/audio processing. Entry JavaScript is 428.21 kB (129.51 kB gzip); main
 CSS is 55.97 kB (11.76 kB gzip) and deferred viewer JavaScript is 966.27 kB
 (259.05 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
@@ -33,6 +33,12 @@ The maximum 21,999-row union has 40 columns, with empty unavailable channels;
 its serialization is covered by the maximum-grid test. No export work is added
 to playback frames. The JSON input snapshots are built by the shared report
 builder but omitted from CSV text; large files still require local browser memory.
+Profiling found substantial accepted-file parsing and maximum-export costs.
+Removing nested per-field pair arrays reduces the largest CSV serialization from
+105.5–111.6 ms to 42.5–53.1 ms locally, and from 957.9–981.8 ms to 328.8–334.2 ms
+under a synthetic six-times CPU slowdown. Report construction and large CSV parsing
+still run synchronously and can pause the UI. See CSV_WORKLOADS.md for fixture
+scope, separate stage measurements and remaining background-processing work.
 
 Comparison export brings the entry to 411.71 kB JavaScript (124.93 kB gzip), with
 51.73 kB main CSS (11.09 kB gzip). The deferred viewer remains 962.28 kB (257.66 kB

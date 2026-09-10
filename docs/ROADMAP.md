@@ -82,12 +82,17 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for the bounded actions menu and comparison CSV export.
-   Reviewed timing CSV passes all preceding 126 development journeys remotely.
-2. Profile upper-bound CSV import and comparison-export work in the browser,
-   then address demonstrated responsiveness or memory issues within existing limits.
+1. Verify remote CI for comparison CSV and the allocation reduction. The bounded
+   actions menu passes all preceding 128 development journeys remotely.
+2. Move measured large-file CSV parsing/conversion into cancellable background
+   work, then address maximum comparison-report/export work on the same evidence.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+Browser workload profiling covers accepted near-5-MB imports and maximum comparison
+grids at normal/synthetically slowed CPU. Replacing nested CSV pair arrays reduces
+serialization cost while preserving rows and units. Large parsing and report work
+remain synchronous and measurable; see CSV_WORKLOADS.md for the follow-up priority.
 
 Time Delta now exports flat CSV rows from the same full-lap comparison report.
 Forty canonical-unit columns preserve independent times, deltas and paired channels,
