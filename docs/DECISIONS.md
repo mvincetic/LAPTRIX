@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Keep each workspace error with its recovery action
+
+**Decision:** Replace separate message/action state with one typed error value,
+including an explicit Enable audio again action. **Reasoning:** After the Save
+recovery fix, browser checks also reproduced audio-start failures inheriting
+simulation Retry or Download project. Keeping the fields separate allowed a new
+failure to reuse unrelated recovery metadata. **Consequences:** Every failure now
+chooses its action when publishing its message. Existing calculation/import retries
+retain their behavior. Successful audio enable and Save clear only their respective
+current warning through functional state updates, so a delayed audio success cannot
+erase a newer reference error. Retrying audio preserves the workspace and clock.
+
 ## 2026-09-10 — Recover failed device Save through the existing portable export
 
 **Decision:** Give storage failures an explicit Download project action, sharing

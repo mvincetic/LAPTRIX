@@ -82,7 +82,11 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Revisit measured calibration and reusable 3D data when complete inputs are
+1. Add independently benchmarked quasi-steady crest/compression tyre loads,
+   explicit road-contact limits and inspectable authoritative vertical/load data.
+   A read-only original smooth-crest study demonstrates why the existing omission
+   matters. Preserve explicit legacy telemetry semantics when extending the model.
+2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
@@ -150,6 +154,9 @@ Device Save failures now offer Download project through the same portable writer
 as the actions menu. Recovery retains completed results, pending setup, references,
 playback and the previous device save. Successful Save clears only its storage
 warning, leaving other failures' recovery actions available. See PROJECT_FILES.md.
+Workspace errors now keep messages and recovery actions together. Audio startup
+has its own explicit retry, reusing its context and preserving the project/clock.
+Delayed successful audio activation retains newer unrelated errors. See AUDIO_ENGINE.md.
 
 ## Stabilization evidence
 
@@ -160,7 +167,7 @@ geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
 north direction, verified signed-zero migration, display precision and clock/data invariants.
-Seventy-six browser journeys cover the
+Seventy-nine browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -170,7 +177,7 @@ profile inspection/export, large-track camera visibility, orbit/reset/chase nort
 unsupported optimized-line recovery, signed-zero reference/project round trips,
 ordering of delayed reference reads/hashes including asynchronous read rejection,
 neutral displayed deltas with full-precision reference preservation,
-device-storage failure recovery, and the
+device-storage and audio-start recovery, and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

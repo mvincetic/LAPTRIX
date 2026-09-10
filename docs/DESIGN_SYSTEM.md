@@ -185,3 +185,6 @@ Storage failures use the existing error banner with an explicit **Download proje
 button. The message identifies device storage and preserves the warning after a
 download; successful device Save clears it. The phone layout keeps the full error
 text above its recovery and dismissal controls.
+Audio-start failures use **Enable audio again** in that same banner. Successful
+activation clears only an audio warning; normal transport mute/enable controls
+remain the ongoing audio interaction.

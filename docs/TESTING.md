@@ -246,6 +246,12 @@ recovery, complete bundle equality, pending versus completed setup, unchanged
 cursor and zero simulation requests. Restoring storage then verifies actual Save
 and warning clearance; successful Save must preserve unrelated reference errors.
 
+Audio-recovery browser cases reject the first native AudioContext resume and then
+permit a real retry. Desktop/phone checks retain complete project exports, pending
+fuel and playback, count zero simulation calls and verify one reused audio context.
+A controlled delayed retry then completes after a reference import fails; the
+newer reference error and its retry action must remain available.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

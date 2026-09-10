@@ -52,6 +52,29 @@ const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
 const storageKey = "laptrix.project.v1";
 
+type WorkspaceError = {
+  message: string;
+  action:
+    | "retry"
+    | "import-reference"
+    | "import-project"
+    | "import-track"
+    | "import-gpx"
+    | "import-vehicle"
+    | "export-project"
+    | "enable-audio";
+};
+const recoveryLabels: Record<WorkspaceError["action"], string> = {
+  retry: "Retry",
+  "import-reference": "Import reference again",
+  "import-project": "Import project again",
+  "import-track": "Import track again",
+  "import-gpx": "Review GPX again",
+  "import-vehicle": "Import vehicle again",
+  "export-project": "Download project",
+  "enable-audio": "Enable audio again",
+};
+
 export function App() {
   const [projectName, setProjectName] = useState("Development workspace");
   const [catalog, setCatalog] = useState<Catalog | null>(null),
@@ -61,20 +84,11 @@ export function App() {
     [lap, setLap] = useState<Lap | null>(null),
     [reference, setReference] = useState<Reference | null>(null);
   const [busy, setBusy] = useState(true),
-    [error, setError] = useState(""),
+    [error, setError] = useState<WorkspaceError | null>(null),
     [notice, setNotice] = useState(""),
     [selectedCorner, setSelectedCorner] = useState<number | null>(null),
     [menu, setMenu] = useState(false),
     [audio, setAudio] = useState(false);
-  const [errorAction, setErrorAction] = useState<
-    | "retry"
-    | "import-reference"
-    | "import-project"
-    | "import-track"
-    | "import-gpx"
-    | "import-vehicle"
-    | "export-project"
-  >("retry");
   const fileInput = useRef<HTMLInputElement>(null),
     referenceInput = useRef<HTMLInputElement>(null),
     projectInput = useRef<HTMLInputElement>(null),
@@ -95,7 +109,7 @@ export function App() {
     retryTarget.current = null;
     setCancellable(true);
     setBusy(true);
-    setError("");
+    setError(null);
     clock.play(false);
     return { id, signal: controller.signal };
   }, []);
@@ -114,7 +128,7 @@ export function App() {
     retryTarget.current = null;
     setCancellable(false);
     setBusy(false);
-    setError("");
+    setError(null);
     setNotice("Calculation cancelled. Workspace kept; server work may finish.");
   };
   const [aeroComparison, setAeroComparison] = useState(false);
@@ -147,7 +161,6 @@ export function App() {
       makeReference = false,
     ) => {
       const { id, signal } = beginCalculation();
-      setErrorAction("retry");
       try {
         const custom = customTracks.current.has(selectedTrack.id);
         const inlineVehicle = customVehicles.current.get(selectedVehicle);
@@ -180,9 +193,10 @@ export function App() {
       } catch (e) {
         if (id === generation.current) {
           retryTarget.current = { track: selectedTrack, makeReference };
-          setError(
-            `${selectedTrack.name}: ${e instanceof Error ? e.message : "Simulation failed. Please retry."}`,
-          );
+          setError({
+            action: "retry",
+            message: `${selectedTrack.name}: ${e instanceof Error ? e.message : "Simulation failed. Please retry."}`,
+          });
         }
       } finally {
         finishCalculation(id);
@@ -207,14 +221,20 @@ export function App() {
       setAudio(false);
       return;
     }
+    setNotice("");
     try {
       await audioEngine.enable();
       setAudio(true);
+      setError((current) =>
+        current?.action === "enable-audio" ? null : current,
+      );
       setNotice("Procedural engine audio enabled · play the lap to listen");
     } catch {
-      setError(
-        "Audio could not start in this browser. Try enabling audio again.",
-      );
+      setError({
+        action: "enable-audio",
+        message:
+          "Audio could not start in this browser. Try enabling audio again.",
+      });
     }
   };
   useEffect(() => {
@@ -268,7 +288,7 @@ export function App() {
       })
       .catch((e) => {
         if (active) {
-          setError(e.message);
+          setError({ action: "retry", message: e.message });
           setBusy(false);
         }
       });
@@ -314,13 +334,16 @@ export function App() {
           customVehicle: customVehicles.current.get(vehicleId),
         }),
       );
-      if (errorAction === "export-project") setError("");
+      setError((current) =>
+        current?.action === "export-project" ? null : current,
+      );
       setNotice("Project saved on this device");
     } catch {
-      setErrorAction("export-project");
-      setError(
-        "Device storage is unavailable or full. Download a project file to keep this workspace.",
-      );
+      setError({
+        action: "export-project",
+        message:
+          "Device storage is unavailable or full. Download a project file to keep this workspace.",
+      });
     }
   };
   const importTrack = async (
@@ -382,10 +405,10 @@ export function App() {
       setNotice("Track imported and simulated");
     } catch (e) {
       if (id === generation.current) {
-        setErrorAction(source.format === "gpx" ? "import-gpx" : "import-track");
-        setError(
-          `Track import failed: ${e instanceof Error ? e.message : "Invalid track data"}. Current workspace kept.`,
-        );
+        setError({
+          action: source.format === "gpx" ? "import-gpx" : "import-track",
+          message: `Track import failed: ${e instanceof Error ? e.message : "Invalid track data"}. Current workspace kept.`,
+        });
       }
     } finally {
       finishCalculation(id);
@@ -461,10 +484,10 @@ export function App() {
       );
     } catch (e) {
       if (id === generation.current) {
-        setErrorAction("import-vehicle");
-        setError(
-          `Vehicle import failed: ${e instanceof Error ? e.message : "Invalid vehicle JSON"}. Current workspace kept.`,
-        );
+        setError({
+          action: "import-vehicle",
+          message: `Vehicle import failed: ${e instanceof Error ? e.message : "Invalid vehicle JSON"}. Current workspace kept.`,
+        });
       }
     } finally {
       finishCalculation(id);
@@ -548,10 +571,10 @@ export function App() {
       );
     } catch (e) {
       if (id === generation.current) {
-        setErrorAction("import-project");
-        setError(
-          `Project import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current workspace kept.`,
-        );
+        setError({
+          action: "import-project",
+          message: `Project import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current workspace kept.`,
+        });
       }
     } finally {
       finishCalculation(id);
@@ -584,15 +607,15 @@ export function App() {
               referenceImport: { fileName: file.name.slice(0, 255) },
             },
       );
-      setError("");
+      setError(null);
       setMenu(false);
       setNotice("Reference imported · current simulation retained");
     } catch (e) {
       if (!isCurrent()) return;
-      setErrorAction("import-reference");
-      setError(
-        `Reference import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current reference kept.`,
-      );
+      setError({
+        action: "import-reference",
+        message: `Reference import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current reference kept.`,
+      });
       setMenu(false);
     }
   };
@@ -965,18 +988,19 @@ export function App() {
       </div>
       {error && (
         <div className="error-banner" role="alert">
-          <span>{error}</span>
+          <span>{error.message}</span>
           <button
             onClick={() => {
-              if (errorAction === "export-project") exportProject();
-              else if (errorAction === "import-reference")
+              if (error.action === "enable-audio") void toggleAudio();
+              else if (error.action === "export-project") exportProject();
+              else if (error.action === "import-reference")
                 referenceInput.current?.click();
-              else if (errorAction === "import-project")
+              else if (error.action === "import-project")
                 projectInput.current?.click();
-              else if (errorAction === "import-track")
+              else if (error.action === "import-track")
                 fileInput.current?.click();
-              else if (errorAction === "import-gpx") setGpxImport(true);
-              else if (errorAction === "import-vehicle")
+              else if (error.action === "import-gpx") setGpxImport(true);
+              else if (error.action === "import-vehicle")
                 vehicleInput.current?.click();
               else if (track)
                 void run(
@@ -988,21 +1012,9 @@ export function App() {
               else window.location.reload();
             }}
           >
-            {errorAction === "export-project"
-              ? "Download project"
-              : errorAction === "retry"
-                ? "Retry"
-                : errorAction === "import-reference"
-                  ? "Import reference again"
-                  : errorAction === "import-project"
-                    ? "Import project again"
-                    : errorAction === "import-vehicle"
-                      ? "Import vehicle again"
-                      : errorAction === "import-gpx"
-                        ? "Review GPX again"
-                        : "Import track again"}
+            {recoveryLabels[error.action]}
           </button>
-          <button aria-label="Dismiss error" onClick={() => setError("")}>
+          <button aria-label="Dismiss error" onClick={() => setError(null)}>
             <X size={15} />
           </button>
         </div>
@@ -1125,7 +1137,7 @@ export function App() {
             setSetup(result.setup);
             setLap(result);
             setSelectedCorner(null);
-            setError("");
+            setError(null);
             clock.configure(result.lapTime);
             closeAeroComparison();
             setNotice("Aero comparison result applied · reference retained");

@@ -113,6 +113,8 @@ exports remain available. Percentage change uses its own displayed precision.
 If device-local Save fails, Download project offers the complete portable workspace
 without recalculation or changing the previous save. A later successful Save clears
 that warning; unrelated failures retain their own recovery actions.
+Audio-start failures similarly offer Enable audio again. The retry preserves the
+workspace and playback, and delayed success retains a newer unrelated error.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

@@ -60,6 +60,10 @@ returns without changing data or feedback, while current failures retain retry.
 The menu and failed-Save recovery share one portable project writer. A storage
 failure sets an explicit download action and clears stale success feedback. A
 successful Save clears only a current storage warning, retaining unrelated retries.
+Workspace errors store their message and recovery action in one typed value.
+Every failure must choose its action; clearing an error removes both. Audio-start
+failure retries the existing audio engine, and asynchronous success uses the
+current error state to clear only an audio warning, preserving newer failures.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and

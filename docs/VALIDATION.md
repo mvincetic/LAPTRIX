@@ -575,6 +575,30 @@ browser coverage; the suite now discovers 76 journeys. Evidence is
 `storage-recovery-production.log` and `storage-recovery-error-*.png`.
 The preceding reference-ordering milestone passed remote CI run 34450301662.
 
+Typed workspace errors and audio recovery pass lint, typecheck, build, all 117
+TypeScript and 116 Python tests. Two controlled native AudioContext resume failures
+first reproduced inherited simulation/download actions. The final three new browser
+cases verify explicit audio retry, reuse of one native context, complete project
+equality, pending fuel, unchanged playback and zero simulation requests. A delayed
+successful retry retains a newer reference error and its import action. All nine
+focused audio/import/storage journeys pass (1.1 minutes).
+
+Desktop and full phone audio-error screenshots were opened and reviewed. The
+message and Enable audio again action remain readable without horizontal overflow.
+The first full browser invocation was interrupted after 38 passing journeys, with
+no assertion failure in its log. The process handle, local servers and browser
+runner were subsequently confirmed absent before restarting; its incomplete log
+is retained as `artifacts/audio-recovery-e2e-interrupted.log`.
+The fresh full invocation passes all 79 development browser journeys (13.3 minutes),
+recorded in `artifacts/audio-recovery-e2e-final.log`. Both production viewer journeys
+also pass (17.5 seconds), recorded in `artifacts/audio-recovery-production.log`.
+The application source stayed fixed throughout these final gates.
+
+Evidence also includes `artifacts/audio-recovery-before.log`,
+`audio-recovery-before-results`, `audio-recovery-focused.log`,
+`audio-recovery-check.log` and `audio-recovery-error-*.png`. The preceding comparison
+display and storage milestones passed remote CI runs 34451075247 and 34452191325.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,
