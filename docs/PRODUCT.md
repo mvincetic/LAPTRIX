@@ -103,6 +103,10 @@ landscape screens. The existing scene, selection and playback are preserved.
 The track key starts collapsed in narrow or short scenes, exposing more of the
 circuit. Its keyboard toggle retains explicit display choices across resizing,
 fullscreen and viewer tabs. See TRACK_KEY.md for the compact thresholds and scope.
+Synthetic surroundings now interpolate full source segments and stay below the
+road and shoulders, preserving visible racing lines on sparse/sloped imports.
+The contextual ground can be conservatively excavated; the original road and
+calculated lap remain unchanged. See TERRAIN.md.
 Vehicle JSON import/export supports bounded user-supplied parameters through the
 same solver. Imports activate after successful calculation, retain references and
 declared sources/assumptions, and resolve occupied IDs without replacing built-in

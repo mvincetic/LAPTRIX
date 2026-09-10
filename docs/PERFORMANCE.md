@@ -6,8 +6,8 @@ despite zero WebGL draws; the strengthened settled-workspace tests now require z
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
 all browser/audio processing. Entry JavaScript is 415.19 kB (125.95 kB gzip); main
-CSS is 52.84 kB (11.26 kB gzip) and deferred viewer JavaScript is 964.67 kB
-(258.46 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
+CSS is 52.84 kB (11.26 kB gzip) and deferred viewer JavaScript is 966.27 kB
+(259.05 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
 The track key observes only a compact-scene predicate and reuses existing layout
 invalidation after a toggle. Both idle browser checks still require zero settled
@@ -149,8 +149,16 @@ The top-level React app does not subscribe to playback frames. Chart subscribers
 update around 30 Hz during playback and on explicit controls; the scene reads the
 same clock per frame. Paused playback does not repeatedly notify React subscribers.
 
-Terrain nearest-sample interpolation is generated on track changes only. Large
-custom imports and small screens should be profiled before increasing resolution
+Terrain source-segment interpolation and road-clearance caps are generated on
+track changes only. The fixed 8,991-vertex grid, 17,600 triangles and 4,200 tree
+candidates keep output bounded. Its separate Landscape component stays deferred,
+and ordinary setup/viewer changes retain the memoized result.
+
+An original circle measured pure terrain construction at 7.6–10.6 ms for 40 source
+points, 56.0–64.2 ms for 720 and 141.5–170.8 ms for 2,000 in the local browser
+(three runs each). These observations exclude GPU upload and material creation,
+and do not establish a timing guarantee. See `artifacts/terrain-timing.json`.
+Large custom imports and small screens should be profiled before increasing resolution
 or tree counts. The current synthetic scenery is intentionally simple. Production
 optimization should follow measured frame time, memory and payload regressions.
 

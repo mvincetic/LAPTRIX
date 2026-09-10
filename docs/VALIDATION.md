@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 203 tests pass.
+- Vitest: 211 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -144,6 +144,17 @@ and no main merge, force-push or repository-settings change was made.
   three deletions and 51,840 bytes of uploads per interaction before the change.
   All four final production loading/restoration journeys pass in 19.9 seconds,
   recorded in `artifacts/shoulder-buffers-production.log`.
+  Terrain clearance adds eight independent geometry tests and two real import/
+  renderer journeys (119 development journeys now discovered). Both browser cases
+  fail before the renderer correction, exposing missing racing-line sections.
+  Both pass afterward (13.4 seconds), followed by all 14 relevant import/framing/
+  callout/ghost/key/idle/restoration journeys together (2.1 minutes).
+  The full gate passes with 211 TypeScript and 146 Python tests (40.20 seconds),
+  lint, strict typecheck and build. An obsolete Vector3 import from the component
+  extraction was removed; final lint also covers the visual-QA script's declared
+  browser globals. No solver, source, schema or dependency changed.
+  All four production loading/restoration journeys pass in 20.3 seconds;
+  evidence is `artifacts/terrain-production.log`.
 - Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -234,6 +245,20 @@ Evidence is `artifacts/shoulder-buffers-before.log`, `shoulder-buffers-browser.l
 `geometry-churn-after-settled.log`. An earlier probe sampled a phone still uploading
 its initial scene; it is retained in `geometry-churn-after-unsettled.json`. The
 final probe explicitly awaits a populated and settled renderer before counting.
+
+Terrain visual QA passes 30 default/sparse-fixture states at 1600×1000, 1280×900 and
+390×844. Top/3D terrain-on/off captures retain over 98% of the visible blue pixels;
+Chase is captured with ground enabled. Every sequence retains the same Canvas,
+20-second cursor, pending 21 kg fuel and complete exported project, with no new
+solve, console/runtime error or horizontal overflow. Before/after sparse Top,
+3D and Chase images were opened and reviewed; final sparse-phone 3D, default
+1280 px 3D and default-phone Chase captures were also opened. The line remains
+continuous and the surrounding ground retains its explicit synthetic character.
+Evidence is `artifacts/terrain-clearance-before.json`, `terrain-view-before.json`,
+`terrain-view-after.json`, `terrain-unit.log`, `terrain-browser-before.log`,
+`terrain-browser.log`, `terrain-regressions.log`, `terrain-check-final.log`,
+`terrain-lint-final.log`, `terrain-qa.json`, `terrain-qa.log` and `terrain-*.png`.
+The bounded builder timing/size study is `artifacts/terrain-timing.json`.
 
 Custom-window visual QA initially passes 20 states at 1600×1000, 1280×900, 390×844 and
 780×390, plus two workspace captures. The editor, native distance/time curves,

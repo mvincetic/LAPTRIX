@@ -153,3 +153,15 @@ passes through `64507c3`: all 114 development journeys (58 in 10.0 minutes and
 56 in 9.9 minutes), 203 TypeScript tests, 146 Python tests (42.53 seconds), all
 quality gates and four production journeys (28.9 seconds). All seven fullscreen
 recovery, native-transition and short-viewport cases pass.
+
+The [compact-key run](https://github.com/mvincetic/LAPTRIX/actions/runs/34508648908)
+passes through `45c1d81`: all 117 development journeys (60 in 10.6 minutes and
+57 in 9.7 minutes), 203 TypeScript tests, 146 Python tests (42.56 seconds), all
+quality gates and four production journeys (29.1 seconds). All three compact-key
+journeys and the expanded label/idle checks pass.
+
+The [stable-shoulder run](https://github.com/mvincetic/LAPTRIX/actions/runs/34509690703)
+passes through `04f73fe`: all 117 development journeys (60 in 10.0 minutes and
+57 in 9.7 minutes), 203 TypeScript tests, 146 Python tests (40.35 seconds), all
+quality gates and four production journeys (27.7 seconds). Both updated actual
+buffer-retention and zero-idle-render checks pass remotely.

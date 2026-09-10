@@ -33,6 +33,7 @@ the last completed result remains visible if a solve fails.
 
 - A validated, data-driven 720-sample circuit with width and elevation.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.
+- Conservative synthetic terrain clearance for sparse, sloped and wide source roads.
 - A paused workspace that stops drawing and scheduling animation frames once settled.
 - Automatic redraw after the browser restores a lost graphics context.
 - Bounded minimum-curvature optimization and a closed-loop speed envelope.

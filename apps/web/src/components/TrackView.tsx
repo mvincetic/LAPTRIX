@@ -11,14 +11,11 @@ import {
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, Line, OrbitControls } from "@react-three/drei";
 import {
-  Box3,
   BufferAttribute,
   BufferGeometry,
   Color,
   DoubleSide,
-  Object3D,
   PerspectiveCamera,
-  Vector3,
   type Group,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -31,6 +28,7 @@ import {
   type Vehicle,
 } from "../../../../packages/shared/schema";
 import { TelemetryGhost } from "./TelemetryGhost";
+import { Landscape } from "./Landscape";
 import { CornerCallouts } from "./CornerCallouts";
 import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
@@ -118,106 +116,6 @@ function Ribbon({
     <mesh geometry={geometry} receiveShadow>
       <meshStandardMaterial color={color} roughness={1} side={DoubleSide} />
     </mesh>
-  );
-}
-
-function Landscape({ track }: { track: Track }) {
-  const data = useMemo(() => {
-    const f = normalizeTrack(track),
-      positions: number[] = [],
-      colors: number[] = [],
-      indices: number[] = [],
-      trees: Vec3[] = [];
-    const box = new Box3(
-      new Vector3(...f.min),
-      new Vector3(...f.max),
-    ).expandByScalar(f.span * 0.7);
-    const nx = 110,
-      nz = 80;
-    function height(x: number, z: number) {
-      let nearest = Infinity,
-        y = 0;
-      for (let i = 0; i < track.points.length; i += 3) {
-        const p = track.points[i],
-          d = (p.x - x) ** 2 + (p.z - z) ** 2;
-        if (d < nearest) {
-          nearest = d;
-          y = p.y;
-        }
-      }
-      return {
-        height: y - 9 - Math.min(25, Math.sqrt(nearest) * 0.055),
-        distance: Math.sqrt(nearest),
-      };
-    }
-    for (let z = 0; z <= nz; z++)
-      for (let x = 0; x <= nx; x++) {
-        const px = box.min.x + ((box.max.x - box.min.x) * x) / nx,
-          pz = box.min.z + ((box.max.z - box.min.z) * z) / nz;
-        const h = height(px, pz);
-        positions.push(px, h.height, pz);
-        const c = new Color("#edf0ed").lerp(
-          new Color("#dce4df"),
-          Math.min(1, h.distance / 280) * 0.55,
-        );
-        colors.push(c.r, c.g, c.b);
-        if (x < nx && z < nz) {
-          const a = z * (nx + 1) + x,
-            b = a + nx + 1;
-          indices.push(a, b, a + 1, b, b + 1, a + 1);
-        }
-      }
-    let seed = 37;
-    const random = () => {
-      seed = (seed * 16807) % 2147483647;
-      return (seed - 1) / 2147483646;
-    };
-    for (let i = 0; i < 4200; i++) {
-      const x = box.min.x + random() * (box.max.x - box.min.x),
-        z = box.min.z + random() * (box.max.z - box.min.z),
-        h = height(x, z);
-      if (h.distance > 38 && h.distance < 240 && random() > 0.25)
-        trees.push([x, h.height + 6, z]);
-    }
-    const geometry = new BufferGeometry();
-    geometry.setAttribute(
-      "position",
-      new BufferAttribute(new Float32Array(positions), 3),
-    );
-    geometry.setAttribute(
-      "color",
-      new BufferAttribute(new Float32Array(colors), 3),
-    );
-    geometry.setIndex(indices);
-    geometry.computeVertexNormals();
-    return { geometry, trees };
-  }, [track]);
-  const treeRef = useRef<import("three").InstancedMesh>(null);
-  useEffect(() => {
-    const o = new Object3D();
-    data.trees.forEach((p, i) => {
-      o.position.set(...p);
-      const s = 8 + (i % 7);
-      o.scale.set(s * 0.65, s, s * 0.65);
-      o.updateMatrix();
-      treeRef.current?.setMatrixAt(i, o.matrix);
-    });
-    if (treeRef.current) treeRef.current.instanceMatrix.needsUpdate = true;
-    return () => data.geometry.dispose();
-  }, [data]);
-  return (
-    <group>
-      <mesh geometry={data.geometry} receiveShadow>
-        <meshStandardMaterial vertexColors roughness={1} />
-      </mesh>
-      <instancedMesh
-        ref={treeRef}
-        args={[undefined, undefined, data.trees.length]}
-      >
-        <coneGeometry args={[1, 2, 7]} />
-        <meshStandardMaterial color="#c1cec7" roughness={1} />
-      </instancedMesh>
-    </group>
   );
 }
 

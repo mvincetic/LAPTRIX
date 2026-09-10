@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Keep contextual terrain below source roads
+
+**Decision:** Use all closed source segments for ground interpolation and cap
+overlapping grid cells below road/shoulder segment endpoints. **Reasoning:** An
+accepted original sloped-circle import exposed repeated terrain intrusions and
+visible racing-line gaps at desktop and phone widths. **Consequences:** Road,
+lap and physics stay unchanged; the conservative synthetic ground can lie well
+below the road at sparse segments or crossings. Tree clearance uses road widths
+and the actual capped ground. A pure builder and separate deferred Landscape
+component retain the existing fixed grid and rendering lifecycle. See TERRAIN.md.
+
+
 ## 2026-09-10 — Retain unchanged shoulder geometry
 
 **Decision:** Memoize shoulder widths beside the existing asphalt widths by track

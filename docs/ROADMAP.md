@@ -82,15 +82,21 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for the compact key and stable shoulder geometry. There are
-   117 development journeys; fullscreen recovery passes all 114 preceding journeys
-   remotely. The updated local buffer-retention checks pass.
-2. Review synthetic terrain visibility against the rendered road in close cameras
-   and valid sloped imports. Retain original source geometry and keep the synthetic
-   surroundings explicit. The single prior fuel observation remains documented;
-   nine additional native-event traces, including slowed runs, did not reproduce it.
+1. Verify remote CI for terrain clearance. There are 119 development journeys;
+   both the compact key and stable shoulder geometry pass all preceding 117 remotely.
+2. Evaluate a bounded CSV timing-reference import using the existing explicit
+   source-progress/units contract, so externally prepared timing does not require
+   hand-authored JSON. Preserve declared alignment rather than infer GPS correspondence.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+Synthetic terrain now interpolates full source segments and caps overlapping grid
+cells beneath the road and shoulders. Width-aware tree clearance and final-grid
+base heights retain usable close views on accepted sparse/sloped inputs. Eight
+geometry tests, fourteen relevant browser journeys and thirty visual states cover
+the correction. No source geometry or solver output changes; see TERRAIN.md.
+The single earlier fuel observation remains recorded in VALIDATION.md; nine further
+native-input sequences, including slowed runs, did not reproduce it.
 
 The track key now collapses automatically in narrow or short scenes and retains
 explicit choices across viewer transitions. Browser/visual QA confirms the observed

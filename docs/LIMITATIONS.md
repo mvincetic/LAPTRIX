@@ -76,7 +76,11 @@
   rows add no measured detail and are not accepted by project/reference importers.
   Original comparison inputs remain inside the report; pending setup and original
   source geometry belong to Export project. See COMPARISON_EXPORT.md.
-- Terrain and trees are contextual generated scenery. The ghost is intentionally
+- Terrain and trees are contextual generated scenery.
+  Terrain cells are conservatively lowered below source roads and shoulders;
+  sparse segments and crossings can leave exaggerated ground clearance. This
+  does not establish surveyed ground, bridge structures or sight lines from every
+  camera. See TERRAIN.md. The ghost is intentionally
   enlarged three times for engineering visibility, not a physically scaled asset.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.
 - Project saving is device-local browser storage. There are no accounts, cloud

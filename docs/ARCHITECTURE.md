@@ -26,6 +26,10 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+The deferred Landscape component consumes a pure fixed-grid terrain builder.
+Nearest source-segment interpolation and conservative road/shoulder cell caps
+prevent contextual ground from cutting through the road. Tree clearance accounts
+for source widths and bases sample the final terrain triangles. See TERRAIN.md.
 Road and shoulder widths share the existing track-keyed memo. Ordinary setup or
 viewer-state renders retain Ribbon geometry and its GPU buffers; track replacement
 still derives fresh widths and disposes replaced geometry normally.
