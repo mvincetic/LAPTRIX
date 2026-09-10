@@ -138,7 +138,11 @@ channel grid. The selected horizontal axis determines the input's labelled units
 Inspect pauses and seeks; Escape restores the cursor value. The grid has four
 columns in the desktop panel and two on mobile, where the document can grow.
 The desktop tab panel is its own keyboard-scrollable container.
-Values include units, discrete fields and an explicit Not modelled vertical channel.
+Values include units and discrete fields. New laps show Vertical G in G and Normal
+tyre load in × weight, each with three decimals. A note distinguishes acceleration
+excluding gravity from total contact force and states the suspension limitation.
+Legacy current laps keep Vertical dynamics / Not modelled; absent load data is not
+displayed as zero. The grid retains four desktop/two phone columns.
 Ghost Car offers independent current/reference checkboxes and names the native
 reference. Blue CURRENT and grey REF labels identify the two schematic vehicles
 when reference playback is enabled. The panel explains shared elapsed time, current

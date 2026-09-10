@@ -15,7 +15,7 @@ GRAVITY = 9.80665
 @pytest.mark.parametrize("downforce", [0.0, 1.5])
 def test_graded_ramps_match_independent_steady_forces_and_projected_lateral_acceleration(grade, downforce):
     # Equal uphill/downhill circular arcs close in position. Compare steady values
-    # away from their joins; vertical-curvature dynamics at those joins are unmodelled.
+    # away from their joins; the joins' signed vertical curvature is checked below.
     source, original = catalog()[0][0], catalog()[1][0]
     radius, count = 80.0, 720
     cosine = np.cos(np.arcsin(grade))
@@ -32,17 +32,18 @@ def test_graded_ramps_match_independent_steady_forces_and_projected_lateral_acce
     lap = solve(Track.model_validate(data), vehicle, setup)
     samples = lap["samples"]
 
+    def normal_load(v):
+        return GRAVITY * cosine + 0.5 * setup.airDensity * downforce * v**2 / vehicle.mass
+
     def grip(v):
-        return vehicle.friction * (
-            GRAVITY * cosine + 0.5 * setup.airDensity * downforce * v**2 / vehicle.mass
-        )
+        return vehicle.friction * normal_load(v)
 
     def lateral(v):
         # Helix horizontal speed is road speed times cos(theta); radius is horizontal.
         return (v * cosine) ** 2 / radius
 
     def resistance(v):
-        return 0.5 * setup.airDensity * vehicle.dragArea * v**2 / vehicle.mass + 0.015 * GRAVITY * cosine
+        return 0.5 * setup.airDensity * vehicle.dragArea * v**2 / vehicle.mass + 0.015 * normal_load(v)
 
     for sign, fraction in [(1, 0.3), (-1, 0.8)]:
         force_limit = brentq(
@@ -63,8 +64,19 @@ def test_graded_ramps_match_independent_steady_forces_and_projected_lateral_acce
     segments = np.diff(points, axis=0)
     distance = np.linalg.norm(segments, axis=1)
     speed = np.array([s["speed"] for s in samples])
-    wheel = np.diff(speed**2) / (2 * distance) + resistance(speed[:-1]) + GRAVITY * segments[:, 1] / distance
-    assert np.max(np.hypot(lateral(speed[:-1]), wheel) / grip(speed[:-1])) <= 1.00001
+    # Equal-length chords turn from -theta to +theta at the seam and conversely
+    # at the crest. Their vertical circumcircle has curvature +/- 2 sin(theta)/ds.
+    vertical = np.zeros(count)
+    vertical[0] = 2 * grade / distance[0]
+    vertical[count // 2] = -2 * grade / distance[count // 2]
+    normal = normal_load(speed[:-1]) + vertical * speed[:-1] ** 2
+    wheel = (
+        np.diff(speed**2) / (2 * distance)
+        + 0.5 * setup.airDensity * vehicle.dragArea * speed[:-1] ** 2 / vehicle.mass
+        + 0.015 * normal
+        + GRAVITY * segments[:, 1] / distance
+    )
+    assert np.max(np.hypot(lateral(speed[:-1]), wheel) / (vehicle.friction * normal)) <= 1.00001
     assert lap["numericalChecks"]["speedConverged"]
     assert lap["numericalChecks"]["maxDemandRatio"] <= 1.015
 
@@ -85,9 +97,16 @@ def test_braking_search_never_increases_a_lateral_cap_below_the_propagation_floo
     vehicle = catalog()[1][0].model_copy(update={"friction": 0.5, "downforceArea": 0, "dragArea": 0.01})
     setup = Setup(solver="centerline", tire="medium", temperature=28, fuel=0)
     lap = solve(Track.model_validate(data), vehicle, setup)
-    cap = np.sqrt(0.98 * vehicle.friction * GRAVITY * radius / np.cos(np.arcsin(grade)))
-    assert cap < 1
-    assert lap["maxSpeed"] <= cap * (1 + 1e-10)
+    cosine = np.sqrt(1 - grade**2)
+    distance = chords / cosine
+    vertical = np.zeros(count)
+    vertical[0] = 2 * grade / distance[0]
+    vertical[count // 2] = -2 * grade / distance[count // 2]
+    caps = np.sqrt(
+        0.98 * vehicle.friction * GRAVITY * cosine / (cosine**2 / radius - 0.98 * vehicle.friction * vertical)
+    )
+    assert caps.max() < 1
+    assert np.all(np.array([s["speed"] for s in lap["samples"][:-1]]) <= caps * (1 + 1e-10))
     assert np.isfinite([[s[key] for key in s] for s in lap["samples"]]).all()
     # The propagation floor still limits this unsupported operating regime;
     # retain its explicit force failure instead of presenting it as feasible.

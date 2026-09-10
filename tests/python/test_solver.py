@@ -107,10 +107,13 @@ def test_grip_braking_rpm_and_actuator_constraints(source, result):
     mu = vehicle.friction * 1.04 * (1 - 0.00018 * (setup.temperature - 28) ** 2)
     for p in result["samples"][:-1]:
         normal_weight = G * np.cos(np.arcsin(p["trackGradient"]))
-        normal = normal_weight + setup.airDensity * vehicle.downforceArea * p["speed"] ** 2 / (2 * mass)
-        resistance = (
-            setup.airDensity * vehicle.dragArea * p["speed"] ** 2 / (2 * mass) + 0.015 * normal_weight
+        normal = (
+            normal_weight
+            + p["verticalG"] * G
+            + setup.airDensity * vehicle.downforceArea * p["speed"] ** 2 / (2 * mass)
         )
+        assert p["normalLoadG"] * G == pytest.approx(normal, rel=1e-12)
+        resistance = setup.airDensity * vehicle.dragArea * p["speed"] ** 2 / (2 * mass) + 0.015 * normal
         wheel = p["longitudinalG"] * G + resistance + p["trackGradient"] * G
         assert np.hypot(p["lateralG"] * G, wheel) <= mu * normal * 1.015
         assert -wheel <= vehicle.maxBrakeG * G * 1.015

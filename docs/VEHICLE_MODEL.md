@@ -23,9 +23,11 @@ Aero setup shifts downforce area by 5.5% and drag area by 4.5% per step. Brake b
 applies an approximate efficiency penalty away from 56% front; there is no axle-load
 or lockup calculation. The UI does not claim those approximations model actual
 front/rear balance. Air density is configurable in kg/m³.
-On slopes, friction uses gravity-supported normal weight plus assumed road-normal
-downforce. Rolling resistance applies its 0.015 coefficient to normal weight only;
-aerodynamic tyre rolling losses and vertical-curvature loads remain omitted.
+Friction uses total road-normal tyre load from gravity, vertical curvature and
+assumed road-normal downforce. Rolling resistance applies its fixed 0.015
+coefficient to that same load. An independent crest speed cap retains 2% of
+gravity-supported contact load; suspension and flight remain omitted. See
+VERTICAL_LOAD.md for equations and synthetic analytical benchmarks.
 
 ## GT Development 01
 

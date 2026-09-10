@@ -14,6 +14,7 @@ power-limited speed against a scalar work balance and rigid-transform invariance
   changes. Far from transitions, computed speed must be within 0.1% of a separately
   root-solved equation: `0.94 P = 0.5 rho CdA v³ + m g (0.015 cos(theta) + grade) v`.
   Here gradient is rise divided by 3D segment length, so it is the sine of slope.
+  This fixture has zero downforce and zero vertical curvature away from the joins.
   Both signs pass, and full-loop force-demand/convergence checks also pass.
 - For both development vehicles on the original elevation circuit, wheel work is
   reconstructed from exported throttle/brake, selected gear/RPM relationships and
@@ -22,6 +23,10 @@ power-limited speed against a scalar work balance and rigid-transform invariance
   the closed loop, as is the kinetic-energy change at its matching-speed endpoint.
   Both profiles pass. This checks delivered controls rather than simply summing
   the solver's required-force array; capacity clipping can create a small residual.
+  Normal load now includes vertical curvature and downforce, and rolling loss uses
+  that complete load. A separate turn-angle/opposite-chord construction derives
+  vertical curvature for the work oracle, independently of the production cross
+  product. The 0.1% work tolerance is unchanged.
 
 Run `node scripts/python.mjs -m pytest tests/python/test_gradient_energy.py -q` for
 the five grade/energy cases. The full suite also covers line bounds, analytical
@@ -33,6 +38,8 @@ power evaluator agrees with the independent vector gear/RPM calculation over
 gear redlines for both vehicles. Five GT aero cases independently reconstruct
 wheel-force demand from endpoint kinetic energy, drag, rolling loss and exported
 grade; drive demand stays within exact available power to `1e-8` relative tolerance.
+The rolling term includes full normal load, with vertical curvature independently
+reconstructed from chord turning angles.
 The broader combined-force tolerance remains 1.015. The formerly failing GT rows
 now report maximum demand ratios within floating-point roundoff of 1.0.
 
@@ -45,6 +52,9 @@ against independently root-solved combined-force and 98% lateral-capacity bounds
 Horizontal velocity is road speed times slope cosine; sampled lateral acceleration
 must equal its square divided by radius. Endpoint kinetic energy and exact 3D
 distances reconstruct wheel demand at every node, independently of exported controls.
+Following the vertical-load extension, this oracle includes exact signed curvature
+at the two ramp joins and uses total normal load in rolling resistance. Its original
+steady-speed and all-node force tolerances remain unchanged.
 
 The previous model overestimated lateral acceleration by 9.1822% at slope sine 0.29.
 It also clamped net downhill deceleration to zero and only checked start-node
@@ -56,21 +66,39 @@ speeds agree within `1e-5` relative tolerance, and all-node combined demand with
 failed before the correction and all six pass afterward.
 
 A seventh adversarial case uses an accepted 42-point, 0.12 m-radius star. It is
-numerical test geometry, not a usable road. Its initial lateral cap is 0.776 m/s,
+numerical test geometry, not a usable road. Its original lateral cap was 0.776 m/s,
 below the ordinary 1 m/s propagation floor. The braking bisection must not invert
 its bracket and raise that cap to 1 m/s. The regression verifies bounded finite
 telemetry while retaining an explicit failed force diagnostic for this operating
 regime; it does not claim the floor makes the result feasible.
+The current oracle independently calculates each node's cap with vertical curvature;
+all remain below 1 m/s and none may be raised by the braking bisection.
 
 [OpenStax's force decomposition](https://openstax.org/books/university-physics-volume-1/pages/5-6-common-forces)
 supports the normal/longitudinal weight components; its
 [friction model](https://openstax.org/books/university-physics-volume-1/pages/6-2-friction)
 supports scaling available friction with normal load. The road-normal aero
-orientation, weight-only rolling loss and friction-circle approximation are
+orientation, fixed rolling coefficient and friction-circle approximation are
 explicit LAPTRIX model choices. No external code or track data was copied.
 
-Remaining limits include omitted aerodynamic tyre rolling losses, no
-vertical-curvature load, constant friction, fixed aerodynamic coefficients and
-no transient suspension/tyre state. The ramp joins are not a test of crest or
-compression dynamics. Agreement with these equations does not establish that
-omitted effects are negligible on a real track.
+## Crest and compression load
+
+Fourteen cases in `tests/python/test_vertical_load.py` independently check signed
+vertical curvature, normal-load projection and contact-limited speed. Eight circular
+arc cases cover unequal spacing, both signs and rigid transforms. Two straight-grade
+cases give zero curvature. Three smooth closed waves compare with analytically
+differentiated continuous geometry at 360/720/1,440 points, checking quadratic
+geometric error reduction, independent friction demand and crest speed. A separate
+straight-crest stadium checks the contact bound where lateral demand is zero.
+Exact tolerances, telemetry semantics and equations are in VERTICAL_LOAD.md.
+
+The updated slope/work/drivetrain oracles retain their former tolerances. Initial
+failures using old static-load/weight-only rolling expectations are preserved in
+`artifacts/vertical-load-existing-oracles.log`; corrected focused checks pass in
+`artifacts/vertical-load-oracles-final.log`. The complete 130-test Python suite
+passes in `artifacts/vertical-load-check-final.log`.
+
+Remaining limits include constant friction, fixed aerodynamic coefficients,
+unfiltered elevation noise and no transient suspension/tyre state or flight. These
+are discrete point-mass checks. Agreement with the equations does not establish
+that omitted effects are negligible on a real track.

@@ -1,5 +1,23 @@
 # Decision log
 
+## 2026-09-10 — Model quasi-steady crest/compression contact load explicitly
+
+**Decision:** Derive signed vertical curvature from adjacent horizontal-distance/
+elevation chords and use gravity, curvature and road-normal downforce together for
+tyre grip and rolling loss. Retain a separate 2% gravity-supported contact reserve
+at crests. Export signed acceleration, positive normal load, its minimum and a
+versioned interpretation marker through the existing Lap. **Reasoning:** An
+independent synthetic crest probe reconstructed nonpositive tyre load where the
+old envelope still claimed feasible grip. A straight crest also needs a contact
+bound when lateral demand is zero. **Consequences:** All solver modes and studies
+share the correction; rolling loss now includes aerodynamic load too. Analytical
+geometry/force tests retain independent oracles, and previous work/braking checks
+keep their tolerances with the corrected equations. Legacy references retain their
+reserved zeros without invented channels; declared new data must be complete.
+Cursor Data uses the same playback interpolation. This remains a discrete road-
+following point mass, without suspension, flight or measured calibration. See
+VERTICAL_LOAD.md for equations, the numerical reserve and evidence.
+
 ## 2026-09-10 — Keep each workspace error with its recovery action
 
 **Decision:** Replace separate message/action state with one typed error value,

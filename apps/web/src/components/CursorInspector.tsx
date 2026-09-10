@@ -9,6 +9,7 @@ const channels: {
   unit: string;
   digits: number;
   scale?: number;
+  requiresVerticalModel?: boolean;
 }[] = [
   { key: "speed", label: "Speed", unit: "km/h", digits: 2, scale: 3.6 },
   { key: "throttle", label: "Throttle", unit: "%", digits: 1, scale: 100 },
@@ -17,6 +18,20 @@ const channels: {
   { key: "gear", label: "Gear", unit: "", digits: 0 },
   { key: "longitudinalG", label: "Longitudinal G", unit: "G", digits: 3 },
   { key: "lateralG", label: "Lateral G", unit: "G", digits: 3 },
+  {
+    key: "verticalG",
+    label: "Vertical G",
+    unit: "G",
+    digits: 3,
+    requiresVerticalModel: true,
+  },
+  {
+    key: "normalLoadG",
+    label: "Normal tyre load",
+    unit: "× weight",
+    digits: 3,
+    requiresVerticalModel: true,
+  },
   {
     key: "steering",
     label: "Road-wheel angle",
@@ -116,7 +131,11 @@ export function CursorInspector({
       </div>
       <dl className="cursor-values" aria-label="Telemetry at cursor">
         {channels.map((channel) => {
-          const value = sample[channel.key] * (channel.scale ?? 1);
+          if (channel.requiresVerticalModel && !lap.verticalDynamics)
+            return null;
+          const raw = sample[channel.key];
+          if (raw === undefined) return null;
+          const value = raw * (channel.scale ?? 1);
           return (
             <div key={channel.key}>
               <dt>{channel.label}</dt>
@@ -131,15 +150,19 @@ export function CursorInspector({
             </div>
           );
         })}
-        <div>
-          <dt>Vertical dynamics</dt>
-          <dd className="cursor-unavailable">Not modelled</dd>
-        </div>
+        {!lap.verticalDynamics && (
+          <div>
+            <dt>Vertical dynamics</dt>
+            <dd className="cursor-unavailable">Not modelled</dd>
+          </div>
+        )}
       </dl>
       <p className="cursor-note">
         Calculated telemetry. Continuous values interpolate between samples;
         gear, sector and corner step at sample boundaries. Display precision is
         not model accuracy.
+        {lap.verticalDynamics &&
+          " Vertical G is road-normal acceleration excluding gravity. Normal tyre load includes gravity, curvature and downforce; suspension motion is not modelled."}
       </p>
     </div>
   );

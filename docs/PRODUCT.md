@@ -52,7 +52,8 @@ the existing 3D canvas, layer settings and playback position.
 Cursor Data adds exact time/distance entry and numerical channel inspection.
 Inspect pauses playback at the entered position; invalid or unsent entries leave
 the clock unchanged. It reports the development model's channels and explicitly
-identifies vertical dynamics as unmodelled.
+identifies road-normal vertical acceleration and total tyre load separately. Old
+current telemetry retains its explicit unmodelled state; see VERTICAL_LOAD.md.
 An optional grey native-reference ghost compares vehicles on the same elapsed-time
 clock. Visibility is independent of the blue current ghost, and each uses its own
 vehicle snapshot. Timing-only files retain analytical comparison without a drawn
@@ -96,8 +97,9 @@ visible in the interface and exported data. Precision in formatting is useful fo
 repeatable comparisons, not evidence of real-world accuracy.
 Slope forces now consistently affect normal grip, rolling loss and lateral speed,
 including braking while accelerating downhill. Numerical checks continue to flag
-infeasible results separately from convergence; crest and suspension dynamics
-remain outside the development model.
+infeasible results separately from convergence. Quasi-steady crest/compression load
+now affects grip, rolling loss and an independent contact-speed bound. Suspension
+motion, axle load transfer and flight remain outside the development model.
 An optimized line that exceeds the supported slope or reverses a source interval
 now produces a recoverable explanation before calculation. Users can select
 Centerline mode and retry; failed imports and runs preserve their completed work.

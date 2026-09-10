@@ -70,6 +70,13 @@ export function interpolate(
     f = (value - a[axis]) / (b[axis] - a[axis]);
   const result = { ...a };
   for (const key of Object.keys(a) as (keyof Sample)[]) {
+    if (key === "normalLoadG") {
+      if (a.normalLoadG !== undefined && b.normalLoadG !== undefined)
+        result.normalLoadG =
+          a.normalLoadG + (b.normalLoadG - a.normalLoadG) * f;
+      else delete result.normalLoadG;
+      continue;
+    }
     if (!["gear", "cornerId", "sectorId"].includes(key))
       result[key] = a[key] + (b[key] - a[key]) * f;
   }

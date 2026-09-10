@@ -115,6 +115,13 @@ the same outgoing chord grade. Its signed lateral acceleration feeds both sample
 telemetry and corner summaries. Backward braking retains signed net deceleration,
 including gravity-driven acceleration; convergence and force feasibility remain
 separate diagnostics. See SIMULATION_MODEL.md for the bounded approximation.
+Signed vertical curvature comes from adjacent horizontal-distance/elevation chords.
+The same envelope uses total normal load for grip, rolling loss and crest contact
+limits, exporting `verticalG`, `normalLoadG`, its minimum and a `verticalDynamics`
+version marker. Shared validation enforces complete declared channels and preserves
+legacy references without invented data. CursorInspector consumes the existing
+interpolation/clock; optional load interpolation requires both endpoints. See
+VERTICAL_LOAD.md for the physical and compatibility contracts.
 `line_geometry_error` applies the same finite-coordinate, source-progress and slope
 checks before the initial optimized envelope and within refinement. Invalid seeds
 raise an API 422; invalid candidates increment the existing rejected count. A

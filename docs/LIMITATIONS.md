@@ -11,9 +11,9 @@
 - Aero studies compare five or six fixed settings and rank only checked runs.
   They do not establish a globally optimal setup. Stop cancels the browser request
   and queued candidates; an already running synchronous server solve may finish.
-- Grid density changes calculated lap time. The measured 720-to-1,440 point change
-  is larger than the default refinement gain; milliseconds are numerical display
-  resolution, not a statement of real-world prediction accuracy. See SOLVER_STUDY.md.
+- Grid density changes calculated lap time. The current Formula 5 m/3 m refined
+  difference is about 0.041 s; it is not a rigorous error bound. Milliseconds are
+  display resolution, not real-world prediction accuracy. See SOLVER_STUDY.md.
 - Force-demand checks cover sampled discrete segments with a 1.5% tolerance, not
   continuous trajectory feasibility. Imported geometry may fail these checks;
   the UI flags the result and skips lap-time refinement when its seed fails.
@@ -22,10 +22,12 @@
   Long circuits may reach the 2,000-point budget before reaching the target spacing.
 - The point-mass model omits transient yaw, axle load transfer, tyre temperature/
   wear, suspension, braking lockup, slip, shift delays, hybrid energy and fuel burn.
-- Banking is reserved but rejected; vertical G is a reserved zero field. Slope
-  affects normal weight, horizontal lateral speed, rolling loss and longitudinal
-  gravity. Suspension compression and vertical-curvature loads remain unmodelled.
-  Downforce is assumed road-normal; aerodynamic tyre rolling losses are omitted.
+- Banking is reserved but rejected. Quasi-steady vertical curvature affects tyre
+  load, grip and rolling loss; downforce is assumed road-normal. The 2% contact
+  reserve constrains a road-following point mass and does not model flight or
+  suspension motion. Raw elevation noise can strongly affect curvature. Vertical G
+  is road-normal acceleration excluding gravity, not world-Y acceleration or an
+  accelerometer reading. Legacy results retain reserved zeros. See VERTICAL_LOAD.md.
 - Detected corners use curvature prominence; gradual turns may be combined.
   Seam-adjacent event windows are clipped to the canonical lap interval.
 - Track imports accept local JSON and a reviewed GPX 1.1 geometry subset. GPX

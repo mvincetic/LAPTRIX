@@ -75,18 +75,19 @@ visible focus. Camera/axis controls expose selected state; tab changes retain th
 canvas, layer choices and playback position.
 Cursor Data now offers exact seconds/metres entry and numerical channel values.
 Inspect pauses and seeks the shared clock, invalid positions retain it, and draft
-entry resets on axis/result changes. Reserved vertical dynamics stay explicit.
+entry resets on axis/result changes. Legacy reserved vertical dynamics stay explicit.
 Native references now support an optional second ghost with independent visibility
 and vehicle snapshots. Both use shared elapsed time; a completed reference holds
 its finish pose. Timing-only files remain comparisons without invented positions.
 
 ## Next highest-value work
 
-1. Add independently benchmarked quasi-steady crest/compression tyre loads,
-   explicit road-contact limits and inspectable authoritative vertical/load data.
-   A read-only original smooth-crest study demonstrates why the existing omission
-   matters. Preserve explicit legacy telemetry semantics when extending the model.
-2. Revisit measured calibration and reusable 3D data when complete inputs are
+1. Resolve overlapping selected-corner event callouts observed in the final GT
+   refinement view, preserving their authoritative positions and numeric controls.
+2. Extend whole-lap inspection of the new vertical acceleration and tyre-load data,
+   including explicit availability when comparing older references. Preserve the
+   shared source alignment, units, cursor and existing seven-channel overview.
+3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
@@ -157,17 +158,23 @@ warning, leaving other failures' recovery actions available. See PROJECT_FILES.m
 Workspace errors now keep messages and recovery actions together. Audio startup
 has its own explicit retry, reusing its context and preserving the project/clock.
 Delayed successful audio activation retains newer unrelated errors. See AUDIO_ENGINE.md.
+Quasi-steady crest/compression load now feeds tyre grip and total rolling loss in
+every solver mode. An independent contact-speed cap also constrains straight crests.
+Declared vertical/load telemetry, matching minima and exact cursor readouts preserve
+legacy references without invented channels. Fourteen analytical Python cases and
+both vehicles on source/5 m/3 m grids check the correction; see VERTICAL_LOAD.md.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 116 passing tests, including coupled quadratic
+The local numerical/API suite contains 130 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. The 117 TypeScript tests cover
+extremes and analytical work/grip/contact benchmarks. The 132 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
-north direction, verified signed-zero migration, display precision and clock/data invariants.
-Seventy-nine browser journeys cover the
+north direction, verified signed-zero migration, display precision, optional load
+contracts and clock/data invariants.
+Eighty-two browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -177,7 +184,7 @@ profile inspection/export, large-track camera visibility, orbit/reset/chase nort
 unsupported optimized-line recovery, signed-zero reference/project round trips,
 ordering of delayed reference reads/hashes including asynchronous read rejection,
 neutral displayed deltas with full-precision reference preservation,
-device-storage and audio-start recovery, and the
+device-storage and audio-start recovery, declared/legacy load telemetry, and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

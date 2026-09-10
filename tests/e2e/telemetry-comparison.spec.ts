@@ -15,7 +15,7 @@ function referenceValue(
   current: Lap,
   reference: Lap,
   time: number,
-  key: keyof Sample,
+  key: Exclude<keyof Sample, "normalLoadG">,
 ) {
   const progress = at(
     current.samples.map((sample) => sample.time),

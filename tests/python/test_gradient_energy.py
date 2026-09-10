@@ -67,6 +67,14 @@ def test_exported_actuator_work_balances_resistance_over_closed_elevation_lap(ve
     samples = lap["samples"]
     p = np.array([[s["x"], s["y"], s["z"]] for s in samples])
     distances = np.linalg.norm(np.diff(p, axis=0), axis=1)
+    chords = np.diff(p, axis=0)
+    horizontal = np.linalg.norm(chords[:, [0, 2]], axis=1)
+    slope_angles = np.arctan2(chords[:, 1], horizontal)
+    turn = slope_angles - np.roll(slope_angles, 1)
+    long_chord = np.hypot(horizontal + np.roll(horizontal, 1), chords[:, 1] + np.roll(chords[:, 1], 1))
+    # Independently reconstruct circumcircle curvature from the tangent turn and
+    # opposite chord, rather than using the solver's cross-product calculation.
+    vertical = 2 * np.sin(turn) / long_chord
     mass = vehicle.mass + setup.fuel
     drive_work = brake_work = resistance_work = gravity_work = 0.0
     for i, sample in enumerate(samples[:-1]):
@@ -84,7 +92,9 @@ def test_exported_actuator_work_balances_resistance_over_closed_elevation_lap(ve
             rpm, [p.rpm for p in vehicle.powerCurve], [p.powerKw * 1000 for p in vehicle.powerCurve]
         )
         cosine = np.linalg.norm((p[i + 1] - p[i])[[0, 2]]) / distances[i]
-        normal_load = mass * G * cosine + 0.5 * setup.airDensity * vehicle.downforceArea * v**2
+        normal_load = (
+            mass * (G * cosine + vertical[i] * v**2) + 0.5 * setup.airDensity * vehicle.downforceArea * v**2
+        )
         friction_force = vehicle.friction * normal_load
         lateral_force = mass * abs(sample["lateralG"]) * G
         longitudinal_capacity = np.sqrt(max(0, friction_force**2 - lateral_force**2))
@@ -93,7 +103,7 @@ def test_exported_actuator_work_balances_resistance_over_closed_elevation_lap(ve
         drive_work += sample["throttle"] * drive_force * distances[i]
         brake_work += sample["brake"] * brake_force * distances[i]
         resistance_work += (
-            0.5 * setup.airDensity * vehicle.dragArea * v**2 + 0.015 * mass * G * cosine
+            0.5 * setup.airDensity * vehicle.dragArea * v**2 + 0.015 * normal_load
         ) * distances[i]
         gravity_work += mass * G * (p[i + 1, 1] - p[i, 1])
     assert abs(gravity_work) < 1e-6

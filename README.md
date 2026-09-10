@@ -38,6 +38,7 @@ the last completed result remains visible if a solve fails.
 - Controlled 5 m / 3 m resampling with geometry checks and comparison across grids.
 - Grip, fuel mass, downforce, drag, power curve, gears, braking and gradient.
 - Consistent slope-normal grip, projected lateral speed and downhill braking checks.
+- Quasi-steady crest/compression tyre loads, a contact-speed bound and numerical cursor readouts.
 - Recoverable rejection of unsupported optimized slopes and reversed source intervals.
 - Formula and GT development profiles with inspectable parameters, sources and assumptions.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
@@ -93,6 +94,7 @@ node scripts/telemetry-comparison-qa.mjs
 node scripts/plot-range-qa.mjs
 npm run study:solver
 npm run study:sampling
+npm run study:sampling -- --vehicle gt-development --output artifacts/gt-sampling-study.json
 ```
 
 `check` runs frontend and Python lint, TypeScript, unit/API tests and the production
@@ -127,6 +129,9 @@ dragging, corner selection and playback all use the existing shared cursor.
 **Cursor Data** exposes numerical channels at that same position. Enter a time in
 seconds or distance in metres and press **Inspect** to pause and seek exactly.
 Escape discards an unsent entry; switching axis or calculating a new lap resets it.
+New laps expose signed road-normal acceleration and total tyre load separately,
+with explicit legacy-file semantics. See [VERTICAL_LOAD](docs/VERTICAL_LOAD.md)
+for the quasi-steady model, contact bound and independent benchmarks.
 Enable **Reference traces** in **Lap Graphs** to compare native reference channels at
 the same source position. Grey dashed curves and R readings share the current lap's
 axes and channel scales. Timing-only files keep this control disabled. See

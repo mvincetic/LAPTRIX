@@ -1,5 +1,14 @@
 # Performance
 
+At the vertical-load milestone, the production entry is 400.41 kB (121.55 kB gzip),
+the separately loaded viewer 953.50 kB (254.82 kB gzip), and CSS 49.80 kB (10.74 kB
+gzip). Curvature and normal load are computed once per speed envelope and exported
+with the Lap; inspection uses the existing clock and interpolation. The latest
+Formula/GT sampling studies ran concurrently, so their observed 4.6/7.4–7.5/12.7–12.8 s
+refinement times at source/5 m/3 m are not controlled performance comparisons.
+See SOLVER_STUDY.md for exact numerical outputs and runtime provenance. Earlier
+measurements below describe their respective historical milestones.
+
 The engineering UI loads independently of the WebGL viewer. At the viewer-split
 milestone the entry fell from 1,301.15 kB (359.50 kB gzip) to 352.57 kB (107.31 kB
 gzip). With source geometry inspection it is about 359.18 kB (109.60 kB gzip).

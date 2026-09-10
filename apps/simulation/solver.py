@@ -95,6 +95,24 @@ def line_geometry_error(points: np.ndarray, center: np.ndarray):
     return None
 
 
+def vertical_curvature(points: np.ndarray):
+    """Signed Menger curvature in the horizontal-distance/elevation plane.
+
+    Positive curvature is a compression, negative curvature a crest. The closed
+    incoming/outgoing chords retain the source's spacing and elevation noise.
+    """
+    forward = np.roll(points, -1, axis=0) - points
+    longitudinal = np.column_stack((np.linalg.norm(forward[:, [0, 2]], axis=1), forward[:, 1]))
+    previous = np.roll(longitudinal, 1, axis=0)
+    cross = previous[:, 0] * longitudinal[:, 1] - previous[:, 1] * longitudinal[:, 0]
+    denominator = (
+        np.linalg.norm(previous, axis=1)
+        * np.linalg.norm(longitudinal, axis=1)
+        * np.linalg.norm(previous + longitudinal, axis=1)
+    )
+    return 2 * cross / denominator
+
+
 def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     ds, _, _, curvature = geometry(points)
     mass = vehicle.mass + setup.fuel
@@ -108,6 +126,8 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     # road speed projects into that plane by cos(slope). Aero acts road-normal.
     cosine = np.sqrt(np.maximum(0, 1 - grade**2))
     normal_gravity = G * cosine
+    vertical_curve = vertical_curvature(points)
+    load_coefficient = vertical_curve + rho * lift / (2 * mass)
     k = np.abs(curvature) * cosine**2
     max_speed = (
         vehicle.maxRpm / (vehicle.gearRatios[-1] * vehicle.finalDrive) * 2 * np.pi / 60 * vehicle.wheelRadius
@@ -115,18 +135,28 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     # Reserve 2% of lateral capacity for sustaining speed against resistance/gradient.
     limit = np.minimum(
         max_speed,
-        np.sqrt(0.98 * mu * normal_gravity / np.maximum(k - 0.98 * mu * rho * lift / (2 * mass), 1e-6)),
+        np.sqrt(0.98 * mu * normal_gravity / np.maximum(k - 0.98 * mu * load_coefficient, 1e-6)),
     )
+    # Independently retain 2% of gravity-supported contact load at a crest,
+    # including straight sections with no lateral demand to impose a speed cap.
+    contact_squared = np.divide(
+        0.98 * normal_gravity,
+        -load_coefficient,
+        out=np.full_like(load_coefficient, np.inf),
+        where=load_coefficient < 0,
+    )
+    limit = np.minimum(limit, np.sqrt(contact_squared))
     speeds = limit.copy()
     # Evaluate each gear's curve exactly, preserving discontinuities at redline.
     power_at_speed = available_power(vehicle)
     bias_efficiency = max(0.7, 1 - abs(setup.brakeBias - 56) * 0.012)
 
     def capacities(v, i):
-        grip = mu * (normal_gravity[i] + rho * lift * v * v / (2 * mass))
+        normal_load = normal_gravity[i] + load_coefficient[i] * v * v
+        grip = mu * normal_load
         lateral = v * v * k[i]
         remaining = np.sqrt(max(0.0, grip * grip - lateral * lateral))
-        resistance = rho * drag * v * v / (2 * mass) + 0.015 * normal_gravity[i]
+        resistance = rho * drag * v * v / (2 * mass) + 0.015 * normal_load
         drive = min(power_at_speed(v) * 0.94 / (mass * max(v, 4)), remaining)
         brake = min(vehicle.maxBrakeG * G * bias_efficiency, remaining)
         return drive - resistance - G * grade[i], brake + resistance + G * grade[i]
@@ -163,9 +193,12 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     dt = 2 * ds / (speeds + next_speed)
     acceleration = (next_speed**2 - speeds**2) / (2 * ds)
     gear, rpm, power = vehicle_state(vehicle, speeds)
-    resistance = rho * drag * speeds**2 / (2 * mass) + 0.015 * normal_gravity
+    normal_load = normal_gravity + load_coefficient * speeds**2
+    if not np.isfinite(normal_load).all() or np.any(normal_load <= 0):
+        raise ValueError("Road contact cannot be maintained; review crest geometry and source spacing")
+    resistance = rho * drag * speeds**2 / (2 * mass) + 0.015 * normal_load
     wheel_acc = acceleration + resistance + G * grade
-    grip = mu * (normal_gravity + rho * lift * speeds**2 / (2 * mass))
+    grip = mu * normal_load
     remaining = np.sqrt(np.maximum(0, grip**2 - (speeds**2 * k) ** 2))
     drive = np.minimum(power * 0.94 / (mass * np.maximum(speeds, 4)), remaining)
     braking = np.minimum(vehicle.maxBrakeG * G * bias_efficiency, remaining)
@@ -186,6 +219,8 @@ def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
         curvature=curvature,
         grade=grade,
         lateral=speeds**2 * curvature * cosine**2,
+        vertical=speeds**2 * vertical_curve,
+        normalLoad=normal_load,
         acceleration=acceleration,
         gear=gear,
         rpm=rpm,
@@ -365,7 +400,8 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
                 steering=float(np.arctan(vehicle.wheelbase * profile["curvature"][j])),
                 longitudinalG=float(profile["acceleration"][j] / G),
                 lateralG=float(profile["lateral"][j] / G),
-                verticalG=0.0,
+                verticalG=float(profile["vertical"][j] / G),
+                normalLoadG=float(profile["normalLoad"][j] / G),
                 trackGradient=float(profile["grade"][j]),
                 cornerId=int(corner_ids[j]),
                 sectorId=sector,
@@ -405,6 +441,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         vehicle=vehicle.model_dump(mode="json"),
         setup=setup.model_dump(),
         model="Development Physics Model",
+        verticalDynamics="quasi-steady-road-normal-v1",
         sectorBasis=sector_basis,
         solverProvenance=solver_provenance(),
         lapTime=lap_time,
@@ -422,6 +459,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
             speedConverged=profile["converged"],
             maxDemandRatio=profile["maxDemandRatio"],
             demandTolerance=1.015,
+            minNormalLoadG=float(np.min(profile["normalLoad"]) / G),
         ),
         warnings=warnings,
         computationMs=round((time.perf_counter() - started) * 1000, 1),

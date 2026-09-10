@@ -1,5 +1,19 @@
 # Testing and validation
 
+Vertical-load coverage includes fourteen Python cases for exact circular arcs,
+nonuniform straight grades, three independently differentiated smooth height waves
+and a straight crest requiring the separate contact bound. Existing slope,
+drivetrain and wheel-work oracles reconstruct full normal load independently and
+retain their original tolerances. Fifteen TypeScript tests cover explicit model
+metadata, complete/positive load arrays, matching minima, legacy preservation and
+missing-endpoint interpolation. Three real-browser journeys check desktop/phone
+cursor values against exported samples, reject incomplete imports without replacing
+the workspace, preserve mixed-generation references through Save/portable loading,
+and keep legacy-current channels explicitly unavailable. The legacy fixture is
+deliberately shaped from a real API lap; it is not claimed to be a historical
+solver measurement. See VERTICAL_LOAD.md for definitions and SOLVER_STUDY.md for
+both vehicle profiles across all production grids.
+
 Camera framing has independent matrix-projection tests for road vertices across
 source scales, aspect ratios and overview modes, plus small/tall sources and large
 translations. A real-browser large-track import checks that direct WebGL readback

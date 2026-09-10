@@ -1,7 +1,7 @@
 import type { Sample } from "../../../packages/shared/schema";
 
 export type Channel = {
-  key: keyof Sample;
+  key: Exclude<keyof Sample, "normalLoadG">;
   label: string;
   unit: string;
   min: number;

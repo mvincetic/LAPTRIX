@@ -57,6 +57,7 @@ for (const width of [1600, 390]) {
       ["rpm", 1, 0, "rpm"],
       ["longitudinalG", 1, 3, "G"],
       ["lateralG", 1, 3, "G"],
+      ["verticalG", 1, 3, "G"],
       ["steering", 180 / Math.PI, 2, "°"],
       ["trackGradient", 100, 2, "%"],
       ["y", 1, 2, "m"],
@@ -68,7 +69,15 @@ for (const width of [1600, 390]) {
       );
     }
     await expect(page.getByTestId("cursor-gear")).toHaveText(String(a.gear));
-    await expect(page.getByText("Not modelled", { exact: true })).toBeVisible();
+    expect(lap.verticalDynamics).toBe("quasi-steady-road-normal-v1");
+    const normalLoad =
+      a.normalLoadG! + fraction * (b.normalLoadG! - a.normalLoadG!);
+    await expect(page.getByTestId("cursor-normalLoadG")).toHaveText(
+      `${normalLoad.toFixed(3)}× weight`,
+    );
+    await expect(page.getByText("Not modelled", { exact: true })).toHaveCount(
+      0,
+    );
 
     await page.getByRole("button", { name: "Time", exact: true }).click();
     const atTime = page.getByRole("spinbutton", {

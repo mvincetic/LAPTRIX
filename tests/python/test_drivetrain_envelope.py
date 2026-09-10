@@ -42,15 +42,21 @@ def test_gt_aero_study_respects_exact_power_and_force_budget(aero):
     speeds = np.array([s["speed"] for s in samples])
     # Independent work demand from endpoint speeds and exported grade, before actuator clipping.
     mass = vehicle.mass + setup.fuel
+    chords = np.roll(points, -1, axis=0) - points
+    horizontal = np.linalg.norm(chords[:, [0, 2]], axis=1)
+    angles = np.arctan2(chords[:, 1], horizontal)
+    turn = angles - np.roll(angles, 1)
+    opposite = np.hypot(horizontal + np.roll(horizontal, 1), chords[:, 1] + np.roll(chords[:, 1], 1))
+    vertical = 2 * np.sin(turn) / opposite
+    normal = (
+        mass * (G * horizontal / ds + vertical * speeds**2)
+        + 0.5 * setup.airDensity * vehicle.downforceArea * (1 + aero * 0.055) * speeds**2
+    )
     wheel_force = (
         mass * (np.roll(speeds, -1) ** 2 - speeds**2) / (2 * ds)
         + 0.5 * setup.airDensity * vehicle.dragArea * (1 + aero * 0.045) * speeds**2
-        + mass
-        * G
-        * (
-            0.015 * np.linalg.norm(np.roll(points, -1, axis=0)[:, [0, 2]] - points[:, [0, 2]], axis=1) / ds
-            + np.array([s["trackGradient"] for s in samples])
-        )
+        + 0.015 * normal
+        + mass * G * np.array([s["trackGradient"] for s in samples])
     )
     available_force = 0.94 * vehicle_state(vehicle, speeds)[2] / np.maximum(speeds, 4)
     assert np.max(np.maximum(wheel_force, 0) / available_force) <= 1 + 1e-8

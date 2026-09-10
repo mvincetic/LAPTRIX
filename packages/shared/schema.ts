@@ -149,6 +149,7 @@ export const sampleSchema = z.object({
   longitudinalG: finite,
   lateralG: finite,
   verticalG: finite,
+  normalLoadG: finite.positive().optional(),
   trackGradient: finite,
   cornerId: finite.int().nonnegative(),
   sectorId: finite.int().positive(),
@@ -164,6 +165,7 @@ export const lapSchema = z
     referenceImport: z.object({ fileName: z.string().max(255) }).optional(),
     setup: setupSchema,
     model: z.string(),
+    verticalDynamics: z.literal("quasi-steady-road-normal-v1").optional(),
     sectorBasis: z.enum(["source-progress", "racing-line-distance"]).optional(),
     solverProvenance: z
       .object({
@@ -206,6 +208,7 @@ export const lapSchema = z
         speedConverged: z.boolean(),
         maxDemandRatio: finite.nonnegative(),
         demandTolerance: finite.min(1),
+        minNormalLoadG: finite.positive().optional(),
       })
       .optional(),
     sampling: z
@@ -261,6 +264,36 @@ export const lapSchema = z
   })
   .superRefine((lap, ctx) => {
     if (lap.samples.length < 41) return;
+    const loads = lap.samples.map((sample) => sample.normalLoadG);
+    const minimumLoad = lap.numericalChecks?.minNormalLoadG;
+    if (lap.verticalDynamics) {
+      if (
+        loads.some((load) => load === undefined) ||
+        minimumLoad === undefined
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message:
+            "Vertical dynamics requires complete normal-load telemetry and its minimum",
+        });
+      } else if (
+        Math.abs(Math.min(...(loads as number[])) - minimumLoad) > 1e-9
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Minimum normal load must match telemetry",
+        });
+      }
+    } else if (
+      loads.some((load) => load !== undefined) ||
+      minimumLoad !== undefined
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message:
+          "Normal-load telemetry requires a declared vertical dynamics model",
+      });
+    }
     if (lap.vehicle && lap.vehicle.id !== lap.vehicleId)
       ctx.addIssue({
         code: "custom",

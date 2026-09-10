@@ -52,18 +52,21 @@ seed time, actual gain, candidate counts, accepted/rejected changes and status.
 Horizontal Menger curvature gives a lateral speed cap from tyre friction plus
 speed-dependent downforce. For slope angle `theta`, road speed `v` projects to
 horizontal speed `v cos(theta)`, so lateral acceleration is
-`v² cos²(theta) curvature`. Gravity-supported normal load is `m g cos(theta)`;
-the aerodynamic downforce term is assumed to act normal to the road. The initial
-cap reserves 2% of lateral capacity, with the full longitudinal force balance
-enforced by the sweeps below. Top speed is also bounded by top gear redline.
+`v² cos²(theta) curvature`. Signed vertical Menger curvature `kv` uses adjacent
+horizontal-distance/elevation chords. Total tyre load per mass is
+`N/m = g cos(theta) + v² kv + rho ClA v²/(2m)`: compression increases load, crests
+reduce it, and aerodynamic downforce is assumed road-normal. The initial cap
+reserves 2% of lateral capacity and independently retains 2% of gravity-supported
+contact load on unloading crests. Top speed is also bounded by top gear redline.
+See VERTICAL_LOAD.md for the contact bound, geometry approximation and benchmarks.
 
 Closed-loop backward braking and forward acceleration sweeps propagate constraints
 through the start/finish seam until the envelope converges or 80 sweeps finish.
 Longitudinal grip uses the residual of a friction circle after lateral demand.
 Acceleration is limited by interpolated power, 94% efficiency and grip; braking by
 the configured maximum and grip. Drag, a 0.015 rolling coefficient and gravity along
-the local gradient are included. Rolling loss applies to gravity-supported normal
-load only (`0.015 m g cos(theta)`); aerodynamic tyre rolling losses are omitted.
+the local gradient are included. Rolling loss is `0.015 N`, using the same total
+normal load as tyre grip, including curvature and aerodynamic contributions.
 Longitudinal gravity remains `m g sin(theta)`, with the outgoing source/solved chord
 defining `sin(theta) = rise / 3D length`. The aerodynamic terms use selected air density.
 Power is evaluated separately on each gear's piecewise-linear RPM curve before
@@ -88,8 +91,9 @@ acceleration. The complete closing segment contributes to lap time. Throttle and
 brake are normalized wheel-force requests; gears/RPM follow the drivetrain table.
 Before actuator clipping, integrated wheel demand is checked against the combined
 friction circle, available drive and braking. `numericalChecks` reports the largest
-demand/capacity ratio, a 1.015 numerical tolerance and envelope convergence. This
-checks the discrete model at samples, not continuous or transient feasibility.
+demand/capacity ratio, a 1.015 numerical tolerance, envelope convergence and minimum
+normal load as a multiple of weight. Nonpositive/non-finite contact load is rejected.
+This checks the discrete model at samples, not continuous or transient feasibility.
 
 ## Analysis
 
@@ -105,7 +109,7 @@ the lap, and explicit source intervals accompany new results. See TRACK_FORMAT.m
 Tests check an analytical flat circle, combined grip, RPM/brake bounds, integration,
 closed seam, bounds, objective improvement, setup response and API contracts.
 These are numerical/model checks, **not real-world physics validation**. No CFD,
-load transfer, tyre temperature state, banked-road dynamics, vertical dynamics,
+load transfer, tyre temperature state, banked-road dynamics, transient suspension,
 energy recovery, fuel burn or shift-time loss is calculated.
 See SOLVER_STUDY.md for grid sensitivity; interpolation adds no input accuracy.
 Source and optional uniform grids are prepared before the line solve; see

@@ -15,7 +15,8 @@ the complete seam. Distances and timestamps strictly increase.
 | `throttle`, `brake` | Normalized 0–1 requests |
 | `steering` | Schematic plan-view road-wheel angle in radians |
 | `longitudinalG`, `lateralG` | Acceleration / 9.80665; lateral is signed and uses horizontal projected speed |
-| `verticalG` | Reserved zero; vertical dynamics are not solved |
+| `verticalG` | With `verticalDynamics`: signed road-normal kinematic acceleration / 9.80665, excluding gravity; legacy laps retain reserved zero |
+| `normalLoadG` | Optional positive total tyre contact force / vehicle weight, including gravity, curvature and downforce |
 | `trackGradient` | Local rise / 3D outgoing segment length, the sine of slope angle |
 | `cornerId`, `sectorId` | Zero means no detected corner; sectors start at one |
 | `offset` | Metres laterally from centerline |
@@ -33,9 +34,18 @@ accepted. Focusing the input captures its value before selection or typing, so
 playback cannot overwrite an edit in progress. The draft survives playback and
 blur until Inspect/Enter, Escape, an axis change or a new result. Escape captures
 the current value again. Gear/corner/sector remain stepped values, zero corner is
-shown as None, and reserved vertical dynamics are labelled Not modelled. Numerical
+shown as None. Declared vertical/load channels show G and multiples of weight to
+three decimals; legacy current laps retain Vertical dynamics / Not modelled. Numerical
 display precision is not an accuracy claim. The playback slider exposes its current
 seconds and metres through an accessible value description.
+
+New laps declare `verticalDynamics: "quasi-steady-road-normal-v1"`, requiring a
+positive `normalLoadG` at every sample and a matching
+`numericalChecks.minNormalLoadG`. Partial, inconsistent or undeclared load arrays
+are rejected. Old native references retain their original data and interpretation.
+Optional normal load interpolates only when both endpoints contain it. Vertical G
+is neither world-Y acceleration nor suspension travel or accelerometer output.
+See VERTICAL_LOAD.md for equations, the road-contact reserve and model bounds.
 
 `PlaybackClock` is the only source of playback time. Play, pause, seeking, speed
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers

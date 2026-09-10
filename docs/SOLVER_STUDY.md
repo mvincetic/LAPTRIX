@@ -1,12 +1,12 @@
 # Solver grid study — updated 2026-09-10
 
 This is a numerical study of the original synthetic Ardennes Development Circuit
-and Formula Development 01 at the default setup. It establishes model behavior,
+and development vehicles at the default setup. It establishes model behavior,
 not accuracy against a real circuit or car.
 
 The first table records commit `cf91692`. The subsequent controlled-sampling update
 changed the refinement anchor after an orientation-invariance test. Those tables
-remain historical baselines; the final section records the slope-force correction.
+remain historical baselines; the final section records current vertical-load results.
 
 Reproduce with `npm run study:solver`. The script writes full diagnostics to
 `artifacts/solver-study.json`. Coordinates are periodically cubic-interpolated in
@@ -68,7 +68,7 @@ displacement was 0.242 m, below the 0.50 m guard; neither run reached the point 
 These are discrete-model observations, not a rigorous error bound. Added samples
 remain interpolations of synthetic geometry, not new measurements.
 
-## Current sampling study after slope-force correction
+## Historical sampling study after slope-force correction
 
 On 2026-09-10, the same production-path sampling study was rerun after correcting
 slope-normal weight, horizontal lateral speed and signed downhill braking. The
@@ -92,3 +92,46 @@ At original resolution the Formula centerline/curvature laps change by -0.0129 /
 -0.0181 s. GT centerline changes from 94.759842 to 94.745802 s and curvature from
 91.468502 to 91.454362 s. These differences correct the declared development
 equations; they do not establish a closer match to a measured real lap.
+
+## Current sampling study with vertical tyre loads
+
+The 2026-09-10 crest/compression extension uses total normal load for grip and
+rolling loss, plus an independent crest contact cap. Both catalog vehicles were
+run through all three solver modes and production grids using their default setup.
+The source geometry and selected vehicle parameters are unchanged.
+
+| Vehicle | Sampling | Points | Centerline (s) | Curvature (s) | Refined (s) | Gain (s) |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Formula | Original | 720 | 74.964 | 72.024 | 71.883 | 0.141 |
+| Formula | 5 m | 1,121 | 74.931 | 72.153 | 72.005 | 0.148 |
+| Formula | 3 m | 1,869 | 74.915 | 72.111 | 71.964 | 0.147 |
+| GT | Original | 720 | 94.660 | 91.382 | 91.310 | 0.072 |
+| GT | 5 m | 1,121 | 94.663 | 91.517 | 91.445 | 0.072 |
+| GT | 3 m | 1,869 | 94.668 | 91.514 | 91.442 | 0.072 |
+
+All 18 envelopes and curvature seeds converge. Maximum demand ratios are within
+`7.5e-14` of 1.0. Every run retains positive contact load: the lowest across Formula
+runs is 1.0773 times weight, across GT runs 0.9726. Both crest and compression
+accelerations occur. All grids retain the same source fingerprint; no source point
+is overwritten. The 5 m/3 m refined differences are about 0.0406 s for Formula and
+0.00275 s for GT. These two grid comparisons are not a rigorous discretization
+error bound or evidence of measured performance accuracy.
+
+Reports are `artifacts/vertical-load-formula-sampling.json` and
+`artifacts/vertical-load-gt-sampling.json`. They record complete diagnostics,
+vertical acceleration extrema, minimum normal load and solver/runtime provenance.
+Both use source fingerprint
+`sha256:ee2a3aa9039406df999ef6e6e60e974e995d942f2e4a32e968ff789660d3d12b`
+for the solver implementation. Their track fingerprint is separately
+`sha256:a2e611b0d0a69621ff5c04d0003f15e3a92f49fb78ee623a8cda1a60f9d5f689`.
+
+These two studies ran concurrently with each other and other local checks.
+Observed seed/refined times were about 0.17/4.6 s at source resolution, 0.41/7.4–7.5 s
+at 5 m and 0.76/12.7–12.8 s at 3 m. They are not controlled comparisons with the
+earlier sequential timings. The numerical equations, rather than performance
+changes, are the purpose of this study. The CLI now accepts `--vehicle`:
+
+```powershell
+npm run study:sampling -- --vehicle formula-development --output artifacts/vertical-load-formula-sampling.json
+npm run study:sampling -- --vehicle gt-development --output artifacts/vertical-load-gt-sampling.json
+```

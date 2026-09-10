@@ -8,16 +8,17 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 92 tests pass.
-- Python numerical/API tests: 103 tests pass.
-- Playwright: 62 development browser journeys pass; two viewer journeys also run
-  against built production assets.
-- Vite production build: pass; approximately 398 kB initial JavaScript / 121 kB
+- Vitest: 132 tests pass.
+- Python numerical/API tests: 130 tests pass.
+- Playwright: all 82 development journeys pass (13.4 minutes), including the new
+  load-telemetry contracts. Five focused cursor/compatibility journeys also pass.
+  Both viewer journeys pass against built production assets (10.9 seconds).
+- Vite production build: pass; approximately 400 kB initial JavaScript / 122 kB
   gzip, plus a separate 954 kB viewer / 255 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `19fc232`, including camera north and stable reset,
-  the Chrome-source fix and the expanded bounded browser budget. Each following
+- GitHub Actions passed through `86edfa2` (run 34461731682), including typed workspace
+  recovery, the Chrome-source fix and the expanded bounded browser budget. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
@@ -598,6 +599,64 @@ Evidence also includes `artifacts/audio-recovery-before.log`,
 `audio-recovery-before-results`, `audio-recovery-focused.log`,
 `audio-recovery-check.log` and `audio-recovery-error-*.png`. The preceding comparison
 display and storage milestones passed remote CI runs 34451075247 and 34452191325.
+
+## Vertical-load continuation
+
+The quasi-steady crest/compression milestone passes lint, typecheck, production
+build, all 132 TypeScript tests and all 130 Python numerical/API tests. Fourteen new
+analytical cases check signed curvature, straight grades, continuous height-wave
+oracles on three grids and a straight crest requiring its own contact-speed bound.
+Existing slope, drivetrain and wheel-work tests retain their tolerances after
+independently reconstructing total normal load and its rolling loss. Initial old-
+equation failures remain recorded rather than being described as a passing baseline.
+
+Both vehicle studies cover source/5 m/3 m grids and all three solver modes: 18 runs
+converge, retain positive contact load and pass force checks. SOLVER_STUDY.md gives
+the actual lap times, grid differences and concurrent-runtime caveat. The restarted
+API's solver fingerprint matches both reports, and its default Formula lap is
+72.02375644930231 s with minimum contact load 1.0972615305452413 times weight.
+
+Five focused cursor/compatibility browser journeys pass in 54.0 seconds. New
+desktop/phone checks use actual exported samples as independent interpolation
+oracles, preserve the complete workspace after an incomplete-load import, and
+restore new current data with an unchanged legacy-shaped reference through Save
+and portable loading. A separate routed legacy-current fixture keeps Vertical
+dynamics / Not modelled and omits the new load row. Fixtures are explicitly shaped
+test data, not measurements produced by an old solver.
+
+Desktop and full phone cursor screenshots were opened and reviewed: Vertical G,
+Normal tyre load, units and the physical interpretation note are readable, without
+horizontal overflow. The desktop numerical panel remains internally scrollable.
+The first full browser invocation was interrupted after five passing journeys.
+Its handle, browser runner and both local servers were confirmed absent before
+restart; `artifacts/vertical-load-e2e-interrupted.log` preserves that incomplete run.
+The fresh full gate passes all 82 journeys in 13.4 minutes, recorded in
+`artifacts/vertical-load-e2e-final.log`. Both production viewer journeys pass in
+10.9 seconds, recorded in `artifacts/vertical-load-production.log`. Application
+source stayed fixed throughout both final gates.
+
+The final cursor QA additionally checks 1600/1280/390 px, including keyboard
+scrolling to the interpretation note, with exact document widths and no runtime
+errors. The 1280 px panel, its scrolled state and phone panel were opened and
+reviewed. GT + 5 m sampling + lap-time refinement was visually exercised at
+1600/1280/900/390 px; the desktop, full phone and selected-corner images were opened.
+The displayed 91.445 s result and 0.072 s seed gain agree with the numerical study.
+An existing selected-corner issue remains visible: nearby event callouts can overlap
+in the scene, although the labelled numerical event controls remain usable. This
+is recorded for the following interface-quality work.
+
+A real-browser export check compares every numeric field of all 721 CSV rows with
+the JSON samples: all 19 channels agree exactly, including vertical acceleration
+and normal load, with zero extra simulation requests. Additional evidence is
+`artifacts/vertical-load-cursor-qa.log`, `vertical-load-gt-visual.log`,
+`vertical-load-export-qa.log`, `cursor-panel-*.png`, `cursor-scrolled-*.png` and
+`gt-sampling-refinement-*.png`.
+
+Evidence: `artifacts/vertical-load-check-final.log`,
+`vertical-load-browser-focused.log`, `vertical-load-existing-oracles.log`,
+`vertical-load-oracles-final.log`, `vertical-load-formula-sampling.json`,
+`vertical-load-gt-sampling.json` and `vertical-load-cursor-*.png`.
+The preceding workspace-error milestone passed remote CI run 34461731682.
 
 ## Scope of the evidence
 
