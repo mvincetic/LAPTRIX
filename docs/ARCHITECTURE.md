@@ -213,6 +213,12 @@ custom-track contract. Reference files are read and validated locally as native
 Lap or timing-only Reference data; they never pass through the simulation API.
 Common comparison functions interpolate their time arrays against source progress.
 Neither imported references nor metadata drive the canonical playback clock.
+`timingCsv.ts` separates bounded CSV parsing, explicit unit conversion and canonical
+timing-reference construction. The native TimingCsvDialog owns file-read generations
+and local validation; App owns source fingerprinting and the shared reference/
+calculation generation checks. Cancel or superseding work invalidates delayed reads
+and hashes. Converted CSV data enters the existing timing schema and persistence
+path without a new source, solver call, channel set or playback clock.
 `comparison-report.ts` consumes `prepareTimeComparison`'s source progress and
 matched reference times, then uses the existing sample interpolator for each side.
 It clones both completed inputs and omits undeclared legacy vertical channels from

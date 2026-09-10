@@ -5,8 +5,8 @@ completion. Both widths previously executed 32 animation callbacks in a half-sec
 despite zero WebGL draws; the strengthened settled-workspace tests now require zero
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
-all browser/audio processing. Entry JavaScript is 415.19 kB (125.95 kB gzip); main
-CSS is 52.84 kB (11.26 kB gzip) and deferred viewer JavaScript is 966.27 kB
+all browser/audio processing. Entry JavaScript is 426.51 kB (128.90 kB gzip); main
+CSS is 55.89 kB (11.73 kB gzip) and deferred viewer JavaScript is 966.27 kB
 (259.05 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
 The track key observes only a compact-scene predicate and reuses existing layout
@@ -20,6 +20,13 @@ Custom graph windows retain memoized full-lap curves and scales, changing only t
 viewport and labels. Exact axis bounds are derived only when lap/range/axis changes;
 the editor and window loop add no timer, solve or sample generation. See
 CUSTOM_WINDOWS.md.
+
+Timing CSV adds bounded local parsing and a native review dialog. Conversion is
+memoized by parsed table and column/unit selection; editing provenance or playback
+does not repeat it. File size, rows, columns and individual fields have explicit
+limits. Only first/final records are rendered, and applying a reference performs
+one source fingerprint with no simulation request. These bounds are not a device
+responsiveness guarantee for every file within the limits.
 
 Comparison export brings the entry to 411.71 kB JavaScript (124.93 kB gzip), with
 51.73 kB main CSS (11.09 kB gzip). The deferred viewer remains 962.28 kB (257.66 kB

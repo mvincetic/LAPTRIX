@@ -1,6 +1,7 @@
 # Importing comparison references
 
-Use **Additional actions → Import reference JSON**. Importing changes the reference,
+Use **Additional actions → Import reference JSON** for native exports or explicit
+timing JSON, or **Import timing CSV** for a reviewed column mapping. Importing changes the reference,
 not the current solve or playback. Files stay in the browser and are limited to
 5 MB. Save explicitly to retain the reference on this device; Export project also
 includes it. Invalid data, unsupported units or a different source track preserve
@@ -67,8 +68,8 @@ This abbreviated example illustrates the structure, not sufficient measurement
 resolution for corner analysis. Supply 2–20,000 paired samples. Time and progress
 must strictly increase; time starts at zero and ends at `lapTime`, and progress
 starts at zero and ends at one. Seconds and fractional source progress are required;
-milliseconds, raw GPS coordinates, distance-only CSV and implicit conversion are
-not accepted. Label, vehicle label, origin and provenance description are required.
+milliseconds, raw GPS coordinates and implicit conversion are not accepted by the
+JSON reader. Label, vehicle label, origin and provenance description are required.
 
 The file producer must map each timestamp to the canonical source track, including
 the same start/finish, direction and lap seam. A hash match establishes declared
@@ -76,6 +77,45 @@ source identity, **not** the accuracy of a logger's alignment. LAPTRIX does not
 currently perform GPS map matching or verify a claimed recording. Imported timing
 shows its declared origin, description, sample count and linear interpolation.
 Sparse samples can miss braking and corner detail.
+
+## Reviewed timing CSV
+
+**Import timing CSV** accepts a comma-separated header and 2–20,000 complete-lap
+records, limited to 5 MB. Choose distinct time and source-progress columns, then
+explicitly select seconds/milliseconds and fraction/percent. Only the example's
+exact `time_s` and `source_progress` headers are preselected, with seconds/fraction.
+Other headers require a column choice. Review the converted first/final records,
+record count and lap duration before importing. Extra columns are ignored.
+
+Time and progress must be finite decimal or scientific-notation numbers, strictly
+increasing in file order. They start at zero; final progress is one after conversion.
+Lap time cannot exceed 86,400 seconds. Formulas, hexadecimal values, blank numeric
+cells, duplicate positions, sorting, implicit offsets and raw-distance normalization
+are unsupported. Prepare GPS/distance alignment outside LAPTRIX first.
+
+Enter the reference/vehicle labels, declared origin and provenance, including how
+progress was aligned. Confirm the displayed source's start/finish and direction.
+LAPTRIX stamps that source's actual fingerprint and validates the existing timing
+reference contract. This declaration establishes which source you intended; it
+does not authenticate a recording or independently verify alignment.
+
+The parser supports quoted commas/newlines and doubled quotes as described in
+[RFC 4180](https://www.rfc-editor.org/info/rfc4180/), plus UTF-8 BOM, LF and CR line
+endings. Headers must be nonempty and unique after trimming (2–64 columns, each
+header at most 100 characters). Every record must have the header's column count;
+fields are limited to 100,000 characters. Malformed quoting and interior blank
+records are rejected. CSV parsing is local and does not execute cell contents.
+
+**Download simulated CSV example** uses the current calculated lap's exact times
+and source progress. It is original simulated data, not a measured recording.
+The imported result is the same timing-only reference used by JSON import, so Save,
+portable projects, Time Delta and comparison exports work without a new format.
+No reference ghost or unavailable telemetry channels are fabricated.
+
+Cancel or Escape closes the dialog and restores focus to Additional actions.
+Selecting another CSV supersedes an older pending read. Closing the review, a new
+JSON reference, Set reference or a workspace calculation invalidates a pending
+CSV import. Parsing errors stay in the dialog; the completed workspace remains.
 
 ## Physical comparison intervals
 

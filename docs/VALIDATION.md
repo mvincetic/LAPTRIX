@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 211 tests pass.
+- Vitest: 246 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -155,8 +155,35 @@ and no main merge, force-push or repository-settings change was made.
   browser globals. No solver, source, schema or dependency changed.
   All four production loading/restoration journeys pass in 20.3 seconds;
   evidence is `artifacts/terrain-production.log`.
-- Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
-  gzip, plus a separate 962 kB viewer / 258 kB gzip.
+  Reviewed timing CSV adds 35 parser/conversion/contract cases and seven browser
+  journeys (126 development journeys now discovered). The first browser attempt
+  timed out matching a select's nested label text; all five selects now have
+  explicit accessible names. Native imported references retain their existing
+  filename metadata in assertions, and delayed hash fixtures await actual digest
+  completion. All six initial mapping/cancellation/ordering/persistence journeys
+  then pass together in 39.0 seconds. The full quality gate passes 246 TypeScript
+  and 146 Python tests (60.64 seconds), lint, typecheck and production build.
+  Visual QA covers 20 states across 1600/1280/390 px and 780 × 390 landscape:
+  empty, invalid, converted preview, ready and imported. Header/footer remain
+  within the viewport, form bodies have no horizontal overflow, and imports
+  preserve the complete exported workspace apart from the reference, pending
+  fuel 21 and cursor 20. All four original CSV-example round trips reproduce
+  every current timestamp/progress value, with zero simulation requests and
+  runtime/console errors. Desktop preview, phone ready and short-landscape ready
+  screenshots were opened and reviewed. Evidence is `artifacts/timing-csv-qa.json`,
+  `.log` and `timing-csv-*-*.png`.
+  The wider reference/project/comparison/keyboard run passes 22 of 23 journeys
+  (2.4 minutes), including all seven CSV cases and live playback retention. The
+  remaining accessibility audit never loads the app: its preserved trace records
+  Chromium `ERR_NO_BUFFER_SPACE` fetching `main.tsx`, before any application API
+  call. An unchanged isolated run passes in 4.6 seconds, completing the scoped
+  checks across the two runs. No timeout, retry configuration or application
+  workaround was added. See `timing-csv-regressions.log`,
+  `timing-csv-keyboard-startup-trace.zip` and `timing-csv-keyboard-recheck.log`.
+  All four production loading/restoration journeys pass in 21.3 seconds;
+  evidence is `artifacts/timing-csv-production.log`.
+- Vite production build: pass; approximately 427 kB initial JavaScript / 129 kB
+  gzip, plus a separate 966 kB viewer / 259 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
 - GitHub Actions passed through `7f78ce0` (run 34472973538), including vertical-load

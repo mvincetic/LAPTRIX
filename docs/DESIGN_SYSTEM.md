@@ -257,3 +257,12 @@ visible label states scope even in a sector plot. The readout/action row wraps o
 phones while the existing chart height remains usable; the button has a specific
 accessible comparison-export name and native keyboard activation. The current
 delta, reference caption, graph axes and loop strip remain in their existing roles.
+
+Timing CSV uses a native modal with fixed heading/actions and a scrolling body.
+Paired column/unit controls have explicit accessible names; the converted preview
+shows first/final records, units, count and duration. Reference metadata and the
+source-alignment checkbox follow the preview. The import button stays unavailable
+for invalid data or missing alignment, and native required inputs guard metadata.
+Errors remain local with room for wrapped record details. Escape/Cancel return
+focus to Additional actions; all modal content fits desktop, phone and short
+landscape viewports with vertical scrolling where needed.

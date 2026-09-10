@@ -27,7 +27,10 @@ import {
   type Track,
   type Vehicle,
 } from "../../../packages/shared/schema";
-import { normalizeTrack } from "../../../packages/track-engine";
+import {
+  normalizeTrack,
+  trackFingerprint,
+} from "../../../packages/track-engine";
 import {
   PlaybackClock,
   interpolate,
@@ -47,6 +50,12 @@ import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { RenameProjectDialog } from "./components/RenameProjectDialog";
 import { GpxImportDialog, type GpxDraft } from "./components/GpxImportDialog";
 import { download } from "./download";
+import { TimingCsvDialog } from "./components/TimingCsvDialog";
+import {
+  timingCsvReference,
+  type TimingCsvData,
+  type TimingCsvMetadata,
+} from "./timingCsv";
 
 const clock = new PlaybackClock();
 const audioEngine = new TelemetryAudioEngine();
@@ -97,6 +106,11 @@ export function App() {
     vehicleInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
   const referenceGeneration = useRef(0);
+  const [timingCsv, setTimingCsv] = useState<{
+    track: Track;
+    referenceId: number;
+    calculationId: number;
+  } | null>(null);
   const audioGeneration = useRef(0);
   const customTracks = useRef(new Set<string>());
   const customVehicles = useRef(new Map<string, Vehicle>());
@@ -107,6 +121,7 @@ export function App() {
   const [cancellable, setCancellable] = useState(false);
   const beginCalculation = useCallback(() => {
     const id = ++generation.current;
+    setTimingCsv(null);
     const controller = new AbortController();
     activeCalculation.current = controller;
     retryTarget.current = null;
@@ -154,6 +169,36 @@ export function App() {
   const closeGpxImport = () => {
     setGpxImport(false);
     actionsButton.current?.focus();
+  };
+  const closeTimingCsv = () => {
+    if (timingCsv?.referenceId === referenceGeneration.current)
+      referenceGeneration.current++;
+    setTimingCsv(null);
+    actionsButton.current?.focus();
+  };
+  const applyTimingCsv = async (
+    data: TimingCsvData,
+    metadata: TimingCsvMetadata,
+  ) => {
+    const session = timingCsv;
+    if (!session) throw new Error("Reopen CSV import for the current source.");
+    const isCurrent = () =>
+      session.referenceId === referenceGeneration.current &&
+      session.calculationId === generation.current;
+    const fingerprint = await trackFingerprint(session.track);
+    if (!isCurrent())
+      throw new Error("The reference or workspace changed. Reopen CSV import.");
+    const imported = timingCsvReference(
+      data,
+      metadata,
+      session.track.id,
+      fingerprint,
+    );
+    setReference(imported);
+    setError((current) =>
+      current?.action === "import-reference" ? null : current,
+    );
+    setNotice("CSV timing reference imported · current simulation retained");
   };
   useLapTools(lap, clock);
   const run = useCallback(
@@ -596,6 +641,7 @@ export function App() {
   const importReference = async (file: File) => {
     if (!track) return;
     const referenceId = ++referenceGeneration.current;
+    setTimingCsv(null);
     const currentGeneration = generation.current;
     const isCurrent = () =>
       referenceId === referenceGeneration.current &&
@@ -861,6 +907,19 @@ export function App() {
                     <Upload size={14} /> Import reference JSON
                   </button>
                   <button
+                    disabled={!track || busy}
+                    onClick={() => {
+                      if (track)
+                        setTimingCsv({
+                          track,
+                          referenceId: ++referenceGeneration.current,
+                          calculationId: generation.current,
+                        });
+                    }}
+                  >
+                    <Upload size={14} /> Import timing CSV
+                  </button>
+                  <button
                     disabled={!lap?.alignment}
                     onClick={() => {
                       if (lap?.alignment)
@@ -1087,6 +1146,7 @@ export function App() {
           onReference={() => {
             if (lap) {
               referenceGeneration.current++;
+              setTimingCsv(null);
               setReference(lap);
               setNotice("Current simulation set as reference");
             }
@@ -1124,6 +1184,14 @@ export function App() {
             closeGpxImport();
             void importTrack({ format: "gpx", track });
           }}
+        />
+      )}
+      {timingCsv && (
+        <TimingCsvDialog
+          track={timingCsv.track}
+          example={lap}
+          onImport={applyTimingCsv}
+          onClose={closeTimingCsv}
         />
       )}
       {projectNaming && (

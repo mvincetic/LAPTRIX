@@ -51,8 +51,9 @@
   cannot certify intermediate geometry or recover absent elevation details.
   See SOURCE_PROFILES.md.
 - Reference imports accept native simulation JSON or explicitly source-aligned
-  timing JSON. GPS alignment and generic logger CSV conversion are not implemented.
-  Imported timing origin is declared by its file and is not independently verified;
+  timing JSON or reviewed CSV with explicit time/progress columns and units. CSV
+  does not select laps, align GPS, normalize raw distance or infer missing units.
+  Imported timing origin is declared by its file/review and is not independently verified;
   sparse samples limit corner detail. Reference channels do not replace current
   simulation graphs or audio. Only matching native laps can supply the optional
   reference ghost; source identity declarations do not authenticate its trajectory.

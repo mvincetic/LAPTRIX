@@ -11,7 +11,9 @@ reference, inspect individual corners, play a telemetry-driven ghost, scrub the
 lap, save settings on their device and export results. Track JSON import extends
 the same generic pipeline rather than adding track-specific UI logic.
 References can also come from a LAPTRIX export or explicitly aligned external
-timing JSON. Imported timing keeps its declared provenance and does not invent
+timing JSON or reviewed CSV column mappings. CSV supports explicit milliseconds
+and percent conversion, requires source-alignment/provenance declarations and
+previews converted records before applying. Imported timing keeps its declared provenance and does not invent
 missing measured channels or replace the simulation's playback.
 Portable project files restore names, selected setup, custom source geometry and
 references on a fresh workspace. The app validates the bundle and recalculates

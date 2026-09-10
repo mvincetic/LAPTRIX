@@ -165,3 +165,9 @@ passes through `04f73fe`: all 117 development journeys (60 in 10.0 minutes and
 57 in 9.7 minutes), 203 TypeScript tests, 146 Python tests (40.35 seconds), all
 quality gates and four production journeys (27.7 seconds). Both updated actual
 buffer-retention and zero-idle-render checks pass remotely.
+
+The [terrain-clearance run](https://github.com/mvincetic/LAPTRIX/actions/runs/34511922940)
+passes through `7f50e91`: all 119 development journeys (60 in 10.4 minutes and
+59 in 10.2 minutes), 211 TypeScript tests, 146 Python tests (40.37 seconds), all
+quality gates and four production journeys (28.3 seconds). Both sparse/sloped
+road-visibility checks pass alongside the existing rendering regressions.

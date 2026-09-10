@@ -57,6 +57,7 @@ the last completed result remains visible if a solve fails.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 - Import simulation or aligned external timing references with explicit source/units checks.
+- Review CSV timing columns, convert explicit units and retain source/provenance declarations.
 - Portable project import/export with name, setup, custom source and reference restoration.
 - Bounded aero comparison with numerical eligibility, progress and deliberate result application.
 - Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
@@ -140,7 +141,8 @@ and portable projects retain its converted source. See [GPX_IMPORT](docs/GPX_IMP
 In **Track geometry → Source profiles**, inspect the original elevation, grade
 and sampled curvature without moving lap playback. The same inspector appears in
 GPX review; see [SOURCE_PROFILES](docs/SOURCE_PROFILES.md) for units and sampling limits.
-**Import reference JSON** accepts LAPTRIX exports or the timing-only external
+**Import timing CSV** reviews aligned time/progress columns, explicit units and
+provenance before applying. **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
 Source hashes survive signed-zero JSON round trips; older hashes require verified

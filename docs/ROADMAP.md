@@ -82,13 +82,19 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for terrain clearance. There are 119 development journeys;
-   both the compact key and stable shoulder geometry pass all preceding 117 remotely.
-2. Evaluate a bounded CSV timing-reference import using the existing explicit
-   source-progress/units contract, so externally prepared timing does not require
-   hand-authored JSON. Preserve declared alignment rather than infer GPS correspondence.
+1. Verify remote CI for reviewed timing CSV. Terrain clearance passes all preceding
+   119 development journeys remotely; the CSV milestone adds seven journeys.
+2. Inspect the growing actions disclosure at short viewport heights and improve
+   access to all actions if its measured bounds exceed the visible workspace.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+Reviewed CSV timing now maps explicit time/source-progress columns and units into
+the existing reference schema. Converted first/final records, duration, provenance
+and source declaration are reviewed before activation. Original simulated examples
+come from current telemetry. Local file ordering and shared generation checks
+preserve the workspace through cancellation and superseding imports. No GPS
+alignment or measured channels are inferred; see REFERENCE_IMPORT.md.
 
 Synthetic terrain now interpolates full source segments and caps overlapping grid
 cells beneath the road and shoulders. Width-aware tree clearance and final-grid
@@ -253,13 +259,13 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 203 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 246 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and fourteen browser journeys cover the
+One hundred and twenty-six browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

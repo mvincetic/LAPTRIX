@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Review CSV into the existing timing-reference contract
+
+**Decision:** Parse bounded local comma-separated records, ask for explicit time/
+progress columns and units, preview conversion and require source/provenance
+declarations. Validate the resulting existing timing schema after fingerprinting
+the displayed source. **Reasoning:** Prepared logger/simulation timing can be
+compared without hand-writing JSON, while source correspondence remains explicit.
+**Alternatives:** Guess distance/GPS alignment or introduce another persisted format.
+**Consequence:** CSV cannot supply positions or channels absent from timing data.
+Read generations and shared reference/calculation generations protect cancellation
+and superseding actions. No solver request or playback transition is introduced.
+
 ## 2026-09-10 — Keep contextual terrain below source roads
 
 **Decision:** Use all closed source segments for ground interpolation and cap
