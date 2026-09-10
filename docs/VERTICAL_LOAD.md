@@ -105,6 +105,11 @@ also applied, and all nodes retained contact. These are original synthetic probe
 not measured vehicle evidence. Production tests and both vehicle sampling studies
 are the repeatable checks; see PHYSICS_BENCHMARKS.md and SOLVER_STUDY.md.
 
+ELEVATION_SENSITIVITY.md adds a fixed 30-case source-phase study and six independent
+geometry checks. Missing 10 cm waves and captured extrema can produce very different
+loads while every discrete force check passes. This quantifies the raw-elevation
+limitation without adding suspension, smoothing or a measured accuracy claim.
+
 ```powershell
 node scripts/python.mjs -m pytest tests/python/test_vertical_load.py -q
 npm run study:sampling -- --vehicle formula-development --output artifacts/vertical-load-formula-sampling.json

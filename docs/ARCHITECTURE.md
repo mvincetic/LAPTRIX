@@ -128,6 +128,11 @@ version marker. Shared validation enforces complete declared channels and preser
 legacy references without invented data. CursorInspector consumes the existing
 interpolation/clock; optional load interpolation requires both endpoints. See
 VERTICAL_LOAD.md for the physical and compatibility contracts.
+The offline `scripts/elevation_study.py` separately generates original analytic
+sources and runs the existing centerline solver across source/5 m/3 m grids.
+It retains inputs, full results and provenance while comparing geometry against
+independent continuous derivatives. It does not participate in application state
+or change the solver; see ELEVATION_SENSITIVITY.md.
 `line_geometry_error` applies the same finite-coordinate, source-progress and slope
 checks before the initial optimized envelope and within refinement. Invalid seeds
 raise an API 422; invalid candidates increment the existing rejected count. A

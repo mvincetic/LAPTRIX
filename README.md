@@ -97,6 +97,7 @@ node scripts/plot-range-qa.mjs
 npm run study:solver
 npm run study:sampling
 npm run study:sampling -- --vehicle gt-development --output artifacts/gt-sampling-study.json
+node scripts/python.mjs scripts/elevation_study.py
 ```
 
 `check` runs frontend and Python lint, TypeScript, unit/API tests and the production
@@ -111,6 +112,9 @@ See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Selec
 seed under the same vehicle/setup. The default remains minimum curvature.
 Advanced settings also offers **Spatial sampling**; the imported source remains
 unchanged. See [SAMPLING](docs/SAMPLING.md) for the grid and reference contract.
+The original analytic [elevation-sensitivity study](docs/ELEVATION_SENSITIVITY.md)
+quantifies how missing source detail can change tyre loads and lap time even when
+all numerical checks pass. Its report retains full inputs and all 30 solved laps.
 Changing **Car profile** runs that vehicle and retains the selected reference.
 Expand **Vehicle data & assumptions** to inspect model parameters and specification
 anchors. Both bundled vehicles are synthetic; see [VEHICLE_MODEL](docs/VEHICLE_MODEL.md).

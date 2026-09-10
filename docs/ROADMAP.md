@@ -82,9 +82,8 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Quantify elevation-sampling sensitivity with original analytic inputs, including
-   source-phase aliasing and whether finer production grids recover missing detail.
-   Keep source changes explicit and establish evidence before adding any smoothing.
+1. Add exact extrema inspection for vertical acceleration and tyre load, preserving
+   the shared clock, clear full-lap scope and explicit legacy availability.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -169,12 +168,17 @@ renderer and clock. Native references share scales only for available channels;
 legacy references keep five useful curves and explicitly omit undeclared load data.
 Overview, sector ranges, axes and project contents retain their contracts. See
 LOAD_GRAPHS.md for units, precision, guides and compatibility.
+The original analytic elevation study now quantifies source-phase sensitivity in
+30 centerline runs across both vehicles. Complete sources/results and independent
+geometric checks show why numerical eligibility cannot establish elevation fidelity.
+Production resampling cannot recover an absent wave; no smoothing or quality
+threshold is introduced. See ELEVATION_SENSITIVITY.md.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 130 passing tests, including coupled quadratic
+The local numerical/API suite contains 136 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip/contact benchmarks. The 148 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 148 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,

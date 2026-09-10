@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Quantify source elevation sensitivity with complete analytic cases
+
+**Decision:** Add a fixed offline phase/resolution study with original sine-elevation
+circles, complete source/vehicle/setup/Lap exports, independent geometric oracles
+and unchanged production sampling. **Reasoning:** The new tyre-load model responds
+to elevation curvature. A 720-node source can sample only a 10 cm wave's zero
+crossings, while another phase captures its extrema; passing force checks does not
+identify the missing surface. **Consequences:** Thirty cases in both vehicles
+quantify the sensitivity, including capped 3 m grids and denser original sources.
+The report distinguishes numerical eligibility from source fidelity and retains
+rejected cases. It introduces no smoothing, automatic quality threshold or calibrated
+uncertainty claim. See ELEVATION_SENSITIVITY.md for exact inputs and results.
+
 ## 2026-09-10 — Inspect declared load channels in a separate graph group
 
 **Decision:** Retain the seven-channel Overview and add a seven-row Loads &

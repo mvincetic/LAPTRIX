@@ -28,6 +28,10 @@
   suspension motion. Raw elevation noise can strongly affect curvature. Vertical G
   is road-normal acceleration excluding gravity, not world-Y acceleration or an
   accelerometer reading. Legacy results retain reserved zeros. See VERTICAL_LOAD.md.
+  The original ELEVATION_SENSITIVITY.md study demonstrates large sampling-phase
+  effects from a 10 cm synthetic wave despite passing force checks. The current
+  point budget does not resolve every accepted elevation feature; denser solver
+  interpolation and the displacement guard cannot certify source curvature.
 - Detected corners use curvature prominence; gradual turns may be combined.
   Seam-adjacent event windows are clipped to the canonical lap interval.
 - Track imports accept local JSON and a reviewed GPX 1.1 geometry subset. GPX

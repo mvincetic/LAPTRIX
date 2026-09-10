@@ -9,7 +9,7 @@ and no main merge, force-push or repository-settings change was made.
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
 - Vitest: 148 tests pass.
-- Python numerical/API tests: 130 tests pass.
+- Python numerical/API tests: 136 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
   all 15 relevant browser regressions (2.5 minutes); 84 are now discovered.
@@ -28,6 +28,17 @@ and no main merge, force-push or repository-settings change was made.
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
+
+The subsequent offline elevation study passes all 30 centerline cases and six new
+independent geometry tests. All nine full source tracks and 30 full Laps pass the
+frontend runtime schemas without changing values, setup or vehicle snapshots.
+`artifacts/elevation-study.json` retains about 49 MB of complete inputs/results;
+`elevation-study-final.log`, `elevation-study-tests.log`,
+`elevation-study-validation.log` and `elevation-study-check.log` retain the gates.
+The explanatory PNG/SVG figure was generated with Matplotlib in an isolated ignored
+artifact directory and opened for layout review. Browser behavior, production assets
+and solver provenance retain the preceding graph milestone's checks. No app or
+production dependency changed in this offline-study milestone.
 
 Loads & elevation visual QA passes 21 states: Overview, current-only loads, native
 distance/time overlays, sector inspection, partial legacy references and timing-only

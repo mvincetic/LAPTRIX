@@ -3,6 +3,13 @@
 These tests evaluate equations and numerical consistency of the declared
 point-mass model. They do not validate real vehicle performance.
 
+Six source-sensitivity checks in `tests/python/test_elevation_study.py` independently
+verify a sine wave's zero-crossing/extrema samples, exact chord curvature and slope,
+missing inter-node elevation, source preservation and the production point cap.
+The companion fixed study runs 30 real centerline solves with full input/output
+exports. All pass discrete numerical checks while exhibiting large source-phase
+sensitivity; ELEVATION_SENSITIVITY.md separates this from real-world accuracy.
+
 `tests/python/test_physics_benchmarks.py` checks circular lateral limits against an
 independently evaluated aerodynamic grip equation, nonuniform-source resampling,
 power-limited speed against a scalar work balance and rigid-transform invariance.

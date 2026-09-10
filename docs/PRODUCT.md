@@ -125,6 +125,11 @@ without recalculation or changing the previous save. A later successful Save cle
 that warning; unrelated failures retain their own recovery actions.
 Audio-start failures similarly offer Enable audio again. The retry preserves the
 workspace and playback, and delayed success retains a newer unrelated error.
+An offline analytic elevation study now records complete inputs and results for
+30 source-phase/grid cases. It demonstrates how small missing elevation waves can
+alter the road-following model despite passing numerical checks. This strengthens
+the documented source limits without inferring survey quality or changing supplied
+geometry. See ELEVATION_SENSITIVITY.md.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

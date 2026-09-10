@@ -1,5 +1,14 @@
 # Testing and validation
 
+The original elevation study adds six independent geometry checks for exact sine
+samples, horizontal radius, analytical and chord curvature, outgoing grade, missing
+inter-node height and immutable production resampling. All 30 fixed study solves
+pass their numerical diagnostics. An additional local report check parses all nine
+sources and 30 complete results through the frontend schemas and verifies unchanged
+values, setup and vehicle snapshots. The study exports its full evidence; see
+ELEVATION_SENSITIVITY.md for the distinction between source accuracy and numerical
+eligibility. The full quality gate now passes 148 TypeScript and 136 Python tests.
+
 Loads & elevation adds eight channel-math cases and three browser journeys.
 Independent interpolation of real unequal-grid Formula/GT output checks all seven
 current/reference readings on both axes, with exact-clock vertical/load readouts

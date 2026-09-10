@@ -51,3 +51,10 @@ including when the reference came from an older format. Source fingerprints rema
 compatible across versions with the same geometry and fractions; project reuse
 also checks track version to preserve semantics. These are not surveyed timing
 gates. Sampling and consistency do not establish real-world physics accuracy.
+
+An original 30-case [elevation-sensitivity study](ELEVATION_SENSITIVITY.md) quantifies
+that distinction. A coarse source can omit a complete 10 cm sine wave between its
+nodes; 5 m/3 m solver interpolation preserves that absence. Direct denser samples
+capture it and yield different loads/lap times while all force diagnostics pass.
+The displacement guard does not establish curvature accuracy or recover source
+information. No filtering or automatic source-quality classification is applied.
