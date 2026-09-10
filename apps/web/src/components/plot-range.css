@@ -16,8 +16,33 @@
 .plot-range-controls button {
   font-size: 10px;
 }
+.plot-range-controls .sector-loop-button {
+  padding: 3px 5px;
+  border: 1px solid transparent;
+}
+.plot-range-controls .sector-loop-button[aria-pressed="true"] {
+  background: #edf5ff;
+  border-color: #c3dbfd;
+}
 .plot-range-status {
   font-size: 9px;
+}
+.playback-loop-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 12px;
+  padding: 6px 12px;
+  border-top: 1px solid #e7edf4;
+  color: #526379;
+  font-size: 10px;
+}
+.playback-loop-status button {
+  font-size: 10px;
+}
+.playback-loop-hint {
+  font-size: 9px;
+  color: #61758e;
 }
 .plot-controls {
   display: flex;

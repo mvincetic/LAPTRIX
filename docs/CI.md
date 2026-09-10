@@ -94,3 +94,8 @@ The [source-curvature run](https://github.com/mvincetic/LAPTRIX/actions/runs/344
 passes through `6f6261c`: all 93 development journeys (47 in 7.4 minutes and 46 in
 5.1 minutes), 159 TypeScript tests, 136 Python tests, lint/type/build checks and
 all four production journeys (22.9 seconds). The expanded source/GPX checks pass.
+
+The [closed-corner run](https://github.com/mvincetic/LAPTRIX/actions/runs/34490067249)
+passes through `e3e25ef`: all 95 development journeys (49 in 9.7 minutes and 46
+in 7.2 minutes), 161 TypeScript tests, 146 Python tests, lint/type/build and all
+four production journeys (27.0 seconds). Both new seam journeys pass remotely.

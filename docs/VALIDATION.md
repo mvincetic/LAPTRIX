@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 161 tests pass.
+- Vitest: 169 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -45,7 +45,15 @@ and no main merge, force-push or repository-settings change was made.
   (10.9 minutes), including project/reference compatibility and viewer restoration.
   All four production loading/restoration journeys pass on the final build
   (20.2 seconds).
-- Vite production build: pass; approximately 408 kB initial JavaScript / 124 kB
+  Explicit sector loops pass 169 TypeScript tests and 146 Python tests, lint,
+  typecheck and build. Six plot/loop/rendering journeys pass (1.6 minutes), followed
+  by ten cursor/extrema/ghost/tab/seam journeys (1.3 minutes). The final four
+  plot/loop journeys pass again after pressed-state and keyboard-toggle assertions
+  (1.3 minutes). All four production journeys pass (26.7 seconds). The suite now
+  discovers 97 development journeys. The final Python gate took 59.64 seconds;
+  its 167 TypeScript cases were followed by 169 passing cases after adding first/
+  final-sector boundary oracles. Final typechecking and production build also pass.
+- Vite production build: pass; approximately 410 kB initial JavaScript / 124 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
@@ -67,8 +75,25 @@ and no main merge, force-push or repository-settings change was made.
   (47/46), quality gates and all four production journeys.
   Source-curvature run 34487326466 passes all 93 development journeys (47/46),
   159 TypeScript/136 Python tests, lint/type/build and four production journeys.
+  Closed-corner run 34490067249 passes all 95 development journeys (49/46),
+  161 TypeScript/146 Python tests, lint/type/build and four production journeys.
 
 ## Browser evidence
+
+Sector loops pass 16 workspace states plus four control details at 1600×1000,
+1280×900, 390×844 and 780×390, with GT current data, Formula reference ghost and
+load overlays. Desktop/phone workspaces and compact-desktop/short-landscape controls
+were opened and reviewed. The active button and persistent strip remain readable,
+with no horizontal overflow, runtime/WebGL errors or extra solves. All states keep
+the same 40.31-second cursor and full project contents. Expanded panels follow the
+existing vertical page layout; controls are reachable without shrinking plot text.
+Evidence: `artifacts/sector-loop-before.log`, `sector-loop-clock.log`,
+`sector-loop-check.log`, `sector-loop-final-check.log`, `sector-loop-tests-final.log`,
+`sector-loop-browser.log`, `sector-loop-browser-final.log`, `sector-loop-regressions.log`,
+`sector-loop-production.log`, `sector-loop-qa.log`, `sector-loop-qa.json` and
+`sector-loop-*.png`. PLAYBACK_LOOPS.md records the clock/inspection contract.
+The captures also expose a pre-existing overlap between ghost name and sector
+timing labels; the next viewer work addresses placement without changing poses.
 
 Closed corner windows pass 12 event states and three detail-panel captures across
 1600/1280/390 px. Desktop and phone workspaces and the phone detail were opened and

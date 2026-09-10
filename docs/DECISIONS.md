@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Repeat selected sectors through the canonical playback clock
+
+**Decision:** Add an explicit Loop sector toggle, optional validated clock interval
+and persistent active-loop strip. **Reasoning:** Engineers can repeat a selected
+section without rescrubbing the whole lap, while changing the graph view alone
+must retain its existing inspection-only meaning. **Consequences:** Playback,
+ghosts, plots and audio still share canonical time. Outside seeks restore full-lap
+looping; new results clear the interval. The range stays transient and introduces
+no project, solver or source-data changes. Keyboard and whole-boundary cases are
+tested, including independent first/final-sector and rate/remainder checks.
+See PLAYBACK_LOOPS.md.
+
 ## 2026-09-10 — Preserve corner events across the closed lap seam
 
 **Decision:** Derive event windows with bounded periodic indexing and declare

@@ -15,9 +15,13 @@ The Current-lap extrema disclosure in Loads & elevation deliberately restores Fu
 lap when inspecting one of its global sampled extrema, making that event visible.
 It pauses at the original exact sample time. See LOAD_EXTREMA.md.
 
-Playback still covers the entire current lap. If the cursor is outside the chosen
+Playback covers the entire current lap unless **Loop sector** is explicitly
+enabled. This separate toggle repeats the selected sector through the same clock;
+its persistent strip identifies the active loop even after plot/tab changes.
+See PLAYBACK_LOOPS.md for activation, clearing and boundary behavior.
+If the cursor is outside the chosen
 sector, a text label says so and the graph hides its cursor marker; it does not pin
-the marker to an edge or loop playback within the window. Numerical values still
+the marker to an edge or change playback policy. Numerical values still
 describe the shared cursor. Pointer seeking maps the local plot position into the
 selected time/distance interval, then uses the existing full-lap clock mapping.
 
@@ -54,4 +58,5 @@ Run `node scripts/plot-range-qa.mjs` for workspace, outside-cursor, channel-rang
 timing-delta screenshots at 1600/1280/390 px, with axis, cursor, runtime-error and
 document-width records. Zoom exposes existing sampled detail; it does not improve
 source resolution, numerical accuracy or real-world calibration. Arbitrary range
-selection and sector-only playback loops are not implemented.
+selection is not implemented. Explicit sector loops repeat existing telemetry;
+they do not construct new timing or physical transitions.

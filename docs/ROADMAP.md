@@ -82,9 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards for closed corner windows.
-2. Add explicit sector playback loops through the existing clock, independently
-   of plot selection, with precise bounds, preservation checks and responsive QA.
+1. Verify both remote CI shards for explicit sector playback loops.
+2. Keep ghost names clear of sector timing labels: loop visual QA exposes an
+   overlap with a GT current lap and Formula reference. Preserve exact positions
+   and demand rendering while improving label placement.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -197,18 +198,22 @@ durations and source-aligned reference intervals. New results declare their clos
 interval semantics, while historical unmarked estimates remain literal. Six
 Formula/GT start-rotation checks preserve every detected event and lap time; the
 independent interval fixture covers nonuniform samples and bounded braking.
+Explicit sector loops now repeat telemetry through the same clock, independently
+of plotted range. A pressed keyboard control and persistent strip identify the
+active interval. Outside seeks restore full-lap looping, new Laps reset it, and
+eight clock cases cover bounds, rate/remainder, reset and notification behavior.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 161 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 169 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-Ninety-five browser journeys cover the
+Ninety-seven browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

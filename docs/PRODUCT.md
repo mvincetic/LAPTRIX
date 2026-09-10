@@ -51,6 +51,10 @@ selection identifies exact source segments and curvature at their start points.
 Complete exports retain SI values; inspection leaves simulation geometry, pending
 setup and playback untouched.
 See SOURCE_PROFILES.md for units, selection and source-noise limits.
+Explicit sector loops now repeat selected telemetry through the existing clock.
+Plot selection remains independent; a pressed control and persistent strip identify
+the loop. Outside inspection restores full-lap looping, while new results clear
+the interval. Current/reference data and pending setup survive. See PLAYBACK_LOOPS.md.
 Track imports and selection retain the current source, lap and reference until
 both new calculations succeed. Failed imports preserve the workspace and expose
 an import retry; failed selection retries the intended track with its new baseline.

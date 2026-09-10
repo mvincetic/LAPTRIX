@@ -62,7 +62,9 @@
   They preserve available samples, not missing measured detail or independently
   verified alignment. Timing-only files remain ineligible for channel overlays.
 - Plot zoom selects whole current sectors and retains full-lap scales and playback.
-  It adds no measured detail; arbitrary windows and sector-only loops are not implemented.
+  It adds no measured detail; arbitrary windows are not implemented. Explicit sector
+  loops repeat canonical telemetry without adding a physical transition. Their
+  transient intervals are not saved in projects. See PLAYBACK_LOOPS.md.
 - Reference ghosts share current-lap elapsed time and duration. Faster references
   hold the finish; slower ones may not finish before the current clock loops. This
   is visual telemetry interpolation and does not add transient vehicle dynamics.

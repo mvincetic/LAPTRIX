@@ -62,6 +62,11 @@ final stopped state, including inside that normal interval; subsequent idle fram
 remain silent. The viewer uses these same notifications to wake demand rendering.
 See RENDERING.md. After a new simulation the clock resets and
 pauses. Elapsed animation steps clamp to 100 ms to prevent hidden-tab jumps.
+An explicit sector loop uses a validated start/end range within that same clock.
+Playback wraps its elapsed remainder inside the range; an outside seek clears it
+while retaining the canonical cursor. The pressed sector control and persistent
+strip distinguish playback policy from plotted range. New results reset the loop,
+and it is not serialized into Lap/project data. See PLAYBACK_LOOPS.md.
 
 Optional native-reference playback also reads this elapsed time, never normalized
 progress through each lap. Both ghosts start together, and each interpolates its

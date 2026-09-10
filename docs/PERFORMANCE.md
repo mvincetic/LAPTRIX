@@ -1,5 +1,10 @@
 # Performance
 
+Explicit sector looping brings the entry to 409.90 kB JavaScript (124.36 kB gzip)
+and main CSS to 51.51 kB (11.05 kB gzip). The deferred viewer remains 958.27 kB
+(256.61 kB gzip). Sector time bounds are memoized per Lap; repeating uses the
+existing clock and its notification cadence, with no additional scheduler or solve.
+
 Closed corner windows bring the entry to 408.29 kB JavaScript (123.93 kB gzip).
 The deferred viewer remains 958.27 kB (256.61 kB gzip), with 51.08 kB main CSS
 (10.98 kB gzip). Event extraction reuses the solved profile; each entry/exit search

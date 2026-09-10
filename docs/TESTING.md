@@ -1,5 +1,12 @@
 # Testing and validation
 
+Eight explicit-loop clock cases check boundaries, retained play/pause, rate and
+multi-cycle remainder, inside/outside seeking, clearing, reset, notifications and
+invalid bounds. Desktop/phone browser journeys observe two actual sector wraps,
+keyboard toggling, independent plot/tab changes and full workspace preservation.
+Separate `scripts/sector-loop-qa.mjs` captures four viewport sizes with GT current
+data, a Formula ghost and load overlays. See PLAYBACK_LOOPS.md.
+
 Two graphics-restoration journeys run in both development and production. Each
 repeats actual context loss/restoration twice and requires visible line pixels
 without an intervening user action. Canvas identity, cursor, compass, corner labels,

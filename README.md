@@ -69,6 +69,7 @@ the last completed result remains visible if a solve fails.
 - Project naming at every screen width, with draft cancellation and explicit local saving.
 - Optional native-reference channel overlays with shared units and source-position alignment.
 - Sector-focused graph inspection with shared seeking, clear range bounds and full-lap reset.
+- Explicit sector playback loops with keyboard toggling and a persistent active-loop indicator.
 
 ## Checks
 
@@ -164,7 +165,10 @@ row's display limits, separate from its live readings; signed channels have a ze
 guide. Sector inspection keeps these full-lap scales.
 Use **Plot range** to inspect one sector in either graph view. **Inspect start**
 pauses at its first gate; **Full lap** resets the view. Playback still follows the
-whole lap and an outside cursor is labelled. See [PLOT_INSPECTION](docs/PLOT_INSPECTION.md).
+whole lap until **Loop sector** is explicitly enabled. Its pressed state and the
+playback strip identify the repeated interval. **Full-lap loop**, toggling the
+sector off or seeking outside restores full-lap looping. See
+[PLOT_INSPECTION](docs/PLOT_INSPECTION.md) and [PLAYBACK_LOOPS](docs/PLAYBACK_LOOPS.md).
 In **Ghost Car**, enable **Show reference ghost** to compare a native lap in 3D.
 Both vehicles use elapsed seconds from the same start. The current lap sets playback
 duration, and a finished reference holds the line. Timing-only files keep this

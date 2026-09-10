@@ -222,3 +222,8 @@ Selected corners whose events cross start/finish add one muted explanatory line
 inside the existing detail panel. Braking, turn-in, apex and throttle buttons keep
 their canonical lap distances and shared seek behavior, including an apex at 0 m.
 The note wraps within the phone panel; scene labels retain their established colors.
+Plot range adds a **Loop sector** button with a pale blue pressed state and native
+keyboard activation. A compact strip above transport names the active sector in
+all telemetry tabs, provides **Full-lap loop**, and explains outside seeking. It
+wraps across phone rows; expanded panels keep their existing vertical scrolling
+and plot text sizes. Changing the plotted sector does not move this selection.

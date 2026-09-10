@@ -67,6 +67,25 @@ export function Telemetry({
     () => plotViewport(lap, axis, sectorId),
     [lap, axis, sectorId],
   );
+  const sectorLoops = useMemo(
+    () =>
+      lap?.sectors.map((sector) => ({
+        id: sector.id,
+        start: interpolate(lap.samples, sector.startDistance, "distance").time,
+        end: interpolate(lap.samples, sector.endDistance, "distance").time,
+      })) ?? [],
+    [lap],
+  );
+  const activeLoopSector = sectorLoops.find(
+    (sector) =>
+      sector.start === playback.loopRange?.start &&
+      sector.end === playback.loopRange?.end,
+  );
+  const loopLabel = playback.loopRange
+    ? activeLoopSector
+      ? `Sector ${activeLoopSector.id}`
+      : "Selected interval"
+    : null;
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
   const cursorFraction = viewportFraction(sample?.[axis] ?? 0, viewport);
   const cursorInside = cursorFraction >= 0 && cursorFraction <= 1;
@@ -174,12 +193,23 @@ export function Telemetry({
       lap={lap}
       sectorId={viewport.sectorId}
       outside={!cursorInside}
+      loopLabel={loopLabel}
+      loopSelected={activeLoopSector?.id === viewport.sectorId}
       onSelect={(sectorId) => {
         if (lap) setRangeSelection({ lap, sectorId });
       }}
       onInspectStart={() => {
         clock.play(false);
         seekPlot(0);
+      }}
+      onLoopSector={() => {
+        const selected = sectorLoops.find(
+          (sector) => sector.id === viewport.sectorId,
+        );
+        if (selected) {
+          if (activeLoopSector?.id === selected.id) clock.loop(true);
+          else clock.focusLoop(selected.start, selected.end);
+        }
       }}
     />
   );
@@ -368,6 +398,19 @@ export function Telemetry({
           />
         )}
       </div>
+      {loopLabel && (
+        <div className="playback-loop-status">
+          <span id={`${tabsPrefix}-loop-status`} role="status">
+            Playback loop: {loopLabel}
+          </span>
+          <button className="text-button" onClick={() => clock.loop(true)}>
+            Full-lap loop
+          </button>
+          <span className="playback-loop-hint">
+            Seek outside to restore full-lap looping.
+          </span>
+        </div>
+      )}
       <div className="playback">
         <button
           className="icon-button"
@@ -425,6 +468,8 @@ export function Telemetry({
         <button
           className={`icon-button ${playback.loop ? "active" : ""}`}
           aria-label="Loop playback"
+          aria-describedby={loopLabel ? `${tabsPrefix}-loop-status` : undefined}
+          title={loopLabel ? `Loop ${loopLabel}` : "Loop full lap"}
           aria-pressed={playback.loop}
           onClick={() => clock.loop(!playback.loop)}
         >

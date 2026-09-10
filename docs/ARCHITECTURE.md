@@ -89,6 +89,11 @@ braking values. A single external playback clock exposes time, play/pause, rate 
 loop state; binary-search interpolation supplies ghost, plots and sound. React's
 high-level setup state does not rerender at playback frequency. The chart component
 subscribes to the clock, while the ghost reads it within the Three.js render loop.
+An optional validated start/end interval in that same clock supports explicit
+sector playback loops. Telemetry memoizes sector times from canonical distance
+gates and derives the visible loop label from the clock. No duplicate selection
+state or scheduler is needed. Outside seeks clear the interval; new-Lap configure
+also clears it. See PLAYBACK_LOOPS.md for boundary and transport semantics.
 
 The solver's `analyze_corners` derives bounded periodic windows from the completed
 speed profile and its canonical time/distance axes. Temporary unwrapped indices

@@ -5,14 +5,20 @@ export function PlotRangeControls({
   lap,
   sectorId,
   outside,
+  loopLabel,
+  loopSelected,
   onSelect,
   onInspectStart,
+  onLoopSector,
 }: {
   lap: Lap | null;
   sectorId: number | null;
   outside: boolean;
+  loopLabel: string | null;
+  loopSelected: boolean;
   onSelect: (sectorId: number | null) => void;
   onInspectStart: () => void;
+  onLoopSector: () => void;
 }) {
   const id = useId();
   return (
@@ -40,12 +46,21 @@ export function PlotRangeControls({
           <button className="text-button" onClick={onInspectStart}>
             Inspect start
           </button>
+          <button
+            className="text-button sector-loop-button"
+            aria-pressed={loopSelected}
+            onClick={onLoopSector}
+          >
+            Loop sector
+          </button>
           <button className="text-button" onClick={() => onSelect(null)}>
             Full lap
           </button>
-          <span className="plot-range-status">
-            {outside ? "Cursor outside selected sector" : "Full-lap playback"}
-          </span>
+          {(outside || !loopLabel) && (
+            <span className="plot-range-status">
+              {outside ? "Cursor outside selected sector" : "Full-lap playback"}
+            </span>
+          )}
         </>
       )}
     </div>

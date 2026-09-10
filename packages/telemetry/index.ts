@@ -288,6 +288,7 @@ export class PlaybackClock {
     rate: 1,
     duration: 1,
     loop: true,
+    loopRange: null as Readonly<{ start: number; end: number }> | null,
   };
   private listeners = new Set<() => void>();
   private frame = 0;
@@ -306,14 +307,23 @@ export class PlaybackClock {
   configure(duration: number) {
     if (!Number.isFinite(duration) || duration <= 0)
       throw new Error("Lap duration must be positive and finite");
-    this.snapshot = { ...this.snapshot, duration, time: 0, playing: false };
+    this.snapshot = {
+      ...this.snapshot,
+      duration,
+      time: 0,
+      playing: false,
+      loopRange: null,
+    };
     this.emit();
   }
   seek(time: number) {
     if (!Number.isFinite(time)) throw new Error("Seek time must be finite");
+    const at = Math.max(0, Math.min(this.snapshot.duration, time));
+    const range = this.snapshot.loopRange;
     this.snapshot = {
       ...this.snapshot,
-      time: Math.max(0, Math.min(this.snapshot.duration, time)),
+      time: at,
+      loopRange: range && (at < range.start || at > range.end) ? null : range,
     };
     this.emit();
   }
@@ -322,8 +332,10 @@ export class PlaybackClock {
       ...this.snapshot,
       playing,
       time:
-        playing && this.snapshot.time >= this.snapshot.duration
-          ? 0
+        playing &&
+        this.snapshot.time >=
+          (this.snapshot.loopRange?.end ?? this.snapshot.duration)
+          ? (this.snapshot.loopRange?.start ?? 0)
           : this.snapshot.time,
     };
     this.emit();
@@ -335,7 +347,29 @@ export class PlaybackClock {
     this.emit();
   }
   loop(loop: boolean) {
-    this.snapshot = { ...this.snapshot, loop };
+    this.snapshot = { ...this.snapshot, loop, loopRange: null };
+    this.emit();
+  }
+  focusLoop(start: number, end: number) {
+    if (
+      !Number.isFinite(start) ||
+      !Number.isFinite(end) ||
+      start < 0 ||
+      start >= end ||
+      end > this.snapshot.duration
+    )
+      throw new Error(
+        "Playback interval must be finite, ordered and inside the lap",
+      );
+    this.snapshot = {
+      ...this.snapshot,
+      loop: true,
+      loopRange: { start, end },
+      time:
+        this.snapshot.time < start || this.snapshot.time >= end
+          ? start
+          : this.snapshot.time,
+    };
     this.emit();
   }
   advance(delta: number) {
@@ -345,8 +379,10 @@ export class PlaybackClock {
     if (!state.playing) return;
     let time = state.time + delta * state.rate,
       playing = true;
-    if (time >= state.duration) {
-      if (state.loop) time %= state.duration;
+    const start = state.loopRange?.start ?? 0;
+    const end = state.loopRange?.end ?? state.duration;
+    if (time >= end) {
+      if (state.loop) time = start + ((time - start) % (end - start));
       else {
         time = state.duration;
         playing = false;
