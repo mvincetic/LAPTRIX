@@ -28,6 +28,11 @@ Selecting a group preserves the cursor and play/pause state, and makes no API ca
 Group choice survives tab changes in the mounted workspace. It is a view preference
 and is not saved in project files. The default after page load remains Overview.
 
+The collapsed **Current-lap extrema** disclosure shows full-lap minimum/maximum
+tyre load and vertical G. Each Inspect action pauses at its exact original sample
+and restores the full-lap view, independent of reference overlays. See
+[LOAD_EXTREMA](LOAD_EXTREMA.md) for scope and tie handling.
+
 G ranges are symmetric about zero, rounded outward to whole G at peaks of 1 G or
 more. Smaller load-group G ranges use tenths, with a minimum ±0.1 G. Gradient uses
 whole percentage-point bounds with a minimum ±1%. Normal load starts at zero and
@@ -77,10 +82,10 @@ The legacy fixtures are deliberately shaped from real API output to exercise the
 documented old contract; they are not claimed to be historical measurements.
 
 Run `node scripts/load-graphs-qa.mjs` for Overview, current-only loads, native
-time/distance overlays, a sector, partial legacy references and timing-only states
-at 1600/1280/390 px. It writes panel/workspace images and a JSON record of trace
+time/distance overlays, a sector, partial legacy references, timing-only states
+and expanded extrema at 1600/1280/390 px. It writes panel/workspace images and a JSON record of trace
 counts, cursor position, runtime errors and document widths under `artifacts/`.
-The local review passes all 21 states with expected seven/five/zero reference curves,
+The graph-group milestone's review passes all 21 original states with expected seven/five/zero reference curves,
 unchanged cursor, no horizontal overflow and no runtime errors. Desktop, 1280 px
 and phone panels/workspaces were opened to inspect labels, scales, guides and
 transport placement; see VALIDATION.md for the exact local gate record.

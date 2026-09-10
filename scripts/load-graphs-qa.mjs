@@ -1,4 +1,4 @@
-/* global document, structuredClone */
+/* global document, structuredClone, window */
 import { chromium, expect } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { Buffer } from "node:buffer";
@@ -61,8 +61,27 @@ try {
       await expect(
         page.getByRole("button", { name: "Dismiss notification" }),
       ).toBeHidden({ timeout: 15000 });
-      await panel.screenshot({
+      const bounds = await panel.evaluate(async (element) => {
+        const measure = () => {
+          const rect = element.getBoundingClientRect();
+          return {
+            x: rect.x + window.scrollX,
+            y: rect.y + window.scrollY,
+            width: rect.width,
+            height: rect.height,
+          };
+        };
+        const first = measure();
+        // Measure settling without scrolling a tall panel through the live 3D workspace.
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        return { first, settled: measure() };
+      });
+      expect(bounds.settled).toEqual(bounds.first);
+      await page.screenshot({
         path: `artifacts/load-graphs-qa-${state}-${width}.png`,
+        fullPage: true,
+        clip: bounds.settled,
+        timeout: 30000,
       });
       findings.push({
         width,
@@ -86,9 +105,13 @@ try {
     await capture("overview");
     await group.selectOption("loads");
     await capture("current");
+    await page.locator(".load-extrema summary").click();
+    await capture("extrema");
+    await page.locator(".load-extrema summary").click();
     await page.screenshot({
       path: `artifacts/load-graphs-qa-workspace-${width}.png`,
       fullPage: true,
+      timeout: 30000,
     });
     await toggle.check();
     await capture("native-distance");

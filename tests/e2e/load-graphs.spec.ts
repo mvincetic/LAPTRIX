@@ -313,6 +313,7 @@ test("a legacy-current result cannot relabel reserved zeros as load graphs", asy
     "Vertical/load telemetry is unavailable for this lap.",
   );
   await expect(page.getByTestId("current-trace-normalLoadG")).toHaveCount(0);
+  await expect(page.locator(".load-extrema")).toHaveCount(0);
   await expect(page.getByTestId("current-trace-throttle")).toHaveAttribute(
     "d",
     /^M/,

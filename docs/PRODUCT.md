@@ -62,6 +62,10 @@ adds whole-lap vertical acceleration, normal tyre load and gradient alongside sp
 and longitudinal/lateral G. Both groups retain the same cursor, axes and sector
 range. Older references keep available channels with explicit missing load data;
 legacy current laps retain Overview. See LOAD_GRAPHS.md for units and availability.
+Its optional Current-lap extrema disclosure identifies full-lap minimum/maximum
+load and vertical G. Inspect restores the full range and pauses at the exact
+sample, retaining pending setup, reference and complete project data. Values remain
+current-lap observations even with reference overlays. See LOAD_EXTREMA.md.
 An optional grey native-reference ghost compares vehicles on the same elapsed-time
 clock. Visibility is independent of the blue current ghost, and each uses its own
 vehicle snapshot. Timing-only files retain analytical comparison without a drawn

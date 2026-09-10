@@ -204,3 +204,8 @@ decimal G/load readings. A compact note explains vertical acceleration, tyre loa
 the dashed 1× weight guide and gradient units. Missing reference channels show
 R — and a text explanation while available curves remain visible. Overview keeps
 its original channel names and precision. See LOAD_GRAPHS.md.
+Loads & elevation places a collapsed native **Current-lap extrema** disclosure
+before the plots, explicitly marked Full lap. Expanded cards use four columns on
+desktop and two on phones, with value/unit, time/distance and a named Inspect
+action. Its helper states that inspection pauses and restores the full-lap view.
+The existing graph rows and transport retain their layout below the disclosure.

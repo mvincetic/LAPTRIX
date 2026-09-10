@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 148 tests pass.
+- Vitest: 152 tests pass.
 - Python numerical/API tests: 136 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -19,15 +19,40 @@ and no main merge, force-push or repository-settings change was made.
   all five graph/cursor journeys pass (1.7 minutes), completing the 18 relevant
   journeys across both runs without changing application code or timeouts.
   Both production viewer checks also pass (12.0 seconds).
-- Vite production build: pass; approximately 404 kB initial JavaScript / 123 kB
+  The following load-extrema update passes all five extrema/graph journeys
+  (1.9 minutes), nine nearby regressions (1.7 minutes), the complete quality gate
+  and both production viewer checks (11.6 seconds). The suite now discovers 89
+  development journeys.
+- Vite production build: pass; approximately 405 kB initial JavaScript / 123 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
 - GitHub Actions passed through `7f78ce0` (run 34472973538), including vertical-load
   physics/compatibility, corner-callout placement and all 84 browser journeys. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
+  The graph run `34475687433` subsequently reached its 20-minute suite budget with
+  69 passed, one timed out and 17 not run. Its phone trace reached every assertion
+  but included slow successful captures. `83c65ad` separates those captures into
+  visual QA and splits the complete suite across two isolated runners. Functional
+  assertions and individual deadlines are retained; remote validation is pending.
 
 ## Browser evidence
+
+Load-extrema visual QA passes all 24 graph states at 1600/1280/390 px, adding the
+expanded four-card disclosure to each width. Every state retains the 20-second
+cursor, expected current/reference trace counts, zero overflow and no runtime
+errors. The script also verifies complete project exports and zero extra solve
+requests. Final 1280/390 expanded captures were opened and reviewed: four desktop
+columns become two on the phone, with readable values, exact-inspection controls,
+graphs and transport. The separate 1600/390 browser captures were reviewed too.
+Evidence: `artifacts/load-extrema-check.log`, `load-extrema-browser.log`,
+`load-extrema-regression.log`, `load-extrema-production.log`,
+`load-extrema-qa-release.log`, `load-graphs-qa.json` and `load-graphs-qa-*.png`.
+Two preceding standalone visual runs exceeded the 15-second image-capture limit:
+one while scrolling an element into view, the other during full-page capture.
+The final script verifies stable document bounds and clips the page image with a
+30-second screenshot limit. Application code, functional test deadlines and action
+timeouts were unchanged by these capture fixes.
 
 The subsequent offline elevation study passes all 30 centerline cases and six new
 independent geometry tests. All nine full source tracks and 30 full Laps pass the
@@ -40,15 +65,16 @@ artifact directory and opened for layout review. Browser behavior, production as
 and solver provenance retain the preceding graph milestone's checks. No app or
 production dependency changed in this offline-study milestone.
 
-Loads & elevation visual QA passes 21 states: Overview, current-only loads, native
+The original Loads & elevation visual QA passed 21 states: Overview, current-only loads, native
 distance/time overlays, sector inspection, partial legacy references and timing-only
 references at 1600/1280/390 px. Every state keeps the 20-second cursor, seven current
 traces, the expected seven/five/zero reference traces, zero horizontal overflow and
 no runtime errors. Complete project exports and zero additional solve requests are
 checked by the script. Desktop/1280 full workspaces and phone native, sector and
 legacy panels were opened and reviewed: names, scales, guides, wrapped explanations
-and transport remain readable. Evidence is in `artifacts/load-graphs-qa.json`,
-`load-graphs-qa-*.png`, `load-graphs-browser-final.log` and `load-graphs-check.log`.
+and transport remain readable. Logs remain in `artifacts/load-graphs-qa.log`,
+`load-graphs-browser-final.log` and `load-graphs-check.log`; the image/report paths
+are refreshed by the subsequent 24-state run above.
 The initial legacy-option assertion and expiring-notification failures remain
 documented in `load-graphs-browser-focused.log` and `load-graphs-browser-regression.log`.
 

@@ -1,5 +1,14 @@
 # Testing and validation
 
+Four load-extrema tests check exact independent channels, original sample identity,
+first-sample ties, preserved inputs and unavailable data. Two desktop/phone browser
+journeys use actual GT telemetry with Formula overlays and pending fuel edits;
+independent array extrema drive every value/seek oracle. All eight actions across
+both graph axes pause, restore Full lap and match the precise plotted coordinate.
+The complete project, reference and current path remain intact with no extra solves.
+The graph visual script now also captures the expanded native disclosure at three
+widths. See LOAD_EXTREMA.md.
+
 The original elevation study adds six independent geometry checks for exact sine
 samples, horizontal radius, analytical and chord curvature, outgoing grade, missing
 inter-node height and immutable production resampling. All 30 fixed study solves
@@ -7,7 +16,7 @@ pass their numerical diagnostics. An additional local report check parses all ni
 sources and 30 complete results through the frontend schemas and verifies unchanged
 values, setup and vehicle snapshots. The study exports its full evidence; see
 ELEVATION_SENSITIVITY.md for the distinction between source accuracy and numerical
-eligibility. The full quality gate now passes 148 TypeScript and 136 Python tests.
+eligibility. The following extrema quality gate passes 152 TypeScript and 136 Python tests.
 
 Loads & elevation adds eight channel-math cases and three browser journeys.
 Independent interpolation of real unequal-grid Formula/GT output checks all seven

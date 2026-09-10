@@ -8,6 +8,7 @@ import {
 import { TimeDeltaPlot } from "./TimeDeltaPlot";
 import { CursorInspector } from "./CursorInspector";
 import { ChannelPlot } from "./ChannelPlot";
+import { LoadExtrema } from "./LoadExtrema";
 import { PlotRangeControls } from "./PlotRangeControls";
 import {
   plotViewport,
@@ -263,6 +264,16 @@ export function Telemetry({
               <p className="load-graph-note">
                 Vertical/load telemetry is unavailable for this lap.
               </p>
+            )}
+            {group === "loads" && (
+              <LoadExtrema
+                lap={lap}
+                onInspect={(time) => {
+                  clock.play(false);
+                  setRangeSelection(null);
+                  clock.seek(time);
+                }}
+              />
             )}
             <ChannelPlot
               group={group}

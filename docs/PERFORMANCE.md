@@ -1,5 +1,10 @@
 # Performance
 
+The load-extrema disclosure brings the entry to 405.48 kB JavaScript (123.06 kB
+gzip). Its four extrema are scanned once per current Lap and retain exact sample
+objects; the disclosure adds no timer or solver work. The separate viewer remains
+unchanged. These are local production build figures, not performance guarantees.
+
 Loads & elevation brings the entry to 403.77 kB JavaScript (122.60 kB gzip) and
 main CSS to 50.14 kB (10.80 kB gzip). The deferred viewer remains 957.77 kB
 (256.45 kB gzip), plus its 0.26 kB CSS. Channel availability, shared ranges and

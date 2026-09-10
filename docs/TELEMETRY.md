@@ -50,6 +50,10 @@ Lap Graphs exposes these channels through Loads & elevation alongside the origin
 Overview. It shares source alignment, axes, range and the existing clock, with
 per-channel legacy-reference availability and no serialized view state. See
 LOAD_GRAPHS.md for display units and scale semantics.
+The Current-lap extrema disclosure retains exact source sample objects for minimum/
+maximum load and vertical G. Its explicit Inspect actions pause/seek the same clock
+and restore the full range; labels and actions remain current-lap data when native
+reference overlays are shown. See LOAD_EXTREMA.md.
 
 `PlaybackClock` is the only source of playback time. Play, pause, seeking, speed
 and looping change this clock. The ghost reads it each 3D frame; graph subscribers

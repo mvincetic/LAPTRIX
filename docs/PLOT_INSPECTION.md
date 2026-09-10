@@ -11,6 +11,9 @@ retains the cursor and sector, with full-lap scales for the selected group.
 start. **Full lap** restores the complete view without moving that clock. The
 Sector Analysis action **Inspect sector** pauses at that sector's start, opens
 Lap Graphs at its range and focuses the Lap Graphs tab for keyboard continuity.
+The Current-lap extrema disclosure in Loads & elevation deliberately restores Full
+lap when inspecting one of its global sampled extrema, making that event visible.
+It pauses at the original exact sample time. See LOAD_EXTREMA.md.
 
 Playback still covers the entire current lap. If the cursor is outside the chosen
 sector, a text label says so and the graph hides its cursor marker; it does not pin

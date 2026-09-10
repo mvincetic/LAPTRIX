@@ -142,6 +142,9 @@ In **Lap Graphs**, choose **Graph channels → Loads & elevation** to inspect sp
 longitudinal/lateral/vertical G, total tyre load, gradient and elevation over the lap.
 The original seven channels remain under **Overview**. Older references retain
 their available curves with explicit missing load channels. See [LOAD_GRAPHS](docs/LOAD_GRAPHS.md).
+Expand **Current-lap extrema** in that graph to jump to minimum/maximum load and
+vertical G. Inspect pauses at the exact sample and restores the full-lap view;
+see [LOAD_EXTREMA](docs/LOAD_EXTREMA.md).
 Enable **Reference traces** in **Lap Graphs** to compare native reference channels at
 the same source position. Grey dashed curves and R readings share the current lap's
 axes and channel scales. Timing-only files keep this control disabled. See

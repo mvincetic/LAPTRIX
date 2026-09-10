@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Seek sampled current-lap load extrema through the existing clock
+
+**Decision:** Add a collapsed disclosure for full-lap minimum/maximum tyre load
+and vertical G, retaining exact sample objects and first-sample ties. Inspect
+pauses the existing clock and restores the full-lap graph before seeking.
+**Reasoning:** The load curves expose meaningful whole-lap data, but locating their
+extrema by manually scrubbing does not give an exact sample. A sector-only view
+can also hide the chosen event. **Consequences:** Labels explicitly identify current
+lap and full-lap scope. Overlay references and pending setup remain untouched,
+legacy zeros do not create extrema, and actions add no solve or second clock.
+The UI describes sampled values without inferring source accuracy. See LOAD_EXTREMA.md.
+
 ## 2026-09-10 — Quantify source elevation sensitivity with complete analytic cases
 
 **Decision:** Add a fixed offline phase/resolution study with original sine-elevation

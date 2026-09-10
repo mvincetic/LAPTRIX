@@ -186,6 +186,11 @@ values contribute to each shared range. Missing values break paths instead of
 creating zero samples. Group preference lives in Telemetry, outside individual tab
 contents, and falls back to Overview for an undeclared current lap. It adds no
 serialized data, API request or playback subscription. See LOAD_GRAPHS.md.
+`loadExtrema.ts` scans declared current telemetry and retains exact sample objects,
+with first-sample tie handling. The optional LoadExtrema disclosure memoizes that
+scan on Lap identity. Its parent pauses/seeks the existing clock and clears only
+the sector view selection. Reference overlays never feed its extrema, and missing
+declared channels yield no controls. See LOAD_EXTREMA.md.
 `ChannelPlot` owns channel presentation while `Telemetry` retains view state and
 playback controls. `ChannelScales` renders ordinary HTML scale text; a shared CSS
 height maps its rows to the SVG coordinates at each breakpoint. `channelFraction`
