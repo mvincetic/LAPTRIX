@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-09 — Fit and clip the viewer using accepted source extents
+
+**Decision:** Extract camera-space source/road fitting and derive orbit limits,
+near/far planes and perspective updates from the source and canvas dimensions.
+Preserve existing camera directions, field of view, fit margin and chase telemetry.
+**Reasoning:** A valid 28 km source rendered on desktop but disappeared on a phone
+because its fitted camera lay beyond the fixed 12 km far plane. Horizontal-span
+zoom limits also failed to guarantee a reachable fit for tall/narrow cases.
+**Consequences:** Projection tests cover original road edges and full 3D extents;
+browser framebuffer checks catch a blank rendered scene independently of visible
+HTML labels. No input, solver, playback, asset or depth-test contract changes.
+See CAMERA_FRAMING.md for the reproduction and scoped guarantees.
+
 ## 2026-09-09 — Inspect original source profiles independently of simulated laps
 
 **Decision:** Derive elevation and conventional percent grade from every closed

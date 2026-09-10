@@ -43,6 +43,7 @@ the last completed result remains visible if a solve fails.
 - Seven synchronized telemetry traces, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Orbit, top and chase cameras; configurable analysis layers.
+- Source-scaled camera framing and clipping, including large imports at phone widths.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 - Import simulation or aligned external timing references with explicit source/units checks.

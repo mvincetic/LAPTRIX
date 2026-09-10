@@ -1,4 +1,4 @@
-# MVP validation — 2026-09-09
+# MVP validation — 2026-09-10
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
@@ -8,20 +8,17 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 82 tests pass.
+- Vitest: 87 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 59 development browser journeys pass; two viewer journeys also run
+- Playwright: 60 development browser journeys pass; two viewer journeys also run
   against built production assets.
 - Vite production build: pass; approximately 398 kB initial JavaScript / 121 kB
   gzip, plus a separate 952 kB viewer / 254 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `d49c5be`, including GPX and the Chrome-source fix.
-  The source-profile run on `ab7ed20` reached the original 15-minute job deadline
-  during browser tests, without a complete verdict. The workflow now has a bounded
-  25-minute job / 20-minute browser budget and explicit per-test progress. A fresh
-  run will validate that configuration; individual test limits are unchanged.
-  See CI.md for the evidence and scoped changes.
+- GitHub Actions passed through `44da7e3`, including source-profile inspection,
+  the Chrome-source fix and the expanded bounded browser budget. Each following
+  milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
 ## Browser evidence
 
@@ -395,6 +392,30 @@ document widths, bounded modal geometry and an unchanged 10-second cursor at
 `artifacts/source-profile-sidebar-before.png`. Final gate logs are
 `source-profile-check-final.log`, `source-profile-e2e-final.log` and
 `source-profile-production-final.log` in `artifacts/`.
+
+Source-scaled camera framing passes lint, typecheck, build, all 87 TypeScript /
+96 Python tests, 60 development browser journeys and both production viewer
+journeys. The development suite completed before the overnight interruption; the
+remaining production checks passed after restarting the local services on September
+10. The initial workspace bundle remains 398.17 kB / 120.86 kB gzip; the camera helper
+is part of the separate 952.42 kB / 254.34 kB gzip viewer.
+
+An independently validated 28,022.824 m synthetic fixture reproduced a blank phone
+view: all source points lay beyond the old far plane at aspect 0.85, and actual
+390 px WebGL readback contained zero blue line pixels with no GL error. Source-
+scaled clipping and reachable zoom bounds fix it. Five matrix-projection tests
+check source/road edges across scales, proportions, small/tall sources, translation
+and maximum zoom. The browser regression verifies rendered pixels through resize,
+overview/chase changes and reset, while preserving the complete exported project,
+pending setup and current cursor.
+
+Original/large source orbit, top and chase captures at 1600/1280/390 px were opened
+and reviewed, including the previously blank phone view. The final
+`artifacts/camera-framing-qa.json` records zero runtime/GL errors, exact document
+widths and an unchanged 20-second cursor. The large phone overview contains 2,281
+blue pixels in orbit and 2,752 in top view. These are coarse visibility checks,
+not exact raster snapshots. Before images remain in `artifacts/camera-before-*.png`;
+final evidence and gate logs use `artifacts/camera-framing-*`.
 
 ## Scope of the evidence
 

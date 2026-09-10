@@ -26,6 +26,12 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+`camera-framing.ts` fits original source/road edges in camera coordinates using the
+canvas aspect ratio. It derives reachable orbit limits and source-scaled clipping
+planes, including bounded terrain context. CameraRig applies the fit and projection
+matrix after source/mode/size changes or reset; chase still consumes the shared
+telemetry clock. The helper remains inside the deferred viewer dependency graph.
+See CAMERA_FRAMING.md for bounds and independent projection checks.
 `packages/track-engine/diagnostics.ts` separately inspects original centerline
 segments for projected contacts and interpolated height gaps. The settings panel
 memoizes the complete bounded scan on source points and caps retained details at

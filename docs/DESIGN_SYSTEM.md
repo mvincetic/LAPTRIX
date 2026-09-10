@@ -25,6 +25,10 @@ Below 1100 px, the right column moves below the workspace. On narrow screens the
 track/telemetry appear first, settings become two columns and analysis stacks.
 Desktop visualization QA must include 1600, 1280 and 390 px widths and look for
 horizontal overflow, clipped controls, unreadable labels and unframed geometry.
+Overview framing includes source road edges and shoulders, with the same camera
+directions and margin at every width. Large sources use expanded clipping planes;
+small or tall sources have reachable zoom bounds. Reset restores the full fit
+without changing playback. See CAMERA_FRAMING.md for the rendering contract.
 Channel plots reserve a 36 px scale column beside the live readings. Neutral 9 px
 HTML limits align with faint upper/lower row guides; signed ranges add a dashed
 zero guide. A zero label appears only where it fits between the bounds. Large

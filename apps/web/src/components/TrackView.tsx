@@ -16,6 +16,7 @@ import {
   Color,
   DoubleSide,
   Object3D,
+  PerspectiveCamera,
   Vector3,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
@@ -36,6 +37,7 @@ import {
 import { TelemetryGhost } from "./TelemetryGhost";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
+import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import {
   normalizeTrack,
   ribbonGeometry,
@@ -216,38 +218,26 @@ function CameraRig({
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, size } = useThree();
-  const frame = useMemo(() => normalizeTrack(track), [track]);
+  const fit = useMemo(
+    () =>
+      fitTrackCamera(
+        track,
+        Math.max(1, size.width) / Math.max(1, size.height),
+        mode === "top" ? "top" : "orbit",
+      ),
+    [track, mode, size.width, size.height],
+  );
   useEffect(() => {
-    const [x, y, z] = frame.center;
-    // Fit every circuit point in camera space, including depth, at this aspect ratio.
-    const direction = new Vector3(
-      ...((mode === "top" ? [0, 1, 0.001] : [0.1, 0.79, 0.62]) as [
-        number,
-        number,
-        number,
-      ]),
-    ).normalize();
-    const right = new Vector3(0, 1, 0).cross(direction).normalize();
-    const up = direction.clone().cross(right).normalize();
-    const tan = Math.tan((45 * Math.PI) / 360),
-      aspect = size.width / size.height;
-    let distance = 1;
-    for (const p of track.points) {
-      const offset = new Vector3(p.x - x, p.y - y, p.z - z),
-        depth = offset.dot(direction);
-      distance = Math.max(
-        distance,
-        Math.abs(offset.dot(right)) / (tan * aspect) + depth,
-        Math.abs(offset.dot(up)) / tan + depth,
-      );
+    camera.position.set(...fit.position);
+    camera.lookAt(...fit.target);
+    if (camera instanceof PerspectiveCamera) {
+      camera.near = fit.near;
+      camera.far = fit.far;
+      camera.updateProjectionMatrix();
     }
-    camera.position.copy(
-      new Vector3(x, y, z).addScaledVector(direction, distance * 1.27),
-    );
-    camera.lookAt(x, y, z);
-    controls.current?.target.set(x, y, z);
+    controls.current?.target.set(...fit.target);
     controls.current?.update();
-  }, [camera, frame, mode, reset, size.width, size.height, track]);
+  }, [camera, fit, reset]);
   useFrame(() => {
     if (mode !== "chase" || !lap) return;
     const state = clock.getSnapshot(),
@@ -264,8 +254,8 @@ function CameraRig({
       ref={controls}
       enabled={mode !== "chase"}
       makeDefault
-      minDistance={40}
-      maxDistance={frame.span * 3}
+      minDistance={fit.minDistance}
+      maxDistance={fit.maxDistance}
       maxPolarAngle={Math.PI * 0.48}
       enableDamping
       dampingFactor={0.12}
@@ -397,7 +387,12 @@ export function TrackView({
         <SceneBoundary>
           <Canvas
             className="scene-canvas"
-            camera={{ position: [0, 1800, 1500], fov: 45, near: 1, far: 12000 }}
+            camera={{
+              position: [0, 1800, 1500],
+              fov: CAMERA_FOV,
+              near: 1,
+              far: 12000,
+            }}
             dpr={[1, 1.5]}
             gl={{ antialias: true, powerPreference: "high-performance" }}
           >

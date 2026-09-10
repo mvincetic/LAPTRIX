@@ -82,10 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Make viewer framing and clipping planes respond to accepted source extents and
-   viewport proportions. A 28 km analytic scaling of the development source falls
-   beyond the current fixed far plane at phone proportions; preserve complete
-   road visibility through fit/reset and responsive camera changes.
+1. Make the north indicator follow the actual camera orientation. It currently
+   uses a fixed icon rotation, which cannot describe direction after orbiting or
+   switching to a telemetry-driven chase view.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -117,22 +116,26 @@ totals, exact segment inspection and complete profile exports. Settings open a
 bounded dialog that preserves selection on closure; GPX review embeds the same
 plots. Inspection preserves playback and project state, including after resampling.
 See SOURCE_PROFILES.md for source-noise and slope-definition limits.
+Camera fitting now includes source road edges and uses reachable zoom limits and
+source-scaled clipping planes. A valid large source remains rendered on mobile;
+independent projection and framebuffer checks cover fit/reset/resizing without
+changing simulation or playback. See CAMERA_FRAMING.md.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Eighty-two TypeScript tests cover
+extremes and analytical work/grip benchmarks. Eighty-seven TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
-ghost poses, local geographic conversion, source elevation/grade and clock/data
-invariants. Fifty-nine browser journeys cover the
+ghost poses, local geographic conversion, source elevation/grade, camera projection
+and clock/data invariants. Sixty browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
 precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
 native channel overlays, sector graph inspection, reviewed GPX import, source
-profile inspection/export and the
+profile inspection/export, large-track camera visibility and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

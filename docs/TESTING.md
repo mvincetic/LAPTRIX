@@ -1,5 +1,12 @@
 # Testing and validation
 
+Camera framing has independent matrix-projection tests for road vertices across
+source scales, aspect ratios and overview modes, plus small/tall sources and large
+translations. A real-browser large-track import checks that direct WebGL readback
+contains rendered racing-line pixels after resize, reset and mode changes. Camera
+actions preserve complete project exports, pending setup and playback. The visual
+script captures original/large source overviews and chase; see CAMERA_FRAMING.md.
+
 Source-profile math tests use independent ramp dimensions, seam rotation, rigid
 transforms and unequal source intervals. Desktop/phone journeys inspect original
 segments with keyboard and pointer, export all derived values, verify unchanged

@@ -26,6 +26,9 @@ Older v1 track files retain their distance-based sectors and are labelled as suc
 historical references compare at the current lap's physical source intervals.
 The workspace remains usable while the 3D module downloads. If it fails, users can
 continue working, save locally, and reload to recover the viewer.
+Overview cameras now fit accepted source extents at responsive canvas proportions,
+including large imported circuits. Source-scaled clipping and reachable zoom bounds
+preserve road visibility on reset without altering a result or the shared clock.
 Source geometry inspection identifies projected segment contacts and their height
 gaps, with an original-track diagram and exportable report. It helps review imports
 without implying surveyed road accuracy or validated bridge clearance.

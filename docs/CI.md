@@ -31,3 +31,6 @@ browser verdict. The job now allows 25 minutes, with a 20-minute global developm
 browser budget and explicit list reporting for per-test progress. Individual test
 and assertion limits are unchanged. A global suite timeout can now report failure
 and leave time for artifact upload before the outer job deadline.
+The [first run with that budget and reporting](https://github.com/mvincetic/LAPTRIX/actions/runs/34389383617)
+passed the complete source-profile milestone, including development and production
+browser checks.
