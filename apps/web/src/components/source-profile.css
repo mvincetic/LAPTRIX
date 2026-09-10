@@ -60,7 +60,7 @@
 }
 .source-chart-row {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-columns: 56px minmax(0, 1fr);
   gap: 5px;
 }
 .source-chart-scale {
@@ -178,6 +178,10 @@
   backdrop-filter: blur(2px);
 }
 .source-profile-heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: white;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

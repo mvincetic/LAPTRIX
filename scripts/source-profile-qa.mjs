@@ -44,20 +44,25 @@ try {
       .getByRole("slider", { name: "Lap playback position" })
       .fill("10");
     await page.getByText("Track geometry", { exact: true }).click();
-    await page.getByText("Elevation & grade", { exact: true }).click();
+    await page
+      .getByRole("button", { name: "Source profiles", exact: true })
+      .click();
     const profileDialog = page.getByRole("dialog", {
-      name: "Source elevation & grade",
+      name: "Original source profiles",
       exact: true,
     });
     const profile = page.getByRole("region", {
-      name: "Source elevation and grade",
+      name: "Source geometry profiles",
       exact: true,
     });
     const selector = profile.getByRole("slider", {
       name: "Source segment",
       exact: true,
     });
-    await selector.fill("22");
+    await selector.fill("31");
+    await profileDialog.evaluate((element) => {
+      element.scrollTop = 0;
+    });
     await profileDialog.screenshot({
       path: `artifacts/source-profile-ramp-${width}.png`,
     });
@@ -69,14 +74,21 @@ try {
       scroll: element.scrollWidth,
     }));
     expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.client + 1);
-    if (height < 500) {
-      await profile
-        .getByRole("button", { name: "Export source profile", exact: true })
-        .scrollIntoViewIfNeeded();
-      await profileDialog.screenshot({
-        path: `artifacts/source-profile-values-${width}.png`,
-      });
-    }
+    await profile
+      .getByTestId("source-curvature-value")
+      .scrollIntoViewIfNeeded();
+    await expect(profile.getByTestId("source-curvature-value")).toHaveText(
+      "+6.86 km⁻¹",
+    );
+    await expect(
+      profileDialog.getByRole("button", {
+        name: "Close source profile",
+        exact: true,
+      }),
+    ).toBeInViewport();
+    await profileDialog.screenshot({
+      path: `artifacts/source-profile-values-${width}.png`,
+    });
     await profileDialog
       .getByRole("button", { name: "Close source profile", exact: true })
       .click();
@@ -100,16 +112,25 @@ try {
     await expect(
       dialog.getByRole("button", { name: "Import and simulate" }),
     ).toBeEnabled();
-    await dialog.getByText("Elevation & grade", { exact: true }).click();
+    await dialog.getByText("Source profiles", { exact: true }).click();
     const preview = dialog.getByRole("region", {
-      name: "Source elevation and grade",
+      name: "Source geometry profiles",
       exact: true,
     });
     await preview
       .getByRole("slider", { name: "Source segment", exact: true })
       .fill("11");
-    await preview.screenshot({
+    await preview
+      .getByTestId("source-elevation-trace")
+      .scrollIntoViewIfNeeded();
+    await dialog.screenshot({
       path: `artifacts/source-profile-gpx-${width}.png`,
+    });
+    await preview
+      .getByTestId("source-curvature-value")
+      .scrollIntoViewIfNeeded();
+    await dialog.screenshot({
+      path: `artifacts/source-profile-gpx-values-${width}.png`,
     });
     const previewDimensions = await preview.evaluate((element) => ({
       client: element.clientWidth,

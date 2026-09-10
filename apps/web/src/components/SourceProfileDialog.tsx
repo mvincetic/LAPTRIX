@@ -30,7 +30,7 @@ export function SourceProfileDialog({ track }: { track: Track }) {
         }}
       >
         <ChartNoAxesCombined size={14} />
-        Elevation &amp; grade
+        Source profiles
       </button>
       <dialog
         ref={dialog}
@@ -44,7 +44,7 @@ export function SourceProfileDialog({ track }: { track: Track }) {
       >
         <header className="source-profile-heading">
           <div>
-            <h1 id={`${id}-title`}>Source elevation &amp; grade</h1>
+            <h1 id={`${id}-title`}>Original source profiles</h1>
             <p id={`${id}-track`}>{track.name}</p>
           </div>
           <button

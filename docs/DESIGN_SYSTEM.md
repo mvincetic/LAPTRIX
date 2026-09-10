@@ -181,7 +181,13 @@ Two compact blue plots use fixed-size HTML scales/ticks, with a signed grade zer
 guide and a dark selected-segment cursor. A named range input provides keyboard
 access to the same source selection. Numerical fields identify endpoint elevations,
 distance, length and grade; captions explain original samples and raw totals.
-The compact launcher and default GPX collapse keep the usual review surfaces compact.
+The compact **Source profiles** launcher and default GPX collapse keep the usual
+review surfaces compact. Sampled vertical curvature adds a third blue plot, a
+signed zero guide and shared 56 px label columns that align all three distance
+axes while fitting its 1/km scale. The selected value
+names its start-point basis. The native source dialog keeps its heading and Close
+control visible during vertical scrolling; notes explain compression/crest signs
+and the sensitivity to raw elevation noise. See SOURCE_PROFILES.md.
 The viewer's compact north arrow rotates with the camera while N stays readable.
 Hover text and its accessible name describe the projected screen direction; an
 undefined projection hides the arrow and explains the viewing-axis case.

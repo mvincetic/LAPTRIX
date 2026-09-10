@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Inspect sampled source curvature with the original profiles
+
+**Decision:** Add a signed three-point curvature plot and selected-point value to
+the existing source inspector, with 1/km display and full-precision 1/m in report
+v2. **Reasoning:** Elevation and grade alone do not expose the sampled curvature
+that can strongly affect vertical load. **Consequences:** Original points and
+elevation/grade fields stay unchanged; the estimator adds no smoothing or quality
+threshold. Nodal values remain distinct from solved-line dynamics and absent source
+detail. The dialog retains one selection and a visible Close control while scrolling.
+Analytical circle/triangle oracles and source-transform checks cover the calculation.
+See SOURCE_PROFILES.md and ELEVATION_SENSITIVITY.md.
+
 ## 2026-09-10 — Redraw a paused scene after graphics restoration
 
 **Decision:** Request a Fiber frame when the canvas receives `webglcontextrestored`.

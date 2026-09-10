@@ -1,5 +1,11 @@
 # Performance
 
+Sampled source-curvature inspection brings the entry to 407.30 kB JavaScript
+(123.61 kB gzip) and main CSS to 51.17 kB (11.00 kB gzip). Its bounded O(n) scan
+is memoized on original source changes and adds no timer or simulation call.
+The deferred viewer remains 958.27 kB (256.62 kB gzip). These are local build
+figures; source validity and reconstruction limits remain separate concerns.
+
 The graphics-restoration listener brings the deferred viewer to 958.27 kB
 (256.61 kB gzip); the entry remains 405.50 kB (123.06 kB gzip). The listener requests
 a frame on restoration and adds no polling or renderer instance. See RENDERING.md.

@@ -59,7 +59,7 @@ the last completed result remains visible if a solve fails.
 - Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
 - Fixed source-sector gates, with legacy track files and reference comparisons preserved.
 - Source geometry contact inspection with height gaps, a diagram and local report export.
-- Original-source elevation/grade plots, segment inspection and profile export, also in GPX review.
+- Original-source elevation, grade and sampled curvature plots with segment inspection and export, also in GPX review.
 - Cancel pending calculations/imports while retaining the completed workspace and setup edits.
 - Keyboard navigation for actions, viewer tools and telemetry tabs with visible focus.
 - Exact time/distance cursor entry with numerical telemetry and explicit model limits.

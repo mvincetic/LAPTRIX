@@ -82,8 +82,8 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards for the rendering/graphics-restoration milestones.
-   Continue bounded runtime recovery checks before expanding the product further.
+1. Verify both remote CI shards for sampled source-curvature inspection and continue
+   source-quality and runtime inspection work with bounded, independent checks.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -184,6 +184,10 @@ The paused viewer now renders on demand after camera motion settles, waking thro
 the same playback clock and existing controls. Camera and ghost poses update before
 HTML projection. Non-looping completion also always publishes its stopped state,
 even inside the normal notification interval. See RENDERING.md.
+Source profiles now include sampled vertical curvature, with signed compression/
+crest values, exact point selection and full-precision SI exports. Independent
+circle/aliasing checks and cross-language consistency retain the original geometry.
+The scrollable dialog keeps Close available at phone and short-landscape sizes.
 Browser graphics restoration now requests a redraw without replacing the canvas,
 camera, project or clock. Repeated restoration passes at desktop/phone widths and
 in production, with full project preservation and no additional solves.
@@ -192,10 +196,10 @@ in production, with full project preservation and no additional solves.
 
 The local numerical/API suite contains 136 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 153 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 159 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
-ghost poses, local geographic conversion, source elevation/grade, camera projection,
+ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
 Ninety-three browser journeys cover the

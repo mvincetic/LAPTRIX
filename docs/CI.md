@@ -78,4 +78,14 @@ failed an existing corner-label check when returning from chase: three newly
 mounted hidden rectangles passed its separation predicate, before a bounding-box
 read returned null. The rendering continuation strengthens that fixture to require
 all three visible rectangles, containment and separation in one polled measurement.
-Individual deadlines are retained. Complete remote validation follows the next push.
+Individual deadlines are retained.
+
+The [demand-rendering run](https://github.com/mvincetic/LAPTRIX/actions/runs/34482854813)
+passes through `1e1944c`: all 91 development journeys (47 in 9.4 minutes and 44 in
+6.9 minutes), 153 TypeScript tests, 136 Python tests, lint/type/build checks and
+both production journeys (12.3 seconds). The strengthened corner fixture passes.
+
+The [graphics-restoration run](https://github.com/mvincetic/LAPTRIX/actions/runs/34484003527)
+passes through `69df25f`: all 93 development journeys (47 in 9.4 minutes and 46 in
+6.8 minutes), the same complete quality gate and all four production loading/
+restoration journeys (27.1 seconds). Both new restoration cases pass remotely.

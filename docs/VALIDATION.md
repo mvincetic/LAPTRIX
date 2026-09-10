@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 153 tests pass.
+- Vitest: 159 tests pass.
 - Python numerical/API tests: 136 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -32,7 +32,13 @@ and no main merge, force-push or repository-settings change was made.
   adds two browser journeys (93 now discovered). All seven relevant browser
   regressions pass (1.1 minutes); the expanded four-case production suite passes
   in 19.7 seconds. Its complete lint/type/unit/API/build gate also passes.
-- Vite production build: pass; approximately 405 kB initial JavaScript / 123 kB
+  Sampled source-curvature inspection passes the full quality gate with 159
+  TypeScript and 136 Python tests (42.26 seconds for Python). All eight relevant
+  source-profile/GPX journeys pass (1.1 minutes); the final two source-profile
+  journeys pass again with plot-click/sticky-header assertions and shared axis
+  alignment (20.3 seconds).
+  All four production viewer journeys pass on the final build (20.5 seconds).
+- Vite production build: pass; approximately 407 kB initial JavaScript / 124 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
@@ -48,8 +54,25 @@ and no main merge, force-push or repository-settings change was made.
   extrema run 34479735229 passed 88 of 89 journeys, including both extrema cases,
   but exposed hidden-portal readiness in the corner-label test. The rendering
   continuation strengthens that fixture's visible, contained, separate predicate.
+  The complete rendering run 34482854813 then passes all 91 journeys (47/44),
+  153 TypeScript/136 Python tests, quality gates and both production journeys.
+  Graphics-restoration run 34484003527 also passes: all 93 development journeys
+  (47/46), quality gates and all four production journeys.
 
 ## Browser evidence
+
+Source curvature passes 16 visual states across 1600×1000, 1280×900, 390×844 and
+780×390 viewports: source plots/values and GPX plots/values at each size. Source
+and preview panels have no horizontal overflow; each retained the 10-second lap
+cursor with no runtime errors. Desktop, phone and short-landscape captures were
+opened and reviewed. Plots/readouts remain readable and the source dialog keeps
+Close visible while scrolling. All 40 original ramp-fixture values match an
+independent chord calculation; all 720 catalog points agree with the Python source
+estimator within 6.41e-18 1/m. This is consistency evidence, not surveyed validation.
+Evidence: `artifacts/source-curvature-math.log`, `source-curvature-parity.json`,
+`source-curvature-browser.log`, `source-curvature-browser-final.log`,
+`source-curvature-check.log`, `source-curvature-production.log`,
+`source-curvature-qa.log`, `source-profile-qa.json` and `source-profile-*.png`.
 
 Graphics restoration passes nine visual states: before loss and after each of two
 restores at 1600/1280/390 px, using a GT current lap, Formula reference ghost,

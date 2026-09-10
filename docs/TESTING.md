@@ -73,12 +73,17 @@ actions preserve complete project exports, pending setup and playback. The visua
 script captures original/large source overviews and chase; see CAMERA_FRAMING.md.
 
 Source-profile math tests use independent ramp dimensions, seam rotation, rigid
-transforms and unequal source intervals. Desktop/phone journeys inspect original
+transforms and unequal source intervals. Six curvature cases add signed inverse
+radius on unequal arcs, level/constant-grade inputs, closure/reversal invariance,
+the analytical alternating-height example and malformed-input rejection. Desktop/phone journeys inspect original
 segments with keyboard and pointer, export all derived values, verify unchanged
-workspace/playback and resample the smooth catalog source without changing either
+workspace/playback and resample the smooth catalog source without changing any
 profile path. The same journeys inspect and export GPX draft elevations before
 cancelling with no calculation or active-source mutation. Visual evidence comes
-from `scripts/source-profile-qa.mjs`; see SOURCE_PROFILES.md for the exact definitions.
+from `scripts/source-profile-qa.mjs`, including both plots and selected values at
+four viewport sizes. The browser independently checks all 40 fixture curvature
+values, the new plot's selection and the sticky Close control. See SOURCE_PROFILES.md
+for exact definitions and report versioning.
 
 GPX conversion tests check equatorial and meridional geometry, southern-hemisphere
 rotation, antimeridian continuity, unchanged elevations and full-chord extent bounds

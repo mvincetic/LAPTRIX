@@ -34,6 +34,11 @@ requests layout. See RENDERING.md for ordering and idle-work checks.
 The same rendering bridge requests a frame after the browser restores the WebGL
 context and removes its event listener on unmount. Existing scene objects, camera,
 project data and playback are retained; both development and production test this.
+`track-engine/vertical-profile.ts` derives signed three-point source curvature from
+the original profile's closed chords, independently of Lap playback and resampling.
+SourceProfile memoizes it with the existing geometry profile, shares source-segment
+selection across all three plots and exports raw 1/m values in profile report v2.
+See SOURCE_PROFILES.md for nodal semantics, display units and sampling limits.
 `camera-framing.ts` fits original source/road edges in camera coordinates using the
 canvas aspect ratio. It derives reachable orbit limits and source-scaled clipping
 planes, including bounded terrain context. CameraRig applies the fit and projection

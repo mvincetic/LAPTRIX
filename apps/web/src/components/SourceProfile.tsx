@@ -5,6 +5,7 @@ import {
   sourceProfile,
   sourceSegmentAtDistance,
 } from "../../../../packages/track-engine/profile";
+import { sourceVerticalCurvature } from "../../../../packages/track-engine/vertical-profile";
 import { trackFingerprint } from "../../../../packages/track-engine";
 import { download } from "../download";
 import "./source-profile.css";
@@ -12,6 +13,14 @@ import "./source-profile.css";
 const signed = (value: number) => `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
 const scaleLabel = (value: number) =>
   Math.abs(value) >= 10000 ? value.toExponential(1) : value.toFixed(1);
+const curvatureLabel = (value: number) =>
+  value === 0
+    ? "0"
+    : Math.abs(value) < 0.001 || Math.abs(value) >= 1000
+      ? value.toExponential(2)
+      : value.toPrecision(3);
+const signedCurvature = (value: number) =>
+  `${value > 0 ? "+" : ""}${curvatureLabel(value)}`;
 
 export function SourceProfile({
   track,
@@ -23,6 +32,7 @@ export function SourceProfile({
   const Container = expanded ? "div" : "details";
   const id = useId();
   const data = useMemo(() => sourceProfile(track.points), [track.points]);
+  const curvature = useMemo(() => sourceVerticalCurvature(data), [data]);
   const [selection, setSelection] = useState<{
     points: Track["points"];
     index: number;
@@ -37,6 +47,10 @@ export function SourceProfile({
     const min = data.minElevation - (flat ? 0.5 : 0);
     const max = data.maxElevation + (flat ? 0.5 : 0);
     const grade = Math.max(1, data.maxUphill, -data.maxDownhill);
+    const curvatureRange = Math.max(
+      0.001,
+      ...curvature.map((value) => Math.abs(value) * 1000),
+    );
     const x = (distance: number) =>
       ((distance / data.length) * 1000).toFixed(3);
     const y = (value: number, min: number, max: number) =>
@@ -70,8 +84,24 @@ export function SourceProfile({
           )
           .join(" "),
       },
+      {
+        key: "curvature",
+        label: "Sampled vertical curvature (1/km)",
+        min: -curvatureRange,
+        max: curvatureRange,
+        zero: true,
+        format: curvatureLabel,
+        path:
+          data.segments
+            .map(
+              (segment, index) =>
+                `${index ? "L" : "M"}${x(segment.distance)},${y(curvature[index] * 1000, -curvatureRange, curvatureRange)}`,
+            )
+            .join(" ") +
+          ` L1000,${y(curvature[0] * 1000, -curvatureRange, curvatureRange)}`,
+      },
     ];
-  }, [data]);
+  }, [data, curvature]);
   const seek = (fraction: number) =>
     select(sourceSegmentAtDistance(data, fraction * data.length));
   const exportReport = async () => {
@@ -81,21 +111,23 @@ export function SourceProfile({
         "laptrix-source-profile.json",
         JSON.stringify(
           {
-            format: "laptrix-source-profile-v1",
-            algorithm: "closed-source-chords-v1",
+            format: "laptrix-source-profile-v2",
+            algorithm: "closed-source-chords-curvature-v1",
             track,
             trackFingerprint: fingerprint,
             units: {
               distance: "m",
               elevation: "m",
               gradePercent: "percent rise / horizontal run",
+              verticalCurvature: "1/m at each original source point",
               index: "zero-based source segment",
             },
-            profile: data,
+            profile: { ...data, verticalCurvature: curvature },
             limitations: [
               "Original closed source chords without smoothing; elevation totals are sensitive to sample noise.",
               "Grade uses rise divided by horizontal run, not the solver's rise divided by 3D length.",
               "Source elevation datum and accuracy are unverified; this is geometry inspection, not a dynamics result.",
+              "Vertical curvature uses incoming/outgoing original chords without smoothing; added solver samples cannot recover absent source detail.",
             ],
           },
           null,
@@ -111,18 +143,23 @@ export function SourceProfile({
     <Container className="source-profile">
       {!expanded && (
         <summary>
-          <span>Elevation &amp; grade</span>
+          <span>Source profiles</span>
           <ChevronDown size={13} />
         </summary>
       )}
       <div
         className="source-profile-body"
         role="region"
-        aria-label="Source elevation and grade"
+        aria-label="Source geometry profiles"
       >
         <p className="profile-note">
           Original source samples · no smoothing. Grade is rise divided by
           horizontal run.
+        </p>
+        <p className="profile-note">
+          Sampled curvature uses neighbouring points: + compression, − crest.
+          Raw elevation noise can dominate this estimate; it does not establish
+          source accuracy or describe suspension motion.
         </p>
         <dl className="profile-totals">
           <div>
@@ -139,7 +176,10 @@ export function SourceProfile({
           </div>
         </dl>
         {plots.map((plot) => (
-          <div className="source-chart" key={plot.key}>
+          <div
+            className={`source-chart source-chart-${plot.key}`}
+            key={plot.key}
+          >
             <strong>{plot.label}</strong>
             <div className="source-chart-row">
               <div
@@ -147,11 +187,11 @@ export function SourceProfile({
                 aria-label={`${plot.label}: ${plot.min} to ${plot.max}`}
               >
                 <span className="profile-max" title={String(plot.max)}>
-                  {scaleLabel(plot.max)}
+                  {(plot.format ?? scaleLabel)(plot.max)}
                 </span>
                 {plot.zero && <span className="profile-zero">0</span>}
                 <span className="profile-min" title={String(plot.min)}>
-                  {scaleLabel(plot.min)}
+                  {(plot.format ?? scaleLabel)(plot.min)}
                 </span>
               </div>
               <div className="source-chart-plot">
@@ -239,7 +279,7 @@ export function SourceProfile({
           max={data.segments.length}
           step={1}
           value={index + 1}
-          aria-valuetext={`Segment ${index + 1} to ${((index + 1) % data.segments.length) + 1}, ${selected.distance.toFixed(2)} metres, grade ${signed(selected.gradePercent)} percent`}
+          aria-valuetext={`Segment ${index + 1} to ${((index + 1) % data.segments.length) + 1}, ${selected.distance.toFixed(2)} metres, grade ${signed(selected.gradePercent)} percent, curvature ${signedCurvature(curvature[index] * 1000)} per kilometre at start`}
           onChange={(event) => select(Number(event.target.value) - 1)}
         />
         <dl className="source-selected" data-testid="source-segment-data">
@@ -261,6 +301,12 @@ export function SourceProfile({
           <div>
             <dt>Grade</dt>
             <dd>{signed(selected.gradePercent)} %</dd>
+          </div>
+          <div>
+            <dt>Curvature at start point</dt>
+            <dd data-testid="source-curvature-value">
+              {signedCurvature(curvature[index] * 1000)} km⁻¹
+            </dd>
           </div>
         </dl>
         <p className="profile-note">
