@@ -135,8 +135,15 @@ def test_mass_and_grip_change_lap_in_expected_direction(source):
 
 def test_corner_events_index_canonical_samples(result):
     assert len(result["corners"]) >= 5
+    count = len(result["samples"]) - 1
+    assert result["cornerAnalysis"] == "closed-windows-v1"
     for c in result["corners"]:
-        assert c["brakingIndex"] <= c["turnInIndex"] <= c["apexIndex"] <= c["throttleIndex"] <= c["exitIndex"]
+        events = [
+            c[key] for key in ["brakingIndex", "turnInIndex", "apexIndex", "throttleIndex", "exitIndex"]
+        ]
+        assert all(0 <= index < count for index in events)
+        progress = [(index - events[0]) % count for index in events]
+        assert progress == sorted(progress)
         assert result["samples"][c["apexIndex"]]["distance"] == c["distance"]
         assert c["minSpeed"] <= c["entrySpeed"] and c["minSpeed"] <= c["exitSpeed"]
 

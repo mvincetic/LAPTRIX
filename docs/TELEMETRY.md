@@ -77,6 +77,11 @@ also uses source progress, with normalized-distance fallback for old native laps
 without alignment. Corner deltas compare the
 same entry/exit source-track progress via `alignment`, interpolating the reference
 time even when sample counts differ. Detected corner numbering need not be identical.
+New `cornerAnalysis: closed-windows-v1` results may have an exit index below their
+entry index. Their reference duration includes the end-of-lap interval and the
+reference's own lap time. Event indices remain canonical and ordered through at
+most one cycle; sampled interval metrics are validated. Unmarked historical Laps
+retain their original ordered intervals. See CORNER_WINDOWS.md.
 Baseline and current setup
 remain separate; saving a reference is explicit. Exported CSV values retain SI
 units, even when the dashboard shows km/h or percentages.

@@ -158,6 +158,12 @@ export function Analysis({
               T{corner.id} · {corner.direction === "L" ? "Left" : "Right"}{" "}
               corner
             </strong>
+            {lap.cornerAnalysis === "closed-windows-v1" &&
+              corner.brakingIndex > corner.exitIndex && (
+                <span data-testid="corner-seam-note">
+                  Events cross start / finish. Distances use this lap’s start.
+                </span>
+              )}
             <span>
               {corner.brakingDistance.toFixed(0)} m to apex from braking point
             </span>

@@ -284,6 +284,15 @@ North-indicator tests independently rotate world north through Three.js cameras,
 then exercise actual orbit drags, stable reset and authoritative chase positions
 at desktop/phone widths. Visual QA runs separately with `scripts/north-indicator-qa.mjs`.
 
+Closed-corner tests rotate the actual source start before/at/after an apex in both
+vehicles and compare every canonical event and physical interval. Independent
+nonuniform-segment fixtures check time/distance sums, minimum speed, sample IDs,
+bounded continuous braking and uniform-curvature cases. Contract/reference checks
+cover periodic ordering, interval consistency, historical estimates and unequal
+native/timing grids. Browser journeys seek numerical and scene controls at the
+seam, verify a known 10% timing scale and retain pending setup with zero extra
+solves. Separate visual QA uses `scripts/corner-seam-qa.mjs`; see CORNER_WINDOWS.md.
+
 Optimized-line geometry tests use accepted sources whose converged seeds exceed
 the slope bound or reverse a source interval. They independently inspect those
 seeds and ensure rejection precedes speed-profile evaluation. A real API/browser

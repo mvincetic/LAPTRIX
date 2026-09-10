@@ -90,6 +90,13 @@ loop state; binary-search interpolation supplies ghost, plots and sound. React's
 high-level setup state does not rerender at playback frequency. The chart component
 subscribes to the clock, while the ghost reads it within the Three.js render loop.
 
+The solver's `analyze_corners` derives bounded periodic windows from the completed
+speed profile and its canonical time/distance axes. Temporary unwrapped indices
+support interval arithmetic; all exported event indices address the existing Lap.
+`cornerAnalysis: closed-windows-v1` enables periodic contract checks and wrapped
+reference duration, while absent markers retain historical interval rules. No
+additional solver pass or playback clock is introduced. See CORNER_WINDOWS.md.
+
 The backend validates all input with Pydantic. Zod validates catalog and simulation
 responses before they enter the UI. The API runs synchronous simulation functions
 in FastAPI's worker pool. A bounded 24-entry in-process cache avoids re-solving

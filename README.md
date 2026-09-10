@@ -46,6 +46,7 @@ the last completed result remains visible if a solve fails.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Readable selected-corner callouts with leader lines to authoritative event positions.
+- Closed corner event windows and reference timing across start/finish.
 - Synchronized Overview and Loads & elevation graph groups, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Orbit, top and chase cameras; configurable analysis layers.
@@ -108,6 +109,8 @@ ignored `artifacts/`, `test-results/` and `playwright-report/` directories.
 `test:production` rebuilds the frontend and checks delayed/failed viewer downloads
 against its hashed assets on local preview port 5174. Simulation and telemetry
 remain usable before 3D loads; Save then reload recovers a failed module download.
+The same production gate also checks repeated graphics-context restoration while
+paused, preserving the existing scene and workspace.
 The solver study compares five sampling resolutions and all three solver modes.
 See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Select
 **Lap-time refinement** in Solver mode, then run to compare against the curvature
@@ -126,6 +129,9 @@ visible and saved with the project. See [VEHICLE_PROFILES](docs/VEHICLE_PROFILES
 **Import track GPX** opens a review of one closed GPX 1.1 circuit with supplied
 elevations. Inspect the geometry and assumed half-widths before calculating; Save
 and portable projects retain its converted source. See [GPX_IMPORT](docs/GPX_IMPORT.md).
+In **Track geometry → Source profiles**, inspect the original elevation, grade
+and sampled curvature without moving lap playback. The same inspector appears in
+GPX review; see [SOURCE_PROFILES](docs/SOURCE_PROFILES.md) for units and sampling limits.
 **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
@@ -134,6 +140,9 @@ migration. See [SOURCE_IDENTITY](docs/SOURCE_IDENTITY.md).
 Select **Time Delta** under Telemetry graphs to inspect where the current lap gains
 or loses time. Negative values are faster; positive values are slower. Clicking,
 dragging, corner selection and playback all use the existing shared cursor.
+Corner events can cross start/finish. Their buttons use canonical lap distances,
+and reference deltas compare the full closed interval. Historical estimates stay
+literal; see [CORNER_WINDOWS](docs/CORNER_WINDOWS.md).
 **Cursor Data** exposes numerical channels at that same position. Enter a time in
 seconds or distance in metres and press **Inspect** to pause and seek exactly.
 Escape discards an unsent entry; switching axis or calculating a new lap resets it.

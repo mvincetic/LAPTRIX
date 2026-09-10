@@ -99,8 +99,12 @@ This checks the discrete model at samples, not continuous or transient feasibili
 
 Corners are automatically detected as sufficiently prominent curvature peaks,
 including peaks around the seam. Entry/exit thresholds delimit each event, and
-braking/turn-in/throttle pickup indices reference canonical telemetry. Apex means
-the curvature peak, not a surveyed kerb apex. Track v2 sector fractions map to fixed
+braking/turn-in/throttle pickup indices reference canonical telemetry. New
+`closed-windows-v1` event windows use bounded periodic
+indices across start/finish, with sample-derived time and braking distance. The
+duplicate closing endpoint is not an event index. See CORNER_WINDOWS.md for exact
+bounds, reference timing and historical compatibility. Apex is the curvature peak,
+not a surveyed kerb apex. Track v2 sector fractions map to fixed
 source-centerline positions through the same alignment used for references. Their
 solved distances define sample sector IDs, interpolated splits and chart markers.
 Track v1 keeps legacy racing-line-distance fractions. Both modes exactly partition

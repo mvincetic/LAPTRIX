@@ -218,3 +218,7 @@ before the plots, explicitly marked Full lap. Expanded cards use four columns on
 desktop and two on phones, with value/unit, time/distance and a named Inspect
 action. Its helper states that inspection pauses and restores the full-lap view.
 The existing graph rows and transport retain their layout below the disclosure.
+Selected corners whose events cross start/finish add one muted explanatory line
+inside the existing detail panel. Braking, turn-in, apex and throttle buttons keep
+their canonical lap distances and shared seek behavior, including an apex at 0 m.
+The note wraps within the phone panel; scene labels retain their established colors.

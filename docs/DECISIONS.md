@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Preserve corner events across the closed lap seam
+
+**Decision:** Derive event windows with bounded periodic indexing and declare
+`cornerAnalysis: closed-windows-v1` on new Laps. Validate their event order and
+sample-derived intervals, and wrap reference timing through its own lap duration.
+**Reasoning:** Moving the source start onto an apex preserved lap physics but
+clipped its braking distance to zero and shortened its reported corner duration.
+**Consequences:** Event indices still point into canonical telemetry; the UI states
+when distances cross the origin. Existing unmarked reference estimates remain
+literal, and no source alignment is inferred across differently ordered tracks.
+Independent interval sums and six Formula/GT rotation regressions protect the fix.
+See CORNER_WINDOWS.md for bounds, compatibility and limitations.
+
 ## 2026-09-10 — Inspect sampled source curvature with the original profiles
 
 **Decision:** Add a signed three-point curvature plot and selected-point value to

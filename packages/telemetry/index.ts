@@ -45,7 +45,10 @@ export function cornerDelta(
     time,
     current.alignment.progress[corner.exitIndex],
   );
-  return corner.time - (exit - entry);
+  const wraps =
+    current.cornerAnalysis === "closed-windows-v1" &&
+    corner.exitIndex < corner.entryIndex;
+  return corner.time - (exit - entry + (wraps ? reference.lapTime : 0));
 }
 
 export function interpolate(

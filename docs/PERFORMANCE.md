@@ -1,7 +1,13 @@
 # Performance
 
+Closed corner windows bring the entry to 408.29 kB JavaScript (123.93 kB gzip).
+The deferred viewer remains 958.27 kB (256.61 kB gzip), with 51.08 kB main CSS
+(10.98 kB gzip). Event extraction reuses the solved profile; each entry/exit search
+is bounded to n/12 samples and the brake-to-exit sequence to less than one lap.
+Inspection and reference timing add no solve, renderer or clock.
+
 Sampled source-curvature inspection brings the entry to 407.30 kB JavaScript
-(123.61 kB gzip) and main CSS to 51.17 kB (11.00 kB gzip). Its bounded O(n) scan
+(123.61 kB gzip). Its bounded O(n) scan
 is memoized on original source changes and adds no timer or simulation call.
 The deferred viewer remains 958.27 kB (256.62 kB gzip). These are local build
 figures; source validity and reconstruction limits remain separate concerns.

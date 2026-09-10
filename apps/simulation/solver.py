@@ -300,6 +300,59 @@ def refine_line(track: Track, vehicle: Vehicle, setup: Setup, offsets, profile):
     return offsets, profile, info
 
 
+def analyze_corners(profile, distances, times):
+    """Detect bounded periodic event windows; indices address the canonical lap."""
+    curvature = np.abs(profile["curvature"])
+    n = len(curvature)
+    corner_ids = np.zeros(n, dtype=int)
+    peaks, _ = find_peaks(
+        np.tile(curvature, 3),
+        distance=max(8, int(100 / np.mean(profile["ds"]))),
+        prominence=max(0.0005, float(np.max(curvature)) * 0.08),
+    )
+    peaks = peaks[(peaks >= n) & (peaks < 2 * n)] - n
+
+    def at(axis, index):
+        return axis[index % n] + (index // n) * axis[-1]
+
+    corners = []
+    for cid, apex in enumerate(sorted(peaks), 1):
+        apex = int(apex)
+        lo, hi = apex, apex
+        while lo > apex - n // 12 and curvature[lo % n] > curvature[apex] * 0.25:
+            lo -= 1
+        while hi < apex + n // 12 and curvature[hi % n] > curvature[apex] * 0.25:
+            hi += 1
+        brake_start = lo
+        # Keep the complete brake-to-exit sequence shorter than one lap.
+        while brake_start > hi - n + 1 and profile["brake"][(brake_start - 1) % n] > 0.05:
+            brake_start -= 1
+        pickup = next((i for i in range(apex, hi + 1) if profile["throttle"][i % n] > 0.3), hi)
+        window = np.arange(lo, hi + 1) % n
+        minimum = int(window[np.argmin(profile["speed"][window])])
+        corner_ids[window] = cid
+        corners.append(
+            dict(
+                id=cid,
+                direction="L" if profile["curvature"][apex] > 0 else "R",
+                apexIndex=apex,
+                entryIndex=lo % n,
+                exitIndex=hi % n,
+                brakingIndex=brake_start % n,
+                turnInIndex=lo % n,
+                throttleIndex=pickup % n,
+                distance=float(distances[apex]),
+                entrySpeed=float(profile["speed"][lo % n]),
+                minSpeed=float(profile["speed"][minimum]),
+                exitSpeed=float(profile["speed"][hi % n]),
+                lateralG=float(abs(profile["lateral"][apex]) / G),
+                brakingDistance=float(at(distances, apex) - at(distances, brake_start)),
+                time=float(at(times, hi) - at(times, lo)),
+            )
+        )
+    return corners, corner_ids
+
+
 def solve(track: Track, vehicle: Vehicle, setup: Setup):
     started = time.perf_counter()
     track, sampling, alignment = prepare_track(track, setup.sampling)
@@ -337,47 +390,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         gate_progress = np.interp(gate_distances, distances, progress)
         sector_basis = "racing-line-distance"
     n = len(points)
-    corner_ids = np.zeros(n, dtype=int)
-    curvature = np.abs(profile["curvature"])
-    # Tile so peaks near the lap seam have the same detection behavior.
-    peaks, _ = find_peaks(
-        np.tile(curvature, 3),
-        distance=max(8, int(100 / np.mean(ds))),
-        prominence=max(0.0005, float(np.max(curvature)) * 0.08),
-    )
-    peaks = peaks[(peaks >= n) & (peaks < 2 * n)] - n
-    corners = []
-    for cid, apex in enumerate(sorted(peaks), 1):
-        lo, hi = int(apex), int(apex)
-        while lo > max(0, apex - n // 12) and curvature[lo] > curvature[apex] * 0.25:
-            lo -= 1
-        while hi < min(n - 1, apex + n // 12) and curvature[hi] > curvature[apex] * 0.25:
-            hi += 1
-        brake_start = lo
-        while brake_start > 0 and profile["brake"][brake_start - 1] > 0.05:
-            brake_start -= 1
-        pickup = next((i for i in range(apex, hi + 1) if profile["throttle"][i] > 0.3), hi)
-        minimum = lo + int(np.argmin(profile["speed"][lo : hi + 1]))
-        corner_ids[lo : hi + 1] = cid
-        corners.append(
-            dict(
-                id=cid,
-                direction="L" if profile["curvature"][apex] > 0 else "R",
-                apexIndex=int(apex),
-                entryIndex=lo,
-                exitIndex=hi,
-                brakingIndex=brake_start,
-                turnInIndex=lo,
-                throttleIndex=int(pickup),
-                distance=float(distances[apex]),
-                entrySpeed=float(profile["speed"][lo]),
-                minSpeed=float(profile["speed"][minimum]),
-                exitSpeed=float(profile["speed"][hi]),
-                lateralG=float(abs(profile["lateral"][apex]) / G),
-                brakingDistance=float(distances[apex] - distances[brake_start]),
-                time=float(times[hi] - times[lo]),
-            )
-        )
+    corners, corner_ids = analyze_corners(profile, distances, times)
     samples = []
     for i in range(n + 1):
         j = i % n
@@ -442,6 +455,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
         setup=setup.model_dump(),
         model="Development Physics Model",
         verticalDynamics="quasi-steady-road-normal-v1",
+        cornerAnalysis="closed-windows-v1",
         sectorBasis=sector_basis,
         solverProvenance=solver_provenance(),
         lapTime=lap_time,

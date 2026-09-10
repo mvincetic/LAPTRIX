@@ -33,7 +33,9 @@
   point budget does not resolve every accepted elevation feature; denser solver
   interpolation and the displacement guard cannot certify source curvature.
 - Detected corners use curvature prominence; gradual turns may be combined.
-  Seam-adjacent event windows are clipped to the canonical lap interval.
+  New event windows cross the seam but retain bounded sampled thresholds. Continuous
+  braking uses a search bound rather than a known onset. Historical unmarked
+  references retain their clipped estimates. See CORNER_WINDOWS.md.
 - Track imports accept local JSON and a reviewed GPX 1.1 geometry subset. GPX
   requires one segment with complete elevations, a bounded closure and points
   within 10 km of its origin. Widths, zero banking and equal sectors are assumptions;

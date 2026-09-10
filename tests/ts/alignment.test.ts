@@ -176,6 +176,108 @@ describe("physical track alignment across solver grids", () => {
       ).toBe(false);
     }
   });
+  it("validates declared closed corner events and retains legacy interval rules", () => {
+    const progress = Array.from({ length: 41 }, (_, i) => i / 40);
+    const current = lap(
+      progress,
+      progress.map((value) => value * 10),
+    );
+    current.cornerAnalysis = "closed-windows-v1";
+    current.corners = [
+      {
+        id: 1,
+        direction: "L",
+        brakingIndex: 35,
+        entryIndex: 38,
+        turnInIndex: 38,
+        apexIndex: 0,
+        throttleIndex: 2,
+        exitIndex: 4,
+        distance: 0,
+        entrySpeed: 10,
+        minSpeed: 10,
+        exitSpeed: 10,
+        lateralG: 1,
+        brakingDistance: 12.5,
+        time: 1.5,
+      },
+    ];
+    expect(lapSchema.safeParse(current).success).toBe(true);
+    for (const change of [
+      { apexIndex: 40 },
+      { entryIndex: -1 },
+      { throttleIndex: 39 },
+      { turnInIndex: 3 },
+      { brakingIndex: 3 },
+      { time: 11.5 },
+      { time: 0 },
+      { brakingDistance: 0 },
+      { distance: 1 },
+    ]) {
+      const altered = structuredClone(current);
+      Object.assign(altered.corners[0], change);
+      expect(lapSchema.safeParse(altered).success, JSON.stringify(change)).toBe(
+        false,
+      );
+    }
+    const undeclared = structuredClone(current);
+    delete undeclared.cornerAnalysis;
+    expect(lapSchema.safeParse(undeclared).success).toBe(false);
+    undeclared.corners[0] = {
+      ...undeclared.corners[0],
+      brakingIndex: 0,
+      entryIndex: 1,
+      turnInIndex: 1,
+      apexIndex: 2,
+      throttleIndex: 3,
+      exitIndex: 4,
+    };
+    // Historical corner estimates are retained literally, without retrofitting new metrics.
+    expect(lapSchema.parse(undeclared).corners).toEqual(undeclared.corners);
+  });
+  it("compares wrapped physical corner intervals against native and timing references", () => {
+    const current = lap([0, 0.2, 0.6, 0.8, 1], [0, 4, 8, 10, 12]);
+    current.cornerAnalysis = "closed-windows-v1";
+    const reference = lap([0, 0.1, 0.5, 0.8, 1], [0, 1, 5, 11, 15]);
+    const corner = {
+      id: 1,
+      direction: "L" as const,
+      entryIndex: 2,
+      exitIndex: 1,
+      apexIndex: 0,
+      brakingIndex: 2,
+      turnInIndex: 2,
+      throttleIndex: 0,
+      distance: 0,
+      entrySpeed: 10,
+      minSpeed: 10,
+      exitSpeed: 10,
+      lateralG: 1,
+      brakingDistance: 40,
+      time: 8,
+    };
+    // Current: (12 - 8) + 4 = 8 s. Reference: (15 - 7) + 2 = 10 s.
+    expect(cornerDelta(current, reference, corner)).toBeCloseTo(-2, 12);
+    const timing: TimingReference = {
+      format: "laptrix-timing-reference-v1",
+      label: "Known timing",
+      vehicleLabel: "Test",
+      origin: "external-simulation",
+      source: "Independent intervals",
+      trackId: track.id,
+      lapTime: reference.lapTime,
+      units: { time: "s", progress: "fraction" },
+      alignment: reference.alignment!,
+      samples: reference.samples.map(({ time }) => ({ time })),
+    };
+    expect(cornerDelta(current, timing, corner)).toBeCloseTo(-2, 12);
+    expect(cornerDelta(current, current, corner)).toBe(0);
+    timing.alignment = {
+      ...timing.alignment,
+      trackFingerprint: `sha256:${"0".repeat(64)}`,
+    };
+    expect(cornerDelta(current, timing, corner)).toBeNull();
+  });
   it("restores a different-resolution reference only for the matching source", async () => {
     const ref = lap([0, 0.5, 1], [0, 5, 10]);
     ref.sectors = [...ref.sectors, { ...ref.sectors[1], id: 3 }];

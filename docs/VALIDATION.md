@@ -8,8 +8,8 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 159 tests pass.
-- Python numerical/API tests: 136 tests pass.
+- Vitest: 161 tests pass.
+- Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
   all 15 relevant browser regressions (2.5 minutes); 84 are now discovered.
@@ -38,7 +38,14 @@ and no main merge, force-push or repository-settings change was made.
   journeys pass again with plot-click/sticky-header assertions and shared axis
   alignment (20.3 seconds).
   All four production viewer journeys pass on the final build (20.5 seconds).
-- Vite production build: pass; approximately 407 kB initial JavaScript / 124 kB
+  Closed corner windows pass 161 TypeScript and 146 Python tests (45.68 seconds
+  for Python), plus lint, typecheck and build. The four existing corner/reference
+  journeys pass; both new seam journeys pass after correcting their playback
+  button locator (15.1 seconds). The complete 95-journey suite passes in one run
+  (10.9 minutes), including project/reference compatibility and viewer restoration.
+  All four production loading/restoration journeys pass on the final build
+  (20.2 seconds).
+- Vite production build: pass; approximately 408 kB initial JavaScript / 124 kB
   gzip, plus a separate 958 kB viewer / 256 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
@@ -58,8 +65,28 @@ and no main merge, force-push or repository-settings change was made.
   153 TypeScript/136 Python tests, quality gates and both production journeys.
   Graphics-restoration run 34484003527 also passes: all 93 development journeys
   (47/46), quality gates and all four production journeys.
+  Source-curvature run 34487326466 passes all 93 development journeys (47/46),
+  159 TypeScript/136 Python tests, lint/type/build and four production journeys.
 
 ## Browser evidence
+
+Closed corner windows pass 12 event states and three detail-panel captures across
+1600/1280/390 px. Desktop and phone workspaces and the phone detail were opened and
+reviewed. Notes and canonical distances remain readable; three scene labels are
+separate and contained, with no overflow, runtime/WebGL errors or extra solves.
+Complete project exports remain identical through inspection. A before/after
+rotated-source probe changes only sample `cornerId`, with exactly unchanged lap
+time and all trajectory/control/load values. The live implementation's solver
+fingerprint is `sha256:3247393e84b16cd100316c6bb4af1e180574fff6e77aadc7548b926b7e4cccf6`.
+Evidence: `artifacts/corner-seam-before.json`, `corner-seam-before.log`,
+`corner-seam-after.json`, `corner-seam-after.log`, `corner-seam-ts.log`,
+`corner-seam-check.log`, `corner-seam-browser.log`, `corner-seam-browser-final.log`,
+`corner-seam-browser-all.log`, `corner-seam-production.log`,
+`corner-seam-qa.log`, `corner-seam-qa.json`, `corner-seam-compat.json`,
+`corner-seam-live-lap.json` and `corner-seam-*.png`. Four complete 721-sample
+Laps—two historical and two new—pass the current reader with literal corner values.
+The six rotation regressions fail before the fix and pass afterward; see
+CORNER_WINDOWS.md for the numerical example and compatibility contract.
 
 Source curvature passes 16 visual states across 1600×1000, 1280×900, 390×844 and
 780×390 viewports: source plots/values and GPX plots/values at each size. Source

@@ -82,9 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards for sampled source-curvature inspection and continue
-   source-quality and runtime inspection work with bounded, independent checks.
-2. Revisit measured calibration and reusable 3D data when complete inputs are
+1. Verify both remote CI shards for closed corner windows.
+2. Add explicit sector playback loops through the existing clock, independently
+   of plot selection, with precise bounds, preservation checks and responsive QA.
+3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
@@ -191,18 +192,23 @@ The scrollable dialog keeps Close available at phone and short-landscape sizes.
 Browser graphics restoration now requests a redraw without replacing the canvas,
 camera, project or clock. Repeated restoration passes at desktop/phone widths and
 in production, with full project preservation and no additional solves.
+Corner event windows now wrap across start/finish, preserving braking distances,
+durations and source-aligned reference intervals. New results declare their closed
+interval semantics, while historical unmarked estimates remain literal. Six
+Formula/GT start-rotation checks preserve every detected event and lap time; the
+independent interval fixture covers nonuniform samples and bounded braking.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 136 passing tests, including coupled quadratic
+The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 159 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 161 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-Ninety-three browser journeys cover the
+Ninety-five browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

@@ -166,6 +166,7 @@ export const lapSchema = z
     setup: setupSchema,
     model: z.string(),
     verticalDynamics: z.literal("quasi-steady-road-normal-v1").optional(),
+    cornerAnalysis: z.literal("closed-windows-v1").optional(),
     sectorBasis: z.enum(["source-progress", "racing-line-distance"]).optional(),
     solverProvenance: z
       .object({
@@ -431,15 +432,60 @@ export const lapSchema = z
         corner.throttleIndex,
         corner.exitIndex,
       ];
+      const count = lap.samples.length - 1;
+      const closed = lap.cornerAnalysis === "closed-windows-v1";
       if (
-        indices.some((i) => i < 0 || i >= lap.samples.length) ||
-        corner.entryIndex > corner.apexIndex ||
-        corner.apexIndex > corner.exitIndex
-      )
+        indices.some((i) => i < 0 || i >= (closed ? count : lap.samples.length))
+      ) {
         ctx.addIssue({
           code: "custom",
           message: "Corner event index is outside the lap",
         });
+        continue;
+      }
+      if (closed) {
+        const span = indices
+          .slice(1)
+          .reduce(
+            (total, index, i) => total + ((index - indices[i] + count) % count),
+            0,
+          );
+        const interval = (
+          from: number,
+          to: number,
+          axis: "time" | "distance",
+        ) =>
+          lap.samples[to][axis] -
+          lap.samples[from][axis] +
+          (to < from ? lap.samples.at(-1)![axis] : 0);
+        if (
+          span >= count ||
+          corner.time <= 0 ||
+          corner.brakingDistance < 0 ||
+          Math.abs(
+            corner.time - interval(corner.entryIndex, corner.exitIndex, "time"),
+          ) > 1e-7 ||
+          Math.abs(
+            corner.brakingDistance -
+              interval(corner.brakingIndex, corner.apexIndex, "distance"),
+          ) > 1e-7 ||
+          Math.abs(corner.distance - lap.samples[corner.apexIndex].distance) >
+            1e-7
+        )
+          ctx.addIssue({
+            code: "custom",
+            message:
+              "Closed corner events must follow one lap and match sampled intervals",
+          });
+      } else if (
+        corner.entryIndex > corner.apexIndex ||
+        corner.apexIndex > corner.exitIndex
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Legacy corner events must use an ordered lap interval",
+        });
+      }
     }
   });
 export type Lap = z.infer<typeof lapSchema>;

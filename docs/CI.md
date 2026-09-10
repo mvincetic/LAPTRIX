@@ -89,3 +89,8 @@ The [graphics-restoration run](https://github.com/mvincetic/LAPTRIX/actions/runs
 passes through `69df25f`: all 93 development journeys (47 in 9.4 minutes and 46 in
 6.8 minutes), the same complete quality gate and all four production loading/
 restoration journeys (27.1 seconds). Both new restoration cases pass remotely.
+
+The [source-curvature run](https://github.com/mvincetic/LAPTRIX/actions/runs/34487326466)
+passes through `6f6261c`: all 93 development journeys (47 in 7.4 minutes and 46 in
+5.1 minutes), 159 TypeScript tests, 136 Python tests, lint/type/build checks and
+all four production journeys (22.9 seconds). The expanded source/GPX checks pass.
