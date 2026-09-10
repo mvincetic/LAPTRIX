@@ -1,5 +1,15 @@
 # Performance
 
+Comparison export brings the entry to 411.71 kB JavaScript (124.93 kB gzip), with
+51.73 kB main CSS (11.09 kB gzip). The deferred viewer remains 962.28 kB (257.66 kB
+gzip), with 0.53 kB viewer CSS. Report generation runs only on explicit download,
+reusing the existing merged source grid and channel interpolation. The maximum
+native/timing case retains all 21,999 possible rows and serializes successfully;
+this is a bounded correctness check, not a device-specific latency guarantee.
+The QA source-grid reports are about 2.34 MB for native and 1.34 MB for timing-only
+references, including original inputs and indented JSON. No additional solve,
+clock or continuous computation is introduced.
+
 Ghost-name placement keeps the entry at 409.90 kB JavaScript (124.36 kB gzip) and
 main CSS at 51.51 kB (11.05 kB gzip). The deferred viewer is 962.28 kB (257.66 kB
 gzip), with 0.53 kB deferred CSS (0.25 kB gzip). Two bounded label searches run

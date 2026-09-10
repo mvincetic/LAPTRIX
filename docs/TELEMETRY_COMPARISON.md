@@ -11,6 +11,10 @@ vertical dynamics retain their five available rows, with missing curves omitted
 and R — readings explained above the plot. Only eligible values contribute to
 each shared scale. Overview keeps its original all-channel display eligibility.
 See [LOAD_GRAPHS](LOAD_GRAPHS.md) for precision, bounds and the 1× weight guide.
+**Time Delta → Export full-lap JSON** now exports matched values on both grids'
+union, with canonical units and complete original comparison inputs. Its scope
+stays full lap during sector inspection; unavailable legacy channels stay omitted
+and timing-only references retain only timing. See COMPARISON_EXPORT.md.
 
 ## Alignment and units
 

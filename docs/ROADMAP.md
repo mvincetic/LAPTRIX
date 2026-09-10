@@ -82,10 +82,11 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards for ghost-name placement and retained viewer behavior.
-2. Make source-aligned current/reference comparisons exportable with explicit SI
-   units, source progress and provenance, reusing existing alignment rather than
-   creating another comparison model.
+1. Verify both remote CI shards after the sector-loop fixture correction and
+   source-aligned comparison export.
+2. Let the shared playback scheduler sleep while paused, with explicit wake/cleanup
+   and finish/resume tests. The demand viewer already stops drawing, but the clock
+   still requests animation frames while idle.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -206,18 +207,25 @@ Ghost names now avoid timing badges, event labels and controls, with leaders to
 the actual rendered car anchors. End-of-frame placement handles remounted corner
 portals after chase; paused zero-draw behavior and reference finish holding remain
 covered. Sixteen visual states cover desktop, phone and short landscape.
+Time Delta now exports full-lap comparisons on both source grids' union, retaining
+each lap's times/distances, known channels, explicit units and original inputs.
+Timing-only and historical load availability remain explicit. Eight report cases
+cover independent interpolation, immutable snapshots and maximum input grids;
+browser exports preserve sector/loop inspection and pending work at both widths.
+The sector-loop fixture now observes two real near-boundary crossings without a
+renderer-speed assumption; both cases pass with six-times CPU throttling.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 179 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 187 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-Ninety-nine browser journeys cover the
+One hundred and one browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

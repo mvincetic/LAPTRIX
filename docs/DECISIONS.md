@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Export comparison data through the existing alignment
+
+**Decision:** Add full-lap comparison JSON to Time Delta, using the plot's merged
+source grid, matched times and shared channel interpolator. Preserve both original
+comparison inputs, explicit units and missing-channel availability. **Reasoning:**
+Individual Lap exports do not capture the source-aligned comparison shown in the
+workspace. **Consequences:** Timing-only references remain timing-only; unmarked
+historical vertical fields stay literal in the archived input and are omitted from
+derived rows. Export preserves inspection and pending work, and adds no import
+format, solver or clock. The maximum merged timing grid is covered independently.
+See COMPARISON_EXPORT.md.
+
 ## 2026-09-10 — Place ghost names around scene information
 
 **Decision:** Project existing rendered car transforms into separate bounded name

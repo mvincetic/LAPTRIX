@@ -1,0 +1,17 @@
+.delta-readout {
+  flex-wrap: wrap;
+}
+.delta-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.comparison-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  white-space: nowrap;
+  font-size: 10px;
+}

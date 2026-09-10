@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 179 tests pass.
+- Vitest: 187 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -62,7 +62,12 @@ and no main merge, force-push or repository-settings change was made.
   All four final production viewer journeys pass in 19.3 seconds.
   The final two reference journeys pass again (10.1 seconds) after requiring
   finite rendered-anchor coordinates explicitly.
-- Vite production build: pass; approximately 410 kB initial JavaScript / 124 kB
+  Comparison reports pass the full gate with 187 TypeScript and 146 Python tests
+  (51.44 seconds for Python). Five export/delta journeys pass in 29.4 seconds and
+  six native-comparison/plot-range/sector-loop journeys in 1.5 minutes. All four
+  production viewer journeys pass in 19.1 seconds. The suite discovers 101
+  development journeys. Final lint also covers the new visual-QA script.
+- Vite production build: pass; approximately 412 kB initial JavaScript / 125 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
@@ -88,8 +93,34 @@ and no main merge, force-push or repository-settings change was made.
   161 TypeScript/146 Python tests, lint/type/build and four production journeys.
   Sector-loop run 34492384734 passes all 97 development journeys (49/48),
   169 TypeScript/146 Python tests, lint/type/build and four production journeys.
+  Ghost-name run 34495944339 passes 98 of 99 development journeys, all quality
+  checks and four production journeys. The desktop sector-loop fixture saw one
+  wrap before its wall-time estimate expired. The revised real-boundary fixture
+  passes both widths locally (18.9 seconds) and with six-times CPU throttling
+  (49.0 seconds); playback code and default deadlines remain unchanged. See CI.md.
 
 ## Browser evidence
+
+Comparison exports pass 12 telemetry states at 1600×1000, 1280×900, 390×844 and
+780×390: native full-lap, native sector and timing-only sector views, including a
+long reference caption and both axes. Two additional whole-workspace captures give
+layout context. Desktop workspace, phone timing-sector and short-landscape native
+sector images were opened and reviewed. The export action remains readable and
+contained, charts retain over 100 px height, and long captions stay within the panel.
+Every download retains its complete current/reference inputs and full-lap scope;
+project, 40.31-second cursor, pending 21 kg fuel and active sector loop are preserved.
+There are zero new simulation requests, runtime/WebGL errors or horizontal overflow.
+
+The browser regressions separately use a GT 5 m lap and Formula source-grid
+reference, then a timing reference sampled every seventeenth current point. They
+check all union knots and endpoints, reference-only field availability and keyboard
+download. The unit maximum-grid case retains all 20,000 reference knots alongside
+2,001 current samples in 21,999 report rows. Evidence:
+`artifacts/comparison-report-math.log`, `comparison-report-math-final.log`,
+`comparison-report-check.log`, `comparison-report-browser.log`,
+`comparison-report-nearby.log`, `comparison-report-production.log`,
+`comparison-report-qa.log`, `comparison-export-qa.json` and
+`comparison-export-*.png`/`.json`. COMPARISON_EXPORT.md records the format and units.
 
 Ghost labels pass 16 scene states at 1600×1000, 1280×900, 390×844 and 780×390:
 orbit, selected-corner top view, chase and open Ghost Car tools after returning

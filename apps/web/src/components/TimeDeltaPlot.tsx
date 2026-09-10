@@ -1,4 +1,5 @@
 import { useId, useMemo } from "react";
+import { Download } from "lucide-react";
 import {
   isTimingReference,
   type Lap,
@@ -10,6 +11,9 @@ import {
   signed,
 } from "../../../../packages/telemetry";
 import { viewportFraction, type PlotViewport } from "../plotViewport";
+import { buildComparisonReport } from "../../../../packages/telemetry/comparison-report";
+import { download } from "../download";
+import "./comparison-export.css";
 
 export function TimeDeltaPlot({
   lap,
@@ -80,9 +84,30 @@ export function TimeDeltaPlot({
             {signed(delta)} s
           </strong>
         </div>
-        <div className="delta-legend">
-          <span className="positive">− Faster</span>
-          <span className="negative">+ Slower</span>
+        <div className="delta-actions">
+          <div className="delta-legend">
+            <span className="positive">− Faster</span>
+            <span className="negative">+ Slower</span>
+          </div>
+          <button
+            className="text-button comparison-export"
+            aria-label="Export full-lap comparison JSON"
+            title="Download source-aligned timing, available channels and both original inputs"
+            onClick={() => {
+              const report = buildComparisonReport(
+                lap,
+                reference,
+                new Date().toISOString(),
+              );
+              if (report)
+                download(
+                  "laptrix-comparison.json",
+                  JSON.stringify(report, null, 2),
+                );
+            }}
+          >
+            <Download size={13} /> Export full-lap JSON
+          </button>
         </div>
       </div>
       <div className="delta-chart">

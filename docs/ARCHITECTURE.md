@@ -181,6 +181,12 @@ custom-track contract. Reference files are read and validated locally as native
 Lap or timing-only Reference data; they never pass through the simulation API.
 Common comparison functions interpolate their time arrays against source progress.
 Neither imported references nor metadata drive the canonical playback clock.
+`comparison-report.ts` consumes `prepareTimeComparison`'s source progress and
+matched reference times, then uses the existing sample interpolator for each side.
+It clones both completed inputs and omits undeclared legacy vertical channels from
+derived rows. TimeDeltaPlot builds/downloads the report only on explicit activation;
+no clock, calculation, project or reference action is dispatched. The report is a
+separate versioned artifact, not another accepted import format.
 `TelemetryGhost` now renders either the current or eligible native reference Lap.
 Both call the pure `ghostPose` helper with the same elapsed clock time; each uses
 its own samples and vehicle snapshot. Source fingerprint matching gates native

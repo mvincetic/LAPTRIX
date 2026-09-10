@@ -189,10 +189,13 @@ export function prepareTimeComparison(
   ).sort((a, b) => a - b);
   const samples = progress.map((p) => {
     const time = interpolateValues(currentProgress, currentTime, p);
+    const matchedTime = interpolateValues(referenceProgress, referenceTime, p);
     return {
+      progress: p,
       time,
       distance: interpolateValues(currentProgress, currentDistance, p),
-      delta: time - interpolateValues(referenceProgress, referenceTime, p),
+      referenceTime: matchedTime,
+      delta: time - matchedTime,
     };
   });
   return { atTime, atDistance, samples };

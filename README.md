@@ -49,6 +49,7 @@ the last completed result remains visible if a solve fails.
 - Closed corner event windows and reference timing across start/finish.
 - Synchronized Overview and Loads & elevation graph groups, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
+- Full-lap comparison JSON with matched timing/channels, units and original input snapshots.
 - Orbit, top and chase cameras; configurable analysis layers.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
 - Camera-derived north direction and stable reset after orbiting.
@@ -95,6 +96,7 @@ node scripts/tabs-qa.mjs
 node scripts/cursor-qa.mjs
 node scripts/reference-ghost-qa.mjs
 node scripts/ghost-labels-qa.mjs
+node scripts/comparison-export-qa.mjs
 node scripts/vehicle-profiles-qa.mjs
 node scripts/project-name-qa.mjs
 node scripts/telemetry-comparison-qa.mjs
@@ -171,6 +173,9 @@ whole lap until **Loop sector** is explicitly enabled. Its pressed state and the
 playback strip identify the repeated interval. **Full-lap loop**, toggling the
 sector off or seeking outside restores full-lap looping. See
 [PLOT_INSPECTION](docs/PLOT_INSPECTION.md) and [PLAYBACK_LOOPS](docs/PLAYBACK_LOOPS.md).
+In **Time Delta**, **Export full-lap JSON** downloads matched comparison samples
+and both completed inputs, including when inspecting one sector. Timing-only
+references keep timing-only rows. See [comparison exports](docs/COMPARISON_EXPORT.md).
 In **Ghost Car**, enable **Show reference ghost** to compare a native lap in 3D.
 Both vehicles use elapsed seconds from the same start. The current lap sets playback
 duration, and a finished reference holds the line. Timing-only files keep this

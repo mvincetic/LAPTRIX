@@ -71,6 +71,10 @@
 - Ghost-name placement is a bounded screen-space heuristic. Offscreen anchors,
   crowded views or a required leader over 120 px can omit a name; vehicle poses
   remain unchanged. See GHOST_LABELS.md.
+- Comparison reports export the full lap on declared source alignment. Interpolated
+  rows add no measured detail and are not accepted by project/reference importers.
+  Original comparison inputs remain inside the report; pending setup and original
+  source geometry belong to Export project. See COMPARISON_EXPORT.md.
 - Terrain and trees are contextual generated scenery. The ghost is intentionally
   enlarged three times for engineering visibility, not a physically scaled asset.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.

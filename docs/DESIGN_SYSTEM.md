@@ -232,3 +232,8 @@ thin leaders to vehicle anchors. Names avoid timing, event labels and controls;
 leaders run below badges so they do not cross over timing text. The overlay does
 not capture pointer input. Offscreen or crowded names are omitted when a nearby
 clear placement is unavailable. See GHOST_LABELS.md.
+Time Delta places **Export full-lap JSON** beside the faster/slower legend. Its
+visible label states scope even in a sector plot. The readout/action row wraps on
+phones while the existing chart height remains usable; the button has a specific
+accessible comparison-export name and native keyboard activation. The current
+delta, reference caption, graph axes and loop strip remain in their existing roles.
