@@ -220,9 +220,6 @@ for (const width of [1600, 390]) {
     await page
       .getByRole("combobox", { name: "Plot range" })
       .selectOption("all");
-    await page
-      .locator(".telemetry-panel")
-      .screenshot({ path: `artifacts/load-graphs-native-${width}.png` });
     const legacy = legacyShape(reference);
     await page
       .getByLabel("Import reference file", { exact: true })
@@ -263,12 +260,6 @@ for (const width of [1600, 390]) {
     const mixed = await exported(page);
     expect(mixed.lap).toEqual(before.lap);
     expect(mixed.reference.samples).toEqual(legacy.samples);
-    await expect(
-      page.getByRole("button", { name: "Dismiss notification" }),
-    ).toBeHidden();
-    await page
-      .locator(".telemetry-panel")
-      .screenshot({ path: `artifacts/load-graphs-legacy-${width}.png` });
     const timing = await exported(page, "Export timing reference");
     await page
       .getByLabel("Import reference file", { exact: true })

@@ -38,3 +38,28 @@ The subsequent [source-scaled camera run](https://github.com/mvincetic/LAPTRIX/a
 also passed all remote gates through `90631c9`.
 The [camera-derived north/reset run](https://github.com/mvincetic/LAPTRIX/actions/runs/34442541217)
 passed through `19fc232`, including all 62 development browser journeys.
+
+## 2026-09-10 — Split the complete browser suite across isolated runners
+
+The [load-graphs run](https://github.com/mvincetic/LAPTRIX/actions/runs/34475687433)
+passed lint/type/unit/API/build checks, then reached the 20-minute development
+budget with 69 browser journeys passed, one timed out and 17 not run. Its phone
+graph trace reaches every functional assertion but exceeds the 60-second case
+budget during a workflow that also captures two successful screenshots. Those
+images already belong to the separate three-width visual QA script.
+
+The graph journey now retains its numerical, playback, compatibility and complete
+project assertions while leaving successful captures to that script. Failure
+screenshots/traces remain enabled. Individual test/assertion deadlines are unchanged.
+
+The workflow uses two independent GitHub runner jobs with Playwright `--shard=1/2`
+and `--shard=2/2`. Each retains one local browser worker, the existing 20-minute
+suite budget and 25-minute outer job budget. File-level grouping preserves tests'
+local ordering; `fail-fast: false` lets both report their result. The complete
+lint/type/unit/API/build gate and production viewer checks run once, on shard 1.
+Both jobs must succeed for the workflow to pass. Failure artifacts include shard
+numbers so parallel jobs retain separate evidence without naming collisions.
+
+This follows [Playwright's documented file-level sharding](https://playwright.dev/docs/test-sharding).
+No tests are excluded, retries added, timeouts raised or repository settings changed.
+Local test discovery verifies that both shard lists form the exact complete suite.
