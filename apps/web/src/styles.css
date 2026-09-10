@@ -2266,7 +2266,15 @@ select {
     font-size: 9px;
   }
   .error-banner {
-    font-size: 11px;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .error-banner > span {
+    flex: 1 0 100%;
+  }
+  .error-banner button:last-child {
+    margin-left: auto;
   }
 }
 @media (prefers-reduced-motion: reduce) {

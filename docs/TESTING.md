@@ -214,6 +214,12 @@ North-indicator tests independently rotate world north through Three.js cameras,
 then exercise actual orbit drags, stable reset and authoritative chase positions
 at desktop/phone widths. Visual QA runs separately with `scripts/north-indicator-qa.mjs`.
 
+Optimized-line geometry tests use accepted sources whose converged seeds exceed
+the slope bound or reverse a source interval. They independently inspect those
+seeds and ensure rejection precedes speed-profile evaluation. A real API/browser
+journey checks failure preservation and Centerline retry; the separate
+`scripts/line-geometry-qa.mjs` records desktop and phone recovery layouts.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

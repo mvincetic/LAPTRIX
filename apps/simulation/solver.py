@@ -74,6 +74,27 @@ def vehicle_state(vehicle: Vehicle, speed):
     return idx + 1, np.minimum(selected_rpm, vehicle.maxRpm), np.maximum(selected_power, 0)
 
 
+def line_geometry_error(points: np.ndarray, center: np.ndarray):
+    """Check an offset line against the same source intervals before solving speed."""
+    if not np.isfinite(points).all():
+        return "Racing line contains nonfinite coordinates. Use Centerline mode or review source geometry"
+    forward = np.roll(points, -1, axis=0) - points
+    center_forward = np.roll(center, -1, axis=0) - center
+    progress = np.sum(forward * center_forward, axis=1) / np.linalg.norm(center_forward, axis=1)
+    # Small roundoff margins apply to derived geometry, not the input Track contract.
+    if np.any(progress < 0.1 - 1e-9):
+        return (
+            "Racing line collapses or reverses a source interval. "
+            "Use Centerline mode or review source geometry and widths"
+        )
+    if np.any(np.abs(forward[:, 1]) / np.linalg.norm(forward, axis=1) > 0.3 + 1e-9):
+        return (
+            "Racing line exceeds the supported slope limit (absolute rise / 3D distance <= 0.30). "
+            "Use Centerline mode or review source elevations and widths"
+        )
+    return None
+
+
 def speed_profile(points: np.ndarray, vehicle: Vehicle, setup: Setup):
     ds, _, _, curvature = geometry(points)
     mass = vehicle.mass + setup.fuel
@@ -218,18 +239,13 @@ def refine_line(track: Track, vehicle: Vehicle, setup: Setup, offsets, profile):
         separation = np.abs(distance - origin)
         separation = np.minimum(separation, length - separation)
         weights.append(0.5 + 0.5 * np.cos(np.minimum(separation / (length / 12), 1) * np.pi))
-    center_forward = np.roll(center, -1, axis=0) - center
     for fraction in (0.3, 0.15, 0.075):
         for weight in weights:
             for bound in bounds:
                 candidate = offsets + fraction * weight * (bound - offsets)
                 points = center + normals * candidate[:, None]
-                forward = np.roll(points, -1, axis=0) - points
                 info["evaluations"] += 1
-                # Reject collapsed/reversed segments before attempting an envelope.
-                if np.any(np.sum(forward * center_forward, axis=1) / ds < 0.1) or np.any(
-                    np.abs(forward[:, 1]) / np.linalg.norm(forward, axis=1) > 0.3
-                ):
+                if line_geometry_error(points, center):
                     info["rejectedCandidates"] += 1
                     continue
                 trial = speed_profile(points, vehicle, setup)
@@ -253,6 +269,11 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
     started = time.perf_counter()
     track, sampling, alignment = prepare_track(track, setup.sampling)
     points, offsets, optimization = optimize_line(track, vehicle, setup.solver != "centerline")
+    if setup.solver != "centerline":
+        center = np.array([[p.x, p.y, p.z] for p in track.points])
+        geometry_error = line_geometry_error(points, center)
+        if geometry_error:
+            raise ValueError(geometry_error)
     profile = speed_profile(points, vehicle, setup)
     if setup.solver == "lap-time":
         offsets, profile, refinement = refine_line(track, vehicle, setup, offsets, profile)

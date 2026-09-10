@@ -463,6 +463,23 @@ The final source, including the low-speed bracket regression, also passes all
 62 development browser journeys (11.8 minutes) and both production viewer journeys.
 Those final gate logs are `slope-e2e-final.log` and `slope-production-final.log`.
 
+Initial optimized-line geometry checks pass all 111 Python and 92 TypeScript tests,
+lint, typecheck and build, all 63 development browser journeys (11.3 minutes), and
+both production viewer journeys. The actual API regression rejects an unsupported
+optimized slope before envelope evaluation and permits its valid centerline source.
+The browser checks complete project equality after import/run failures, pending
+fuel and cursor preservation, and successful retry with the same source ID.
+
+Visual QA at 1600/1280/390 px records exact document widths, no page exceptions,
+and only the two deliberately induced HTTP 422 console errors at each width.
+Desktop centerline recovery and desktop/phone error screenshots were opened and
+reviewed. Phone error text now occupies a full row above its recovery actions.
+Evidence is `artifacts/line-geometry-qa.json`, `line-geometry-*.png`,
+`line-geometry-check-final2.log`, `line-geometry-e2e-final.log` and
+`line-geometry-production-final.log`. See LINE_GEOMETRY.md for adversarial fixture
+measurements and the discrete guard's limits. The previous slope-force milestone
+also passed remote CI run 34444918563 on the working branch.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

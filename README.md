@@ -38,6 +38,7 @@ the last completed result remains visible if a solve fails.
 - Controlled 5 m / 3 m resampling with geometry checks and comparison across grids.
 - Grip, fuel mass, downforce, drag, power curve, gears, braking and gradient.
 - Consistent slope-normal grip, projected lateral speed and downhill braking checks.
+- Recoverable rejection of unsupported optimized slopes and reversed source intervals.
 - Formula and GT development profiles with inspectable parameters, sources and assumptions.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.

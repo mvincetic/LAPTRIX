@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-10 — Validate the optimized seed before its speed envelope
+
+**Decision:** Share one geometry check between the initial optimized seed and
+refinement candidates. Reject nonfinite coordinates, collapsed/reversed source
+progress and slope ratios above the existing limit, with small derived-roundoff
+margins. Return an actionable 422 for an invalid seed; keep candidate rejection
+accounting. **Reasoning:** Valid sources produced converged seeds at slope 0.345
+or with -0.916 m forward progress while force checks could still pass. Source and
+force validation do not establish the line's geometry domain. **Consequences:**
+Some formerly returned laps are now refused. Users can explicitly choose the
+validated centerline; the application retains completed work and pending inputs.
+No implicit source repair or solver substitution is introduced. Mobile errors
+give their text a full row above recovery controls. See LINE_GEOMETRY.md.
+
 ## 2026-09-10 — Resolve slope forces and preserve signed downhill braking
 
 **Decision:** Use slope-normal weight in grip and rolling loss, horizontal projected

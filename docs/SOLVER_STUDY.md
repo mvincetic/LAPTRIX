@@ -85,7 +85,7 @@ is within floating-point roundoff of 1.0. Source fingerprints remain equal acros
 grids. The 5 m/3 m refined difference remains about 0.044 s, so the numerical
 resolution caveat still applies. Runtime values are single local observations.
 The current report is `artifacts/sampling-study.json` with its gate log at
-`artifacts/slope-sampling-study-final.log`. New solver outputs carry source fingerprint
+`artifacts/slope-sampling-study-final.log`. That study used solver source fingerprint
 `sha256:9b6df677035dea8a13656277c923140953d2454b7cdb05684a9017aac20ebf61`.
 
 At original resolution the Formula centerline/curvature laps change by -0.0129 /

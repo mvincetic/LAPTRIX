@@ -19,6 +19,10 @@ bypasses optimization and rejects a car that cannot fit there with clearance.
 This is a small-offset minimum-curvature approximation. It does **not** prove a
 minimum-lap-time trajectory, and an objective improvement need not improve lap time
 on every imported track or vehicle. The separate speed solver makes that observable.
+Before its speed envelope, an optimized seed must pass the same finite-coordinate,
+forward-progress and slope checks used for refinement candidates. Unsupported
+geometry returns an actionable API error; centerline mode remains available for
+the validated source. See LINE_GEOMETRY.md for thresholds and failure behavior.
 
 ## Optional lap-time refinement
 

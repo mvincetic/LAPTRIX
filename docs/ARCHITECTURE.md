@@ -98,6 +98,11 @@ the same outgoing chord grade. Its signed lateral acceleration feeds both sample
 telemetry and corner summaries. Backward braking retains signed net deceleration,
 including gravity-driven acceleration; convergence and force feasibility remain
 separate diagnostics. See SIMULATION_MODEL.md for the bounded approximation.
+`line_geometry_error` applies the same finite-coordinate, source-progress and slope
+checks before the initial optimized envelope and within refinement. Invalid seeds
+raise an API 422; invalid candidates increment the existing rejected count. A
+validated centerline remains directly solvable. No fallback mode or source mutation
+is implicit; the existing transaction preserves the workspace. See LINE_GEOMETRY.md.
 Numerical demand diagnostics and refinement accounting cross the existing Lap API.
 Before that solve, `sampling.py` prepares a checked source or uniform grid and
 source-progress alignment. The Lap response carries effective points for rendering;

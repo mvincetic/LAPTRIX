@@ -98,6 +98,9 @@ Slope forces now consistently affect normal grip, rolling loss and lateral speed
 including braking while accelerating downhill. Numerical checks continue to flag
 infeasible results separately from convergence; crest and suspension dynamics
 remain outside the development model.
+An optimized line that exceeds the supported slope or reverses a source interval
+now produces a recoverable explanation before calculation. Users can select
+Centerline mode and retry; failed imports and runs preserve their completed work.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

@@ -173,3 +173,6 @@ The compact launcher and default GPX collapse keep the usual review surfaces com
 The viewer's compact north arrow rotates with the camera while N stays readable.
 Hover text and its accessible name describe the projected screen direction; an
 undefined projection hides the arrow and explains the viewing-axis case.
+At phone widths, error messages occupy a full-width 12 px text row, with recovery
+and dismissal controls below. Long geometry explanations remain readable without
+squeezing the text beside buttons or introducing horizontal overflow.
