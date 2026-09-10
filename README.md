@@ -73,6 +73,7 @@ the last completed result remains visible if a solve fails.
 - Sector-focused graph inspection with shared seeking, clear range bounds and full-lap reset.
 - Explicit sector playback loops with keyboard toggling and a persistent active-loop indicator.
 - Native fullscreen controls with rejection recovery and reachable camera/exit actions on short screens.
+- A keyboard-accessible track key that collapses in compact scenes and retains explicit display choices.
 
 ## Checks
 

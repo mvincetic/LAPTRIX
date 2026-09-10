@@ -6,9 +6,12 @@ despite zero WebGL draws; the strengthened settled-workspace tests now require z
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
 all browser/audio processing. Entry JavaScript is 415.19 kB (125.95 kB gzip); main
-CSS is 52.54 kB (11.22 kB gzip) and deferred viewer JavaScript is 963.82 kB
-(258.18 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
+CSS is 52.84 kB (11.26 kB gzip) and deferred viewer JavaScript is 964.59 kB
+(258.44 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
+The track key observes only a compact-scene predicate and reuses existing layout
+invalidation after a toggle. Both idle browser checks still require zero settled
+frames and draws after expanding and collapsing it. See TRACK_KEY.md.
 Custom graph windows retain memoized full-lap curves and scales, changing only the
 viewport and labels. Exact axis bounds are derived only when lap/range/axis changes;
 the editor and window loop add no timer, solve or sample generation. See

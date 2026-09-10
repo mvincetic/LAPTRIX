@@ -367,7 +367,22 @@ export function TrackView({
     [mode, setMode] = useState<CameraMode>("orbit"),
     [reset, setReset] = useState(0),
     [ghost, setGhost] = useState(true),
-    [showReference, setShowReference] = useState(false);
+    [showReference, setShowReference] = useState(false),
+    [compactScene, setCompactScene] = useState(false),
+    [legendChoice, setLegendChoice] = useState<boolean | null>(null);
+  const legendOpen = legendChoice ?? !compactScene;
+  const scene = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const element = scene.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCompactScene(
+        entry.contentRect.width < 480 || entry.contentRect.height < 350,
+      );
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
   const referenceLap = alignedNativeReference(lap, reference);
   const referenceVisible = showReference && !!referenceLap;
   const currentGhost = useRef<Group>(null);
@@ -440,7 +455,7 @@ export function TrackView({
           <span className="status-dot" /> 3D workspace
         </span>
       </div>
-      <div className="scene">
+      <div className="scene" ref={scene}>
         <ViewerToolsPanels
           prefix={tabsPrefix}
           active={viewerTabs.indexOf(tab)}
@@ -464,6 +479,8 @@ export function TrackView({
           }
           mode={mode}
           onMode={setMode}
+          legendOpen={legendOpen}
+          onLegendChange={setLegendChoice}
         />
         <SceneBoundary>
           <Canvas
@@ -632,13 +649,13 @@ export function TrackView({
                 lap={lap}
                 cornerId={selectedCorner}
                 clock={clock}
-                layoutKey={`${tab}:${layers.sectors}:${layers.corners}`}
+                layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${legendOpen}`}
               />
             )}
             {ghostLabels.length > 0 && (
               <GhostLabels
                 labels={ghostLabels}
-                layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${selectedCorner}:${mode}`}
+                layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${selectedCorner}:${mode}:${legendOpen}`}
               />
             )}
           </Canvas>

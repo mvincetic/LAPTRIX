@@ -88,6 +88,14 @@ for (const width of [1600, 390]) {
     }
     await expect.poll(draws).toBeGreaterThan(0);
     await settled();
+    for (let toggle = 0; toggle < 2; toggle++) {
+      const beforeKey = await draws();
+      await page
+        .getByRole("button", { name: "Track key", exact: true })
+        .click();
+      await expect.poll(draws).toBeGreaterThan(beforeKey);
+      await settled();
+    }
     const cursor = page.getByRole("slider", { name: "Lap playback position" });
     let previous = await draws();
     await cursor.fill("20");

@@ -21,6 +21,10 @@ such as SI units, pending setup changes and approximate physics is visible where
 it affects interpretation. No decorative animation is added; reduced motion is
 honored for the loading spinner.
 Paused scenes render when their content or camera changes and rest after settling.
+The track key uses a compact labelled toggle above its four familiar symbols.
+It starts collapsed in scenes below 480 px wide or 350 px high; an explicit choice persists
+through display changes. The same panel and focus treatment remain, while hidden
+contents leave room for projected markers. See TRACK_KEY.md.
 Playback and orbit motion retain the same detail; this policy adds no visible mode
 or user setting. See RENDERING.md.
 

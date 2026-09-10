@@ -82,13 +82,19 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for fullscreen recovery and short-screen controls; local quality,
-   15 relevant browser journeys and four production checks pass. Custom windows
-   pass all 107 development journeys in remote CI.
-2. Review how fixed viewer overlays affect corner-marker visibility across compact
-   and fullscreen views; preserve the meaning and positions of canonical events.
+1. Verify remote CI for the compact track key; 117 development journeys are now
+   discovered. Fullscreen recovery passes all 114 preceding journeys remotely.
+2. Investigate a single pending-fuel change observed during the initial short-screen
+   resize journey. Per-step assertions, nine repeated cases and the final relevant
+   browser run pass; the cause has not been established. Preserve its evidence.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
+
+The track key now collapses automatically in narrow or short scenes and retains
+explicit choices across viewer transitions. Browser/visual QA confirms the observed
+corner-1 obstruction is removed in those compact defaults, while expanded state
+remains an optional overlay. Canonical marker positions and the same demand
+renderer remain. See TRACK_KEY.md for thresholds and bounded evidence.
 
 Bounded vehicle JSON import/export is implemented through the existing solver and
 cache. Activation is transactional; metadata, references, built-ins and pending edits

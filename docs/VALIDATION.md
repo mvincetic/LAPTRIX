@@ -112,6 +112,22 @@ and no main merge, force-push or repository-settings change was made.
   Final lint is clean; the typechecked production build and all four viewer
   loading/restoration journeys pass in 20.0 seconds.
   The suite now discovers 114 development journeys.
+  The track-key disclosure retains 203 TypeScript / 146 Python passes (46.40 seconds
+  for Python), lint, strict typechecking and build. Final narrow-scene refinement
+  also passes lint, typecheck, all 203 TypeScript cases and the production build.
+  Three new browser journeys bring the development suite to 117. The first fixture
+  attempted to resize native fullscreen, which Chromium disallows; it now exits
+  before resizing and re-enters through the actual control.
+  One initial combined run passes 15 of 16 journeys and observes pending fuel
+  changing from 21 to 15 in the short-screen journey. Its cause was not established.
+  Added per-step fuel assertions pass in the isolated case and all nine repeated
+  desktop/phone/short journeys (55.0 seconds); no application fix is claimed for
+  that observation. The log remains as evidence for further investigation.
+  The final compact-width implementation passes all 16 relevant browser journeys
+  together (2.0 minutes), including the strengthened per-step fuel, label separation
+  and zero-idle-frame assertions.
+  All four final production loading/restoration journeys pass in 20.2 seconds;
+  evidence is `artifacts/track-key-production-final.log`.
 - Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -171,6 +187,27 @@ desktop exit feedback images were opened and reviewed. Evidence:
 `fullscreen-browser-final.log`, `fullscreen-check.log`, `fullscreen-regressions.log`,
 `fullscreen-qa.log`, `fullscreen-qa.json`, `fullscreen-*.png`,
 `fullscreen-lint-final.log` and `fullscreen-production.log`. See FULLSCREEN.md.
+
+Track-key visual review reproduced the original full obstruction of corner 1 in
+780×390 fullscreen Top View. Initial QA also caught the added heading extending
+the phone legend over corner 1, leading to a default collapse for narrow scenes
+as well as short ones. The pre-refinement record is
+`artifacts/track-key-qa-before-phone.json` and `track-key-390-before-phone.png`.
+The bounded disclosure keeps world-projected badge positions unchanged and reuses
+the existing event/ghost layouts. See TRACK_KEY.md for behavior and scope.
+Browser and quality evidence is `artifacts/track-key-browser.log`,
+`track-key-regressions.log`, `track-key-short-investigation.log`,
+`track-key-retention.log`, `track-key-final-regressions.log` and
+`track-key-check.log`. The previous fullscreen commit `64507c3` passes all
+114 development journeys and all other remote gates in CI run 34506301466.
+Final visual QA passes all 20 states across four viewport sizes with five visible,
+contained and mutually separated event/ghost labels, zero label/key overlap, the
+same Canvas and 20-second cursor, unchanged project/pending 21 kg fuel, no solves,
+runtime errors or horizontal overflow. Every collapsed capture exposes corner 1
+to pointer hit testing. Final desktop, phone and short fullscreen captures were
+opened and reviewed, including deliberate expansion in the crowded short view.
+Evidence is `artifacts/track-key-qa-final.log`, `track-key-qa.json` and
+`track-key-*.png`.
 
 Custom-window visual QA initially passes 20 states at 1600×1000, 1280×900, 390×844 and
 780×390, plus two workspace captures. The editor, native distance/time curves,

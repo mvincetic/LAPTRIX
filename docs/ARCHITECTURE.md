@@ -39,6 +39,10 @@ fullscreen events and handles rejected or unavailable API calls locally. Generat
 invalidate obsolete errors after newer requests/transitions and cleanup removes
 the listener. Fullscreen scene sizing can shrink under a fixed header/footer,
 retaining the existing Canvas and camera mode. See FULLSCREEN.md.
+TrackView observes its actual scene size for the track key's initial compact
+state, with a local explicit-choice override. Expanded state participates in the
+existing event/ghost layout keys and demand invalidation; its observer disconnects on
+cleanup and adds no clock or renderer. See TRACK_KEY.md.
 `track-engine/vertical-profile.ts` derives signed three-point source curvature from
 the original profile's closed chords, independently of Lap playback and resampling.
 SourceProfile memoizes it with the existing geometry profile, shares source-segment

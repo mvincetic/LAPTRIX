@@ -147,3 +147,9 @@ passes through `1a8c64d`: all 107 development journeys (55 in 10.3 minutes and
 52 in 8.6 minutes), 203 TypeScript tests, 146 Python tests (42.52 seconds), all
 quality gates and four production journeys (29.5 seconds). Both custom-window
 journeys include the exact-boundary visibility regression and pass.
+
+The [fullscreen run](https://github.com/mvincetic/LAPTRIX/actions/runs/34506301466)
+passes through `64507c3`: all 114 development journeys (58 in 10.0 minutes and
+56 in 9.9 minutes), 203 TypeScript tests, 146 Python tests (42.53 seconds), all
+quality gates and four production journeys (28.9 seconds). All seven fullscreen
+recovery, native-transition and short-viewport cases pass.

@@ -686,8 +686,8 @@ select {
   top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  padding: 13px 15px;
+  gap: 8px;
+  padding: 8px 10px;
   background: #ffffffef;
   border: 1px solid #dce3e9;
   box-shadow: 0 2px 8px #172d4104;
@@ -695,7 +695,28 @@ select {
   min-width: 133px;
   z-index: 11;
 }
-.legend > span {
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.legend-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 10px;
+  color: #526379;
+}
+.legend-toggle:hover {
+  background: transparent;
+  color: var(--blue);
+}
+.legend-items > span {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2036,7 +2057,10 @@ select {
     min-width: 107px;
     gap: 8px;
   }
-  .legend > span {
+  .legend-items {
+    gap: 8px;
+  }
+  .legend-items > span {
     font-size: 8px;
     gap: 8px;
   }

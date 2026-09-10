@@ -1,4 +1,4 @@
-import { Eye, Layers } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye, Layers } from "lucide-react";
 import type { CameraMode, ViewLayers } from "./TrackView";
 import { tabPanelProps } from "./tabs";
 
@@ -15,6 +15,8 @@ export function ViewerToolsPanels({
   referenceReason,
   mode,
   onMode,
+  legendOpen,
+  onLegendChange,
 }: {
   prefix: string;
   active: number;
@@ -28,6 +30,8 @@ export function ViewerToolsPanels({
   referenceReason: string;
   mode: CameraMode;
   onMode: (value: CameraMode) => void;
+  legendOpen: boolean;
+  onLegendChange: (value: boolean) => void;
 }) {
   return (
     <>
@@ -35,21 +39,36 @@ export function ViewerToolsPanels({
         {...tabPanelProps(prefix, 0, active === 0)}
         className={`legend${mode === "chase" ? " chase-legend" : ""}`}
       >
-        <span>
-          <i className="line-key blue" />
-          Racing line
-        </span>
-        <span>
-          <i className="line-key red" />
-          Braking zone
-        </span>
-        <span>
-          <i className="dot-key" />
-          Apex point
-        </span>
-        <span>
-          <i className="number-key">1</i>Corner number
-        </span>
+        <button
+          className="legend-toggle"
+          aria-expanded={legendOpen}
+          aria-controls={`${prefix}-track-key`}
+          onClick={() => onLegendChange(!legendOpen)}
+        >
+          Track key{" "}
+          {legendOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        </button>
+        <div
+          id={`${prefix}-track-key`}
+          className="legend-items"
+          hidden={!legendOpen}
+        >
+          <span>
+            <i className="line-key blue" />
+            Racing line
+          </span>
+          <span>
+            <i className="line-key red" />
+            Braking zone
+          </span>
+          <span>
+            <i className="dot-key" />
+            Apex point
+          </span>
+          <span>
+            <i className="number-key">1</i>Corner number
+          </span>
+        </div>
       </div>
       <div
         {...tabPanelProps(prefix, 1, active === 1)}

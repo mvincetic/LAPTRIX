@@ -98,6 +98,12 @@ for (const width of [1600, 390]) {
     await page
       .getByRole("button", { name: "Select corner 2", exact: true })
       .click();
+    for (let toggle = 0; toggle < 2; toggle++) {
+      await page
+        .getByRole("button", { name: "Track key", exact: true })
+        .click();
+      await separated();
+    }
     for (const mode of ["3D View", "Top View"] as const) {
       await page.getByRole("button", { name: mode, exact: true }).click();
       for (const time of [0, 40.31, 78]) {

@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Expose short-scene markers through a collapsible key
+
+**Decision:** Make the track key a native disclosure, initially collapsed below
+480 px scene width or 350 px height while retaining an explicit user choice. **Reasoning:** The
+fixed legend intercepted corner 1 in short fullscreen Top View; visual QA also
+caught the added heading covering the phone marker. **Consequences:**
+Marker coordinates remain authoritative; existing event/ghost placement observes
+the key's changed bounds. A single ResizeObserver and local state add no clock,
+solve or project-format change. Expanded overlays remain optional obstacles;
+this is not global marker collision avoidance. See TRACK_KEY.md.
+
+
 ## 2026-09-10 — Recover viewer fullscreen transitions locally
 
 **Decision:** Derive fullscreen controls from actual browser events, catch failed
