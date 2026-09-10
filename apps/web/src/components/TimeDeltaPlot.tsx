@@ -10,7 +10,7 @@ import {
   prepareTimeComparison,
   signed,
 } from "../../../../packages/telemetry";
-import { viewportFraction, type PlotViewport } from "../plotViewport";
+import { plotTickLabel, type PlotViewport } from "../plotViewport";
 import { buildComparisonReport } from "../../../../packages/telemetry/comparison-report";
 import { download } from "../download";
 import "./comparison-export.css";
@@ -21,6 +21,7 @@ export function TimeDeltaPlot({
   axis,
   time,
   progress,
+  cursorInside,
   viewport,
   onSeek,
 }: {
@@ -29,6 +30,7 @@ export function TimeDeltaPlot({
   axis: "distance" | "time";
   time: number;
   progress: number;
+  cursorInside: boolean;
   viewport: PlotViewport;
   onSeek: (fraction: number) => void;
 }) {
@@ -66,8 +68,6 @@ export function TimeDeltaPlot({
       </div>
     );
   const delta = comparison.atTime(time);
-  const cursorFraction = viewportFraction(progress * plot.max, viewport);
-  const cursorInside = cursorFraction >= 0 && cursorFraction <= 1;
   const seekPointer = (e: React.PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     onSeek(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)));
@@ -224,17 +224,22 @@ export function TimeDeltaPlot({
           </svg>
           <div className="delta-x-ticks">
             {Array.from({ length: 6 }, (_, i) => (
-              <span key={i}>
-                {(
-                  viewport.start +
-                  ((viewport.end - viewport.start) * i) / 5
-                ).toFixed(
-                  axis === "time" && viewport.sectorId !== null ? 1 : 0,
+              <span
+                key={i}
+                title={String(
+                  viewport.start + ((viewport.end - viewport.start) * i) / 5,
+                )}
+              >
+                {plotTickLabel(
+                  viewport.start + ((viewport.end - viewport.start) * i) / 5,
+                  viewport,
+                  axis,
                 )}
               </span>
             ))}
           </div>
           <span className="axis-label">
+            {viewport.custom ? "Custom window · " : ""}
             {viewport.sectorId !== null ? `Sector ${viewport.sectorId} · ` : ""}
             {axis === "distance" ? "Distance (m)" : "Time (s)"} · click or drag
             to inspect

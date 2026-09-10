@@ -61,8 +61,9 @@
 - Native channel overlays compare declared source positions on current-lap axes.
   They preserve available samples, not missing measured detail or independently
   verified alignment. Timing-only files remain ineligible for channel overlays.
-- Plot zoom selects whole current sectors and retains full-lap scales and playback.
-  It adds no measured detail; arbitrary windows are not implemented. Explicit sector
+- Plot zoom selects current sectors or increasing custom time windows and retains
+  full-lap scales and playback. Custom windows require at least 0.001 s and cannot
+  cross the start/finish seam. They add no measured detail. Explicit interval
   loops repeat canonical telemetry without adding a physical transition. Their
   transient intervals are not saved in projects. See PLAYBACK_LOOPS.md.
 - Reference ghosts share current-lap elapsed time and duration. Faster references

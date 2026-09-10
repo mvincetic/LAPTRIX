@@ -104,6 +104,12 @@ sector playback loops. Telemetry memoizes sector times from canonical distance
 gates and derives the visible loop label from the clock. No duplicate selection
 state or scheduler is needed. Outside seeks clear the interval; new-Lap configure
 also clears it. See PLAYBACK_LOOPS.md for boundary and transport semantics.
+Custom graph windows store exact time endpoints with the completed Lap object.
+The shared viewport helper validates both axis projections; switching axes maps
+the same endpoints through canonical interpolation. Paths and full-lap scales
+remain memoized, while only clipping and labels change. Explicit Loop window uses
+the existing clock interval; editor and plotted range do not own playback state.
+See CUSTOM_WINDOWS.md.
 
 The solver's `analyze_corners` derives bounded periodic windows from the completed
 speed profile and its canonical time/distance axes. Temporary unwrapped indices

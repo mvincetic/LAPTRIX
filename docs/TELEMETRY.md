@@ -161,3 +161,7 @@ resampling either reference. Time bounds use current sector splits; distance bou
 use current gate distances. Both views map local pointer positions back to the
 full-lap clock. Outside cursors are labelled and hidden, and full-lap channel scales
 remain fixed across range changes. See PLOT_INSPECTION.md.
+Custom windows store exact current-lap endpoint times and derive both plotted axes
+from those same positions. Existing curves and scales are clipped without changing
+samples; explicit Inspect start or Loop window uses the canonical clock. Reference
+and comparison exports retain full-lap scope. See CUSTOM_WINDOWS.md.

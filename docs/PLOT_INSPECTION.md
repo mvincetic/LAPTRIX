@@ -1,9 +1,13 @@
-# Sector-focused graph inspection
+# Graph range inspection
 
 **Plot range** selects the full lap or one current-lap sector in Lap Graphs and
 Time Delta. Selecting a range changes the horizontal view only. The current
 cursor, play/pause state, reference choice, channel scales and setup remain intact.
 Both views retain the same selected sector across axis and tab changes.
+**Custom window** also accepts exact start/end seconds for an interval inside the
+current lap. Its explicit Apply action preserves playback, and axis changes retain
+the same physical endpoints. Cancel/invalid input retains the old view. See
+CUSTOM_WINDOWS.md for validation, millisecond minimum and the optional Loop window.
 Overview and Loads & elevation also share this range. Changing graph channels
 retains the cursor and sector, with full-lap scales for the selected group.
 
@@ -57,6 +61,7 @@ use the plotted clock position rather than that rounded control value.
 Run `node scripts/plot-range-qa.mjs` for workspace, outside-cursor, channel-range and
 timing-delta screenshots at 1600/1280/390 px, with axis, cursor, runtime-error and
 document-width records. Zoom exposes existing sampled detail; it does not improve
-source resolution, numerical accuracy or real-world calibration. Arbitrary range
-selection is not implemented. Explicit sector loops repeat existing telemetry;
+source resolution, numerical accuracy or real-world calibration. Custom increasing
+time windows are now available; seam-crossing windows remain separate portions.
+Explicit sector or custom-window loops repeat existing telemetry;
 they do not construct new timing or physical transitions.

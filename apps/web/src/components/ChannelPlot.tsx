@@ -1,5 +1,9 @@
 import type { Lap, Sample } from "../../../../packages/shared/schema";
-import { viewportFraction, type PlotViewport } from "../plotViewport";
+import {
+  plotTickLabel,
+  viewportFraction,
+  type PlotViewport,
+} from "../plotViewport";
 import {
   channelDigits,
   channelFraction,
@@ -81,10 +85,20 @@ export function ChannelPlot({
       <div className="plot">
         <div className="channel-sector-labels" aria-hidden="true">
           {lap?.sectors
-            .filter(
-              (sector) =>
-                viewport.sectorId === null || sector.id === viewport.sectorId,
-            )
+            .filter((sector) => {
+              const position = viewportFraction(
+                axis === "distance"
+                  ? (sector.startDistance + sector.endDistance) / 2
+                  : sector.split - sector.time / 2,
+                viewport,
+              );
+              return (
+                (viewport.sectorId === null ||
+                  sector.id === viewport.sectorId) &&
+                position >= 0 &&
+                position <= 1
+              );
+            })
             .map((sector) => (
               <span
                 key={sector.id}
@@ -240,13 +254,18 @@ export function ChannelPlot({
         </svg>
         <div className="channel-x-ticks">
           {Array.from({ length: 6 }, (_, i) => (
-            <span key={i} style={{ left: `${i * 20}%` }}>
+            <span
+              key={i}
+              style={{ left: `${i * 20}%` }}
+              title={String(
+                viewport.start + ((viewport.end - viewport.start) * i) / 5,
+              )}
+            >
               {lap
-                ? (
-                    viewport.start +
-                    ((viewport.end - viewport.start) * i) / 5
-                  ).toFixed(
-                    axis === "time" && viewport.sectorId !== null ? 1 : 0,
+                ? plotTickLabel(
+                    viewport.start + ((viewport.end - viewport.start) * i) / 5,
+                    viewport,
+                    axis,
                   )
                 : i * 1000}
             </span>
@@ -254,6 +273,7 @@ export function ChannelPlot({
         </div>
         <span className="axis-label">
           {overlay ? "Current lap · " : ""}
+          {viewport.custom ? "Custom window · " : ""}
           {viewport.sectorId !== null ? `Sector ${viewport.sectorId} · ` : ""}
           {axis === "distance" ? "Distance (m)" : "Time (s)"} · click or drag to
           inspect

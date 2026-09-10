@@ -1,9 +1,14 @@
-# Explicit sector playback loops
+# Explicit playback intervals
 
 Select a sector with **Plot range**, then enable **Loop sector** to repeat that
 sector's calculated telemetry. Selecting a plot range alone retains the current
 clock and playback behavior. The loop button has a pressed state and supports
 normal keyboard activation. Pressing it again restores full-lap looping.
+An applied **Custom window** exposes **Loop window** with the same behavior. Its
+exact start/end times go through the existing `focusLoop` method. A custom interval
+status shows its time bounds across telemetry tabs. Editing or changing the plotted
+window alone preserves any active loop, even when the two intervals differ. See
+CUSTOM_WINDOWS.md.
 
 The persistent strip above transport identifies **Playback loop: Sector N** in
 every telemetry tab, including Cursor Data. **Full-lap loop** clears the interval

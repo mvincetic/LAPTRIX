@@ -80,7 +80,14 @@ selection exposes Inspect start, Full lap and a short playback/outside-cursor no
 Channel comparison controls share the same wrapping row where space permits.
 Horizontal ticks show the selected interval; strokes and labels retain their
 display size. Full-lap vertical scales stay consistent across sector changes.
-Sector time ticks show tenths of a second. The desktop workspace grows with its
+Sector time ticks show tenths of a second.
+Custom window opens an inline editor with labelled start/end seconds, Apply and
+Cancel. Opening focuses the start input; applying or cancelling restores the
+trigger, and Escape cancels. Inputs follow the neutral border/radius system and
+stack into labelled rows on phones. Custom ticks add precision as the window
+narrows; actual values remain in titles. Loop window shares the existing pressed
+state and persistent interval strip. See CUSTOM_WINDOWS.md.
+The desktop workspace grows with its
 center content and keeps the status bar below the transport. Side columns retain
 internal scrolling instead of determining the entire workspace's height.
 

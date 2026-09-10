@@ -114,6 +114,9 @@ Sector-focused plotting shares one range across Lap Graphs and Time Delta. Range
 selection preserves the cursor; explicit inspection pauses at the sector start.
 Full lap restores the complete view, while outside-cursor text makes full-lap
 playback explicit. A new completed calculation resets the view range.
+Custom windows narrow either graph to explicit start/end times inside the lap.
+Applying the window preserves playback and reference data; Inspect start and Loop
+window use the shared clock explicitly. Both axes show the same lap positions.
 Each channel row exposes its display bounds alongside the live values. Current and
 reference curves share those bounds; signed channels include a zero guide. Bounds
 retain their units and remain fixed when inspecting a sector.

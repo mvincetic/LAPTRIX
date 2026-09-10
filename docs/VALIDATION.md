@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 197 tests pass.
+- Vitest: 203 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -84,7 +84,24 @@ and no main merge, force-push or repository-settings change was made.
   after the fix (38.6 seconds). All four production viewer journeys pass in 19.8
   seconds. Seven nearby project/storage/idle-playback journeys pass in 1.0 minute.
   The suite now discovers 105 development journeys.
-- Vite production build: pass; approximately 412 kB initial JavaScript / 125 kB
+  Custom windows pass the full quality gate with 203 TypeScript and 146 Python
+  tests (40.97 seconds for Python), including six new independent window cases.
+  Both existing sector-inspection journeys pass before an interrupted fixture run
+  was corrected to match the actual `optimized` request field. The four custom/
+  sector-loop journeys then pass in 38.8 seconds. Eight final custom/comparison/
+  export/extrema journeys pass in 1.3 minutes after input styling/focus refinement.
+  Lint, typechecking, all 203 TypeScript tests and the build also pass on that
+  refinement. The suite now discovers 107 development journeys.
+  Final endpoint review reproduced a disappearing Time Delta cursor at a valid
+  exact start: time/fraction/time rounding moved the visibility check just outside
+  the bounds. Both graphs now share the canonical-position check and custom
+  Inspect start seeks its stored time directly. The new browser assertion first
+  failed at the exact-boundary visibility check. All five custom/sector/delta
+  journeys then pass in 45.0 seconds, including that case at both widths.
+  Final lint and all 203 TypeScript tests pass after the boundary correction.
+  The final typechecked production build and all four loading/restoration journeys
+  pass (20.6 seconds). Their evidence is `plot-window-production-final.log`.
+- Vite production build: pass; approximately 415 kB initial JavaScript / 126 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
@@ -118,8 +135,37 @@ and no main merge, force-push or repository-settings change was made.
   Comparison-export run 34498132296 then passes all 101 development journeys
   (51/50), 187 TypeScript/146 Python tests, lint/type/build and four production
   journeys (27.2 seconds), including both revised sector-loop cases.
+  Sleeping-clock run 34501143584 passes all 101 development journeys (51/50),
+  194 TypeScript/146 Python tests, quality gates and four production journeys
+  (31.7 seconds). Audio-ordering run 34501927841 passes all 105 development journeys
+  (53/52), 197 TypeScript/146 Python tests, quality gates and four production
+  journeys (23.9 seconds), including all new ordering and existing recovery cases.
 
 ## Browser evidence
+
+Custom-window visual QA initially passes 20 states at 1600×1000, 1280×900, 390×844 and
+780×390, plus two workspace captures. The editor, native distance/time curves,
+looped Time Delta and a minimum-width time window retain the complete project,
+20-second cursor and pending 21 kg fuel with no inspection solve, runtime/console
+error or horizontal overflow. Six ticks remain distinct and separate; controls
+stay inside their panel and charts retain over 100 px height. Desktop native,
+phone editor/minimum window and short-landscape loop images were opened and
+reviewed. A second visual run confirms the final input styling and focus, with
+the phone editor and desktop native images opened again. Evidence:
+`artifacts/plot-window-unit.log`, `plot-window-browser.log`,
+`plot-window-browser-fixed.log`, `plot-window-check.log`, `plot-window-nearby.log`,
+`plot-window-qa.log`, `plot-window-qa-final.log`, `plot-window-qa.json` and
+`plot-window-*.png`. Exact-boundary evidence is
+`plot-window-boundary-before.log` and `plot-window-boundary-browser.log`.
+See CUSTOM_WINDOWS.md.
+
+The final window visual run expands to 24 states by inspecting the reproduced
+10.035-second boundary at each viewport. It remains visible at the left edge, and
+the phone boundary image was opened and reviewed. These four states use that exact
+cursor; the preceding 20 retain 20 seconds. All preserve the same complete project
+and run without added simulation requests or errors. Evidence is
+`plot-window-qa-release.log`, `plot-window-final-check.log` and the final window
+images/JSON.
 
 Audio ordering passes eight enabled/muted states at 1600×1000, 1280×900, 390×844
 and 780×390, plus four whole-workspace captures. Desktop muted and phone enabled

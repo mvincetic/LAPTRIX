@@ -82,11 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify remote CI for the sleeping playback scheduler and audio activation
-   ordering; local quality, related browser and production gates pass.
-2. Add explicit time-bounded graph windows for inspecting events smaller than a
-   sector, preserving canonical endpoint positions across both axes and keeping
-   existing native/reference curves, project contents and playback state intact.
+1. Verify remote CI for exact custom graph windows; local quality, relevant browser
+   journeys and final production checks pass. Clock/audio milestones pass remote CI.
+2. Review fullscreen viewer entry/exit and browser rejection recovery, preserving
+   the existing scene, camera, playback and workspace through each transition.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -221,18 +220,24 @@ The shared clock now sleeps while paused, cancels at reset/finish/last cleanup a
 resumes with a fresh timestamp. Seven scheduling cases retain the delayed-frame
 cap, rate, notification behavior and one chain across start owners. Desktop/phone
 checks now require zero idle animation callbacks as well as zero WebGL draws.
+Custom windows now clip both graph views to exact increasing current-lap times.
+The editor validates before applying, preserves playback and source/native curves,
+and maps the same positions across axes. Explicit Inspect start seeks the stored
+time directly; Loop window reuses the existing clock interval. Six numerical cases
+and desktop/phone browser journeys cover precision, recovery, looping and project
+preservation. See CUSTOM_WINDOWS.md.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 197 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 203 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and five browser journeys cover the
+One hundred and seven browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

@@ -173,6 +173,9 @@ whole lap until **Loop sector** is explicitly enabled. Its pressed state and the
 playback strip identify the repeated interval. **Full-lap loop**, toggling the
 sector off or seeking outside restores full-lap looping. See
 [PLOT_INSPECTION](docs/PLOT_INSPECTION.md) and [PLAYBACK_LOOPS](docs/PLAYBACK_LOOPS.md).
+Use **Custom window** to enter exact start/end seconds for closer inspection.
+Applying preserves playback; both graph axes show the same lap positions, and
+**Loop window** explicitly repeats that interval. See [custom windows](docs/CUSTOM_WINDOWS.md).
 In **Time Delta**, **Export full-lap JSON** downloads matched comparison samples
 and both completed inputs, including when inspecting one sector. Timing-only
 references keep timing-only rows. See [comparison exports](docs/COMPARISON_EXPORT.md).

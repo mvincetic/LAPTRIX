@@ -9,7 +9,7 @@
   color: #61758e;
 }
 .plot-range-controls select {
-  width: 100px;
+  width: 112px;
   padding: 3px 5px;
   font-size: 10px;
 }
@@ -56,4 +56,50 @@
 .graph-area svg,
 .delta-plot svg {
   overflow: hidden;
+}
+.plot-window-editor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px 12px;
+  background: #f7faff;
+  border-bottom: 1px solid #e7edf4;
+  font-size: 10px;
+  color: #526379;
+  flex-basis: 100%;
+}
+.plot-window-editor input {
+  width: 108px;
+  padding: 4px 6px;
+  font-size: 11px;
+  border: 1px solid #dce5f0;
+  border-radius: 4px;
+  background: #fff;
+  color: #23344d;
+  font-variant-numeric: tabular-nums;
+}
+.plot-window-editor button {
+  padding: 4px 7px;
+  font-size: 10px;
+}
+.plot-window-editor > span {
+  flex-basis: 100%;
+  font-size: 9px;
+}
+.plot-window-editor .plot-window-error {
+  color: #bd303b;
+}
+@media (max-width: 600px) {
+  .plot-window-editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .plot-window-editor input {
+    width: 100%;
+    min-width: 0;
+  }
+  .plot-window-editor > span {
+    grid-column: 1 / -1;
+  }
 }

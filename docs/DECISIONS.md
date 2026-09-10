@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Inspect exact custom telemetry windows
+
+**Decision:** Extend the existing plot viewport with exact current-lap time bounds,
+an explicit Apply/Cancel editor and optional reuse of `clock.focusLoop`.
+**Reasoning:** Whole-sector views can obscure short braking events. Canonical time
+endpoints preserve the same positions across nonlinear time/distance axes without
+creating another data grid. **Consequences:** Existing paths, full-lap scales,
+source alignment and project data stay unchanged. Applying preserves playback;
+only explicit Inspect/Loop actions change it. The 0.001-second minimum bounds the
+editor's zoom, not simulation accuracy. New laps reset this transient selection;
+increasing windows cannot wrap across the seam. See CUSTOM_WINDOWS.md.
+
 ## 2026-09-10 — Preserve the latest explicit audio activation
 
 **Decision:** Guard asynchronous activation in both the engine and workspace with

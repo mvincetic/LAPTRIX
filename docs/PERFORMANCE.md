@@ -5,9 +5,13 @@ completion. Both widths previously executed 32 animation callbacks in a half-sec
 despite zero WebGL draws; the strengthened settled-workspace tests now require zero
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
-all browser/audio processing. Entry JavaScript is 412.26 kB (125.13 kB gzip); main
-CSS remains 51.73 kB (11.09 kB gzip) and deferred viewer JavaScript 962.28 kB
+all browser/audio processing. Entry JavaScript is 415.18 kB (125.94 kB gzip); main
+CSS is 52.44 kB (11.20 kB gzip) and deferred viewer JavaScript remains 962.28 kB
 (257.66 kB gzip). See RENDERING.md for lifecycle and resume behavior.
+Custom graph windows retain memoized full-lap curves and scales, changing only the
+viewport and labels. Exact axis bounds are derived only when lap/range/axis changes;
+the editor and window loop add no timer, solve or sample generation. See
+CUSTOM_WINDOWS.md.
 
 Comparison export brings the entry to 411.71 kB JavaScript (124.93 kB gzip), with
 51.73 kB main CSS (11.09 kB gzip). The deferred viewer remains 962.28 kB (257.66 kB

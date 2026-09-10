@@ -14,6 +14,7 @@ import {
   plotViewport,
   viewportFraction,
   viewportLapFraction,
+  type PlotTimeRange,
 } from "../plotViewport";
 import { TabList } from "./TabList";
 import { tabId, tabPanelProps } from "./tabs";
@@ -60,12 +61,15 @@ export function Telemetry({
   const [rangeSelection, setRangeSelection] = useState<{
     lap: Lap;
     sectorId: number | null;
+    customRange?: PlotTimeRange;
   } | null>(null);
   const sectorId =
     rangeSelection?.lap === lap ? (rangeSelection?.sectorId ?? null) : null;
+  const customRange =
+    rangeSelection?.lap === lap ? (rangeSelection?.customRange ?? null) : null;
   const viewport = useMemo(
-    () => plotViewport(lap, axis, sectorId),
-    [lap, axis, sectorId],
+    () => plotViewport(lap, axis, sectorId, customRange),
+    [lap, axis, sectorId, customRange],
   );
   const sectorLoops = useMemo(
     () =>
@@ -84,10 +88,20 @@ export function Telemetry({
   const loopLabel = playback.loopRange
     ? activeLoopSector
       ? `Sector ${activeLoopSector.id}`
-      : "Selected interval"
+      : `Custom interval · ${formatTime(playback.loopRange.start)}–${formatTime(playback.loopRange.end)}`
     : null;
+  const windowRange = customRange ??
+    sectorLoops.find((sector) => sector.id === viewport.sectorId) ?? {
+      start: 0,
+      end: lap?.lapTime ?? 1,
+    };
+  const loopSelected =
+    windowRange.start === playback.loopRange?.start &&
+    windowRange.end === playback.loopRange?.end;
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
-  const cursorFraction = viewportFraction(sample?.[axis] ?? 0, viewport);
+  const cursorPosition =
+    axis === "time" ? playback.time : (sample?.distance ?? 0);
+  const cursorFraction = viewportFraction(cursorPosition, viewport);
   const cursorInside = cursorFraction >= 0 && cursorFraction <= 1;
   const comparison = useMemo(
     () => (lap ? prepareTelemetryComparison(lap, reference) : null),
@@ -192,24 +206,25 @@ export function Telemetry({
     <PlotRangeControls
       lap={lap}
       sectorId={viewport.sectorId}
+      custom={viewport.custom}
+      windowRange={windowRange}
       outside={!cursorInside}
       loopLabel={loopLabel}
-      loopSelected={activeLoopSector?.id === viewport.sectorId}
+      loopSelected={loopSelected}
       onSelect={(sectorId) => {
         if (lap) setRangeSelection({ lap, sectorId });
       }}
+      onCustom={(customRange) => {
+        if (lap) setRangeSelection({ lap, sectorId: null, customRange });
+      }}
       onInspectStart={() => {
         clock.play(false);
-        seekPlot(0);
+        if (customRange) clock.seek(customRange.start);
+        else seekPlot(0);
       }}
-      onLoopSector={() => {
-        const selected = sectorLoops.find(
-          (sector) => sector.id === viewport.sectorId,
-        );
-        if (selected) {
-          if (activeLoopSector?.id === selected.id) clock.loop(true);
-          else clock.focusLoop(selected.start, selected.end);
-        }
+      onLoopRange={() => {
+        if (loopSelected) clock.loop(true);
+        else clock.focusLoop(windowRange.start, windowRange.end);
       }}
     />
   );
@@ -332,6 +347,7 @@ export function Telemetry({
               axis={axis}
               time={playback.time}
               progress={progress}
+              cursorInside={cursorInside}
               viewport={viewport}
               onSeek={seekPlot}
             />

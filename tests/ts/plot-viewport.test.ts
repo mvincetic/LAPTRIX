@@ -23,6 +23,7 @@ describe("sector plot viewport", () => {
       end: 90,
       fullExtent: 100,
       sectorId: 2,
+      custom: false,
       x: 400,
       width: 500,
     });
@@ -31,6 +32,7 @@ describe("sector plot viewport", () => {
       end: 15,
       fullExtent: 20,
       sectorId: 2,
+      custom: false,
       x: 200,
       width: 550,
     });
@@ -57,6 +59,7 @@ describe("sector plot viewport", () => {
         end: 20,
         fullExtent: 20,
         sectorId: null,
+        custom: false,
         x: 0,
         width: 1000,
       });
@@ -67,6 +70,7 @@ describe("sector plot viewport", () => {
       end: 1,
       fullExtent: 1,
       sectorId: null,
+      custom: false,
       x: 0,
       width: 1000,
     });

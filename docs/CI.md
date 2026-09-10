@@ -129,3 +129,15 @@ passes through `e35ae54`: all 101 development journeys (51 in 9.7 minutes and 50
 in 8.0 minutes), 187 TypeScript tests, 146 Python tests, lint/type/build and all
 four production journeys (27.2 seconds). Both revised sector-loop journeys pass,
 along with ghost placement and the new native/timing comparison exports.
+
+The [sleeping-clock run](https://github.com/mvincetic/LAPTRIX/actions/runs/34501143584)
+passes through `1a37057`: all 101 development journeys (51 in 11.1 minutes and
+50 in 8.2 minutes), 194 TypeScript tests, 146 Python tests (39.58 seconds), all
+quality gates and four production journeys (31.7 seconds). Both zero-idle-frame
+checks pass alongside the sector loops and graphics-restoration cases.
+
+The [audio-ordering run](https://github.com/mvincetic/LAPTRIX/actions/runs/34501927841)
+passes through `7ecbc68`: all 105 development journeys (53 in 7.7 minutes and
+52 in 8.7 minutes), 197 TypeScript tests, 146 Python tests (29.56 seconds), all
+quality gates and four production journeys (23.9 seconds). The four new delayed
+activation cases and existing startup-retry/unrelated-error cases all pass.
