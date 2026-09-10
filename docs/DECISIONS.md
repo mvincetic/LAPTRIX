@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-10 — Sleep the shared playback scheduler while paused
+
+**Decision:** Queue clock frames only during owned active playback, cancel at
+pause/reset/finish/cleanup and resume with a fresh timestamp. **Reasoning:** Demand
+rendering removed idle WebGL draws, but the clock still executed 32 callbacks per
+measured half-second. **Consequences:** One canonical clock and one shared frame
+chain remain. Multiple start owners receive idempotent cleanup; paused inspection
+still notifies the renderer. Seven scheduling cases preserve delayed-frame/rate,
+finish, restart and notification behavior, and browser checks now require zero
+idle callbacks as well as draws. See RENDERING.md.
+
 ## 2026-09-10 — Export comparison data through the existing alignment
 
 **Decision:** Add full-lap comparison JSON to Time Delta, using the plot's merged

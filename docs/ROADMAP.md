@@ -82,11 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify both remote CI shards after the sector-loop fixture correction and
-   source-aligned comparison export.
-2. Let the shared playback scheduler sleep while paused, with explicit wake/cleanup
-   and finish/resume tests. The demand viewer already stops drawing, but the clock
-   still requests animation frames while idle.
+1. Verify remote CI for the sleeping playback scheduler; all 101 local browser
+   journeys pass alongside the quality and production gates.
+2. Reproduce overlapping audio-enable completion after a newer mute or successful
+   activation, then preserve the latest explicit audio intent if confirmed.
 3. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -214,12 +213,16 @@ cover independent interpolation, immutable snapshots and maximum input grids;
 browser exports preserve sector/loop inspection and pending work at both widths.
 The sector-loop fixture now observes two real near-boundary crossings without a
 renderer-speed assumption; both cases pass with six-times CPU throttling.
+The shared clock now sleeps while paused, cancels at reset/finish/last cleanup and
+resumes with a fresh timestamp. Seven scheduling cases retain the delayed-frame
+cap, rate, notification behavior and one chain across start owners. Desktop/phone
+checks now require zero idle animation callbacks as well as zero WebGL draws.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 187 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 194 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,

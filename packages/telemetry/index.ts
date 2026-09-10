@@ -294,8 +294,9 @@ export class PlaybackClock {
     loopRange: null as Readonly<{ start: number; end: number }> | null,
   };
   private listeners = new Set<() => void>();
-  private frame = 0;
-  private last = 0;
+  private frame: number | null = null;
+  private last: number | null = null;
+  private owners = 0;
   private emitted = 0;
   getSnapshot = () => this.snapshot;
   subscribe = (callback: () => void) => {
@@ -307,6 +308,29 @@ export class PlaybackClock {
   private emit() {
     for (const fn of this.listeners) fn();
   }
+  private stopFrames() {
+    if (this.frame !== null) cancelAnimationFrame(this.frame);
+    this.frame = null;
+    this.last = null;
+  }
+  private queueFrame() {
+    if (this.owners && this.snapshot.playing && this.frame === null)
+      this.frame = requestAnimationFrame(this.tick);
+  }
+  private tick = (now: number) => {
+    this.frame = null;
+    if (!this.owners || !this.snapshot.playing) return;
+    const delta =
+      this.last === null ? 0 : Math.min((now - this.last) / 1000, 0.1);
+    this.last = now;
+    this.advance(delta);
+    if (!this.snapshot.playing || now - this.emitted > 1000 / 30) {
+      this.emitted = now;
+      this.emit();
+    }
+    // A subscriber may pause or release the clock during notification.
+    this.queueFrame();
+  };
   configure(duration: number) {
     if (!Number.isFinite(duration) || duration <= 0)
       throw new Error("Lap duration must be positive and finite");
@@ -317,6 +341,7 @@ export class PlaybackClock {
       playing: false,
       loopRange: null,
     };
+    this.stopFrames();
     this.emit();
   }
   seek(time: number) {
@@ -341,6 +366,8 @@ export class PlaybackClock {
           ? (this.snapshot.loopRange?.start ?? 0)
           : this.snapshot.time,
     };
+    if (playing) this.queueFrame();
+    else this.stopFrames();
     this.emit();
   }
   rate(rate: number) {
@@ -392,25 +419,16 @@ export class PlaybackClock {
       }
     }
     this.snapshot = { ...state, time, playing };
+    if (!playing) this.stopFrames();
   }
   start() {
-    const tick = (now: number) => {
-      const wasPlaying = this.snapshot.playing;
-      this.advance(this.last ? Math.min((now - this.last) / 1000, 0.1) : 0);
-      this.last = now;
-      if (
-        wasPlaying &&
-        (!this.snapshot.playing || now - this.emitted > 1000 / 30)
-      ) {
-        this.emit();
-        this.emitted = now;
-      }
-      this.frame = requestAnimationFrame(tick);
-    };
-    this.frame = requestAnimationFrame(tick);
+    this.owners++;
+    this.queueFrame();
+    let active = true;
     return () => {
-      cancelAnimationFrame(this.frame);
-      this.last = 0;
+      if (!active) return;
+      active = false;
+      if (--this.owners === 0) this.stopFrames();
     };
   }
 }

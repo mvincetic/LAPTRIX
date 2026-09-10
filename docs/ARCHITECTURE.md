@@ -89,6 +89,12 @@ braking values. A single external playback clock exposes time, play/pause, rate 
 loop state; binary-search interpolation supplies ghost, plots and sound. React's
 high-level setup state does not rerender at playback frequency. The chart component
 subscribes to the clock, while the ghost reads it within the Three.js render loop.
+The clock schedules one animation callback chain only while playing and owned by
+an active `start()` registration. Pause, new-Lap reset, non-looping finish and last
+owner cleanup cancel pending work; resume initializes a fresh timestamp. Multiple
+owners share the chain, cleanup is idempotent, and notification-time pause is
+honored before another frame can be queued. The existing delayed-frame cap and
+forced finish notification remain intact. See RENDERING.md.
 An optional validated start/end interval in that same clock supports explicit
 sector playback loops. Telemetry memoizes sector times from canonical distance
 gates and derives the visible loop label from the clock. No duplicate selection

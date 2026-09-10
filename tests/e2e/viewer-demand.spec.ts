@@ -1,13 +1,19 @@
 import { expect, test } from "@playwright/test";
 
 for (const width of [1600, 390]) {
-  test(`a settled viewer stops drawing and wakes for playback and interaction at ${width}px`, async ({
+  test(`a settled workspace stops drawing and scheduling frames, then wakes for interaction at ${width}px`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 1000 });
     await page.addInitScript(() => {
-      const stats = { draws: 0 };
+      const stats = { draws: 0, frames: 0 };
       Object.assign(window, { laptrixRenderProbe: stats });
+      const request = window.requestAnimationFrame.bind(window);
+      window.requestAnimationFrame = (callback) =>
+        request((time) => {
+          stats.frames++;
+          callback(time);
+        });
       const seen = new WeakSet();
       const original = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (
@@ -59,6 +65,12 @@ for (const width of [1600, 390]) {
           (window as unknown as { laptrixRenderProbe: { draws: number } })
             .laptrixRenderProbe.draws,
       );
+    const frames = () =>
+      page.evaluate(
+        () =>
+          (window as unknown as { laptrixRenderProbe: { frames: number } })
+            .laptrixRenderProbe.frames,
+      );
     async function settled() {
       await expect
         .poll(async () => {
@@ -70,6 +82,9 @@ for (const width of [1600, 390]) {
       const start = await draws();
       await page.waitForTimeout(500);
       expect(await draws()).toBe(start);
+      const frameStart = await frames();
+      await page.waitForTimeout(500);
+      expect(await frames()).toBe(frameStart);
     }
     await expect.poll(draws).toBeGreaterThan(0);
     await settled();

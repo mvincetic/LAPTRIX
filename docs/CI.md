@@ -123,3 +123,9 @@ Both revised journeys pass locally in 18.9 seconds and, in a separate ignored
 fixture using Chromium's six-times CPU throttle, in 49.0 seconds (22.2/25.1 seconds).
 All normal application, assertion and test deadlines remain unchanged. Evidence is
 `artifacts/sector-loop-boundary-browser.log` and `sector-loop-slow-browser.log`.
+
+The [comparison-export run](https://github.com/mvincetic/LAPTRIX/actions/runs/34498132296)
+passes through `e35ae54`: all 101 development journeys (51 in 9.7 minutes and 50
+in 8.0 minutes), 187 TypeScript tests, 146 Python tests, lint/type/build and all
+four production journeys (27.2 seconds). Both revised sector-loop journeys pass,
+along with ghost placement and the new native/timing comparison exports.

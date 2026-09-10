@@ -93,6 +93,10 @@ completed inputs, explicit units and every knot from either sampling grid. Nativ
 channels retain independent distances/times; timing-only references contribute
 only timing. Export preserves the current inspection, loop, project and pending
 setup. See COMPARISON_EXPORT.md.
+The paused workspace now also stops the playback clock's animation requests once
+the viewer settles. Play resumes from the inspected time, and paused seeking or
+camera changes still redraw immediately. This reduces idle browser work without
+adding another clock or changing simulation output.
 Vehicle JSON import/export supports bounded user-supplied parameters through the
 same solver. Imports activate after successful calculation, retain references and
 declared sources/assumptions, and resolve occupied IDs without replacing built-in

@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 187 tests pass.
+- Vitest: 194 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -67,6 +67,15 @@ and no main merge, force-push or repository-settings change was made.
   six native-comparison/plot-range/sector-loop journeys in 1.5 minutes. All four
   production viewer journeys pass in 19.1 seconds. The suite discovers 101
   development journeys. Final lint also covers the new visual-QA script.
+  Sleeping playback passes the full quality gate with 194 TypeScript and 146
+  Python tests (57.28 seconds for Python). The 24 focused clock cases include
+  seven new lifecycle checks; six fail on the previous scheduler while the
+  delayed-frame cap case already passes. Both strengthened browser idle checks
+  fail before the change, observing 32 callbacks in a half-second with zero draws.
+  Six clock/reference/sector browser journeys pass in 1.0 minute; ten audio/import/
+  tool/export/restoration journeys pass in 51.2 seconds. All four production viewer
+  journeys pass in 19.9 seconds. The complete local run passes all 101 development
+  browser journeys in 10.9 minutes.
 - Vite production build: pass; approximately 412 kB initial JavaScript / 125 kB
   gzip, plus a separate 962 kB viewer / 258 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
@@ -98,8 +107,25 @@ and no main merge, force-push or repository-settings change was made.
   wrap before its wall-time estimate expired. The revised real-boundary fixture
   passes both widths locally (18.9 seconds) and with six-times CPU throttling
   (49.0 seconds); playback code and default deadlines remain unchanged. See CI.md.
+  Comparison-export run 34498132296 then passes all 101 development journeys
+  (51/50), 187 TypeScript/146 Python tests, lint/type/build and four production
+  journeys (27.2 seconds), including both revised sector-loop cases.
 
 ## Browser evidence
+
+The existing ghost-label visual workflow was repeated with a separate `clock-idle`
+artifact prefix after the clock change. All 16 orbit/top/chase/tool states at
+1600×1000, 1280×900, 390×844 and 780×390 pass, retaining the complete project,
+40.31-second cursor, pending fuel and reference with no new solve, runtime/WebGL
+error or horizontal overflow. Desktop chase and phone selected-corner top images
+were opened and reviewed; paused camera/seek changes retain the car anchors and
+separate labels. Playback wake and non-looping finish are covered by the browser
+journeys, including zero settled callbacks after each interaction.
+Evidence: `artifacts/clock-idle-math-before.log`, `clock-idle-math.log`,
+`clock-idle-browser-before.log`, `clock-idle-check.log`, `clock-idle-browser.log`,
+`clock-idle-regressions.log`, `clock-idle-qa.log`, `clock-idle-qa.json`,
+`clock-idle-*.png`, `clock-idle-production.log` and `clock-idle-browser-all.log`.
+See RENDERING.md.
 
 Comparison exports pass 12 telemetry states at 1600×1000, 1280×900, 390×844 and
 780×390: native full-lap, native sector and timing-only sector views, including a

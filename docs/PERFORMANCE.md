@@ -1,5 +1,14 @@
 # Performance
 
+The shared clock now sleeps while paused, including new-Lap reset and non-looping
+completion. Both widths previously executed 32 animation callbacks in a half-second
+despite zero WebGL draws; the strengthened settled-workspace tests now require zero
+callbacks and draws. Active playback retains the same rate, delayed-frame cap and
+notification cadence. This measures browser animation work, not battery life or
+all browser/audio processing. Entry JavaScript is 412.05 kB (125.05 kB gzip); main
+CSS remains 51.73 kB (11.09 kB gzip) and deferred viewer JavaScript 962.28 kB
+(257.66 kB gzip). See RENDERING.md for lifecycle and resume behavior.
+
 Comparison export brings the entry to 411.71 kB JavaScript (124.93 kB gzip), with
 51.73 kB main CSS (11.09 kB gzip). The deferred viewer remains 962.28 kB (257.66 kB
 gzip), with 0.53 kB viewer CSS. Report generation runs only on explicit download,

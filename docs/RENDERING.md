@@ -9,8 +9,8 @@ The renderer does not introduce its own simulation time.
 scene after clock actions. While playback is active, its existing Fiber frame
 callback requests another frame. Pausing or reaching a non-looping finish lets
 that chain settle. The subscription is removed when the component unmounts.
-The shared clock retains its scheduling and interpolation. A non-looping finish
-now always publishes its final stopped state, including when it falls inside the
+The shared clock retains its interpolation and notification cadence. A non-looping
+finish now always publishes its final stopped state, including when it falls inside the
 normal 30 Hz notification interval. Previously the snapshot could stop at the finish
 while subscribers retained the previous playing state. A deterministic frame test
 reproduces that boundary and checks that subsequent idle frames stay silent.
@@ -20,6 +20,32 @@ including damping updates. Camera fitting/reset explicitly requests a frame afte
 applying its pose. Fiber also handles scene-property and canvas-size changes.
 No polling timer, second clock, lower-resolution mode or renderer recreation is
 introduced.
+
+## Shared clock lifetime
+
+`PlaybackClock` now schedules animation callbacks only while playing and owned by
+an active `start()` registration. Pausing, configuring a new Lap, reaching a
+non-looping finish or releasing the last owner cancels pending work. Multiple
+registrations share one callback chain, and each cleanup is idempotent. The
+application's existing effect still owns this same clock.
+
+Play wakes the chain. The first resumed callback establishes a fresh timestamp;
+time spent paused or unmounted is not added to playback. Nullable frame/timestamp
+state also handles a valid zero request ID or zero timestamp. Subsequent callbacks
+retain the existing 0.1-second delayed-frame cap and selected rate. Ordinary
+notifications stay at approximately 30 Hz, and a non-looping finish always emits.
+A listener that pauses or releases the clock during notification cannot leave a
+new callback chain behind. Seek/rate/loop actions while paused still notify their
+consumers and can wake the demand viewer without starting clock advancement.
+
+The preceding implementation already stopped WebGL draws while paused but still
+executed 32 animation callbacks in a measured half-second at both desktop and
+phone widths. The strengthened browser checks fail before this change and require
+zero callbacks as well as zero draws after settling. They retain reference names,
+seeking, playback, camera changes, orbit/reset and non-looping completion. Seven
+deterministic scheduling cases cover idle controls, long-pause resume, delayed
+frames/rate, shared owners, new-Lap reset, finish/replay and notification-time pause.
+The separate finish-notification regression remains unchanged.
 
 ## Graphics context restoration
 
@@ -92,7 +118,8 @@ WebGL error assertion, without enabling drawing-buffer preservation in the app.
 
 This reduces idle renderer work; it is not a measured battery-life or frame-rate
 guarantee. Playback and interactive camera movement still render continuously while
-needed, and the application's existing playback scheduler remains active.
+needed. The shared playback scheduler now also sleeps while paused. These checks
+measure animation callbacks and WebGL draws, not all browser processes or audio DSP.
 
 The approach follows the upstream [Fiber performance guide](https://github.com/pmndrs/react-three-fiber/blob/master/docs/advanced/scaling-performance.mdx)
 and was checked against the installed OrbitControls source.
