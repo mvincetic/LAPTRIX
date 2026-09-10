@@ -553,6 +553,28 @@ suite invocation. Evidence: `artifacts/delta-display-check.log`,
 `delta-display-browser.log`, `delta-display-final-ui.log`,
 `delta-display-production.log` and `delta-display-*.png`.
 
+Device-storage recovery passes lint, typecheck, build, all 117 TypeScript and 116
+Python tests. Two controlled failures first reproduced inherited simulation/import
+retry actions after a rejected local Save. Three final browser cases now cover
+desktop/phone Download project, a later successful Save, and successful Save while
+an unrelated reference error is active.
+
+The 21 relevant browser journeys pass in one invocation (4.3 minutes), including
+portable projects, project names, embedded vehicle profiles and reference ordering.
+Recovery downloads equal the full menu export, including pending fuel distinct
+from the completed lap. The previous device save, reference, playback cursor and
+completed results remain unchanged, with zero simulation requests. A download
+retains the storage warning; a successful Save clears only that warning.
+
+Desktop and full phone error screenshots were opened and reviewed. The full error
+and explicit Download project action are readable, with no horizontal overflow.
+Both production viewer journeys pass (11.3 seconds). This change used targeted
+browser coverage; the suite now discovers 76 journeys. Evidence is
+`artifacts/storage-recovery-before.log`, `storage-recovery-results`,
+`storage-recovery-check-final.log`, `storage-recovery-browser.log`,
+`storage-recovery-production.log` and `storage-recovery-error-*.png`.
+The preceding reference-ordering milestone passed remote CI run 34450301662.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

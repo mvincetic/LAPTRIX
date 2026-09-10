@@ -11,6 +11,12 @@ The name can be edited directly in the desktop header or through **Additional
 actions → Rename project** at every width. The dialog preserves draft cancellation,
 the 80-character limit and intentionally blank names; use Save explicitly to persist it.
 
+If device storage is unavailable or full, Save offers **Download project** directly
+in its error banner. It uses the same portable writer as Export project, preserving
+the completed lap, pending setup, source, vehicle and reference without calculation.
+Downloading does not write device storage or dismiss its warning. A later successful
+Save clears that storage warning; unrelated errors retain their own retry actions.
+
 Imports are limited to 10 MB. The complete bundle, track geometry, archived lap
 identity and reference alignment are validated before activation. The selected
 vehicle in catalog mode must match an installed profile's ID and physics;

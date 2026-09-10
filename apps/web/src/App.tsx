@@ -73,6 +73,7 @@ export function App() {
     | "import-track"
     | "import-gpx"
     | "import-vehicle"
+    | "export-project"
   >("retry");
   const fileInput = useRef<HTMLInputElement>(null),
     referenceInput = useRef<HTMLInputElement>(null),
@@ -298,6 +299,7 @@ export function App() {
   };
   const save = () => {
     if (!track) return;
+    setNotice("");
     try {
       localStorage.setItem(
         storageKey,
@@ -312,10 +314,12 @@ export function App() {
           customVehicle: customVehicles.current.get(vehicleId),
         }),
       );
+      if (errorAction === "export-project") setError("");
       setNotice("Project saved on this device");
     } catch {
+      setErrorAction("export-project");
       setError(
-        "Local storage is unavailable or full. Export the project from the actions menu.",
+        "Device storage is unavailable or full. Download a project file to keep this workspace.",
       );
     }
   };
@@ -388,6 +392,29 @@ export function App() {
     }
   };
   const vehicle = catalog?.vehicles.find((v) => v.id === vehicleId);
+  const exportProject = () => {
+    if (!track) return;
+    download(
+      "laptrix-project.json",
+      JSON.stringify(
+        {
+          version: 3,
+          vehicleSource: customVehicles.current.has(vehicleId)
+            ? "embedded"
+            : "catalog",
+          projectName,
+          track,
+          vehicle,
+          setup,
+          lap,
+          reference,
+        },
+        null,
+        2,
+      ),
+    );
+    setMenu(false);
+  };
   const importVehicle = async (file: File) => {
     if (!catalog || !track) return;
     const { id, signal } = beginCalculation();
@@ -867,31 +894,7 @@ export function App() {
                     <Download size={14} />
                     Export telemetry CSV (SI)
                   </button>
-                  <button
-                    disabled={!track}
-                    onClick={() => {
-                      download(
-                        "laptrix-project.json",
-                        JSON.stringify(
-                          {
-                            version: 3,
-                            vehicleSource: customVehicles.current.has(vehicleId)
-                              ? "embedded"
-                              : "catalog",
-                            projectName,
-                            track,
-                            vehicle,
-                            setup,
-                            lap,
-                            reference,
-                          },
-                          null,
-                          2,
-                        ),
-                      );
-                      setMenu(false);
-                    }}
-                  >
+                  <button disabled={!track} onClick={exportProject}>
                     <Save size={14} />
                     Export project
                   </button>
@@ -965,7 +968,8 @@ export function App() {
           <span>{error}</span>
           <button
             onClick={() => {
-              if (errorAction === "import-reference")
+              if (errorAction === "export-project") exportProject();
+              else if (errorAction === "import-reference")
                 referenceInput.current?.click();
               else if (errorAction === "import-project")
                 projectInput.current?.click();
@@ -984,17 +988,19 @@ export function App() {
               else window.location.reload();
             }}
           >
-            {errorAction === "retry"
-              ? "Retry"
-              : errorAction === "import-reference"
-                ? "Import reference again"
-                : errorAction === "import-project"
-                  ? "Import project again"
-                  : errorAction === "import-vehicle"
-                    ? "Import vehicle again"
-                    : errorAction === "import-gpx"
-                      ? "Review GPX again"
-                      : "Import track again"}
+            {errorAction === "export-project"
+              ? "Download project"
+              : errorAction === "retry"
+                ? "Retry"
+                : errorAction === "import-reference"
+                  ? "Import reference again"
+                  : errorAction === "import-project"
+                    ? "Import project again"
+                    : errorAction === "import-vehicle"
+                      ? "Import vehicle again"
+                      : errorAction === "import-gpx"
+                        ? "Review GPX again"
+                        : "Import track again"}
           </button>
           <button aria-label="Dismiss error" onClick={() => setError("")}>
             <X size={15} />

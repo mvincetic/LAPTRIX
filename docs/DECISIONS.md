@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Recover failed device Save through the existing portable export
+
+**Decision:** Give storage failures an explicit Download project action, sharing
+the menu's portable writer. Clear stale success feedback on a Save attempt, and
+clear only an active storage warning after a later successful Save. **Reasoning:**
+The generic error banner inherited either simulation Retry or Import reference
+again when local storage failed, neither of which preserves the project on disk.
+**Consequences:** Recovery retains the completed lap, pending setup, reference,
+cursor and previous device save. Download does not imply that browser storage was
+written. Other failures keep their own messages and retry actions after successful
+Save. The project format and explicit Save contract remain unchanged.
+
 ## 2026-09-10 — Classify comparison displays at their visible precision
 
 **Decision:** Suppress the sign of a displayed zero and share comparison-tone

@@ -110,6 +110,9 @@ that choice; active failures still preserve the existing reference and offer ret
 Comparison signs and colors now match displayed precision. Values shown as zero
 are neutral; resolvable gains/losses stay distinct, and full-precision timing and
 exports remain available. Percentage change uses its own displayed precision.
+If device-local Save fails, Download project offers the complete portable workspace
+without recalculation or changing the previous save. A later successful Save clears
+that warning; unrelated failures retain their own recovery actions.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

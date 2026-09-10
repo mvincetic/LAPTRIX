@@ -240,6 +240,12 @@ Desktop/mobile browser tests compare a lap to itself, preserve a nonzero
 sub-millisecond reference in exported data, distinguish percent/seconds precision,
 and verify meaningful gains/losses without recalculation or cursor movement.
 
+Storage-recovery browser tests deny only the application's local-storage write,
+retaining an earlier saved baseline. They check desktop/phone Download project
+recovery, complete bundle equality, pending versus completed setup, unchanged
+cursor and zero simulation requests. Restoring storage then verifies actual Save
+and warning clearance; successful Save must preserve unrelated reference errors.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

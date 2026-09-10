@@ -57,6 +57,9 @@ calculation generation after file reading and hash verification, including error
 New imports and explicit Set reference invalidate older reference work; calculation
 changes and unmount invalidate it through the shared generation. Superseded work
 returns without changing data or feedback, while current failures retain retry.
+The menu and failed-Save recovery share one portable project writer. A storage
+failure sets an explicit download action and clears stale success feedback. A
+successful Save clears only a current storage warning, retaining unrelated retries.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and

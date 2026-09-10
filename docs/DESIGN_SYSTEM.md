@@ -181,3 +181,7 @@ places for seconds, two for percentage change. Displayed zero and missing values
 use neutral slate `#526379`; zero badges use a pale neutral background with no
 directional icon. Resolvable gains remain green and losses red. A time-delta trace whose whole
 range rounds to zero uses the same neutral stroke while retaining its original path.
+Storage failures use the existing error banner with an explicit **Download project**
+button. The message identifies device storage and preserves the warning after a
+download; successful device Save clears it. The phone layout keeps the full error
+text above its recovery and dismissal controls.
