@@ -57,12 +57,21 @@ inside/outside seeks, both ways to clear an interval, new-Lap reset, notificatio
 and atomic rejection of invalid bounds. Existing full-lap playback, non-looping
 finish notification and native-ghost tests remain in the gate.
 
-Desktop and phone browser journeys observe two actual wraps inside the current
-second sector, using its exported timing as the oracle. They check explicit
+Desktop and phone browser journeys seek near the second sector's end and observe
+two separate real playback crossings, using exported timing as the oracle. Each
+crossing retains playback and keeps every observed cursor inside the interval.
+They check explicit
 activation, keyboard toggling, graph/tab independence, full-lap/disabled looping,
 outside seeking, exact project preservation, zero inspection solves and a new
 result clearing the interval. These are observed playback transitions; the browser
 test does not replace or advance the application's clock.
+The original fixture required two complete sectors within a wall-time estimate.
+Remote run 34495944339 observed only one wrap before that estimate expired. The
+clock deliberately caps each delayed frame to 0.1 seconds, so elapsed wall time
+does not guarantee a fixed amount of playback under slow rendering. The revised
+fixture tests repeated boundary behavior without a software-renderer speed target;
+whole-cycle and multiple-cycle arithmetic remains in deterministic clock tests.
+Ordinary assertion/test deadlines, playback code and rendering are unchanged.
 
 `node scripts/sector-loop-qa.mjs` captures GT telemetry with a Formula reference
 ghost and load overlays at 1600×1000, 1280×900, 390×844 and 780×390. States cover

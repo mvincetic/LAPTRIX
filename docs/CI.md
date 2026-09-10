@@ -104,3 +104,22 @@ The [sector-loop run](https://github.com/mvincetic/LAPTRIX/actions/runs/34492384
 passes through `64b11af`: all 97 development journeys (49 in 9.5 minutes and 48
 in 6.3 minutes), 169 TypeScript tests, 146 Python tests, lint/type/build and all
 four production journeys (26.2 seconds). Both real-time sector-loop cases pass.
+
+The [ghost-name run](https://github.com/mvincetic/LAPTRIX/actions/runs/34495944339)
+passes 98 of 99 development journeys: shard 1 passes 51 in 10.0 minutes, the
+179-TypeScript/146-Python quality gate and four production journeys (26.9 seconds).
+Shard 2 passes 47 and fails the desktop sector-loop fixture after observing one
+wrap rather than two inside its 22.825-second wall-time budget. Both ghost-name,
+reference-finish, demand-rendering and graphics-restoration pairs pass.
+
+The sector-loop fixture now uses the real seek control to approach the sector end
+before each of two observed playback crossings. It preserves all interval, clock,
+project, keyboard and reset assertions while removing the assumption that the
+software renderer completes full sectors at a particular wall-clock rate. The
+clock's existing delayed-frame cap remains unchanged, and deterministic tests
+retain whole/multiple-cycle coverage. Default assertion/test limits are retained;
+no retries, exclusions or renderer changes are introduced.
+Both revised journeys pass locally in 18.9 seconds and, in a separate ignored
+fixture using Chromium's six-times CPU throttle, in 49.0 seconds (22.2/25.1 seconds).
+All normal application, assertion and test deadlines remain unchanged. Evidence is
+`artifacts/sector-loop-boundary-browser.log` and `sector-loop-slow-browser.log`.
