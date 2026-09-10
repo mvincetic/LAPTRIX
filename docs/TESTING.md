@@ -227,6 +227,13 @@ reference formats before source serialization, then verifies Save and fresh mobi
 portable import. These operations retain native data and introduce no calculation
 for a reference change; see SOURCE_IDENTITY.md.
 
+Reference-ordering browser tests hold an earlier file read or actual WebCrypto hash,
+complete a newer action, and then release the older operation. They await digest
+settlement and rendering frames, compare full exported projects and exact cursors,
+and count simulation calls. Coverage includes malformed/valid overlaps, a rejected
+asynchronous file read that directly exercises stale error handling, mobile
+Set reference, a current failure with retry, and a completed vehicle calculation.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

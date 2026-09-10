@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Keep reference imports ordered through reads and hashes
+
+**Decision:** Give reference-file imports a separate request counter, checked with
+the calculation generation after each asynchronous boundary and before reporting
+errors. A new import or explicit Set reference supersedes earlier reference work;
+workspace changes invalidate it through the existing calculation lifecycle.
+**Reasoning:** Controlled browser reads reproduced an older valid file overwriting
+a newer reference and an older malformed file replacing current success with an
+obsolete error. A calculation-only guard did not order reference changes.
+**Consequences:** Superseded work exits quietly. Current failures keep the completed
+reference and retry action; reference changes retain playback and cause no solve.
+No worker, second clock or additional application service is introduced.
+
 ## 2026-09-10 — Canonicalize exact zero and verify legacy source hashes
 
 **Decision:** Encode exact zero as positive zero in both source fingerprint

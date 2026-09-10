@@ -79,6 +79,7 @@ export function App() {
     projectInput = useRef<HTMLInputElement>(null),
     vehicleInput = useRef<HTMLInputElement>(null),
     generation = useRef(0);
+  const referenceGeneration = useRef(0);
   const customTracks = useRef(new Set<string>());
   const customVehicles = useRef(new Map<string, Vehicle>());
   const retryTarget = useRef<{ track: Track; makeReference: boolean } | null>(
@@ -531,19 +532,22 @@ export function App() {
   };
   const importReference = async (file: File) => {
     if (!track) return;
+    const referenceId = ++referenceGeneration.current;
     const currentGeneration = generation.current;
+    const isCurrent = () =>
+      referenceId === referenceGeneration.current &&
+      currentGeneration === generation.current;
     try {
       if (file.size > 5_000_000)
         throw new Error("Reference file must be smaller than 5 MB.");
-      const parsed = parseReference(JSON.parse(await file.text()));
+      const text = await file.text();
+      if (!isCurrent()) return;
+      const parsed = parseReference(JSON.parse(text));
       const restored = await restoreReference(parsed, track);
+      if (!isCurrent()) return;
       if (!restored)
         throw new Error(
           "Reference does not match this source track. Use its original track and start/finish alignment.",
-        );
-      if (generation.current !== currentGeneration)
-        throw new Error(
-          "The workspace changed during import. Import the reference again.",
         );
       setReference(
         isTimingReference(restored)
@@ -557,6 +561,7 @@ export function App() {
       setMenu(false);
       setNotice("Reference imported · current simulation retained");
     } catch (e) {
+      if (!isCurrent()) return;
       setErrorAction("import-reference");
       setError(
         `Reference import failed: ${e instanceof Error ? e.message : "Invalid JSON"}. Current reference kept.`,
@@ -1050,6 +1055,7 @@ export function App() {
           referenceVehicleName={referenceVehicle?.name}
           onReference={() => {
             if (lap) {
+              referenceGeneration.current++;
               setReference(lap);
               setNotice("Current simulation set as reference");
             }

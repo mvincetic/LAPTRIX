@@ -104,6 +104,9 @@ Centerline mode and retry; failed imports and runs preserve their completed work
 Valid zero-valued source fields now retain reference identity through API transport,
 Save and portable projects. Historical references migrate only with verifiable
 source identity; source geometry and recorded timing remain unchanged.
+Reference-file reads and hashes now respect the latest import, explicit reference
+choice or workspace calculation. Late superseded results and errors cannot replace
+that choice; active failures still preserve the existing reference and offer retry.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

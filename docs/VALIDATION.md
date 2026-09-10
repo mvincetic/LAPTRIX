@@ -506,6 +506,30 @@ were opened and reviewed. Evidence is `artifacts/signed-zero-qa.json`,
 The live solver fingerprint matches the checked source. The preceding geometry
 milestone passed remote CI run 34446690815 on the working branch.
 
+Reference-file ordering passes lint, typecheck, build, all 101 TypeScript and 116
+Python tests. Controlled reads first reproduced two failures: an older valid file
+replaced the latest reference, and older malformed JSON published an obsolete error.
+Both pass after separate reference and calculation generation checks.
+
+The full 70-journey development suite passes in one clean invocation (12.9 minutes).
+Final review then added one asynchronous read-rejection case to exercise the catch
+guard directly. The final seven-case ordering file passes (59.4 seconds) with the
+application code unchanged, bringing discovered browser coverage to 71 journeys.
+The cases cover delayed reads/hashes, mobile Set reference, current failure/retry
+and a completed vehicle calculation. They compare complete project exports, retain
+pending setup/cursors and verify zero simulation calls for reference-only actions.
+
+Desktop latest-reference and phone Set reference screenshots were opened and
+reviewed after delayed work completed. The selected references, pending 80 kg fuel,
+20-second cursor and appropriate notices remain visible, with no phone overflow.
+Evidence is `artifacts/reference-ordering-before.log`, `reference-ordering-results`,
+`reference-ordering-check.log`, `reference-ordering-e2e-final.log`,
+`reference-ordering-seven-final.log` and `reference-ordering-*.png`.
+The preceding signed-zero milestone passed remote CI run 34448405332.
+Both production viewer journeys pass (14.0 seconds), recorded in
+`artifacts/reference-ordering-production.log`. Final test-helper edits also pass
+lint and typecheck; the application source stayed fixed through these gates.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,

@@ -6,6 +6,13 @@ not the current solve or playback. Files stay in the browser and are limited to
 includes it. Invalid data, unsupported units or a different source track preserve
 the existing reference and provide an import-specific retry action.
 
+The most recent reference action takes precedence. A new reference import or
+**Set reference** supersedes an earlier pending file read/hash; starting a workspace
+calculation invalidates it too. Superseded work cannot change the reference or
+publish success/error feedback. A failure of the current import still preserves
+the completed reference and offers retry. Reference imports do not pause playback
+or trigger a simulation.
+
 ## LAPTRIX simulation export
 
 Use **Export telemetry JSON** in another run, then import that file. It retains

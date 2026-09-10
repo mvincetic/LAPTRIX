@@ -82,9 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Verify reference-file ordering when an earlier read or hash completes after a
-   newer import, explicit reference selection or workspace calculation. Preserve
-   the user's latest choice and suppress any superseded success/error feedback.
+1. Make displayed zero comparison deltas neutral at their shown precision. A lap
+   compared with its own export currently shows red `+0.000` and green `-0.000`
+   sector differences from interpolation roundoff. Preserve full-precision data
+   while keeping displayed signs, colors and labels consistent.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -140,6 +141,11 @@ Source fingerprints now encode exact zero consistently in Python and TypeScript,
 retaining every other numeric bit and existing positive-zero hashes. Verified
 legacy migration preserves timing/telemetry and avoids false project collisions;
 missing sign information is not guessed. See SOURCE_IDENTITY.md.
+Reference imports now check their own ordering and the workspace calculation
+generation through file reads, hashes and errors. New imports, explicit reference
+selection and calculations supersede older work without stale data or feedback.
+Current failures retain retry, playback and completed reference data. Seven browser
+cases cover delayed reads/hashes and newer choices; see REFERENCE_IMPORT.md.
 
 ## Stabilization evidence
 
@@ -150,14 +156,15 @@ geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
 north direction, verified signed-zero migration and clock/data invariants.
-Sixty-four browser journeys cover the
+Seventy-one browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
 precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
 native channel overlays, sector graph inspection, reviewed GPX import, source
 profile inspection/export, large-track camera visibility, orbit/reset/chase north,
-unsupported optimized-line recovery, signed-zero reference/project round trips and the
+unsupported optimized-line recovery, signed-zero reference/project round trips,
+ordering of delayed reference reads/hashes including asynchronous read rejection, and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

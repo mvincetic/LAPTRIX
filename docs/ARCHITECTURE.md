@@ -52,6 +52,11 @@ Source fingerprints canonicalize exact zero in the shared TypeScript encoder and
 Python sampler, preserving all other float64 bits. `restoreReference` migrates
 historical signed-zero hashes only from verified source bytes or a matching native
 source grid; project and Save readers share that boundary. See SOURCE_IDENTITY.md.
+Reference-file activation separately checks its own request counter and the
+calculation generation after file reading and hash verification, including errors.
+New imports and explicit Set reference invalidate older reference work; calculation
+changes and unmount invalidate it through the shared generation. Superseded work
+returns without changing data or feedback, while current failures retain retry.
 
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and
