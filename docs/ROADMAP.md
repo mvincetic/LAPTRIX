@@ -82,9 +82,10 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Make the north indicator follow the actual camera orientation. It currently
-   uses a fixed icon rotation, which cannot describe direction after orbiting or
-   switching to a telemetry-driven chase view.
+1. Resolve slope-normal weight, projected lateral speed and downhill braking
+   consistently in the quasi-steady model. Independent circular-ramp experiments
+   expose incorrect lateral acceleration and a descending force-demand violation;
+   promote the tested isolated correction with updated work-balance benchmarks.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -120,22 +121,26 @@ Camera fitting now includes source road edges and uses reachable zoom limits and
 source-scaled clipping planes. A valid large source remains rendered on mobile;
 independent projection and framebuffer checks cover fit/reset/resizing without
 changing simulation or playback. See CAMERA_FRAMING.md.
+The north arrow now projects track north through the actual camera, including
+manual orbit and shared-clock chase. Reset drains residual orbit damping before
+applying its fit. Direction labels are accessible, and camera actions retain the
+complete workspace. See CAMERA_FRAMING.md for projection and reset evidence.
 
 ## Stabilization evidence
 
 The local numerical/API suite contains 96 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Eighty-seven TypeScript tests cover
+extremes and analytical work/grip benchmarks. Ninety-two TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
-ghost poses, local geographic conversion, source elevation/grade, camera projection
-and clock/data invariants. Sixty browser journeys cover the
+ghost poses, local geographic conversion, source elevation/grade, camera projection,
+north direction and clock/data invariants. Sixty-two browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
 precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
 native channel overlays, sector graph inspection, reviewed GPX import, source
-profile inspection/export, large-track camera visibility and the
+profile inspection/export, large-track camera visibility, orbit/reset/chase north and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

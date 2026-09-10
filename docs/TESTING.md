@@ -210,6 +210,10 @@ those became explicit responsive checks. The first physics pass found a bad
 speed-envelope update that collapsed speeds toward 1 m/s; the plausible-lap and
 analytical-circle tests protect against its recurrence.
 
+North-indicator tests independently rotate world north through Three.js cameras,
+then exercise actual orbit drags, stable reset and authoritative chase positions
+at desktop/phone widths. Visual QA runs separately with `scripts/north-indicator-qa.mjs`.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

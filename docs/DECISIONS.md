@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-10 — Project north from the actual camera and clear reset inertia
+
+**Decision:** Replace the fixed compass rotation with the projection of track
+north through the active camera quaternion. Reuse CameraRig's frame callback and
+update only changed DOM angles/labels. Drain OrbitControls damping before fitting
+or resetting. **Reasoning:** A fixed icon gives the wrong direction after orbiting
+or entering chase. Real drag tests also exposed residual motion changing a reset
+pose. **Consequences:** The indicator describes track-coordinate north and hides
+when its screen projection is undefined. Project contents, simulation and the
+shared clock are unchanged. Independent rotation checks and desktop/phone browser
+journeys cover orientation and reset behavior; see CAMERA_FRAMING.md.
+
 ## 2026-09-09 — Fit and clip the viewer using accepted source extents
 
 **Decision:** Extract camera-space source/road fitting and derive orbit limits,

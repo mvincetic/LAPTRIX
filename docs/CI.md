@@ -34,3 +34,5 @@ and leave time for artifact upload before the outer job deadline.
 The [first run with that budget and reporting](https://github.com/mvincetic/LAPTRIX/actions/runs/34389383617)
 passed the complete source-profile milestone, including development and production
 browser checks.
+The subsequent [source-scaled camera run](https://github.com/mvincetic/LAPTRIX/actions/runs/34440831541)
+also passed all remote gates through `90631c9`.

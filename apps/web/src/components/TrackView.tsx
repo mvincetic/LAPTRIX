@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type RefObject,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, Line, OrbitControls } from "@react-three/drei";
@@ -20,13 +21,7 @@ import {
   Vector3,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import {
-  Expand,
-  RotateCcw,
-  Navigation,
-  Flag,
-  MousePointer2,
-} from "lucide-react";
+import { Expand, RotateCcw, Flag, MousePointer2 } from "lucide-react";
 import {
   isTimingReference,
   type Lap,
@@ -38,6 +33,7 @@ import { TelemetryGhost } from "./TelemetryGhost";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
+import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
   normalizeTrack,
   ribbonGeometry,
@@ -209,14 +205,21 @@ function CameraRig({
   reset,
   lap,
   clock,
+  northIndicator,
 }: {
   track: Track;
   mode: CameraMode;
   reset: number;
   lap: Lap | null;
   clock: PlaybackClock;
+  northIndicator: RefObject<HTMLDivElement | null>;
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
+  const lastNorth = useRef<{
+    node: HTMLDivElement;
+    angle: number | null;
+    label: string;
+  } | null>(null);
   const { camera, size } = useThree();
   const fit = useMemo(
     () =>
@@ -228,6 +231,14 @@ function CameraRig({
     [track, mode, size.width, size.height],
   );
   useEffect(() => {
+    // Drain residual drag/pan motion before imposing a new fitted pose.
+    const orbit = controls.current;
+    if (orbit) {
+      const damping = orbit.enableDamping;
+      orbit.enableDamping = false;
+      orbit.update();
+      orbit.enableDamping = damping;
+    }
     camera.position.set(...fit.position);
     camera.lookAt(...fit.target);
     if (camera instanceof PerspectiveCamera) {
@@ -235,19 +246,43 @@ function CameraRig({
       camera.far = fit.far;
       camera.updateProjectionMatrix();
     }
-    controls.current?.target.set(...fit.target);
-    controls.current?.update();
+    orbit?.target.set(...fit.target);
+    orbit?.update();
   }, [camera, fit, reset]);
   useFrame(() => {
-    if (mode !== "chase" || !lap) return;
-    const state = clock.getSnapshot(),
-      s = interpolate(lap.samples, state.time),
-      next = interpolate(lap.samples, (state.time + 0.3) % lap.lapTime);
-    const dx = next.x - s.x,
-      dz = next.z - s.z,
-      len = Math.hypot(dx, dz) || 1;
-    camera.position.set(s.x - (dx / len) * 50, s.y + 25, s.z - (dz / len) * 50);
-    camera.lookAt(next.x, next.y + 2, next.z);
+    if (mode === "chase" && lap) {
+      const state = clock.getSnapshot(),
+        s = interpolate(lap.samples, state.time),
+        next = interpolate(lap.samples, (state.time + 0.3) % lap.lapTime);
+      const dx = next.x - s.x,
+        dz = next.z - s.z,
+        len = Math.hypot(dx, dz) || 1;
+      camera.position.set(
+        s.x - (dx / len) * 50,
+        s.y + 25,
+        s.z - (dz / len) * 50,
+      );
+      camera.lookAt(next.x, next.y + 2, next.z);
+    }
+    // OrbitControls updates before this callback; chase lookAt above also updates rotation.
+    const node = northIndicator.current;
+    if (!node) return;
+    const bearing = northScreenAngle(camera.quaternion);
+    const angle =
+      bearing === null ? null : (Math.round(bearing * 100) % 36000) / 100;
+    const previous = lastNorth.current;
+    if (previous?.node === node && previous.angle === angle) return;
+    const arrow = node.querySelector("svg");
+    if (arrow) {
+      arrow.style.transform = angle === null ? "" : `rotate(${angle}deg)`;
+      arrow.style.visibility = angle === null ? "hidden" : "visible";
+    }
+    const label = northScreenLabel(angle);
+    if (previous?.node !== node || previous.label !== label) {
+      node.setAttribute("aria-label", label);
+      node.title = label;
+    }
+    lastNorth.current = { node, angle, label };
   });
   return (
     <OrbitControls
@@ -313,6 +348,7 @@ export function TrackView({
   const referenceLap = alignedNativeReference(lap, reference);
   const referenceVisible = showReference && !!referenceLap;
   const tabsPrefix = useId();
+  const northIndicator = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null),
     frame = useMemo(() => normalizeTrack(track), [track]);
   const widths = useMemo(
@@ -577,6 +613,7 @@ export function TrackView({
               reset={reset}
               lap={lap}
               clock={clock}
+              northIndicator={northIndicator}
             />
           </Canvas>
         </SceneBoundary>
@@ -590,8 +627,21 @@ export function TrackView({
             <MousePointer2 size={12} /> Drag to orbit · scroll to zoom
           </span>
         </div>
-        <div className="compass">
-          <Navigation size={24} strokeWidth={1.3} />
+        <div
+          ref={northIndicator}
+          className="compass"
+          role="img"
+          aria-label="North direction unavailable until the view is ready."
+        >
+          <svg width={24} height={24} viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M12 2 20 21 12 17 4 21Z"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.3}
+              strokeLinejoin="round"
+            />
+          </svg>
           <span>N</span>
         </div>
         <div className="scene-bottom">

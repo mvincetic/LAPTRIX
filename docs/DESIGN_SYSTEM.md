@@ -170,3 +170,6 @@ guide and a dark selected-segment cursor. A named range input provides keyboard
 access to the same source selection. Numerical fields identify endpoint elevations,
 distance, length and grade; captions explain original samples and raw totals.
 The compact launcher and default GPX collapse keep the usual review surfaces compact.
+The viewer's compact north arrow rotates with the camera while N stays readable.
+Hover text and its accessible name describe the projected screen direction; an
+undefined projection hides the arrow and explains the viewing-axis case.

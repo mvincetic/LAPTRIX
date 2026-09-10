@@ -674,7 +674,8 @@ select {
   z-index: 11;
 }
 .compass svg {
-  transform: rotate(-15deg);
+  transform-origin: center;
+  visibility: hidden;
 }
 .legend {
   position: absolute;

@@ -8,15 +8,15 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 87 tests pass.
+- Vitest: 92 tests pass.
 - Python numerical/API tests: 96 tests pass.
-- Playwright: 60 development browser journeys pass; two viewer journeys also run
+- Playwright: 62 development browser journeys pass; two viewer journeys also run
   against built production assets.
 - Vite production build: pass; approximately 398 kB initial JavaScript / 121 kB
-  gzip, plus a separate 952 kB viewer / 254 kB gzip.
+  gzip, plus a separate 954 kB viewer / 255 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package
   changes were made in the following viewer/geometry/workspace milestones.
-- GitHub Actions passed through `44da7e3`, including source-profile inspection,
+- GitHub Actions passed through `90631c9`, including source-scaled camera framing,
   the Chrome-source fix and the expanded bounded browser budget. Each following
   milestone reruns CI on push. See CI.md for the evidence and scoped changes.
 
@@ -416,6 +416,23 @@ widths and an unchanged 20-second cursor. The large phone overview contains 2,28
 blue pixels in orbit and 2,752 in top view. These are coarse visibility checks,
 not exact raster snapshots. Before images remain in `artifacts/camera-before-*.png`;
 final evidence and gate logs use `artifacts/camera-framing-*`.
+
+The camera-derived north indicator passes all lint/typecheck/build gates, 92
+TypeScript and 96 Python tests, all 62 development browser journeys (11.2 minutes)
+and both production viewer journeys. The initial bundle stays at 398.17 kB /
+120.86 kB gzip; the viewer is 953.50 kB / 254.82 kB gzip.
+
+Independent quaternion/vector checks cover orbit, pitch, roll, sign equivalence
+and undefined north projection. Real desktop/phone drags initially reproduced
+reset errors of 71.44° and 29.68° from residual damping. Draining that motion before
+the fit makes both regression journeys pass, including two independently computed
+chase headings, complete project equality, pending fuel and zero simulation calls.
+Visual QA at 1600/1280/390 px records zero runtime errors and exact document widths.
+Desktop rotated, phone reset/chase and 1280 px chase screenshots were opened and
+reviewed. The arrow is legible and follows the changed view; playback remains at
+20 seconds until explicitly seeking 40. Evidence is `artifacts/north-*.png` and
+`north-indicator-qa.json`; gate logs use `north-indicator-*`. The initial failing
+reset evidence remains in `north-reset-before.log` and `north-reset-before-390.png`.
 
 ## Scope of the evidence
 

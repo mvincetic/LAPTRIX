@@ -32,6 +32,9 @@ planes, including bounded terrain context. CameraRig applies the fit and project
 matrix after source/mode/size changes or reset; chase still consumes the shared
 telemetry clock. The helper remains inside the deferred viewer dependency graph.
 See CAMERA_FRAMING.md for bounds and independent projection checks.
+CameraRig clears residual orbit damping before fitting. The north indicator
+projects `-z` through the actual camera quaternion after its existing frame update;
+only changed arrow angles and accessible direction labels write to the DOM.
 `packages/track-engine/diagnostics.ts` separately inspects original centerline
 segments for projected contacts and interpolated height gaps. The settings panel
 memoizes the complete bounded scan on source points and caps retained details at

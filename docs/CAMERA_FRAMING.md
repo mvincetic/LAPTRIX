@@ -26,8 +26,35 @@ OrbitControls. No depth tests are disabled and no source geometry is changed.
 
 The bounds describe the original road and procedural context around its fitted
 target. Arbitrary panning can still move the source off screen; Reset restores the
-fit. Screen-space labels can overlap at compact sizes. Source fingerprints do not
-authenticate arbitrary imported reference trajectories outside the source road.
+fit. Reset drains residual orbit/pan damping before applying the fitted pose, so
+an unfinished drag cannot rotate the restored view. Screen-space labels can overlap
+at compact sizes. Source fingerprints do not authenticate arbitrary imported
+reference trajectories outside the source road.
+
+## North direction
+
+The viewer arrow projects world north (`-z`, with east `+x` and up `+y`) onto the
+actual camera's right/up axes. It therefore follows manual orbiting, top view and
+the current telemetry-driven chase pose. The fixed N identifies the arrow; it is
+track-coordinate north, not a magnetic bearing or proof of source georeferencing.
+Its accessible name and hover text describe one of eight screen directions. If
+north lies along the viewing axis, its screen direction is undefined: the arrow
+is hidden and the label explains this case. It also starts hidden while the
+camera is unavailable.
+
+`north-indicator.ts` derives the direction from the camera's unit quaternion.
+CameraRig reads it after OrbitControls and the existing chase update within the
+existing frame callback. DOM rotation changes only when its rounded 0.01-degree
+value changes; the label changes only at direction boundaries. This creates no
+additional clock, simulation request or per-frame React state.
+
+Five unit tests compare the helper against an independent Three.js vector
+rotation across azimuth, pitch and roll, including cardinal, translation,
+quaternion-sign and degenerate cases. Two browser journeys use real orbit drags,
+reset and chase at two shared-clock positions, retaining complete exported project
+contents and pending setup. They exposed and now protect against residual damping
+moving the camera after reset. `node scripts/north-indicator-qa.mjs` captures
+top/orbit/reset/chase evidence at 1600, 1280 and 390 px in ignored `artifacts/`.
 
 ## Regression evidence
 
