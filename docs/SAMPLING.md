@@ -31,13 +31,17 @@ Exports retain both the original project track and the actual simulation grid.
 to source-track progress from zero to one. `alignment.trackFingerprint` hashes the
 physical source fields and sector fractions, excluding descriptive metadata. The
 browser and Python use the same prefix and little-endian float64 byte layout and
-SHA-256; tests check their shared dataset fingerprint.
+SHA-256; exact zeros use positive-zero bytes so JSON transport preserves identity.
+Other values remain exact and the source object is unchanged. Tests check their
+shared dataset fingerprint; see SOURCE_IDENTITY.md for the full byte contract and
+verified compatibility with older signed-zero hashes.
 
 Corner comparison interpolates reference time at the current corner's source entry
 and exit progress. It no longer assumes equal sample counts or raw racing-line
 distances. Saved references must match the source fingerprint. Legacy references
-can be migrated only after verifying their positions against source points and
-their recorded lateral offsets. Unrelated geometry with a reused ID is rejected.
+without alignment can be migrated only after verifying their positions against
+source points and their recorded lateral offsets. Unrelated geometry with a reused
+ID is rejected.
 
 Track v2 interprets sector fractions at fixed source-centerline positions, then
 maps them through alignment to each solved line. Track v1 retains fractions of

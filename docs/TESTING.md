@@ -220,6 +220,13 @@ seeds and ensure rejection precedes speed-profile evaluation. A real API/browser
 journey checks failure preservation and Centerline retry; the separate
 `scripts/line-geometry-qa.mjs` records desktop and phone recovery layouts.
 
+Signed-zero tests share a known cross-language hash, protect exact nonzero values,
+and exercise verified legacy source/native-grid migration through reference and
+project readers. The browser imports literal negative-zero JSON, restores both
+reference formats before source serialization, then verifies Save and fresh mobile
+portable import. These operations retain native data and introduce no calculation
+for a reference change; see SOURCE_IDENTITY.md.
+
 Passing numerical tests establishes behavior of this approximation only. No
 surveyed circuit, measured car specification or recorded lap has been used to
 validate real-world accuracy. Full production browser/device and accessibility

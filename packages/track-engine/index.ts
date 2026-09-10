@@ -3,6 +3,13 @@ import type { Point, Track } from "../shared/schema";
 export type Vec3 = [number, number, number];
 /** Fingerprint only the physical track contract, using the backend's byte layout. */
 export async function trackFingerprint(track: Track) {
+  return fingerprint(track, true);
+}
+/** Reader compatibility only: verify a historical hash against its original sign bits. */
+export async function legacyTrackFingerprint(track: Track) {
+  return fingerprint(track, false);
+}
+async function fingerprint(track: Track, canonicalZero: boolean) {
   const values = [
     track.points.length,
     track.sectorFractions.length,
@@ -15,7 +22,11 @@ export async function trackFingerprint(track: Track) {
   bytes.set(prefix);
   const view = new DataView(bytes.buffer);
   values.forEach((value, i) =>
-    view.setFloat64(prefix.length + i * 8, value, true),
+    view.setFloat64(
+      prefix.length + i * 8,
+      canonicalZero && value === 0 ? 0 : value,
+      true,
+    ),
   );
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return `sha256:${Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("")}`;

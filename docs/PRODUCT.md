@@ -101,6 +101,9 @@ remain outside the development model.
 An optimized line that exceeds the supported slope or reverses a source interval
 now produces a recoverable explanation before calculation. Users can select
 Centerline mode and retry; failed imports and runs preserve their completed work.
+Valid zero-valued source fields now retain reference identity through API transport,
+Save and portable projects. Historical references migrate only with verifiable
+source identity; source geometry and recorded timing remain unchanged.
 
 Future work may add independently sourced circuits, additional vehicle generations,
 validated tyre and transient dynamics, measured channel comparison, broader setup studies,

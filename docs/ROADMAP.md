@@ -82,11 +82,9 @@ its finish pose. Timing-only files remain comparisons without invented positions
 
 ## Next highest-value work
 
-1. Make source fingerprints stable across signed-zero JSON round trips. An
-   accepted `banking: -0` changes hash when serialization writes `0`, so its own
-   generated lap cannot be restored as a reference. Normalize zero for hashing
-   while preserving verifiable older reference identities; test compatibility
-   without weakening rejection of genuinely different geometry.
+1. Verify reference-file ordering when an earlier read or hash completes after a
+   newer import, explicit reference selection or workspace calculation. Preserve
+   the user's latest choice and suppress any superseded success/error feedback.
 2. Revisit measured calibration and reusable 3D data when complete inputs are
    available; add transient dynamics only with independent benchmarks and sources.
 
@@ -138,23 +136,28 @@ checks. Unsupported slopes and reversed intervals fail before the speed envelope
 with Centerline recovery advice. Actual API/browser tests preserve the complete
 workspace on failure and recover the valid source; phone errors use a full text
 row above their actions. See LINE_GEOMETRY.md.
+Source fingerprints now encode exact zero consistently in Python and TypeScript,
+retaining every other numeric bit and existing positive-zero hashes. Verified
+legacy migration preserves timing/telemetry and avoids false project collisions;
+missing sign information is not guessed. See SOURCE_IDENTITY.md.
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 111 passing tests, including coupled quadratic
+The local numerical/API suite contains 116 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes and analytical work/grip benchmarks. Ninety-two TypeScript tests cover
+extremes and analytical work/grip benchmarks. The 101 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade, camera projection,
-north direction and clock/data invariants. Sixty-three browser journeys cover the
+north direction, verified signed-zero migration and clock/data invariants.
+Sixty-four browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
 precise cursor inspection, reference ghosts, embedded vehicle profiles, project naming,
 native channel overlays, sector graph inspection, reviewed GPX import, source
 profile inspection/export, large-track camera visibility, orbit/reset/chase north,
-unsupported optimized-line recovery and the
+unsupported optimized-line recovery, signed-zero reference/project round trips and the
 optional structured-tool contract. Two viewer journeys also run against production
 assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.

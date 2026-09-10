@@ -31,6 +31,9 @@ solve and any required baseline succeed. A failed file check or API request keep
 the prior workspace, with an import-specific retry. Playback pauses while loading.
 Imports are not automatically saved to browser storage; use Save explicitly.
 
+Exact zero signs do not change physical identity across JSON transport. Historical
+reference hashes migrate only with verified source evidence; see SOURCE_IDENTITY.md.
+
 An existing track ID with the same physical fingerprint and track-format version
 reuses that loaded track. If the ID points to different geometry or sector
 semantics, the imported track receives a local ID

@@ -10,8 +10,11 @@ the existing reference and provide an import-specific retry action.
 
 Use **Export telemetry JSON** in another run, then import that file. It retains
 the vehicle snapshot and identifies the imported filename. Current v1 exports
-carry their source fingerprint/progress. Older exports can be restored only when
-their sample positions and offsets verify against the original source grid.
+carry their source fingerprint/progress. Older unaligned exports can be restored
+only when their sample positions and offsets verify against the original source
+grid. Historical signed-zero hashes require their original source bytes or a
+verified native source grid; see SOURCE_IDENTITY.md. New hashes remain stable when
+JSON turns `-0` into `0`, without rounding other geometry.
 The reader accepts 41–2,001 simulation samples, including the closed endpoint.
 A project export is a bundle; use **Import project JSON** to restore and recalculate
 that workspace. To use only its archived lap as a comparison, import its `lap`

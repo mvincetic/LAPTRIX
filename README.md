@@ -119,6 +119,8 @@ and portable projects retain its converted source. See [GPX_IMPORT](docs/GPX_IMP
 **Import reference JSON** accepts LAPTRIX exports or the timing-only external
 format. **Export timing reference** provides a working format example. See
 [REFERENCE_IMPORT](docs/REFERENCE_IMPORT.md) for units, alignment and provenance.
+Source hashes survive signed-zero JSON round trips; older hashes require verified
+migration. See [SOURCE_IDENTITY](docs/SOURCE_IDENTITY.md).
 Select **Time Delta** under Telemetry graphs to inspect where the current lap gains
 or loses time. Negative values are faster; positive values are slower. Clicking,
 dragging, corner selection and playback all use the existing shared cursor.

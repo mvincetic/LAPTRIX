@@ -48,6 +48,11 @@ dialog keeps its inspector mounted so selection survives closure. Local segment
 selection has no clock or API dependency; export reuses the source fingerprint and
 download helper. Resampling a lap does not replace the original source array.
 
+Source fingerprints canonicalize exact zero in the shared TypeScript encoder and
+Python sampler, preserving all other float64 bits. `restoreReference` migrates
+historical signed-zero hashes only from verified source bytes or a matching native
+source grid; project and Save readers share that boundary. See SOURCE_IDENTITY.md.
+
 Simulation telemetry is authoritative. The renderer draws solved positions and
 braking values. A single external playback clock exposes time, play/pause, rate and
 loop state; binary-search interpolation supplies ghost, plots and sound. React's

@@ -4,6 +4,7 @@ import {
   type Track,
 } from "../../../packages/shared/schema";
 import {
+  legacyTrackFingerprint,
   normalizeTrack,
   trackFingerprint,
 } from "../../../packages/track-engine";
@@ -20,10 +21,34 @@ export async function restoreReference(
   )
     return null;
   const fingerprint = await trackFingerprint(track);
-  if (reference.alignment)
-    return reference.alignment.trackFingerprint === fingerprint
-      ? reference
+  if (reference.alignment) {
+    const declared = reference.alignment.trackFingerprint;
+    if (declared === fingerprint) return reference;
+    let verified = declared === (await legacyTrackFingerprint(track));
+    // A native source grid may retain the historical signs after a saved source
+    // loses them in JSON. Require both exact old bytes and current physical identity.
+    // Resampled points and racing-line samples cannot prove an original source.
+    if (!verified && !isTimingReference(reference)) {
+      const sampling = reference.sampling;
+      if (
+        sampling?.mode === "source" &&
+        sampling.sourcePointCount === track.points.length &&
+        sampling.pointCount === track.points.length &&
+        sampling.points.length === track.points.length
+      ) {
+        const original = { ...track, points: sampling.points };
+        verified =
+          declared === (await legacyTrackFingerprint(original)) &&
+          fingerprint === (await trackFingerprint(original));
+      }
+    }
+    return verified
+      ? {
+          ...reference,
+          alignment: { ...reference.alignment, trackFingerprint: fingerprint },
+        }
       : null;
+  }
   if (isTimingReference(reference)) return null;
   if (reference.samples.length !== track.points.length + 1) return null;
   const frame = normalizeTrack(track);

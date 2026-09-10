@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Canonicalize exact zero and verify legacy source hashes
+
+**Decision:** Encode exact zero as positive zero in both source fingerprint
+implementations. Preserve all other bits, the v1 prefix and existing positive-zero
+hashes. Keep a raw-byte reader helper for verified legacy migration. **Reasoning:**
+JSON accepts negative zero but browser serialization erases its sign, making a
+valid source reject its own API lap and falsely collide during project import.
+**Consequences:** Source data and telemetry remain unchanged. Historical references
+can migrate when their supplied source or native source grid proves the old hash
+and canonical identity. Lost sign information is not guessed; resampled grids
+cannot prove an original source. Track-version reuse rules remain intact. See
+SOURCE_IDENTITY.md for encoding, compatibility and regression evidence.
+
 ## 2026-09-10 — Validate the optimized seed before its speed envelope
 
 **Decision:** Share one geometry check between the initial optimized seed and

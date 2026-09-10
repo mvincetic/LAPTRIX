@@ -12,8 +12,11 @@ def track_fingerprint(track: Track):
     values = [len(track.points), len(track.sectorFractions), *track.sectorFractions]
     for p in track.points:
         values.extend((p.x, p.y, p.z, p.widthLeft, p.widthRight, p.banking))
-    # Explicit little-endian doubles match the browser implementation, including integer coordinates.
-    payload = b"laptrix.track.v1\0" + np.asarray(values, dtype="<f8").tobytes()
+    # JSON.stringify erases negative zero. Canonicalize only exact zero, preserving
+    # every other little-endian double and the existing positive-zero identities.
+    encoded = np.asarray(values, dtype="<f8")
+    encoded[encoded == 0] = 0.0
+    payload = b"laptrix.track.v1\0" + encoded.tobytes()
     return "sha256:" + hashlib.sha256(payload).hexdigest()
 
 

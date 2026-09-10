@@ -480,6 +480,32 @@ Evidence is `artifacts/line-geometry-qa.json`, `line-geometry-*.png`,
 measurements and the discrete guard's limits. The previous slope-force milestone
 also passed remote CI run 34444918563 on the working branch.
 
+Signed-zero source identity passes all 101 TypeScript and 116 Python tests, lint,
+typecheck and build. Seven new TypeScript cases and all five new Python cases
+failed before correction; all fourteen now pass. The live API reproduction now
+has the same source hash before serialization, after serialization and in its lap,
+and restores the reference. Positive-zero identities remain unchanged; exact
+subnormal coordinate changes still have different hashes. See SOURCE_IDENTITY.md.
+
+The 64-journey browser run completed with 63 passes (12.2 minutes). One GPX journey
+could not start because Chromium failed to download `App.tsx` with
+`net::ERR_NO_BUFFER_SPACE`, leaving a blank page before any application action.
+Its trace is preserved in `artifacts/signed-zero-gpx-transport-failure`. The affected
+journey passed unchanged in a fresh worker (9.3 seconds); timeouts and assertions
+were not relaxed. Both production viewer journeys passed (11.6 seconds). Logs are
+`signed-zero-e2e-final.log`, `signed-zero-gpx-rerun.log` and
+`signed-zero-production.log`. The initial full-run transport failure remains part
+of this record, rather than being represented as a clean single invocation.
+
+Separate signed-zero visual QA imports its native lap, Saves/restores, and captures
+1600/1280/390 px states. No page/console errors or horizontal overflow were recorded;
+all views retain the 20-second cursor, the 1:11.514 lap and imported native reference.
+Reference import makes no simulation request. Desktop and full phone screenshots
+were opened and reviewed. Evidence is `artifacts/signed-zero-qa.json`,
+`signed-zero-restored-*.png`, `signed-zero-visual.log` and `signed-zero-check.log`.
+The live solver fingerprint matches the checked source. The preceding geometry
+milestone passed remote CI run 34446690815 on the working branch.
+
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,
