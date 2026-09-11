@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-11 — Bound daylight detail to an original environment and current-car shadow
+
+**Decision:** Use an authored analytic sky/ground environment, hemisphere fill and
+a fixed sun direction. A single 1024² map follows the actual current vehicle after
+its telemetry update, reusing the map through paused camera changes. **Reasoning:**
+Reflections expose vehicle contours and cast shadows establish contact at physical
+scale without a circuit-sized shadow map or external imagery. **Consequence:**
+Original source data and all simulation clocks remain intact; references receive
+light but do not cast another road shadow. Explicit context restoration and full
+compositor comparisons cover GPU recovery. The validation pass also exposed
+frame-dependent orbit inertia, reproduced with new lighting disabled. Time-based
+decay preserves the existing 60 Hz feel and resolves long tails on slower frames;
+the idle check now also requires an empty animation queue. See DAYLIGHT.md.
+
 ## 2026-09-11 — Introduce original Dev Track assets through a real GLB pipeline
 
 **Decision:** Give the existing timing line two source-bound original signs and

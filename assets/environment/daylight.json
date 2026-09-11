@@ -1,0 +1,27 @@
+{
+  "id": "laptrix.daylight.v1",
+  "background": "#edf2f5",
+  "hemisphere": { "sky": "#edf4ff", "ground": "#59644e", "intensity": 1.1 },
+  "environment": {
+    "width": 128,
+    "height": 64,
+    "sky": "#bdd8f5",
+    "horizon": "#edf2f5",
+    "ground": "#7a876b",
+    "gradientPower": 0.35,
+    "sunRadiance": 3,
+    "sunSpread": 0.015,
+    "intensity": 0.6
+  },
+  "sun": {
+    "direction": [-8, 18, 7],
+    "intensity": 2.1,
+    "distance": 40,
+    "shadowRadius": 12,
+    "shadowSize": 1024,
+    "near": 1,
+    "far": 80,
+    "bias": -0.00015,
+    "normalBias": 0.03
+  }
+}

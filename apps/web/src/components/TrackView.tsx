@@ -15,6 +15,7 @@ import {
   BufferGeometry,
   Color,
   DoubleSide,
+  PCFShadowMap,
   PerspectiveCamera,
   type Group,
 } from "three";
@@ -29,6 +30,7 @@ import {
 } from "../../../../packages/shared/schema";
 import { TelemetryGhost } from "./TelemetryGhost";
 import { Landscape } from "./Landscape";
+import { Daylight } from "./Daylight";
 import { RoadDetails } from "./RoadDetails";
 import { CornerCallouts } from "./CornerCallouts";
 import { ApexPoints } from "./ApexPoints";
@@ -50,6 +52,7 @@ import {
 import { roadShoulders, roadSurface } from "../road-presentation";
 import { surfaceGrain } from "../surface-grain";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
+import { orbitDampingFactor } from "../orbit-damping";
 import { normalizeTrack, type Vec3 } from "../../../../packages/track-engine";
 import {
   alignedNativeReference,
@@ -160,12 +163,19 @@ function CameraRig({
   vehicle?: Vehicle;
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
+  const dragging = useRef(false);
   const lastNorth = useRef<{
     node: HTMLDivElement;
     angle: number | null;
     label: string;
   } | null>(null);
   const { camera, size, invalidate } = useThree();
+  useFrame((_, delta) => {
+    if (controls.current)
+      controls.current.dampingFactor = dragging.current
+        ? 0.12
+        : orbitDampingFactor(delta);
+  }, -2); // Configure decay before Drei advances its controls at -1.
   const fit = useMemo(
     () =>
       fitTrackCamera(
@@ -248,6 +258,13 @@ function CameraRig({
       maxPolarAngle={Math.PI * 0.48}
       enableDamping
       dampingFactor={0.12}
+      onStart={() => {
+        dragging.current = true;
+        if (controls.current) controls.current.dampingFactor = 0.12;
+      }}
+      onEnd={() => {
+        dragging.current = false;
+      }}
     />
   );
 }
@@ -449,12 +466,11 @@ export function TrackView({
               far: 12000,
             }}
             dpr={[1, 1.5]}
+            shadows={{ type: PCFShadowMap }}
             gl={{ antialias: true, powerPreference: "high-performance" }}
           >
             <PlaybackFrames clock={clock} />
-            <color attach="background" args={["#edf2f5"]} />
-            <ambientLight intensity={1.65} />
-            <directionalLight position={[-800, 1800, 700]} intensity={2.1} />
+            <Daylight currentGhost={currentGhost} clock={clock} lap={lap} />
             {layers.terrain && (
               <Landscape
                 track={track}

@@ -31,7 +31,7 @@ assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
   manifest.assets.length,
-  4,
+  5,
   "Register a validator when adding another asset package.",
 );
 const ids = new Set();
@@ -44,6 +44,7 @@ for (const entry of manifest.assets) {
       "laptrix.formula-body.v1",
       "laptrix.gt-body.v1",
       "laptrix.dev-start-pylon.v1",
+      "laptrix.daylight.v1",
     ].includes(entry.id),
   );
   for (const field of ["origin", "provenance", "rights"])
@@ -55,7 +56,38 @@ for (const entry of manifest.assets) {
     await readFile(await ownedPath(entry.parameters), "utf8"),
   );
   assert.equal(asset.id, entry.id);
-  if (entry.id === "laptrix.dev-start-pylon.v1") {
+  if (entry.id === "laptrix.daylight.v1") {
+    assert.equal(entry.format, "procedural");
+    assert.equal(entry.category, "environment");
+    for (const color of [
+      asset.background,
+      asset.hemisphere.sky,
+      asset.hemisphere.ground,
+      asset.environment.sky,
+      asset.environment.horizon,
+      asset.environment.ground,
+    ])
+      assert.match(color, /^#[0-9a-f]{6}$/);
+    assert.equal(asset.environment.width, 128);
+    assert.equal(asset.environment.height, 64);
+    bounded(asset.environment.gradientPower, 0.1, 2);
+    bounded(asset.environment.sunRadiance, 0, 5);
+    bounded(asset.environment.sunSpread, 0.005, 0.1);
+    bounded(asset.environment.intensity, 0, 1);
+    bounded(asset.hemisphere.intensity, 0, 2);
+    assert.equal(asset.sun.direction.length, 3);
+    asset.sun.direction.forEach((n) => bounded(n, -30, 30));
+    assert(asset.sun.direction[1] > 0);
+    bounded(asset.sun.intensity, 0, 4);
+    bounded(asset.sun.distance, 20, 60);
+    bounded(asset.sun.shadowRadius, 8, 16);
+    assert.equal(asset.sun.shadowSize, 1024);
+    bounded(asset.sun.near, 0.1, asset.sun.distance - 10);
+    bounded(asset.sun.far, asset.sun.distance + 10, 100);
+    bounded(asset.sun.bias, -0.001, 0);
+    bounded(asset.sun.normalBias, 0, 0.05);
+    continue;
+  } else if (entry.id === "laptrix.dev-start-pylon.v1") {
     assert.equal(entry.format, "glb");
     assert.equal(entry.category, "trackside");
     const bytes = await readFile(await ownedPath(entry.runtimeFile));

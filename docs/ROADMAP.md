@@ -4,7 +4,7 @@
 
 The technical MVP is sufficient. The next sequence improves the actual experience
 of choosing a circuit, calculating a lap, watching its vehicle and interpreting
-the result. The seven presentation milestones below are the starting baseline,
+the result. The initial presentation milestones are the starting baseline,
 not the end of the product-quality phase. Retain both source tracks, their
 identities, all engineering contracts and the single playback clock.
 
@@ -19,29 +19,27 @@ identities, all engineering contracts and the single playback clock.
 | V7 Showcase selection | Implemented: native source groups and compact provenance descriptions retain identity and import/restore behavior. Fifteen visual states and 30 production journeys pass; narrow/tablet headers remain aligned through loading and cancellation. The licensed Red Bull Ring data package is complete. |
 | V8 Formula presentation | Implemented: original rounded body contours, sidepod/engine-cover silhouettes, tapered floor, shallow wings and tyre shoulders. Closed-surface/dimension tests, 128 final visual states and all 30 production journeys pass. |
 | V9 GT presentation | Implemented: original rounded shell with wheel wells, continuous painted cabin, fitted glazing and telemetry-driven brake lamps. The full gate, 21 browser journeys, 140 visual states and all 31 production journeys pass. The physical profile, road frame and shared clock remain authoritative. |
-| V10 Asset pipeline | Implemented: the first original GLB asset has editable source, three merged material batches, local lazy loading, instancing, physical/byte budgets and reproducible export checks. The other three packages remain procedural. |
-| V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |
-| V12 Visual QA | Repeat actual desktop/laptop/narrow/fullscreen and playback inspection across both cars and circuits; keep reproducible critical captures. |
-| V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
+| V10 Asset pipeline | Implemented: the first original GLB asset has editable source, three merged material batches, local lazy loading, instancing, physical/byte budgets and reproducible export checks. Other assets remain procedural. |
+| V11 Lighting and materials | Implemented: original dry-day radiance, hemisphere fill and current-vehicle shadows improve material depth. Cached shadows and time-based orbit settling pass the full gate, 24 interaction journeys, 128 visual states and all 34 production journeys. |
+| V12 Visual QA | Active gate: all 128 final daylight close/onboard/motion states pass across both cars/circuits, with laptop, phone and fullscreen coverage. Repeat critical captures after each visible change. |
+| V13 Performance | Active gate: paused shadows reuse their map, camera decay follows elapsed frame time and the viewer reaches an empty animation queue with zero subsequent work. Track resource counts and engineering responsiveness after each richer asset. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
+| V15 Vegetation presentation | Next: replace uniform scenery cones with original shaped conifer crowns and natural colour variation. Preserve source-grounded placement and verify bounds, road visibility and rendering cost. |
 
-The telemetry pass is green in Linux CI through `fad0434`: 159 development and
-31 production journeys. It resolves crowded ticks and tiny-window dashed SVG
-painting stalls, following the Formula and typography changes. The local gate,
-nine integration journeys and 26 graph/dashboard visual states also pass.
-The GT pass is also green in Linux CI through `a71f838`: 300 TypeScript / 152 Python
-tests, 161 development and 31 production journeys. Its closer lamp captures exposed
-eight-metre apex spheres dominating close Orbit views. The immediate follow-up
-uses small screen-sized analysis dots and a less crowded ghost panel. All 40 final
-overview states retain every sector badge, and six close GT views resolve the
-original sphere defect. The final gate, 17 integration journeys, 60 visual states
-and all 31 production journeys pass. Original Dev Track start signs and the GLB
-pipeline now pass the complete gate, 15 integration journeys, 105 static visual
-states, six continuous motion sequences and all 32 production journeys. Linux CI
-exposed a phone fullscreen transition assertion on the separately committed
-three-shard workflow; inspect and resolve that check while retaining its coverage.
-Continue directly into V11 daylight lighting and vehicle material depth.
-See PRODUCT_PRESENTATION.md for the evidence.
+Both source tracks, their provenance, complete engineering workspaces and the
+shared playback clock remain authoritative. Original Formula/GT bodywork, Dev
+Track start signs, the GLB pipeline, typography, graph readability and close-view
+annotations are implemented. Linux CI is green through `ce1961f`: 306 TypeScript /
+152 Python tests, 166 development and 32 production journeys across three jobs.
+
+The daylight pass adds original material reflections, cached current-car shadows
+and time-based orbit settling. Its final local gate passes 309 TypeScript /
+152 Python tests, 24 combined interaction journeys, 128 visual states and all 34
+production journeys. After this cycle is committed and pushed,
+continue directly into V15 original vegetation while monitoring its Linux CI.
+The close views reveal uniform cone-shaped trees as the next conspicuous scenery
+limitation. Retain their grounded source placement and improve authored shape and
+colour within a measured geometry budget. See PRODUCT_PRESENTATION.md for evidence.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist

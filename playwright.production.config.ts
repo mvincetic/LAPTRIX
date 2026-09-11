@@ -17,6 +17,7 @@ export default defineConfig({
     "track-select.spec.ts",
     "plot-ticks.spec.ts",
     "trackside-delivery.spec.ts",
+    "daylight-recovery.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

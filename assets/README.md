@@ -36,6 +36,12 @@ GLB. Validation reloads it and checks byte-for-byte export reproducibility. Two
 source-bound sites use three shared material batches and grounded foundations.
 See `docs/ASSET_PIPELINE.md` for export, loading, source binding and failure behavior.
 
+The fifth package, `environment/daylight.json`, authors the dry-day sky/ground
+colours, analytic sun lobe and bounded vehicle shadow settings. `daylight.ts`
+generates 128 KiB of linear radiance data at runtime. No HDRI or photograph is
+downloaded. Three filters the environment for material reflections; the existing
+playback vehicle anchors a single 1024² shadow map. See `docs/DAYLIGHT.md`.
+
 ## Conventions
 
 - Metres, right-handed coordinates, +Y up and +Z forward. Source-world geometry
@@ -53,7 +59,7 @@ See `docs/ASSET_PIPELINE.md` for export, loading, source binding and failure beh
   GPU resources, and source changes dispose replaced geometry.
 
 The pylon establishes the actual static GLB export/loading pipeline; the other
-three packages remain procedural. Blender is optional and was not used here.
+four packages remain procedural. Blender is optional and was not used here.
 Future authored vehicle/environment assets should retain editable sources, validate
 metre scale and pivots, normalize materials, export and optimize GLB, then record
 the actual runtime resource and licence in the manifest. Add LODs only with actual

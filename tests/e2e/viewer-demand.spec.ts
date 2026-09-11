@@ -7,14 +7,33 @@ for (const width of [1600, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     if (width === 390) await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addInitScript(() => {
-      const stats = { draws: 0, frames: 0, uploads: 0, deletions: 0 };
+      const stats = {
+        draws: 0,
+        frames: 0,
+        pending: 0,
+        uploads: 0,
+        deletions: 0,
+      };
       Object.assign(window, { laptrixRenderProbe: stats });
       const request = window.requestAnimationFrame.bind(window);
-      window.requestAnimationFrame = (callback) =>
-        request((time) => {
+      const cancel = window.cancelAnimationFrame.bind(window);
+      const pending = new Set<number>();
+      window.requestAnimationFrame = (callback) => {
+        const id = request((time) => {
+          pending.delete(id);
+          stats.pending = pending.size;
           stats.frames++;
           callback(time);
         });
+        pending.add(id);
+        stats.pending = pending.size;
+        return id;
+      };
+      window.cancelAnimationFrame = (id) => {
+        pending.delete(id);
+        stats.pending = pending.size;
+        cancel(id);
+      };
       const seen = new WeakSet();
       const original = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (
@@ -86,6 +105,16 @@ for (const width of [1600, 390]) {
             .laptrixRenderProbe.frames,
       );
     async function settled() {
+      // A slow pending frame is not idle merely because 300 ms had no draws.
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              (window as unknown as { laptrixRenderProbe: { pending: number } })
+                .laptrixRenderProbe.pending,
+          ),
+        )
+        .toBe(0);
       await expect
         .poll(async () => {
           const start = await draws();

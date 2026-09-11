@@ -1,5 +1,12 @@
 # Continuous integration
 
+The [Dev Track asset and fullscreen follow-up run](https://github.com/mvincetic/LAPTRIX/actions/runs/34618439504)
+passes through `ce1961f` (including asset commit `cb3cb11`): 306 TypeScript tests,
+152 Python tests (40.55 seconds), all 166 development journeys (56 in 12.4 minutes,
+55 in 8.7 minutes and 55 in 13.1 minutes) and all 32 production journeys in 5.1
+minutes. All three Linux jobs succeed, including the corrected fullscreen wait,
+optional GLB recovery and byte-for-byte asset export verification.
+
 The [three-shard run](https://github.com/mvincetic/LAPTRIX/actions/runs/34616301449)
 at `d22b1f6` completes without the former job-deadline cancellation, but shard 1
 fails one phone fullscreen assertion (55 other journeys pass in 8.8 minutes).

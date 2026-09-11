@@ -6,6 +6,17 @@
   "handedness": "right",
   "assets": [
     {
+      "id": "laptrix.daylight.v1",
+      "category": "environment",
+      "format": "procedural",
+      "parameters": "assets/environment/daylight.json",
+      "implementation": "apps/web/src/daylight.ts",
+      "origin": "Fixed world-space sun direction; the bounded shadow volume follows the current vehicle in source metres",
+      "provenance": "Original analytic sky, ground and sun radiance authored for LAPTRIX; no photograph or HDRI",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": []
+    },
+    {
       "id": "laptrix.dev-start-pylon.v1",
       "category": "trackside",
       "format": "glb",

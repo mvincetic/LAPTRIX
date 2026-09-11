@@ -118,7 +118,7 @@ try {
               triangles: gl.info.render.triangles,
               controls: [
                 ...document.querySelectorAll(
-                  ".view-actions button, .scene-footer button, .scene-footer select, .scene-footer input, .scene-identity-entry",
+                  ".view-actions button, .scene-footer button, .scene-footer select, .scene-footer input, .scene-footer .scene-identity-entry",
                 ),
               ].every((node) => {
                 const b = node.getBoundingClientRect();
@@ -134,6 +134,14 @@ try {
               }),
             };
           });
+          results.push({
+            track,
+            vehicle,
+            width,
+            state,
+            ...metrics,
+            errors: [...errors],
+          });
           expect(metrics.fov).toBe(60);
           expect(metrics.treeBatches).toBe(2);
           expect(metrics.treeBoundOverflow).toBeLessThan(0.001);
@@ -143,14 +151,6 @@ try {
           expect(metrics.controls).toBe(true);
           expect(metrics.pageWidth).toBe(width);
           expect(errors).toEqual([]);
-          results.push({
-            track,
-            vehicle,
-            width,
-            state,
-            ...metrics,
-            errors: [...errors],
-          });
         }
         for (const fraction of [0, 0.25, 0.5, 0.75]) {
           await cursor.fill(

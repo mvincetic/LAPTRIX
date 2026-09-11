@@ -99,7 +99,7 @@ export function Landscape({
       <mesh name="context-terrain" geometry={data.geometry} receiveShadow>
         <meshStandardMaterial vertexColors roughness={1} />
       </mesh>
-      <mesh name="road-earthworks" geometry={data.apron}>
+      <mesh name="road-earthworks" geometry={data.apron} receiveShadow>
         <meshStandardMaterial color="#a8b395" roughness={1} side={DoubleSide} />
       </mesh>
       <instancedMesh

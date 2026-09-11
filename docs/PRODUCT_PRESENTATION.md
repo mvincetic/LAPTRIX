@@ -1,5 +1,75 @@
 # Product presentation milestones
 
+## Premium V11 — Original daylight, material depth and stable camera decay, 2026-09-11
+
+The authored daylight environment gives the rounded bodywork and glazing sky/
+ground reflections, while a fixed world sun casts the current vehicle's shadow
+onto the actual road. Its 1024² map covers 24×24 m around the real playback car,
+with no circuit-sized shadow allocation or additional lap clock. Current/reference
+dimensions, telemetry, source identity and pending workspace remain authoritative.
+The original analytic sky uses 128 KiB of CPU radiance data and no downloaded HDRI;
+its recipe and resource constraints join the asset manifest. See DAYLIGHT.md.
+
+Two initial 24-capture comparisons (`daylight-probe.json`,
+`daylight-shadow-probe.json`) showed that hemisphere fill alone added little depth.
+Closer reflection/shadow views clearly resolved body contours and road contact.
+The implemented first 12 detail views pass (`daylight-first-qa.json`), with no
+geometry changes. Unit checks independently cover radiance bounds, world sun
+orientation, the texture seam, translation-invariant shadow projection and equal
+camera decay across different frame intervals.
+
+Both shadow/resource journeys and both existing graphics-restoration journeys
+passed, but desktop idle failed after an orbit drag (`daylight-browser-first.log`).
+The failure repeated without parallel gate work (`daylight-recovery-first.log`).
+Actual frame traces reproduced the tail with reflections removed, shadows removed
+and both new lighting features disabled. Remaining invalidations came from the
+controls' fixed per-frame decay, with late frames hundreds of milliseconds apart.
+The shader-only timing probe did not establish a material rendering penalty and
+is not used as a frame-rate claim. No lighting reduction was adopted from it.
+
+Camera decay now preserves 0.12 at 60 Hz using elapsed renderer-frame time after
+release. Active gestures retain their established input response. The idle test
+requires an empty animation queue before its unchanged zero-draw/zero-callback/
+buffer-retention assertions. All six corrected journeys pass in 2.0 minutes
+(`daylight-browser-corrected.log`): both cars/circuits retain exact sun targets,
+shadow/environment resources, camera/seek/playback state, full project exports and
+pending edits. Paused camera changes perform no new shadow pass. Complete compositor
+images also survive two graphics losses on desktop Formula and phone GT, without
+a click to repair the view. A separate zero-time circuit-switch check then
+reproduced a stale shadow target (`daylight-source-red.log`): the reused group and
+unchanged clock did not reposition a dirty map. Invalidated maps now refresh their
+anchor as well as their contents. Both source-switch journeys pass in 40.6 seconds
+(`daylight-source-green.log`). The final complete gate passes 309 TypeScript /
+152 Python tests (44.62 seconds), five asset validators, reproducible GLB export,
+lint/type/build checks (`daylight-complete-check.log`). Entry JavaScript is
+441.35 / 135.96 kB gzip, viewer 1,004.62 / 271.33 kB, lazy GLB loader 45.20 / 13.46
+kB and CSS 60.84 / 12.70 kB.
+
+All 128 final visual states pass: 12 close vehicle details, 52 onboard views and
+64 sampled camera/motion states (`daylight-final-shape-qa.json`,
+`daylight-final-onboard-qa.json`, `daylight-final-motion-qa.json`). The onboard QA
+selector was scoped to playback identities after it inadvertently included hidden
+Ghost Car tool labels sharing the same CSS class; failure metrics are now saved
+before assertions. Its original size, sightline, horizon and tree-bound checks
+remain. Reviewed GT rear/Formula side details show material highlights and cast
+shadows; phone fullscreen and laptop onboard images retain forward road sight and
+reachable controls. The final orbit trace records 16 post-release renders, the
+last at 1.894 seconds, then no further render through the 3.5-second observation
+(`daylight-idle-final.json`). This is a settling observation, not a hardware FPS claim.
+
+A single-car scene retains nine textures in driving views and ten with overview
+apex points, including the original environment and cached GPU maps. Vehicle
+geometry is unchanged. A dirty shadow pass adds at most 56 / 5,406 Formula draws /
+triangles or 47 / 4,910 GT draws / triangles; paused camera changes add none.
+Matched paused Chase still uses 74 / 135,890 for Dev Formula, 65 / 135,394 for Dev
+GT, 70 / 120,830 for Red Bull Ring Formula and 61 / 120,334 for Red Bull Ring GT.
+All 24 final combined interaction journeys pass in 5.6 minutes
+(`daylight-final-browser.log`), including GT brake telemetry, all fullscreen
+recovery paths, source switching, asset retry, empty-queue idle behavior and
+graphics restoration. All 34 production journeys pass on the final distribution
+in 6.3 minutes (`daylight-production.log`), including both complete-image graphics
+recovery cases. Continue directly into original vegetation presentation.
+
 ## Premium V6/V10 — Dev Track start identity and static asset pipeline, 2026-09-11
 
 Two original signs now frame the Dev Track's existing timing stripe. The editable

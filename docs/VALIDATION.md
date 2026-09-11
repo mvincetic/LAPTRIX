@@ -6,6 +6,17 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The daylight cycle passes the complete local gate with 309 TypeScript / 152 Python
+tests, five asset packages, reproducible GLB export, lint/typecheck and build.
+Six corrected lighting/recovery/idle journeys pass in 2.0 minutes. Two additional
+source-switch journeys pass in 40.6 seconds after reproducing and correcting a
+stale shadow target when a new circuit retained the same zero clock time.
+All 128 final close/onboard/motion visual states pass; the final orbit trace stops
+rendering after 1.894 seconds and stays silent through 3.5 seconds. All 24 final
+combined interaction journeys pass in 5.6 minutes and all 34 production journeys
+pass on the final build in 6.3 minutes. See DAYLIGHT.md and
+PRODUCT_PRESENTATION.md for the resource model and camera-inertia finding.
+
 The Dev Track asset cycle passes the complete local gate with 306 TypeScript /
 152 Python tests (49.40 seconds), four asset packages, reproducible GLB export,
 lint/typecheck and build. Six new unit cases cover physical source identity,

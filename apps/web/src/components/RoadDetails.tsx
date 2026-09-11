@@ -24,7 +24,7 @@ export function RoadDetails({ track }: { track: Track }) {
   return (
     <group name="schematic-road-details">
       {meshes.map(({ name, geometry, color }) => (
-        <mesh key={name} geometry={geometry}>
+        <mesh key={name} geometry={geometry} receiveShadow>
           <meshStandardMaterial
             color={color}
             roughness={0.9}

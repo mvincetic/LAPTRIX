@@ -1,5 +1,19 @@
 # Rendering when the scene changes
 
+The daylight pass adds an original 128×64 linear radiance environment and a single
+1024² current-vehicle shadow map. Its direction stays fixed while the map volume
+translates with the real ghost, after the existing telemetry callback. Shadow
+updates occur on lap/time/vehicle changes and graphics restoration; ordinary
+paused camera changes reuse the map. No independent clock or timer is added.
+Environment texels remain in memory for GPU restoration and are disposed with the
+viewer; Three owns its filtered map cache. See DAYLIGHT.md for budgets and limits.
+
+Orbit inertia now applies the equivalent of 0.12 decay per 1/60 second, using
+elapsed renderer-frame time after release. Active input keeps the established
+response. This avoids a long tail when display frames are delayed. Demand checks
+track outstanding requestAnimationFrame/cancelAnimationFrame handles before
+asserting zero further draws, callbacks or geometry uploads.
+
 The Dev Track GLB signs add three instanced material batches and one foundation
 batch: 796 triangles for both sites together. Matched Chase counts are 74 draws /
 135,890 triangles for Formula and 65 / 135,394 for GT. Red Bull Ring remains at

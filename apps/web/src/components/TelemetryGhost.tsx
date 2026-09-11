@@ -1,7 +1,7 @@
-import { useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
-import type { Group } from "three";
+import { Mesh, MeshStandardMaterial, type Group } from "three";
 import type { Lap, Vehicle } from "../../../../packages/shared/schema";
 import { ghostPose, type PlaybackClock } from "../../../../packages/telemetry";
 import { VehicleMesh } from "./VehiclePresentation";
@@ -29,6 +29,17 @@ export function TelemetryGhost({
     front: [],
     brakeLights: [],
   });
+  useLayoutEffect(() => {
+    groupRef.current?.traverse((object) => {
+      if (
+        object instanceof Mesh &&
+        object.material instanceof MeshStandardMaterial
+      ) {
+        object.castShadow = !reference;
+        object.receiveShadow = true;
+      }
+    });
+  }, [groupRef, reference, vehicle]);
   useFrame(() => {
     if (!groupRef.current) return;
     const pose = ghostPose(lap, clock.getSnapshot().time);
