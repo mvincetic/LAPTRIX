@@ -1,4 +1,5 @@
 import { test, expect, type Locator } from "@playwright/test";
+import { referenceGeometry } from "./reference-geometry";
 import type { Lap } from "../../packages/shared/schema";
 
 async function viewportMatches(
@@ -60,14 +61,15 @@ for (const width of [1600, 390]) {
     });
     await toggle.check();
     const paths = await page
-      .locator(
-        '[data-testid^="current-trace-"], [data-testid^="reference-trace-"]',
-      )
+      .locator('[data-testid^="current-trace-"]')
       .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")));
     const range = page.getByRole("combobox", {
       name: "Plot range",
       exact: true,
     });
+    const references = await page
+      .locator('[data-testid^="reference-trace-"]')
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")!));
     await expect(range).toHaveValue("all");
     await range.focus();
     await range.press("Home");
@@ -90,11 +92,10 @@ for (const width of [1600, 390]) {
     );
     expect(
       await page
-        .locator(
-          '[data-testid^="current-trace-"], [data-testid^="reference-trace-"]',
-        )
+        .locator('[data-testid^="current-trace-"]')
         .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d"))),
     ).toEqual(paths);
+    await referenceGeometry(chart, references);
     await expect(page.locator(".channel-x-ticks span").first()).toHaveText(
       sector.startDistance.toFixed(0),
     );

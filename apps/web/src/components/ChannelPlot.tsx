@@ -1,9 +1,5 @@
 import type { Lap, Sample } from "../../../../packages/shared/schema";
-import {
-  plotTickLabel,
-  viewportFraction,
-  type PlotViewport,
-} from "../plotViewport";
+import { viewportFraction, type PlotViewport } from "../plotViewport";
 import {
   channelDigits,
   channelFraction,
@@ -12,6 +8,7 @@ import {
   type TelemetryGroup,
 } from "../telemetryPlot";
 import { ChannelScales } from "./ChannelScales";
+import { PlotTicks } from "./PlotTicks";
 import "./channel-scales.css";
 
 export function ChannelPlot({
@@ -22,6 +19,7 @@ export function ChannelPlot({
   viewport,
   overlay,
   paths,
+  referencePaint,
   axis,
   onSeek,
   progress,
@@ -35,6 +33,7 @@ export function ChannelPlot({
   viewport: PlotViewport;
   overlay: boolean;
   paths: { current: string[]; reference: (string | null)[] };
+  referencePaint: (string | null)[];
   axis: "time" | "distance";
   onSeek: (fraction: number) => void;
   progress: number;
@@ -151,8 +150,8 @@ export function ChannelPlot({
               {[3, 27].map((y) => (
                 <line
                   key={y}
-                  x1={0}
-                  x2={1000}
+                  x1={viewport.x}
+                  x2={viewport.x + viewport.width}
                   y1={i * 33 + y}
                   y2={i * 33 + y}
                   stroke="#e9eff5"
@@ -163,8 +162,8 @@ export function ChannelPlot({
               {c.min < 0 && c.max > 0 && (
                 <line
                   data-testid={`channel-zero-${c.key}`}
-                  x1={0}
-                  x2={1000}
+                  x1={viewport.x}
+                  x2={viewport.x + viewport.width}
                   y1={i * 33 + 27 - channelFraction(0, c) * 24}
                   y2={i * 33 + 27 - channelFraction(0, c) * 24}
                   stroke="#8d9fb6"
@@ -176,8 +175,8 @@ export function ChannelPlot({
               {c.guide !== undefined && c.guide > c.min && c.guide < c.max && (
                 <line
                   data-testid={`channel-guide-${c.key}`}
-                  x1={0}
-                  x2={1000}
+                  x1={viewport.x}
+                  x2={viewport.x + viewport.width}
                   y1={i * 33 + 27 - channelFraction(c.guide, c) * 24}
                   y2={i * 33 + 27 - channelFraction(c.guide, c) * 24}
                   stroke="#8d9fb6"
@@ -187,9 +186,9 @@ export function ChannelPlot({
                 />
               )}
               <line
-                x1={0}
+                x1={viewport.x}
                 y1={i * 33 + 31}
-                x2={1000}
+                x2={viewport.x + viewport.width}
                 y2={i * 33 + 31}
                 stroke="#dce3eb"
                 strokeWidth={1}
@@ -206,7 +205,7 @@ export function ChannelPlot({
               {overlay && paths.reference[i] && (
                 <path
                   data-testid={`reference-trace-${c.key}`}
-                  d={paths.reference[i]}
+                  d={referencePaint[i] ?? ""}
                   fill="none"
                   stroke="#687a91"
                   strokeWidth={1.6}
@@ -252,25 +251,12 @@ export function ChannelPlot({
             </g>
           )}
         </svg>
-        <div className="channel-x-ticks">
-          {Array.from({ length: 6 }, (_, i) => (
-            <span
-              key={i}
-              style={{ left: `${i * 20}%` }}
-              title={String(
-                viewport.start + ((viewport.end - viewport.start) * i) / 5,
-              )}
-            >
-              {lap
-                ? plotTickLabel(
-                    viewport.start + ((viewport.end - viewport.start) * i) / 5,
-                    viewport,
-                    axis,
-                  )
-                : i * 1000}
-            </span>
-          ))}
-        </div>
+        <PlotTicks
+          className="channel-x-ticks"
+          viewport={viewport}
+          axis={axis}
+          available={!!lap}
+        />
         <span className="axis-label">
           {overlay ? "Current lap · " : ""}
           {viewport.custom ? "Custom window · " : ""}

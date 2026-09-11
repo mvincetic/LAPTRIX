@@ -10,7 +10,8 @@ import {
   prepareTimeComparison,
   signed,
 } from "../../../../packages/telemetry";
-import { plotTickLabel, type PlotViewport } from "../plotViewport";
+import type { PlotViewport } from "../plotViewport";
+import { PlotTicks } from "./PlotTicks";
 import { buildComparisonReport } from "../../../../packages/telemetry/comparison-report";
 import { comparisonReportCsv } from "../../../../packages/telemetry/comparison-csv";
 import { download } from "../download";
@@ -170,8 +171,8 @@ export function TimeDeltaPlot({
             {[10, 55, 145, 190].map((y) => (
               <line
                 key={y}
-                x1="0"
-                x2="1000"
+                x1={viewport.x}
+                x2={viewport.x + viewport.width}
                 y1={y}
                 y2={y}
                 stroke="#edf1f6"
@@ -179,8 +180,8 @@ export function TimeDeltaPlot({
               />
             ))}
             <line
-              x1="0"
-              x2="1000"
+              x1={viewport.x}
+              x2={viewport.x + viewport.width}
               y1="100"
               y2="100"
               stroke="#8d9fb6"
@@ -240,22 +241,11 @@ export function TimeDeltaPlot({
               </g>
             )}
           </svg>
-          <div className="delta-x-ticks">
-            {Array.from({ length: 6 }, (_, i) => (
-              <span
-                key={i}
-                title={String(
-                  viewport.start + ((viewport.end - viewport.start) * i) / 5,
-                )}
-              >
-                {plotTickLabel(
-                  viewport.start + ((viewport.end - viewport.start) * i) / 5,
-                  viewport,
-                  axis,
-                )}
-              </span>
-            ))}
-          </div>
+          <PlotTicks
+            className="delta-x-ticks"
+            viewport={viewport}
+            axis={axis}
+          />
           <span className="axis-label">
             {viewport.custom ? "Custom window · " : ""}
             {viewport.sectorId !== null ? `Sector ${viewport.sectorId} · ` : ""}

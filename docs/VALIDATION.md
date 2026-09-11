@@ -6,13 +6,23 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The telemetry follow-up passes 296 TypeScript / 152 Python tests, all lint/asset/
+type/build gates, nine final graph/reference/window/idle journeys (2.8 minutes)
+and all 31 production journeys (4.3 minutes). Twenty-six actual graph/dashboard
+states cover both axes, all graph groups, 0.0015-second windows and both circuits
+at desktop/laptop/phone widths. Browser-native geometry verifies clipped dashed
+references against their original paths. Source/project/cursor retention and zero
+settled drawing/RAF remain intact. See PRODUCT_PRESENTATION.md for the reproduced
+label overlap, SVG paint stall, numerical coverage and final captures.
+
 The V7 typography follow-up reproduces the Linux CI header wrap locally, corrects
 the bundled font-family name and reserves compact loading-action space. The final
 gate passes 289 TypeScript / 152 Python tests, 25 broader browser journeys and
 all 30 production journeys (3.8 minutes). Seventy-one final source/panel/dashboard
 visual states retain native-scrollbar bounds, values and controls. The header
 journey now verifies loaded bundled fonts plus fallback metrics in every state.
-See TYPOGRAPHY.md and CI.md for the failed prior run and corrected local evidence.
+The following Linux CI run passes all 158 development and 30 production journeys
+through `2c001a9`, including the V8 Formula changes. See TYPOGRAPHY.md and CI.md.
 
 Premium phase V8 passes 289 TypeScript / 152 Python tests, both original asset
 validators and all lint/type/build gates. Nineteen focused browser journeys and

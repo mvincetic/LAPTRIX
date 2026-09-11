@@ -25,10 +25,13 @@ identities, all engineering contracts and the single playback clock.
 | V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
 
-The V7 CI follow-up corrects the bundled font-family name and verifies Linux
-fallback header metrics. The resulting narrow dashboard review also identifies
-crowded telemetry distance ticks; resolve that readability issue before returning
-to the V9 coupe surfaces. See TYPOGRAPHY.md for the font correction's evidence.
+The V7 font correction and V8 Formula changes pass Linux CI through `2c001a9`:
+158 development and 30 production journeys. The following telemetry pass resolves
+crowded distance ticks and tiny-window dashed SVG painting stalls. Its measured
+tick row, bounded paint geometry and complete workspace retention pass the full
+local gate, nine integration journeys, 26 graph/dashboard visual states and all
+31 production journeys. Continue directly with V9 coupe surfaces
+and telemetry-driven brake lamps. See PRODUCT_PRESENTATION.md for the evidence.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist

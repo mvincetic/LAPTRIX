@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Locator } from "@playwright/test";
+import { referenceGeometry } from "./reference-geometry";
 import type { Lap } from "../../packages/shared/schema";
 
 async function project(page: Page) {
@@ -63,11 +64,12 @@ for (const width of [1600, 390]) {
     const chart = page.getByRole("img", { name: /Synchronized speed/ });
     const traces = () =>
       page
-        .locator(
-          '[data-testid^="current-trace-"], [data-testid^="reference-trace-"]',
-        )
+        .locator('[data-testid^="current-trace-"]')
         .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")));
     const paths = await traces();
+    const references = await page
+      .locator('[data-testid^="reference-trace-"]')
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")!));
     const scales = await page.locator(".channel-scales").textContent();
     const range = page.getByRole("combobox", {
       name: "Plot range",
@@ -106,6 +108,7 @@ for (const width of [1600, 390]) {
       lap.length,
     );
     expect(await traces()).toEqual(paths);
+    await referenceGeometry(chart, references);
     expect(await page.locator(".channel-scales").textContent()).toBe(scales);
     const applied = await chart.getAttribute("viewBox");
     await edit("20", "19");

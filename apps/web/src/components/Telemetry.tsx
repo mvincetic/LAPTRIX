@@ -173,6 +173,34 @@ export function Telemetry({
         : [],
     };
   }, [lap, axis, channels, currentPoints, activeComparison, referenceKeys]);
+  const referencePaint = useMemo(
+    () =>
+      viewport.x === 0 && viewport.width === 1000
+        ? paths.reference
+        : activeComparison && lap
+          ? channels.map((channel, row) =>
+              referenceKeys.includes(channel.key)
+                ? telemetryPath(
+                    activeComparison.points,
+                    channel,
+                    row,
+                    axis,
+                    axis === "distance" ? lap.length : lap.lapTime,
+                    viewport,
+                  )
+                : null,
+            )
+          : [],
+    [
+      activeComparison,
+      lap,
+      channels,
+      referenceKeys,
+      axis,
+      viewport,
+      paths.reference,
+    ],
+  );
   const missingReference = channels
     .filter((channel) => !referenceKeys.includes(channel.key))
     .map((channel) => channel.label);
@@ -329,6 +357,7 @@ export function Telemetry({
               viewport={viewport}
               overlay={overlay}
               paths={paths}
+              referencePaint={referencePaint}
               axis={axis}
               onSeek={seekPlot}
               progress={progress}

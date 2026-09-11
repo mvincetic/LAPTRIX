@@ -1,5 +1,11 @@
 # Continuous integration
 
+The [Formula and typography run](https://github.com/mvincetic/LAPTRIX/actions/runs/34602624202)
+passes through `2c001a9` (including `8cc0142`): all lint/asset/type/build gates,
+289 TypeScript tests, 152 Python tests (32.01 seconds), 158 development journeys
+(80 in 13.3 minutes, 78 in 16.8 minutes) and all 30 production journeys
+(3.7 minutes). Both Linux jobs are green, including bundled/fallback header checks.
+
 The [V7 selection run](https://github.com/mvincetic/LAPTRIX/actions/runs/34599755461)
 at `63a124f` exposed a Linux loading-header wrap: shard 2 passed 77 journeys and
 failed the new 320 px native-scrollbar header check. Shard 1 passed the complete
@@ -12,8 +18,8 @@ The follow-up selects the actual family and reserves more compact action space;
 bundled/fallback loading/ready/cancellation checks now pass locally. The complete
 local gate passes with 289 TypeScript / 152 Python tests, 25 broader browser
 journeys, 71 final visual states and all 30 production journeys (3.8 minutes).
-See TYPOGRAPHY.md for the cause and final evidence. The next working-branch push
-contains this correction and the separately committed V8 Formula presentation.
+See TYPOGRAPHY.md for the cause and final evidence. The successful run above
+verifies the correction and the separately committed V8 Formula presentation.
 
 Premium-phase [V5 viewer layer clarity](https://github.com/mvincetic/LAPTRIX/actions/runs/34596929792)
 passes through `e1cffac`: 286 TypeScript tests, 152 Python tests (42.77 seconds),

@@ -43,25 +43,11 @@
   color: #77859a;
   font-size: 9px;
 }
-.channel-sector-labels span,
-.channel-x-ticks span {
+.channel-sector-labels span {
   position: absolute;
   transform: translateX(-50%);
 }
 .channel-x-ticks {
-  position: relative;
-  height: 20px;
   margin-top: -20px;
-  padding-top: 5px;
-  flex-shrink: 0;
-  font-size: 9px;
   color: #718096;
-  pointer-events: none;
-  font-variant-numeric: tabular-nums;
-}
-.channel-x-ticks span:first-child {
-  transform: none;
-}
-.channel-x-ticks span:last-child {
-  transform: translateX(-100%);
 }

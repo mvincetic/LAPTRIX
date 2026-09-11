@@ -1,4 +1,5 @@
 import type { Lap, Sample } from "../../../packages/shared/schema";
+import { clipPolyline, type PlotVertex } from "./clip-polyline";
 
 export type Channel = {
   key: keyof Sample;
@@ -225,14 +226,17 @@ export function telemetryPath(
   row: number,
   axis: "time" | "distance",
   extent: number,
+  window?: Readonly<{ x: number; width: number }>,
 ) {
   if (!Number.isFinite(extent) || extent <= 0) return "";
   let connected = false;
   const commands: string[] = [];
+  const vertices: (PlotVertex | null)[] = [];
   for (const point of points) {
     const value = channelValue(point.sample, channel);
     if (value === undefined || !Number.isFinite(point[axis])) {
       connected = false;
+      if (window) vertices.push(null);
       continue;
     }
     const xPosition = (point[axis] / extent) * 1000;
@@ -240,10 +244,18 @@ export function telemetryPath(
     const yPosition = row * 33 + 27 - fraction * 24;
     if (!Number.isFinite(xPosition) || !Number.isFinite(yPosition)) {
       connected = false;
+      if (window) vertices.push(null);
       continue;
     }
     const x = xPosition.toFixed(2),
       y = yPosition.toFixed(2);
+    if (window) {
+      if (connected && channel.key === "gear")
+        vertices.push([Number(x), vertices.at(-1)![1]]);
+      vertices.push([Number(x), Number(y)]);
+      connected = true;
+      continue;
+    }
     commands.push(
       !connected
         ? `M${x},${y}`
@@ -253,5 +265,7 @@ export function telemetryPath(
     );
     connected = true;
   }
-  return commands.join(" ");
+  return window
+    ? clipPolyline(vertices, window.x, window.x + window.width)
+    : commands.join(" ");
 }

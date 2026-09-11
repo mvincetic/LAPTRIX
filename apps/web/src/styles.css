@@ -1297,8 +1297,6 @@ select {
   touch-action: none;
 }
 .delta-x-ticks {
-  display: flex;
-  justify-content: space-between;
   padding-top: 4px;
   color: #79869a;
   font-size: 9px;

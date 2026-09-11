@@ -1,5 +1,54 @@
 # Product presentation milestones
 
+## Premium phase V5 follow-up — Telemetry tick readability, 2026-09-11
+
+The font review exposed a 2.59 px overlap between adjacent distance labels in the
+320 px channel plot (`plot-ticks-before.log`, before PNG). The shared tick row now
+measures its rendered labels and leaves a six-pixel gap, omitting crowded interior
+labels while retaining their original source positions and formatting. The right
+endpoint has priority; both endpoints remain wherever they fit. All six candidate
+values and their full-precision titles stay in the DOM, with hidden labels excluded
+from accessibility output. Curve geometry, scales, inspection coordinates and
+exports are unchanged. Time Delta uses the same source-fraction positioning and
+label policy.
+
+Resize/font/label changes update visibility through a bounded ResizeObserver;
+ordinary playback does not schedule label measurements. Hidden labels retain
+measurable dimensions. Three numerical cases cover readable intervals, endpoint
+reservation, wider precision, empty/narrow layouts and immutable inputs. The first
+actual narrow browser reproduction passes after the change (`plot-ticks-after.log`),
+and the before/after telemetry images were opened and reviewed.
+
+The 0.0015-second window exposed a separate SVG paint stall: an axis-switch click
+took 49.9 seconds with full-lap dashed paths transformed far beyond the viewport.
+Constraining horizontal guides alone did not fix it; temporarily removing reference
+dashes reduced the same interactions to 0.16–0.25 seconds. The final implementation
+retains dashes, bounds horizontal guides to the view and clips only the reference
+paint segments before SVG stroke generation. The original rounded vertices,
+straight interpolation, vertical gear knots and data gaps are preserved. Full-lap
+paths and readout eligibility remain intact; no source samples are resampled.
+Clipped paths are memoized by source/axis/window, independently of playback.
+
+Three segment-clipping cases and one telemetry-pipeline case verify crossings,
+reverse/vertical segments, tiny unrounded endpoints, missing-data gaps and held
+gear values. Browser-native SVG geometry checks compare the clipped reference
+against the original path. Current paths still retain exact `d` values across
+window selection. The expanded 18-state tick journey passes in 20.4 seconds
+(`axis-clipped.log`), including desktop/phone, both axes and all three graph groups
+under a 0.0015-second window. All nine final graph/reference/window/idle journeys
+pass in 2.8 minutes (`axis-final-browser.log`); the tick case takes 17.6 seconds.
+The complete quality gate passes 296 TypeScript / 152 Python tests (110.61 seconds),
+lint, Ruff, both original assets, typecheck and build (`axis-final-check.log`).
+Entry JavaScript is 441.34 / 135.95 kB gzip, viewer JavaScript remains 991.27 /
+266.71 kB, and CSS is 60.84 / 12.70 kB. All eight native-scrollbar dashboards pass
+on both circuits at 1600/1280/390/320 px (`axis-layout-qa.json`, 24 captures).
+Desktop/laptop/phone dashboard and telemetry captures were opened and inspected;
+panels and tick labels fit the usable width, including the native scrollbar.
+Only the existing Three.js Clock deprecation remains. All 31 production journeys
+pass in 4.3 minutes (`axis-production.log`), including the tiny-window journey in
+14.4 seconds and loaded/fallback header metrics. The 26 final graph/dashboard
+states complete this follow-up. Continue directly with V9 GT bodywork.
+
 ## Premium phase V8 — Original Formula contours, 2026-09-11
 
 The real close-view baseline exposed flat rectangular bodywork and a broad floor

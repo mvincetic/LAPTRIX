@@ -118,4 +118,29 @@ describe("telemetry plot units and interpolation", () => {
       );
     }
   });
+  it("clips the existing rounded geometry and retains exact gear knots and missing-data gaps", () => {
+    const points = [0, 1, 2, 3, 4].map((time, i) => ({
+      time,
+      distance: time,
+      sample: sample({ time, gear: i + 1, throttle: i / 4 }),
+    }));
+    const channels = telemetryChannels(points.map((point) => point.sample));
+    const gear = channels.find((channel) => channel.key === "gear")!;
+    expect(
+      telemetryPath(points, gear, 0, "time", 4, { x: 400, width: 200 }),
+    ).toBe("M400,17.4 L500,17.4 L500,12.6 L600,12.6");
+    const throttle = channels.find((channel) => channel.key === "throttle")!;
+    expect(
+      telemetryPath(points, throttle, 0, "time", 4, { x: 400, width: 200 }),
+    ).toBe("M400,17.4 L500,15 L600,12.6");
+    const withGap = points.map((point, i) =>
+      i === 2
+        ? { ...point, sample: { ...point.sample, throttle: NaN } }
+        : point,
+    );
+    expect(
+      telemetryPath(withGap, throttle, 0, "time", 4, { x: 200, width: 600 }),
+    ).toBe("M200,22.2 L250,21 M750,9 L800,7.8");
+    expect(points[2].sample.throttle).toBe(0.5);
+  });
 });

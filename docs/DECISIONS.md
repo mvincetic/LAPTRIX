@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-11 — Fit telemetry labels and bound dashed reference painting
+
+**Decision:** Measure axis labels at their original positions, hide colliding
+interior labels, and clip dashed reference paint segments to the selected window.
+**Reasoning:** Actual 320 px captures exposed overlapping labels; a 0.0015-second
+window then exposed a roughly 50-second SVG painting stall. Browser-native dashed
+strokes expanded far beyond the visible view. **Consequence:** Source samples,
+rounded curve vertices, scales, held gear knots, gaps and inspection coordinates
+remain intact. Clipping adds boundary intersections only to rendered reference
+segments and is memoized independently of playback. Browser geometry checks
+replace string identity checks for those clipped paths; current and full-lap paths
+retain their original data. Guides span only the visible window. No timeout was
+raised and no reference trace or accepted window size was removed.
+
 ## 2026-09-11 — Refine original Formula surfaces at the existing vehicle scale
 
 **Decision:** Author bounded Formula contours in the asset package and generate

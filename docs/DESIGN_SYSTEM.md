@@ -133,6 +133,10 @@ numeric cursor readings with R. Timing-only/mismatched references disable the
 control with text. The compact control row wraps on mobile; both gear plots step.
 Horizontal ticks and sector labels use ordinary layout text so their font size
 does not shrink with the SVG on narrow screens.
+Channel and Time Delta ticks share six source-fraction candidates. Measured text
+keeps a six-pixel gap; crowded interior labels are omitted, with endpoints retained
+where they fit. Visibility updates on resizing, font loading or label changes,
+while curve geometry and exact inspection coordinates stay unchanged.
 Plot range uses a compact native select inside the selected graph panel. A sector
 selection exposes Inspect start, Full lap and a short playback/outside-cursor note.
 Channel comparison controls share the same wrapping row where space permits.
