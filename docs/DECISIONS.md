@@ -1,5 +1,25 @@
 # Decision log
 
+## 2026-09-11 — Mount onboard cameras to the authoritative vehicle frame
+
+**Decision:** Add one original roll-hoop/roof view using the same interpolated
+vehicle frame, a fixed field of view and world-up horizon. **Reasoning:** The low
+perspective supplies road-edge parallax and a visible vehicle foreground while
+remaining reproducible during analysis and seeking. **Consequence:** No extra
+clock, smoothing history, camera shake, fake cockpit or solver setting is added.
+The physical camera mount adapts to the procedural body style and tyre size;
+overview/chase retain their existing fits. Close-view engineering markers and the
+current floating name are hidden, with identity and transport in the viewer footer.
+Independent transform/pixel checks protect the forward sightline and shared
+state. Trackside and broadcast remain later quality work, not placeholder modes.
+
+The final onboard comparison exposed existing disappearing trees. Both actual
+instance batches had cached bounds that excluded transformed instances by over
+1.4 km after a source change. Matrix installation now precedes presentation and
+refreshes both sphere and box before requesting a frame. Independent browser
+checks fail before this correction and pass after it. Frustum culling, positions,
+tree meshes, source geometry and telemetry remain unchanged.
+
 ## 2026-09-11 — Reduce artificial raised-road terrain clearance
 
 **Decision:** Retain the conservative terrain-cell cap but reduce its vertical

@@ -27,6 +27,15 @@ plus 30 m. Their existing cone meshes use the final terrain triangles for base
 placement. Terrain generation is memoized by track in the deferred Landscape
 component; disposal and instanced trees use the existing rendering lifecycle.
 
+Instance matrices are installed in a layout effect before presentation. Both tree
+batches recompute their cached bounding sphere and box after source changes, then
+invalidate the demand renderer. Three.js does not clear these caches when
+`setMatrixAt` changes positions. Onboard review found the old sphere excluded
+instances by up to 1,405.88 m, making trees disappear from some views despite
+unchanged positions. Desktop/phone browser checks now inspect every transformed
+instance sphere after switching both bundled sources and require containment
+within 1 mm. Culling stays enabled and no placements, meshes or materials change.
+
 The original R500 m circle with y=140 sin(theta) and 40 samples is a valid import.
 The old terrain rose above its road at 56 of 400 sampled centerline positions, by
 up to 12.2799 m, and visibly cut gaps through the racing line in Top and 3D views.

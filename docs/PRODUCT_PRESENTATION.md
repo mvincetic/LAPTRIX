@@ -1,5 +1,95 @@
 # Product presentation milestones
 
+## Premium phase V2 — Onboard camera, 2026-09-11
+
+Onboard now provides an original Formula roll-hoop and GT roof mount, using the
+same exact yaw/pitch frame as the current telemetry vehicle. The fixed 60-degree
+field of view and 8 cm near plane preserve close bodywork below the forward road
+sightline. The mount is independent of camera history and playback rate. Reset,
+seek and fullscreen do not introduce a second clock or change the installed lap.
+Both selectors expose the mode; explicit Play respects it. The current vehicle is
+revealed when entering a driving camera. Floating engineering markers, the start
+flag and the current name leave this close view; identity stays in the transport.
+See CAMERA_FRAMING.md for physical coordinates, imported-wheel handling and limits.
+
+The complete local gate passes lint, Ruff, typecheck, **280 TypeScript tests**,
+**152 Python tests (41.46 seconds)** and build (`artifacts/onboard-check.log`).
+Five new mathematical cases compare against independently inverted Three.js body
+transforms and cover slopes, translation, end/seek continuity, finite input and
+large visual tyres. Four new browser journeys pass in 32.7 seconds across both
+circuits and both vehicles. They cover keyboard camera selection, explicit Play,
+camera/reset/rate/fullscreen changes, actual foreground car pixels, exact paused
+cursor, pending setup, Canvas and complete project preservation without a new solve.
+Their image helper is shared with the existing portrait chase regression.
+
+All **14 final integration journeys pass in 2.2 minutes**. They retain north/reset,
+keyboard tabs, first-Play behavior and both existing portrait chase pixel checks.
+The desktop/phone idle journeys now explicitly enter Onboard, verify zero settled
+draws and animation callbacks, edit pending fuel and retain the same GPU buffers
+and cursor. A non-looping finish also settles in Onboard. Final browser evidence:
+`artifacts/onboard-browser-final.log`.
+
+The initial visual sweep passes **52 states**: quarter-lap poses at 1600, 1280 and
+390 px for both cars and circuits, plus phone fullscreen. Actual renderer checks
+confirm fixed clipping/FOV, mount distance, stable horizon, control containment and
+no runtime errors. Formula desktop/phone and GT desktop/phone captures were opened.
+The low view makes the next environment priority clear: nearby original trackside
+objects should establish scale and speed without changing authoritative geometry.
+The first sweep exposed a distracting distant start flag, which is now omitted
+from Onboard. Evidence remains in `artifacts/onboard-qa.json` and `onboard-*.png`.
+
+Four complete 1× portrait-fullscreen laps pass **4,240 presented frames**: Red Bull
+Ring Formula/GT 896/1,261 and Dev Track Formula/GT 902/1,181. Inverse rendered-body
+transforms place the actual camera within 4.82e-13 m of its mount, with no roll,
+projection-setting error or runtime failure. Finish and maximum mount-error poses
+have retained captures; both showcase peak images were opened. Evidence is
+`onboard-continuous-fullscreen-qa.json`, its log and matching PNGs. Frame counts
+reflect this software-rendered run and are not a hardware frame-rate claim.
+
+One earlier GT fullscreen image appeared to crop its left transport edge. A fresh
+five-state phone capture retains the complete transport; the QA now also checks
+control/identity bounds against the viewport, not just their containing panel.
+The final fullscreen panel measures exactly 390×844 at (0,0), with all controls
+inside it. The image was opened and reviewed (`onboard-phone-final-qa.json` and
+matching PNGs). No additional layout change was needed for this capture.
+
+Comparing the same GT pose also revealed disappearing trees. Both new desktop and
+phone regressions fail against the old cached instance bounds, excluding some
+actual tree spheres by **1,405.88 m**. Installing matrices before presentation and
+recomputing each batch's culling sphere/box fixes the issue without disabling
+culling or changing placements/geometry. Both regression cases pass after the
+correction. The final visual script additionally checks every tree instance's
+sphere in each captured state; see TERRAIN.md. Before evidence is retained as
+`landscape-bounds-before.log` and `landscape-bounds-before-1600/390.png`.
+
+The final **52-state sweep passes after that correction** with viewport/control
+containment, stable mounts and complete tree-sphere containment (maximum numerical
+overflow 1.14e-13 m). The formerly empty Dev Track laptop view and Red Bull Ring
+phone fullscreen now retain their trees; both final images were opened and
+reviewed. Maximum observed Onboard submission is 42 draws / 78,568 triangles for
+Formula and 22 draws / 76,628 triangles for GT. These reflect visible batches in
+these poses, not additional geometry or hardware FPS. Final evidence:
+`artifacts/onboard-final-qa.json`, `onboard-final-qa.log` and `onboard-final-*.png`.
+
+The complete quality gate passes again after the culling correction with
+280 TypeScript tests, 152 Python tests (41.94 seconds), lint/Ruff/typecheck and
+build (`artifacts/onboard-check-final.log`). Six final scenery/idle browser
+journeys pass in 1.3 minutes, including both failing-before bounds cases, sparse
+terrain visibility and both strengthened Onboard idle checks
+(`artifacts/onboard-landscape-browser.log`). Camera/clock math is unchanged by
+this correction, so the four continuous laps retain their motion evidence.
+
+All **26 production journeys pass in 2.4 minutes** against the final built assets
+(`artifacts/onboard-production-final.log`), including the four new Onboard cases,
+source/export preservation, loading/context recovery, fullscreen controls and
+existing portrait/annotation checks. The complete development suite now contains
+154 journeys; the next pushed CI run verifies that complete suite independently.
+
+Entry JavaScript remains 438.62 / 134.83 kB gzip, the deferred viewer is
+985.10 / 264.71 kB and CSS is 59.74 / 12.47 kB. Mount math lives entirely in the
+deferred scene. This milestone adds no textures, vehicle geometry, external
+assets, source changes, solver settings or persisted project fields.
+
 ## Premium phase V3 — Terrain and pavement, 2026-09-11
 
 First-Play review identified the next dependency for low cameras: every road sat

@@ -11,9 +11,9 @@ identities, all engineering contracts and the single playback clock.
 | Milestone | Product outcome and current state |
 | --- | --- |
 | V1 Playback clarity | Implemented: first Play finds the current car; explicit camera choices persist. Vehicle identities, follow, restart and rate stay with the viewer transport. |
-| V2 Cameras and speed | Next: a usable onboard view, grounded forward motion and clear camera selection. Keep deterministic seeking, horizon and clipping checks. |
+| V2 Cameras and speed | Implemented: vehicle-mounted Formula/GT onboard views with deterministic seeking, fixed field of view and stable horizon. Grounded scale cues continue in V4. |
 | V3 Track grounding | Implemented ahead of V2: closer terrain with conservative clearance, separate outside shoulders and render-only cross-sections that prevent coarse pavement from covering the canonical line. |
-| V4 Surface and environment | Add measured procedural reference objects where they improve scale and speed, using generic track geometry. |
+| V4 Surface and environment | Next: add measured procedural reference objects where they improve scale and speed, using generic track geometry. |
 | V5 UI clarity | Refine the primary Track → Car → Conditions → Run → Play → Analyze workflow and separate technical/debug layers. |
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
 | V7 Showcase selection | Existing licensed Red Bull Ring package is complete. Distinguish Development Tracks / Real Circuits and make provenance visible when selecting. |
@@ -371,13 +371,13 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 152 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 272 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 280 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and forty-six browser journeys cover the
+One hundred and fifty-four browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -392,7 +392,7 @@ corner event callouts through camera/layer changes, and the
 optional structured-tool contract. Four viewer loading/restoration and four CSV
 worker journeys also run against production assets, alongside three showcase
 and three viewer-transport journeys plus two portrait-car pixel checks and four
-sector-annotation journeys. See VALIDATION.md
+sector-annotation, playback-entry and onboard journeys. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy

@@ -57,7 +57,7 @@ the last completed result remains visible if a solve fails.
 - Synchronized Overview and Loads & elevation graph groups, time/distance inspection and ghost playback.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Full-lap comparison JSON with input snapshots, plus flat CSV with matched timing/channels and units.
-- Orbit, top and chase cameras; configurable analysis layers.
+- Orbit, top, chase and vehicle-mounted onboard cameras; configurable analysis layers.
 - A lower distance-follow camera and original metre-scale Formula/GT bodywork with telemetry-driven wheels.
 - Current speed, gear, elapsed time and playback state beside the track, including fullscreen.
 - Play, pause, loop and scrub directly inside the viewer; graph and fullscreen controls share one clock.

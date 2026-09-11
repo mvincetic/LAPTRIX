@@ -1,5 +1,11 @@
 # Continuous integration
 
+Premium-phase [V3 pavement grounding](https://github.com/mvincetic/LAPTRIX/actions/runs/34588643267)
+passes through `00c6681`: 275 TypeScript tests, 152 Python tests (43.30 seconds),
+all 148 development journeys (74 in 14.7 minutes and 74 in 14.2 minutes), all
+22 production journeys (3.1 minutes), lint, typecheck and build. Onboard camera
+work continues on the same working branch.
+
 Premium-phase [V1 playback entry](https://github.com/mvincetic/LAPTRIX/actions/runs/34584831004)
 passes through `ea810bd`: 272 TypeScript tests, 152 Python tests (31.58 seconds),
 all 148 development journeys (74 in 11.0 minutes and 74 in 14.9 minutes), all

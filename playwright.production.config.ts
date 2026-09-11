@@ -12,6 +12,7 @@ export default defineConfig({
     "portrait-chase.spec.ts",
     "sector-labels.spec.ts",
     "playback-entry.spec.ts",
+    "onboard-camera.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

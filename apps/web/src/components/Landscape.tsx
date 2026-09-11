@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useThree } from "@react-three/fiber";
 import {
   BufferAttribute,
   BufferGeometry,
@@ -12,6 +13,7 @@ import { createTerrainSurface } from "../../../../packages/track-engine/terrain"
 import { roadApron } from "../road-presentation";
 
 export function Landscape({ track }: { track: Track }) {
+  const invalidate = useThree((state) => state.invalidate);
   const data = useMemo(() => {
     const surface = createTerrainSurface(track);
     const colors = new Float32Array(surface.distances.length * 3);
@@ -45,7 +47,7 @@ export function Landscape({ track }: { track: Track }) {
   }, [track]);
   const treeRef = useRef<InstancedMesh>(null);
   const trunkRef = useRef<InstancedMesh>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const object = new Object3D();
     data.trees.forEach((position, i) => {
       const height = 9 + (i % 7),
@@ -59,8 +61,16 @@ export function Landscape({ track }: { track: Track }) {
       object.updateMatrix();
       trunkRef.current?.setMatrixAt(i, object.matrix);
     });
-    if (treeRef.current) treeRef.current.instanceMatrix.needsUpdate = true;
-    if (trunkRef.current) trunkRef.current.instanceMatrix.needsUpdate = true;
+    for (const mesh of [treeRef.current, trunkRef.current]) {
+      if (!mesh) continue;
+      mesh.instanceMatrix.needsUpdate = true;
+      // Three.js keeps cached object bounds after setMatrixAt/source replacement.
+      mesh.computeBoundingSphere();
+      mesh.computeBoundingBox();
+    }
+    invalidate();
+  }, [data, invalidate]);
+  useEffect(() => {
     return () => {
       data.geometry.dispose();
       data.apron.dispose();
@@ -75,6 +85,7 @@ export function Landscape({ track }: { track: Track }) {
         <meshStandardMaterial color="#a8b395" roughness={1} side={DoubleSide} />
       </mesh>
       <instancedMesh
+        name="context-tree-crowns"
         ref={treeRef}
         args={[undefined, undefined, data.trees.length]}
       >
@@ -82,6 +93,7 @@ export function Landscape({ track }: { track: Track }) {
         <meshStandardMaterial color="#819780" roughness={1} />
       </instancedMesh>
       <instancedMesh
+        name="context-tree-trunks"
         ref={trunkRef}
         args={[undefined, undefined, data.trees.length]}
       >

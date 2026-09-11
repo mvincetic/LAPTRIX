@@ -33,7 +33,11 @@ Paused scenes render when their content or camera changes and rest after settlin
 The scene footer prioritizes current speed, gear and elapsed/full lap time,
 with a text playback state and rate. Tabular numerals stay readable at phone widths;
 the strip remains present in fullscreen. Chase instructions describe fixed follow
-behavior, while orbit/top retain their interaction guidance.
+behavior, while orbit/top retain their interaction guidance. Onboard identifies
+its original roof or roll-hoop mount and keeps the road sightline above visible
+bodywork. No fabricated cockpit instrumentation, camera shake or animated zoom is
+added. Four camera choices remain keyboard-operable on compact screens; first
+Play respects an explicitly selected Onboard view.
 Attributed circuits add a compact wrapping credit row below the playback readout;
 it remains inside the viewer in fullscreen. Track inspection exposes full source
 links and assumptions. The real showcase is labelled as an approximate circuit,

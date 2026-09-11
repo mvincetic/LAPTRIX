@@ -173,6 +173,13 @@ for (const width of [1600, 390]) {
     await expect.poll(draws).toBeGreaterThan(previous);
     await settled();
     expect(await cursor.inputValue()).toBe(paused);
+    await page.getByRole("button", { name: "Onboard", exact: true }).click();
+    await settled();
+    const onboardBuffers = await buffers();
+    await page.getByRole("slider", { name: "Fuel load" }).fill("22");
+    await settled();
+    expect(await buffers()).toEqual(onboardBuffers);
+    expect(await cursor.inputValue()).toBe(paused);
     await page
       .getByRole("button", { name: "Loop playback", exact: true })
       .click();

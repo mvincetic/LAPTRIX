@@ -6,6 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V2 passes 280 TypeScript and 152 Python tests plus lint/type/build
+gates. Its new onboard views have independent body-transform and foreground-pixel
+checks across both vehicles and circuits, with complete project/cursor retention.
+Four continuous 1× fullscreen laps verify camera attachment and horizon across
+4,240 presented frames. Final visual QA passes 52 states, including corrected
+instanced-tree bounds; 18 distinct integration journeys and all 26 final production
+journeys pass. The development suite contains 154 cases. Source geometry, numerical contracts and the shared clock
+remain unchanged. See PRODUCT_PRESENTATION.md and CAMERA_FRAMING.md for captures,
+local browser/production outcomes and the documented visual limits.
+
 Premium phase V3 passes 275 TypeScript and 152 Python tests, lint/type/build gates,
 six terrain/vehicle/idle browser journeys and all 22 production journeys. Its 45
 final visual states cover both bundled tracks and a sparse sloped import, with

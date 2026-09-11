@@ -14,6 +14,48 @@ without seeking or starting playback. It recovers a hidden car or a distant
 overview. Current/reference names and blue/grey swatches remain in the transport,
 including fullscreen. These are view preferences, not saved project or lap data.
 
+## Vehicle-mounted onboard — 2026-09-11
+
+Onboard uses the current vehicle's exact `ghostPose` frame and source-metre scale.
+The Formula mount sits 1.18 m above its body origin and 0.45 m behind it; the GT
+roof mount sits 1.48 m up and 0.12 m behind. Imported wheel radii raise the mount
+when necessary to retain 0.22 m above the tyres. These are original visualization
+mounts for the procedural bodywork, not surveyed camera or driver eye positions.
+
+The forward target is 30 m along the same yaw/pitch frame. World up prevents roll;
+road pitch remains perceptible. A fixed 60-degree vertical field of view and 0.08 m
+near plane show bodywork below the forward road sightline. Aspect changes preserve
+the physical mount. There is no animated zoom, smoothing history, independent
+animation clock or new physics. Seeking and Reset reproduce the same pose, and
+camera switches preserve playing/paused state and cursor. The original overview
+and chase projection settings return when those modes are selected.
+
+Both camera selectors expose Onboard, and driving choices reveal a hidden current
+car. Without a lap those choices are disabled. The current locator/name, apex and
+corner markers, sector badges and floating start flag are suppressed in Onboard;
+vehicle identity and timing remain in the viewer footer. Reference names remain
+available at their real positions. The optional racing/braking lines remain.
+
+Five analytical cases compare against independently inverted Three.js vehicle
+transforms on a closed sloped source, with translation, finite-input, end/seam,
+large-wheel and deterministic-seek checks. Four browser journeys cover both
+vehicles and circuits, desktop and 320 px, keyboard selection, explicit Play,
+camera/reset/rate/fullscreen changes, exact cursor and full project retention.
+Composited car-visible/hidden pixel differences verify a visible foreground car
+below the horizon rather than a camera buried inside the body. These journeys
+also run against production assets.
+
+`node scripts/onboard-qa.mjs` captures quarter-lap poses for both cars/circuits at
+1600, 1280 and 390 px, plus phone fullscreen. It checks actual renderer pose,
+projection, horizon, control containment and runtime errors. Optional `QA_TRACK`,
+`QA_VEHICLE`, `QA_WIDTH` and `PRESENTATION_QA_PREFIX` focus/preserve captures.
+`node scripts/continuous-onboard-qa.mjs` inspects every presented frame over four
+complete 1× laps; add `--fullscreen` for portrait fullscreen. It compares the
+actual camera against the rendered car's independent inverse world transform,
+checking mount, horizon and clipping settings. These checks establish coherent
+motion, not hardware FPS, surveyed scenery or collision protection for arbitrary
+imported trajectories.
+
 ## Overview fit
 
 Orbit and top views fit the original road geometry to the current canvas aspect

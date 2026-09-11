@@ -56,6 +56,9 @@ uses three static material batches. Ribbon UVs are centered world coordinates;
 small deterministic mipmapped grain textures provide surface scale without asset
 downloads. Landscape retains its fixed terrain/placement budget and adds an
 instanced trunk batch. Source, solver and playback data remain unchanged.
+Tree instance matrices and their culling sphere/box are refreshed together in a
+layout effect, followed by demand invalidation. Updating `instanceMatrix` alone
+leaves Three.js's cached bounds stale after source changes and can hide scenery.
 The Fiber canvas renders on demand when paused. A subscription to the existing
 clock requests frames after actions; active playback continues the existing Fiber
 frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes
@@ -85,6 +88,13 @@ no secondary state, persistence field or input-to-simulation path is introduced.
 `chase-camera.ts` derives distance-follow and look-ahead poses from the same Lap,
 with a fixed field of view and no history-dependent smoothing. Below canvas aspect
 0.9 it retreats on the same view ray to retain portrait fullscreen car clearance.
+`onboard-camera.ts` applies an original roof/roll-hoop mount in the exact yaw/pitch
+frame used by the current vehicle. Its fixed 60-degree field of view and 8 cm near
+plane retain close bodywork without roll, damping history or a separate clock.
+Camera mode, Reset and aspect changes keep the same mounted pose; overview/chase
+restore their own projection settings. Driving camera choices reveal the current
+car. Onboard suppresses its own floating name, locator and engineering markers;
+the footer retains vehicle identity and all transports.
 VehiclePresentation
 contains original Formula/GT bodywork in metres. Its memoized geometry survives
 ordinary setup/viewer edits; TelemetryGhost updates wheel spin from travelled

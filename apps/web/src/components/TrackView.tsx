@@ -40,6 +40,12 @@ import { ScenePlayback } from "./ScenePlayback";
 import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { CHASE_FOV, ROAD_SURFACE_LIFT, chaseCameraPose } from "../chase-camera";
+import {
+  ONBOARD_FOV,
+  ONBOARD_NEAR,
+  onboardCameraPose,
+  onboardMount,
+} from "../onboard-camera";
 import { roadShoulders, roadSurface } from "../road-presentation";
 import { surfaceGrain } from "../surface-grain";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
@@ -69,7 +75,7 @@ const initialLayers: ViewLayers = {
   boundaries: false,
   terrain: true,
 };
-export type CameraMode = "orbit" | "top" | "chase";
+export type CameraMode = "orbit" | "top" | "chase" | "onboard";
 const viewerTabs = ["Track View", "Analysis Layers", "Ghost Car", "Camera"];
 
 function PlaybackFrames({ clock }: { clock: PlaybackClock }) {
@@ -180,8 +186,14 @@ function CameraRig({
     camera.position.set(...fit.position);
     camera.lookAt(...fit.target);
     if (camera instanceof PerspectiveCamera) {
-      camera.fov = mode === "chase" ? CHASE_FOV : CAMERA_FOV;
-      camera.near = mode === "chase" ? 0.2 : fit.near;
+      camera.fov =
+        mode === "onboard"
+          ? ONBOARD_FOV
+          : mode === "chase"
+            ? CHASE_FOV
+            : CAMERA_FOV;
+      camera.near =
+        mode === "onboard" ? ONBOARD_NEAR : mode === "chase" ? 0.2 : fit.near;
       camera.far = fit.far;
       camera.updateProjectionMatrix();
     }
@@ -197,6 +209,11 @@ function CameraRig({
         vehicle,
         Math.max(1, size.width) / Math.max(1, size.height),
       );
+      camera.position.set(...pose.position);
+      camera.lookAt(...pose.target);
+    }
+    if (mode === "onboard" && lap) {
+      const pose = onboardCameraPose(lap, clock.getSnapshot().time, vehicle);
       camera.position.set(...pose.position);
       camera.lookAt(...pose.target);
     }
@@ -223,7 +240,7 @@ function CameraRig({
   return (
     <OrbitControls
       ref={controls}
-      enabled={mode !== "chase"}
+      enabled={mode !== "chase" && mode !== "onboard"}
       makeDefault
       minDistance={fit.minDistance}
       maxDistance={fit.maxDistance}
@@ -302,7 +319,7 @@ export function TrackView({
   const chooseCamera = (next: CameraMode) => {
     cameraChosen.current = true;
     setMode(next);
-    if (next === "chase") setGhost(true);
+    if (next === "chase" || next === "onboard") setGhost(true);
   };
   const scene = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -322,7 +339,7 @@ export function TrackView({
   const referenceGhost = useRef<Group>(null);
   const ghostLabels = useMemo(() => {
     const labels: GhostLabelSpec[] = [];
-    if (lap && ghost && referenceVisible)
+    if (lap && ghost && referenceVisible && mode !== "onboard")
       labels.push({
         id: "current",
         group: currentGhost,
@@ -339,7 +356,15 @@ export function TrackView({
         color: "#78879c",
       });
     return labels;
-  }, [lap, ghost, referenceVisible, referenceLap, vehicle, referenceVehicle]);
+  }, [
+    lap,
+    ghost,
+    referenceVisible,
+    referenceLap,
+    vehicle,
+    referenceVehicle,
+    mode,
+  ]);
   const tabsPrefix = useId();
   const northIndicator = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null),
@@ -407,6 +432,7 @@ export function TrackView({
                 : "Reference positions must match this source track."
           }
           mode={mode}
+          hasLap={!!lap}
           onMode={chooseCamera}
           legendOpen={legendOpen}
           onLegendChange={setLegendChoice}
@@ -471,13 +497,13 @@ export function TrackView({
               const s = lap.samples[c.apexIndex];
               return (
                 <group key={c.id}>
-                  {layers.apex && mode !== "chase" && (
+                  {layers.apex && mode !== "chase" && mode !== "onboard" && (
                     <mesh position={[s.x, s.y + 3, s.z]}>
                       <sphereGeometry args={[4, 12, 8]} />
                       <meshBasicMaterial color="#26b85b" />
                     </mesh>
                   )}
-                  {layers.corners && mode !== "chase" && (
+                  {layers.corners && mode !== "chase" && mode !== "onboard" && (
                     <Html
                       center
                       position={[
@@ -499,30 +525,35 @@ export function TrackView({
                 </group>
               );
             })}
-            {lap && layers.sectors && mode !== "chase" && (
-              <SectorLabels
-                lap={lap}
-                layoutKey={`${tab}:${layers.corners}:${legendOpen}`}
-              />
+            {lap &&
+              layers.sectors &&
+              mode !== "chase" &&
+              mode !== "onboard" && (
+                <SectorLabels
+                  lap={lap}
+                  layoutKey={`${tab}:${layers.corners}:${legendOpen}`}
+                />
+              )}
+            {mode !== "onboard" && (
+              <Html
+                position={[
+                  track.points[0].x,
+                  track.points[0].y + 18,
+                  track.points[0].z,
+                ]}
+                center
+                zIndexRange={[8, 0]}
+              >
+                <div className="start-marker">
+                  <Flag size={11} />
+                </div>
+              </Html>
             )}
-            <Html
-              position={[
-                track.points[0].x,
-                track.points[0].y + 18,
-                track.points[0].z,
-              ]}
-              center
-              zIndexRange={[8, 0]}
-            >
-              <div className="start-marker">
-                <Flag size={11} />
-              </div>
-            </Html>
             {lap && ghost && (
               <TelemetryGhost
                 lap={lap}
                 clock={clock}
-                marker={mode !== "chase"}
+                marker={mode !== "chase" && mode !== "onboard"}
                 vehicle={vehicle}
                 groupRef={currentGhost}
               />
@@ -546,14 +577,17 @@ export function TrackView({
               northIndicator={northIndicator}
               vehicle={vehicle}
             />
-            {lap && selectedCorner && mode !== "chase" && (
-              <CornerCallouts
-                lap={lap}
-                cornerId={selectedCorner}
-                clock={clock}
-                layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${legendOpen}`}
-              />
-            )}
+            {lap &&
+              selectedCorner &&
+              mode !== "chase" &&
+              mode !== "onboard" && (
+                <CornerCallouts
+                  lap={lap}
+                  cornerId={selectedCorner}
+                  clock={clock}
+                  layoutKey={`${tab}:${layers.sectors}:${layers.corners}:${legendOpen}`}
+                />
+              )}
             {ghostLabels.length > 0 && (
               <GhostLabels
                 labels={ghostLabels}
@@ -572,9 +606,11 @@ export function TrackView({
           </span>
           <span className="scene-instruction">
             <MousePointer2 size={12} />{" "}
-            {mode === "chase"
-              ? "Chase camera · play or scrub below"
-              : "Drag to orbit · scroll to zoom"}
+            {mode === "onboard"
+              ? `${onboardMount(vehicle ?? lap?.vehicle).label} · play or scrub below`
+              : mode === "chase"
+                ? "Chase camera · play or scrub below"
+                : "Drag to orbit · scroll to zoom"}
           </span>
         </div>
         <div
@@ -605,20 +641,25 @@ export function TrackView({
           </div>
           <div className="view-actions">
             <div className="segmented">
-              {(["orbit", "top", "chase"] as CameraMode[]).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => chooseCamera(m)}
-                  className={mode === m ? "active" : ""}
-                  aria-pressed={mode === m}
-                >
-                  {m === "orbit"
-                    ? "3D View"
-                    : m === "top"
-                      ? "Top View"
-                      : "Chase"}
-                </button>
-              ))}
+              {(["orbit", "top", "chase", "onboard"] as CameraMode[]).map(
+                (m) => (
+                  <button
+                    key={m}
+                    onClick={() => chooseCamera(m)}
+                    className={mode === m ? "active" : ""}
+                    aria-pressed={mode === m}
+                    disabled={!lap && (m === "chase" || m === "onboard")}
+                  >
+                    {m === "orbit"
+                      ? "3D View"
+                      : m === "top"
+                        ? "Top View"
+                        : m === "onboard"
+                          ? "Onboard"
+                          : "Chase"}
+                  </button>
+                ),
+              )}
             </div>
             <button
               className="icon-button"

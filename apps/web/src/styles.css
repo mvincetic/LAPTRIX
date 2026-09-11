@@ -2282,6 +2282,13 @@ select {
     right: 10px;
     gap: 10px;
   }
+  .view-actions {
+    gap: 4px;
+  }
+  .view-actions .segmented button {
+    padding: 0 5px;
+    font-size: 9px;
+  }
   .track-caption strong {
     font-size: 12px;
   }

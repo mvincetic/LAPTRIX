@@ -14,6 +14,7 @@ export function ViewerToolsPanels({
   referenceName,
   referenceReason,
   mode,
+  hasLap,
   onMode,
   legendOpen,
   onLegendChange,
@@ -29,6 +30,7 @@ export function ViewerToolsPanels({
   referenceName: string | null;
   referenceReason: string;
   mode: CameraMode;
+  hasLap: boolean;
   onMode: (value: CameraMode) => void;
   legendOpen: boolean;
   onLegendChange: (value: boolean) => void;
@@ -37,7 +39,7 @@ export function ViewerToolsPanels({
     <>
       <div
         {...tabPanelProps(prefix, 0, active === 0)}
-        className={`legend${mode === "chase" ? " chase-legend" : ""}`}
+        className={`legend${mode === "chase" || mode === "onboard" ? " chase-legend" : ""}`}
       >
         <button
           className="legend-toggle"
@@ -144,11 +146,12 @@ export function ViewerToolsPanels({
         className="viewer-popover"
       >
         <h3>Camera mode</h3>
-        {(["orbit", "top", "chase"] as CameraMode[]).map((m) => (
+        {(["orbit", "top", "chase", "onboard"] as CameraMode[]).map((m) => (
           <button
             className={`option-button ${mode === m ? "active" : ""}`}
             key={m}
             aria-pressed={mode === m}
+            disabled={!hasLap && (m === "chase" || m === "onboard")}
             onClick={() => onMode(m)}
           >
             {
@@ -156,10 +159,15 @@ export function ViewerToolsPanels({
                 orbit: "Orbit · perspective",
                 top: "Top · engineering",
                 chase: "Chase · telemetry",
+                onboard: "Onboard · vehicle mounted",
               }[m]
             }
           </button>
         ))}
+        <p>
+          Onboard uses an original roof or roll-hoop mount. All cameras follow
+          the same lap; switching keeps playback in place.
+        </p>
       </div>
     </>
   );
