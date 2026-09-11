@@ -1,5 +1,20 @@
 # Continuous integration
 
+The [annotation follow-up run](https://github.com/mvincetic/LAPTRIX/actions/runs/34613408850)
+at `4ac9bf3` passes the complete gate (300 TypeScript / 152 Python tests in 42.97
+seconds) and all 163 development journeys: 83 in 18.5 minutes and 80 in 17.9 minutes.
+The first job is cancelled roughly 25 minutes after starting, during its production
+step, at the configured job deadline. No complete remote production verdict is
+available; all 31 pass locally in 4.4 minutes. This run is not recorded as green.
+
+The growing suite now uses three independent development shards to leave time for
+the first job's production gate. Test/expect deadlines, the 20-minute development
+budget and the 25-minute job limit remain unchanged. File-level grouping, one
+browser worker per runner, all test cases and failure artifacts are preserved.
+Local list-only discovery verifies that the three shard lists form the exact
+complete suite with no duplicate or missing case. The full quality gate and
+production checks still run once, on shard 1. All three jobs must succeed.
+
 The [original GT coupe run](https://github.com/mvincetic/LAPTRIX/actions/runs/34610148711)
 passes through `a71f838`: 300 TypeScript tests, 152 Python tests (40.95 seconds),
 all 161 development journeys (81 and 80, both in 17.2 minutes), all 31 production
@@ -121,12 +136,13 @@ The graph journey now retains its numerical, playback, compatibility and complet
 project assertions while leaving successful captures to that script. Failure
 screenshots/traces remain enabled. Individual test/assertion deadlines are unchanged.
 
-The workflow uses two independent GitHub runner jobs with Playwright `--shard=1/2`
-and `--shard=2/2`. Each retains one local browser worker, the existing 20-minute
+The workflow initially used two independent GitHub runner jobs with Playwright
+file-level sharding; the premium presentation continuation now uses three, as
+described above. Each retains one local browser worker, the existing 20-minute
 suite budget and 25-minute outer job budget. File-level grouping preserves tests'
-local ordering; `fail-fast: false` lets both report their result. The complete
+local ordering; `fail-fast: false` lets every shard report its result. The complete
 lint/type/unit/API/build gate and production viewer checks run once, on shard 1.
-Both jobs must succeed for the workflow to pass. Failure artifacts include shard
+Every job must succeed for the workflow to pass. Failure artifacts include shard
 numbers so parallel jobs retain separate evidence without naming collisions.
 
 This follows [Playwright's documented file-level sharding](https://playwright.dev/docs/test-sharding).
