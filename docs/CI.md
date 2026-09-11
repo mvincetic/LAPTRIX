@@ -1,5 +1,17 @@
 # Continuous integration
 
+Premium-phase [V5 viewer layer clarity](https://github.com/mvincetic/LAPTRIX/actions/runs/34596929792)
+passes through `e1cffac`: 286 TypeScript tests, 152 Python tests (42.77 seconds),
+all 157 development journeys (80 in 17.2 minutes and 77 in 16.5 minutes), all
+29 production journeys (4.5 minutes), asset validation, lint, typecheck and build.
+The working branch continues through source selection and vehicle presentation.
+
+Premium-phase [V4 grounded trackside context](https://github.com/mvincetic/LAPTRIX/actions/runs/34595680579)
+passes through `c129424`: 286 TypeScript tests, 152 Python tests (42.88 seconds),
+all 154 development journeys (78 in 16.6 minutes and 76 in 16.5 minutes), all
+26 production journeys (4.1 minutes), asset validation, lint, typecheck and build.
+The working branch continues through viewer-tool and track-selection clarity.
+
 Premium-phase [V2 onboard cameras and scenery bounds](https://github.com/mvincetic/LAPTRIX/actions/runs/34591968942)
 passes through `b2dfff5`: 280 TypeScript tests, 152 Python tests (42.95 seconds),
 all 154 development journeys (78 in 15.2 minutes and 76 in 14.9 minutes), all

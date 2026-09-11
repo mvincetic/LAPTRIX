@@ -6,6 +6,14 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V7 passes 286 TypeScript / 152 Python tests, all lint/asset/type/build
+checks, 17 distinct local integration journeys and all 30 final production journeys
+(3.8 minutes). Fifteen source-selection/playback states cover desktop, laptop,
+tablet and phone widths with native scrollbars. An additional header journey checks
+loading/ready/cancellation at 320 and 700 px after reproducing and fixing wordmark
+overlap and split selector rows. Imported origin survives portable/save restoration
+and cannot be overridden by a file's synthetic flag. See PRODUCT_PRESENTATION.md.
+
 Premium phase V5 passes the full gate with 286 TypeScript / 152 Python tests,
 22 distinct local browser journeys and 48 visual states. Three new desktop,
 phone and short-fullscreen journeys reproduce the prior panel/camera overlap,

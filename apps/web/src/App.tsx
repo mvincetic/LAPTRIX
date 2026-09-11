@@ -40,6 +40,7 @@ import { TelemetryAudioEngine } from "../../../packages/audio-engine";
 import { getCatalog, runSimulation } from "./api";
 import { DeferredTrackView } from "./components/DeferredTrackView";
 import { Settings } from "./components/Settings";
+import { TrackSelect } from "./components/TrackSelect";
 import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
@@ -718,24 +719,13 @@ export function App() {
             />
           </div>
         </div>
-        <label className="topbar-field track-field">
-          <span>Track</span>
-          <select
-            aria-label="Track"
-            disabled={busy || !catalog}
-            value={track?.id ?? ""}
-            onChange={(e) => {
-              const next = catalog?.tracks.find((t) => t.id === e.target.value);
-              if (next) void run(next, vehicleId, setup, true);
-            }}
-          >
-            {catalog?.tracks.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <TrackSelect
+          tracks={catalog?.tracks ?? []}
+          track={track}
+          imported={customTracks.current}
+          disabled={busy || !catalog}
+          onSelect={(next) => void run(next, vehicleId, setup, true)}
+        />
         <label className="topbar-field vehicle-field">
           <span>Car profile</span>
           <select
@@ -767,7 +757,13 @@ export function App() {
           <button
             className="primary-button"
             disabled={busy ? !cancellable : !track}
-            aria-label={busy && cancellable ? "Cancel calculation" : undefined}
+            aria-label={
+              busy
+                ? cancellable
+                  ? "Cancel calculation"
+                  : "Connecting…"
+                : "Run Simulation"
+            }
             title={
               busy && cancellable
                 ? "Cancel this request. Server work may still finish."
@@ -783,12 +779,15 @@ export function App() {
             ) : (
               <Play size={15} />
             )}
-            <span>
+            <span className="run-label-full">
               {busy
                 ? cancellable
                   ? "Cancel"
                   : "Connecting…"
                 : "Run Simulation"}
+            </span>
+            <span className="run-label-compact" aria-hidden="true">
+              {busy ? (cancellable ? "Cancel" : "Loading") : "Run"}
             </span>
           </button>
           <button

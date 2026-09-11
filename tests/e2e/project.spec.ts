@@ -36,6 +36,9 @@ test("portable project restores its name, custom track, setup and cross-vehicle 
   await expect(
     page.getByRole("combobox", { name: "Track", exact: true }),
   ).toHaveValue("portable-elevation-loop");
+  await expect(
+    page.getByRole("combobox", { name: "Track", exact: true }),
+  ).toHaveAccessibleDescription("Imported · unverified");
   await page
     .getByRole("button", { name: "Set reference", exact: true })
     .click();
@@ -74,6 +77,12 @@ test("portable project restores its name, custom track, setup and cross-vehicle 
     fresh.getByRole("combobox", { name: "Track", exact: true }),
   ).toHaveValue("portable-elevation-loop");
   await expect(
+    fresh.getByRole("combobox", { name: "Track", exact: true }),
+  ).toHaveAccessibleDescription("Imported · unverified");
+  await expect(
+    fresh.locator('optgroup[label="Imported Tracks"] option'),
+  ).toHaveText(["Portable elevation loop"]);
+  await expect(
     fresh.getByRole("combobox", { name: "Car profile" }),
   ).toHaveValue("gt-development");
   await expect(fresh.getByRole("slider", { name: "Fuel load" })).toHaveValue(
@@ -87,6 +96,9 @@ test("portable project restores its name, custom track, setup and cross-vehicle 
   );
   await fresh.getByRole("button", { name: "Save", exact: true }).click();
   await fresh.reload();
+  await expect(
+    fresh.getByRole("combobox", { name: "Track", exact: true }),
+  ).toHaveAccessibleDescription("Imported · unverified");
   await expect(fresh.getByTestId("lap-time")).toHaveText(
     formatTime(exported.lap.lapTime),
   );

@@ -177,6 +177,21 @@ small,
 .track-field {
   width: 230px;
 }
+.track-selector-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+.track-category {
+  min-width: 0;
+  font-size: 9px;
+  font-weight: 550;
+  color: #61728a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .vehicle-field {
   width: 190px;
   border-left: 1px solid #eef1f5;
@@ -224,6 +239,9 @@ small,
 }
 .primary-button:hover {
   background: #0054ca;
+}
+.run-label-compact {
+  display: none;
 }
 .save-button {
   height: 36px;
@@ -2193,8 +2211,9 @@ select {
     padding: 12px;
   }
   .brand {
-    min-width: 0;
+    min-width: max-content;
     width: calc(100% - 245px);
+    flex-shrink: 0;
   }
   .brand-word {
     font-size: 31px;
@@ -2763,5 +2782,16 @@ select {
 @media (min-width: 761px) and (max-width: 1350px) {
   .reset-label {
     display: none;
+  }
+}
+@media (max-width: 360px) {
+  .topbar {
+    column-gap: 8px;
+  }
+  .run-label-full {
+    display: none;
+  }
+  .run-label-compact {
+    display: inline;
   }
 }

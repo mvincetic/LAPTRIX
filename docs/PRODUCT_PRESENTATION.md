@@ -1,5 +1,59 @@
 # Product presentation milestones
 
+## Premium phase V7 — Track-selection clarity, 2026-09-11
+
+The native selector now groups Development Tracks, Real Circuits and Imported
+Tracks while retaining existing IDs, names and activation behavior. A compact
+description identifies the currently installed source as Development, Real ·
+approximate or Imported · unverified. The existing custom-source registry takes
+precedence over self-declared synthetic flags. Country/provenance remain in the
+description's title and full source details; the licensed Red Bull Ring package
+and LAPTRIX Dev Track geometry remain unchanged.
+
+The first 12 selector/playback captures cover three origins at 1600, 1280, 390 and
+320 px, including keyboard selection across native groups and a long imported
+name. All status labels fit and playback works. Actual header review exposed an
+existing wordmark overlap at 320 px with native scrollbars: an independent text
+range measured 120.48 square CSS pixels under the actions. Intrinsic brand width,
+compact Run/Cancel/Loading labels with full accessible names, and an eight-pixel
+column gap correct it. The loading-state review also caught a one-row wrap, now
+fixed and verified alongside ready/cancel states. Before/after header PNGs were
+opened and reviewed (`track-select-compact-before.log`, `track-select-states.log`).
+
+Seven source activation, import-failure and showcase restoration journeys pass
+in 1.4 minutes. Both portable-project journeys pass in 26.3 seconds and preserve
+the imported group through fresh-page import and saved reload. Three cancellation
+journeys pass; the new compact-header journey passes in 7.0 seconds and also runs
+against production. Evidence is in `selection-browser.log`, `selection-project.log`
+and `selection-compact-cancel.log`. The latter retains the initial loading-wrap
+failure; `track-select-states.log` verifies the corrected complete state sequence.
+
+The full gate passes 286 TypeScript / 152 Python tests (80.20 seconds), lint, Ruff,
+asset validation, typecheck and build (`selection-check.log`). Ten final keyboard,
+project, cancellation and compact-header journeys pass in 1.3 minutes, giving
+17 distinct local integration journeys. The first complete production suite passes
+all 30 journeys in 3.7 minutes (`selection-production.log`). The final review then
+extended to the tablet boundary and reproduced a row split at 700 px: Track could
+share the action row while Car profile moved below it. The brand now combines its
+intrinsic minimum with a preferred width that reserves the first row. The expanded
+loading/ready/cancel regression passes both widths in 9.4 seconds, and the tablet
+before/after captures were reviewed (`track-select-tablet-{before,after}.log`).
+
+The completed 15-state sweep repeats three source origins at 1600, 1280, 700,
+390 and 320 px with native scrollbars (`selection-complete-qa.json`, 30 PNGs).
+Every field stays aligned, each source description fits, actual wordmark/action
+overlap is zero and playback advances from the same clock. Final tablet, narrow
+import and laptop playback images were opened and reviewed. No runtime errors
+occur; the existing renderer dependency's `THREE.Clock` deprecation remains.
+The final full gate passes all 286 TypeScript / 152 Python tests (56.93 seconds),
+lint, Ruff, asset validation, typecheck and build (`selection-complete-check.log`).
+Entry JavaScript is 439.43 / 135.12 kB gzip, viewer JavaScript 990.03 / 266.19 kB,
+and CSS 60.74 / 12.71 kB. Geometry, textures and physical source identities are unchanged.
+All 30 final production journeys pass in 3.8 minutes
+(`selection-complete-production.log`), including the expanded compact/tablet
+loading, ready and cancellation states. The development suite contains 158 cases.
+Continue directly into V8 original Formula surface and silhouette refinement.
+
 ## Premium phase V5 — Viewer layer clarity, 2026-09-11
 
 Analysis Layers now groups lap overlays separately from the scene environment.

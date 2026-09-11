@@ -36,6 +36,7 @@ the last completed result remains visible if a solve fails.
 
 - A validated, data-driven 720-sample circuit with width and elevation.
 - Preserved LAPTRIX Dev Track plus a separately selectable Red Bull Ring showcase.
+- Track selection groups development, real and imported circuits with visible source status.
 - Visible source attribution and portable licenses for the real-circuit reconstruction.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.
 - Conservative synthetic terrain clearance for sparse, sloped and wide source roads.

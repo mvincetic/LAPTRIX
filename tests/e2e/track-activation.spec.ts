@@ -52,6 +52,7 @@ test("a superseded import cannot add its source or overwrite the newer completed
       ...crossing,
       id: "newer-crossing",
       name: "Newer crossing source",
+      synthetic: false,
     };
     await page
       .getByLabel("Import track file", { exact: true })
@@ -62,6 +63,12 @@ test("a superseded import cannot add its source or overwrite the newer completed
     await expect(
       page.getByRole("button", { name: "Run Simulation", exact: true }),
     ).toBeEnabled();
+    await expect(
+      page.getByRole("combobox", { name: "Track", exact: true }),
+    ).toHaveAccessibleDescription("Imported · unverified");
+    await expect(
+      page.locator('optgroup[label="Imported Tracks"] option'),
+    ).toHaveText([newer.name]);
     const before = await exportProject(page);
     const responses = ["optimized", "centerline"].map((solver) =>
       page.waitForResponse((response) => {
@@ -116,6 +123,9 @@ for (const failedSolver of ["optimized", "centerline"]) {
       page.getByRole("combobox", { name: "Track", exact: true }),
     ).toHaveValue(source.id);
     await expect(
+      page.getByRole("combobox", { name: "Track", exact: true }),
+    ).toHaveAccessibleDescription("Development");
+    await expect(
       page.getByRole("option", { name: crossing.name, exact: true }),
     ).toHaveCount(0);
     await expect(
@@ -134,6 +144,12 @@ for (const failedSolver of ["optimized", "centerline"]) {
     await expect(
       page.getByRole("combobox", { name: "Track", exact: true }),
     ).toHaveValue(crossing.id);
+    await expect(
+      page.getByRole("combobox", { name: "Track", exact: true }),
+    ).toHaveAccessibleDescription("Imported · unverified");
+    await expect(
+      page.locator('optgroup[label="Imported Tracks"] option'),
+    ).toHaveText([crossing.name]);
     await expect(page.getByRole("alert")).toHaveCount(0);
     const after = await exportProject(page);
     expect(after.lap.trackId).toBe(crossing.id);

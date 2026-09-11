@@ -1,5 +1,21 @@
 # Decision log
 
+## 2026-09-11 — Show track origin at selection without changing source identity
+
+**Decision:** Group the existing native selector into development, real and
+imported sources. Show a compact active-source description above it. **Reasoning:**
+The controlled fictional track and approximate Austrian showcase serve different
+purposes and should be recognizable before playback. **Consequence:** The existing
+custom-track registry takes precedence over a file's synthetic flag, so imported
+claims cannot promote a file into the bundled real-circuit group. IDs, option names,
+ordering within groups, activation, failure retention and project formats remain
+unchanged. Country/provenance are available in the description's title; detailed
+attribution stays in the existing track details and viewer credit row.
+The native-scrollbar review also reproduced an existing 320 px brand/action
+overlap. Compact Run/Cancel/Loading text keeps the full accessible button names,
+and intrinsic branding plus an eight-pixel column gap retains one action row even
+during loading. The same test exercises real cancellation and retained results.
+
 ## 2026-09-11 — Bound viewer tools and separate source inspection
 
 **Decision:** Group lap overlays and environment controls, with original source

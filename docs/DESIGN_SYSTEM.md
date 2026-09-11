@@ -23,8 +23,20 @@ TRACKSIDE.md. No branding or surveyed-infrastructure claim is implied.
   the middle, lap results/comparison/insights at right. Setup data remains visible.
 - A compact workspace breadcrumb and footer expose synthetic/development status.
 
-Native controls are labelled and keyboard-operable. Tabs indicate active state,
-layer controls are checkboxes, playback has labelled controls and a range slider.
+Native controls are labelled and keyboard-operable. The track selector uses
+native Development Tracks / Real Circuits / Imported Tracks groups. Its compact
+description reads Development, Real · approximate or
+Imported · unverified for the installed source. It is visible beside the Track
+label and associated with the select for screen readers. Country and provenance
+remain available in its title and the detailed source information. The description
+does not add another header row or modify any source/activation behavior. Native
+keyboard selection crosses groups normally, and imported metadata stays unverified.
+On screens up to 360 px, the simulation button shows Run / Cancel / Loading while
+retaining its full accessible name. The wordmark keeps an intrinsic minimum width
+and single-line subtitle, with enough preferred space to keep track/car selection
+on the next row. Native page scrollbars cannot push actions over the brand.
+Tabs indicate active state, layer controls are checkboxes, and playback has labelled
+controls and a range slider.
 Analysis Layers groups normal lap overlays separately from scene environment.
 Source centerline and road edges live behind a native Source inspection disclosure.
 The Environment label covers terrain, trees and barriers, with a concise schematic

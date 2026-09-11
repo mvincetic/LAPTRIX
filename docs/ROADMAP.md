@@ -16,8 +16,8 @@ identities, all engineering contracts and the single playback clock.
 | V4 Surface and environment | Implemented: source-framed guardrails, supports and reflectors follow shoulder crests and exclude nearby roads. Final terrain/motion/production checks pass on both circuits/imports. |
 | V5 UI clarity | Implemented: grouped lap overlays/environment, collapsed source inspection and bounded scrolling panels retain camera/playback access. All 48 visual states and 29 production journeys pass. Continue the workflow audit through showcase selection next. |
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
-| V7 Showcase selection | Next: distinguish Development Tracks / Real Circuits / Imported Tracks in the existing selector, with visible approximation and import status. The licensed Red Bull Ring data package is complete. |
-| V8 Formula presentation | Refine original category-correct bodywork and road contact after camera/environment review. |
+| V7 Showcase selection | Implemented: native source groups and compact provenance descriptions retain identity and import/restore behavior. Fifteen visual states and 30 production journeys pass; narrow/tablet headers remain aligned through loading and cancellation. The licensed Red Bull Ring data package is complete. |
+| V8 Formula presentation | Next active slice: refine original body contours, sidepod/engine-cover silhouettes and tyre shoulders against actual close/chase/onboard views. Preserve metre scale, source road contact and telemetry-driven wheel pivots. |
 | V9 GT presentation | Refine separate coupe proportions and telemetry-driven brake-light/vehicle presentation. |
 | V10 Asset pipeline | Started in V4: actual original guardrail parameters, manifest, conventions and quality-gate validation. Authored vehicle assets, GLB export/optimization and broader validation remain. Use Blender only if locally useful. |
 | V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |

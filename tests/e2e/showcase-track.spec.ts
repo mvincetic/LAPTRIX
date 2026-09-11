@@ -50,11 +50,26 @@ for (const width of [1600, 390]) {
     await expect(page.getByTestId("lap-time")).toBeVisible();
     const select = page.getByRole("combobox", { name: "Track", exact: true });
     await expect(select).toHaveValue("ardennes-development");
+    await expect(select).toHaveAccessibleDescription("Development");
+    await expect(
+      select.locator('optgroup[label="Development Tracks"] option'),
+    ).toHaveText(["LAPTRIX Dev Track"]);
+    await expect(
+      select.locator('optgroup[label="Real Circuits"] option'),
+    ).toHaveText(["Red Bull Ring"]);
+    await expect(
+      select.locator('optgroup[label="Imported Tracks"]'),
+    ).toHaveCount(0);
     const original = await exportProject(page);
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
     await select.selectOption("red-bull-ring");
     await expect(page.locator(".track-caption strong")).toHaveText(
       "Red Bull Ring",
+    );
+    await expect(select).toHaveAccessibleDescription("Real · approximate");
+    await expect(page.locator(".track-category")).toHaveAttribute(
+      "title",
+      `${source.country} · ${source.provenance}`,
     );
     await expect(
       page.getByRole("button", { name: "Run Simulation", exact: true }),
@@ -110,6 +125,7 @@ for (const width of [1600, 390]) {
     await page.reload();
     await expect(page.getByTestId("lap-time")).toBeVisible();
     await expect(select).toHaveValue("red-bull-ring");
+    await expect(select).toHaveAccessibleDescription("Real · approximate");
     await expect(page.getByLabel("Project name")).toHaveValue(
       "Austrian showcase",
     );
@@ -125,6 +141,7 @@ for (const width of [1600, 390]) {
       page.getByRole("button", { name: "Run Simulation", exact: true }),
     ).toBeEnabled();
     await expect(attribution).toHaveCount(0);
+    await expect(select).toHaveAccessibleDescription("Development");
     const dev = await exportProject(page);
     expect(dev.track.points).toEqual(original.track.points);
     expect(dev.lap.alignment.trackFingerprint).toBe(
@@ -146,6 +163,7 @@ for (const width of [1600, 390]) {
       page.getByRole("button", { name: "Run Simulation", exact: true }),
     ).toBeEnabled();
     const imported = await exportProject(page);
+    await expect(select).toHaveAccessibleDescription("Real · approximate");
     expect(imported.track).toEqual(saved.track);
     expect(imported.reference).toEqual(saved.reference);
     expect(imported.setup).toEqual(saved.setup);
