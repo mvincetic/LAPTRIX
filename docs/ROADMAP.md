@@ -27,6 +27,9 @@ QA, documentation, a clean commit and working-branch push:
 2. Source, attribute and bundle the Red Bull Ring showcase. Verify the complete GP
    layout, direction/start line, geometry and source limitations. Keep both tracks
    selectable and exercise activation, saved projects and reference isolation.
+   Implemented: pinned OSM GP data, Steiermark
+   terrain/flight epoch, reproducible transformation, visible/portable attribution.
+   See data/sources/red-bull-ring/README.md. Next: camera and vehicle presentation.
 3. Improve camera framing and follow behavior, speed perception and playback
    clarity using the existing telemetry and single clock. Verify pause/seek/rate,
    loops, camera transitions, reduced motion and responsive/fullscreen use.

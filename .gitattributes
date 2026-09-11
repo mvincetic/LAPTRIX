@@ -2,3 +2,9 @@
 *.png binary
 *.woff binary
 *.woff2 binary
+*.tif binary
+# Preserve the exact downloaded/extracted bytes referenced by the source manifest.
+data/sources/red-bull-ring/osm-gp.osm -text
+data/sources/red-bull-ring/wcs-capabilities.xml -text
+data/sources/red-bull-ring/flight-block.json -text
+data/sources/red-bull-ring/*.txt -text

@@ -9,10 +9,11 @@ The current technical scope is sufficient for this MVP. The next milestone
 sequence prioritizes presentation: visual polish, camera behavior, speed
 perception, track grounding, clearer playback/UI and higher-quality vehicles.
 The original circuit remains available as LAPTRIX Dev Track; Red Bull Ring
-will be added alongside it as the first real showcase using documented reusable
+is available alongside it as the first real showcase using documented reusable
 data. ROADMAP.md defines the implementation, verification and source requirements.
 
-The current product is local: one original synthetic elevation circuit, Formula
+The current product is local: the original development circuit, an approximate
+Red Bull Ring GP reconstruction, Formula
 and GT development profiles and dry conditions. Users can compare a setup or vehicle against a
 reference, inspect individual corners, play a telemetry-driven ghost, scrub the
 lap, save settings on their device and export results. Track JSON import extends
@@ -26,6 +27,11 @@ missing measured channels or replace the simulation's playback.
 Portable project files restore names, selected setup, custom source geometry and
 references on a fresh workspace. The app validates the bundle and recalculates
 before activation, preserving the previous workspace on any file or API failure.
+Red Bull Ring source credits remain beside the viewer and in exported track/lap
+metadata. Attributed CSV exports use a labelled ZIP containing the unchanged table
+and source notices. The circuit uses mapped geometry and smoothed2010 terrain;
+widths, sectors, vehicles and surroundings remain estimates. See the
+[source record](../data/sources/red-bull-ring/README.md).
 An aero study compares five or six settings through the selected solver while
 keeping other inputs fixed. Only checked runs can be applied, and the existing
 reference remains available. See AERO_COMPARISON.md for its bounded scope.

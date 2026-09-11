@@ -8,8 +8,8 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 257 tests pass.
-- Python numerical/API tests: 146 tests pass.
+- Vitest: 259 tests pass.
+- Python numerical/API tests: 152 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
   all 15 relevant browser regressions (2.5 minutes); 84 are now discovered.
@@ -1283,7 +1283,8 @@ passed remote CI run 34470528022.
 ## Scope of the evidence
 
 These checks establish a working development application and numerical consistency,
-not real-world motorsport accuracy. Track and vehicle inputs are synthetic and the
+not real-world motorsport accuracy. Track inputs are synthetic or approximate
+licensed reconstructions, vehicle inputs remain synthetic, and the
 solver is approximate. Audio is original procedural synthesis, not a realistic
 recording. There are upstream Python test-client and Three.js clock deprecation
 warnings; they do not prevent tests or rendering, and dependency source was not

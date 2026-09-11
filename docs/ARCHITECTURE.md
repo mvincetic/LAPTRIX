@@ -26,6 +26,15 @@ closed-loop distance, tangents, horizontal lateral normals and boundaries;
 `ribbonGeometry` emits indexed, top-facing triangles. Three.js constructs and
 disposes GPU geometries when data changes, never on every playback frame. Terrain
 and synthetic tree placements are original contextual geometry, not surveyed data.
+The catalog now includes the original development circuit and a licensed Red Bull
+Ring reconstruction. Its offline importer consumes pinned OSM/terrain files;
+runtime requests do not contact the data providers. Catalog JSON is explicitly
+decoded as UTF-8 on every platform, including Windows.
+Optional bounded track attribution is validated in both contracts, displayed by
+generic viewer/inspection components and copied to new Lap metadata. It does not
+participate in the physical source fingerprint. Native/timing JSON retains it;
+CSV exports with declared source notices use an uncompressed ZIP alongside a text
+notice and JSON attribution. The numeric tables and interpolation are unchanged.
 The deferred Landscape component consumes a pure fixed-grid terrain builder.
 Nearest source-segment interpolation and conservative road/shoulder cell caps
 prevent contextual ground from cutting through the road. Tree clearance accounts

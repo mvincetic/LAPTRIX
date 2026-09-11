@@ -35,6 +35,7 @@ import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { FullscreenControl } from "./FullscreenControl";
 import { ScenePlayback } from "./ScenePlayback";
+import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
@@ -564,7 +565,9 @@ export function TrackView({
           <span className="pill" title={track.provenance}>
             {track.synthetic
               ? "SYNTHETIC DEVELOPMENT CIRCUIT"
-              : "USER-SUPPLIED TRACK · UNVERIFIED"}
+              : track.attribution
+                ? "APPROXIMATE CIRCUIT · SOURCE DATA"
+                : "USER-SUPPLIED TRACK · UNVERIFIED"}
           </span>
           <span className="scene-instruction">
             <MousePointer2 size={12} />{" "}
@@ -635,6 +638,7 @@ export function TrackView({
         )}
       </div>
       <ScenePlayback lap={lap} clock={clock} calculating={calculating} />
+      <TrackAttribution track={track} />
     </section>
   );
 }

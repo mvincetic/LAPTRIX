@@ -25,6 +25,15 @@ for the distinction between the published DIN mass and the independent base-mass
 estimate. No manufacturer images, CAD, branding, measured telemetry or audio were
 copied. The source document itself is linked, not redistributed.
 
+## Real circuit showcase, 2026-09-11
+
+Red Bull Ring is now bundled separately using a pinned OpenStreetMap GP extract
+(ODbL1.0) and Land Steiermark1m DGM crop (CC BY4.0, flight2010). The complete
+[source record](../data/sources/red-bull-ring/README.md) includes licenses, hashes,
+direction/finish selection, reproducible transformation and approximation limits.
+Credits remain visible in the viewer and travel with exported data. LAPTRIX Dev
+Track retains its original geometry and source identity.
+
 ## External research, inspected 2026-09-09
 
 The GPX reader follows primary format/geodesy documentation from Topografix, ESA
@@ -59,7 +68,8 @@ LGPL-3.0; a redistribution decision would require checking the selected revision
 and underlying source-data terms. No dataset files have been copied or shipped.
 It remains a candidate for explicitly approximate 2D imports, not a replacement
 for independently documented 3D geometry. The original elevation circuit remains
-the bundled source until appropriate data is identified.
+the preserved development source. The subsequent Red Bull Ring milestone uses
+independently documented OSM and Steiermark inputs instead of this evaluated dataset.
 
 The subsequent [calibration/3D review](CALIBRATION_DATA_EVALUATION.md) records
 RACECAR, BETTY and Marzaglia source documentation, availability observations and
@@ -73,3 +83,5 @@ Inter and Barlow Condensed fonts use SIL Open Font License and are bundled via
 Fontsource packages with their license files. The npm lockfile and complete Python
 requirements pin the actual dependency graph. Consult each package's included
 license before redistributing a binary or hosted bundle; preserve required notices.
+fflate0.8.3 (MIT), already present transitively in the viewer dependency graph, is
+now also a pinned direct dependency for uncompressed CSV/source-notice ZIPs.

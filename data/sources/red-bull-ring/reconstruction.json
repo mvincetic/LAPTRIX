@@ -1,0 +1,36 @@
+{
+  "format": "laptrix-red-bull-ring-reconstruction-v1",
+  "samples": 720,
+  "originUtm33n": [
+    482338.48236549797,
+    5229671.71170846
+  ],
+  "finishNode": "13826152422",
+  "mappedPlanLengthMetres": 4306.887890053094,
+  "reconstructedPlanLengthMetres": 4307.620351199397,
+  "sourceLength3dMetres": 4311.389293288163,
+  "maxPlanDeviationMetres": 0.8648305966961415,
+  "terrainHeightRangeMetres": [
+    676.8044513489298,
+    740.952351120469
+  ],
+  "filteredAbsoluteHeightRangeMetres": [
+    677.4140047504789,
+    740.6862244095839
+  ],
+  "maxHeightFilterChangeMetres": 6.084372785617688,
+  "sourceElevationRangeMetres": 63.272219659105076,
+  "sampleSpacingMetres": [
+    5.936700853167481,
+    6.025913112549796
+  ],
+  "maxConventionalGrade": 0.12017654717807727,
+  "signedPlanAreaSquareMetres": -421393.15436138253,
+  "elevationGaussianSigmaMetres": 30,
+  "widthEachSideMetres": 6,
+  "sectorFractions": [
+    0.3333333333333333,
+    0.6666666666666666,
+    1
+  ]
+}

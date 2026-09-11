@@ -1,0 +1,68 @@
+{
+  "retrieved": "2026-09-11",
+  "osm": {
+    "url": "https://api.openstreetmap.org/api/0.6/map?bbox=14.75,47.212,14.775,47.231",
+    "originalSha256": "3d9b795cc0472d479a60fec3d2f12c870fe07d00739d209cf18f4d4c028bf54f",
+    "relation": 5309181,
+    "version": 8,
+    "gpWays": [
+      "347958266",
+      "822592398",
+      "822592399",
+      "822592400",
+      "822592401",
+      "822592402",
+      "822592405",
+      "822592406",
+      "822592407",
+      "822592408",
+      "822592409",
+      "822592410",
+      "822592403",
+      "822592404"
+    ],
+    "excludedWays": [
+      "1077423714",
+      "289111668",
+      "823820476"
+    ],
+    "finishNode": "13826152422",
+    "startNode": "13826152421",
+    "extraction": "Only relation 5309181, its 17 ways and referenced nodes; contributor account fields omitted. Geometry, version, timestamp, tags and membership retained."
+  },
+  "terrain": {
+    "url": "https://gis.stmk.gv.at/arcgis/services/OGD/ALSGelaendeinformation_1m_UTM33N/MapServer/WCSServer?request=GetCoverage&service=WCS&version=2.0.1&coverageId=Coverage4&format=image%2Ftiff&subset=x%28481280%2C482740%29&subset=y%285229450%2C5230450%29",
+    "originalTiffSha256": "55e393667d8b465535e23f289a23d3c10102ec46f7649a37d0f146e96ecaef92",
+    "bounds": [
+      481280,
+      5229450,
+      482740,
+      5230450
+    ],
+    "coverage": "Coverage4 (terrain heights, not hillshade)",
+    "crs": "EPSG:32633",
+    "pixelMetres": 1,
+    "flightYear": 2010,
+    "flightArea": "Judenburg",
+    "extraction": "TIFF part extracted from ArcGIS multipart response, losslessly DEFLATE-compressed with floating-point predictor3. Pixel equality, CRS and transform verified.",
+    "flightQuery": "https://gis.stmk.gv.at/arcgis/rest/services/OGD/ALSGelaendeinformation_1m_UTM33N/MapServer/1/query?f=pjson&geometry=482000,5230000&geometryType=esriGeometryPoint&inSR=32633&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false"
+  },
+  "files": {
+    "flight-block.json": {
+      "sha256": "316b370e5afffa5489cd64ce6fe0df8125389d825ad7839e9b7b8debda58987f",
+      "bytes": 1264
+    },
+    "osm-gp.osm": {
+      "sha256": "1109b98b86a2e57f4d32229a3ed380d5fec4a85a3e42a78c24014d121cc0d3c0",
+      "bytes": 53112
+    },
+    "terrain-1m.tif": {
+      "sha256": "15763004639ab0e9f047ed8d37fcee1ef3c11a60658ba6e0a44793d825025ca5",
+      "bytes": 2299929
+    },
+    "wcs-capabilities.xml": {
+      "sha256": "b0b662157d371c67145d42460ce1ae83110694228dccbc316ab82dcc95cd4686",
+      "bytes": 8004
+    }
+  }
+}

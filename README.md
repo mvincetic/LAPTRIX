@@ -7,6 +7,9 @@ light engineering reference while using original LAPTRIX branding and data.
 **This is a Development Physics Model, not a validated Formula 1 simulator.** The
 LAPTRIX Dev Track and Formula Development 01 are synthetic. The circuit
 is not Spa-Francorchamps. No commercial game geometry, audio or team assets are used.
+**Red Bull Ring, Austria** is also available as an approximate GP reconstruction
+from OpenStreetMap and Land Steiermark terrain data. Its source snapshots, licenses,
+reproduction steps and limitations are in [the source record](data/sources/red-bull-ring/README.md).
 
 ## Start locally
 
@@ -32,6 +35,8 @@ the last completed result remains visible if a solve fails.
 ## What works
 
 - A validated, data-driven 720-sample circuit with width and elevation.
+- Preserved LAPTRIX Dev Track plus a separately selectable Red Bull Ring showcase.
+- Visible source attribution and portable licenses for the real-circuit reconstruction.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.
 - Conservative synthetic terrain clearance for sparse, sloped and wide source roads.
 - A paused workspace that stops drawing and scheduling animation frames once settled.
@@ -216,7 +221,7 @@ browser gates on pushes. Work remains on `codex/autonomous-mvp`; main is untouch
 | `packages/telemetry` | Shared interpolation and playback clock |
 | `packages/shared` | Frontend runtime schemas and TypeScript types |
 | `packages/audio-engine` | Telemetry-driven procedural sound |
-| `data` | Original synthetic tracks and configurable vehicles |
+| `data` | Original development track, licensed real-circuit reconstruction/source records and configurable vehicles |
 | `tests` | Numerical, geometry, API and real-browser regression checks |
 | `docs` | Product, architecture, decisions and development knowledge base |
 

@@ -1,0 +1,14 @@
+{
+  "ODbL-1.0.txt": {
+    "url": "https://opendatacommons.org/licenses/odbl/odbl-10.txt",
+    "retrieved": "2026-09-11",
+    "sha256": "607680718977f6f6c9607972afd98f208573f19251315ed1362a8589b51beaf5",
+    "bytes": 25278
+  },
+  "CC-BY-4.0.txt": {
+    "url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+    "retrieved": "2026-09-11",
+    "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+    "bytes": 18657
+  }
+}

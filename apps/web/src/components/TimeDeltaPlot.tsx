@@ -14,6 +14,7 @@ import { plotTickLabel, type PlotViewport } from "../plotViewport";
 import { buildComparisonReport } from "../../../../packages/telemetry/comparison-report";
 import { comparisonReportCsv } from "../../../../packages/telemetry/comparison-csv";
 import { download } from "../download";
+import { csvDownload } from "../csvDownload";
 import "./comparison-export.css";
 
 export function TimeDeltaPlot({
@@ -82,14 +83,15 @@ export function TimeDeltaPlot({
       reference,
       new Date().toISOString(),
     );
-    if (report)
-      download(
-        `laptrix-comparison.${format}`,
-        format === "csv"
-          ? comparisonReportCsv(report)
-          : JSON.stringify(report, null, 2),
-        format === "csv" ? "text/csv" : "application/json",
+    if (!report) return;
+    if (format === "csv") {
+      const file = csvDownload(
+        "laptrix-comparison.csv",
+        comparisonReportCsv(report),
+        [lap?.trackAttribution, reference?.trackAttribution],
       );
+      download(file.name, file.content, file.type);
+    } else download("laptrix-comparison.json", JSON.stringify(report, null, 2));
   };
   return (
     <div className="delta-analysis">
@@ -115,11 +117,14 @@ export function TimeDeltaPlot({
           </button>
           <button
             className="text-button comparison-export"
-            aria-label="Export full-lap comparison CSV"
-            title="Download aligned numeric rows in canonical units; unavailable channels are empty"
+            aria-label={`Export full-lap comparison CSV${lap?.trackAttribution || reference?.trackAttribution ? " + credits (ZIP)" : ""}`}
+            title="Download aligned numeric rows in canonical units; source notices accompany attributed data in a ZIP"
             onClick={() => exportComparison("csv")}
           >
             <Download size={13} /> Export full-lap CSV
+            {lap?.trackAttribution || reference?.trackAttribution
+              ? " + credits (ZIP)"
+              : ""}
           </button>
         </div>
       </div>

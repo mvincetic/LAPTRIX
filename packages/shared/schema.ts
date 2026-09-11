@@ -1,6 +1,27 @@
 import { z } from "zod";
 
 const finite = z.number().finite();
+const sourceUrl = z.url({ protocol: /^https?$/ }).max(2000);
+export const trackAttributionSchema = z
+  .object({
+    sources: z
+      .array(
+        z
+          .object({
+            title: z.string().min(1).max(200),
+            credit: z.string().min(1).max(200),
+            url: sourceUrl,
+            license: z.string().min(1).max(100),
+            licenseUrl: sourceUrl,
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(8),
+    notes: z.string().min(1).max(1200),
+    documentationUrl: sourceUrl,
+  })
+  .strict();
 export const pointSchema = z
   .object({
     x: finite,
@@ -19,6 +40,7 @@ export const trackSchema = z
     country: z.string().max(100),
     provenance: z.string().max(500),
     synthetic: z.boolean(),
+    attribution: trackAttributionSchema.nullish(),
     closed: z.literal(true),
     sectorFractions: z.array(finite.positive().max(1)).min(2).max(6),
     points: z.array(pointSchema).min(40).max(2000),
@@ -160,6 +182,7 @@ export const lapSchema = z
   .object({
     schemaVersion: z.literal(1),
     trackId: z.string(),
+    trackAttribution: trackAttributionSchema.nullish(),
     vehicleId: z.string(),
     vehicle: vehicleSchema.optional(),
     referenceImport: z.object({ fileName: z.string().max(255) }).optional(),
@@ -500,6 +523,7 @@ export const timingReferenceSchema = z
     origin: z.enum(["recorded", "external-simulation"]),
     source: z.string().min(1).max(500),
     trackId: z.string().regex(/^[a-z0-9-]{1,64}$/),
+    trackAttribution: trackAttributionSchema.nullish(),
     lapTime: finite.positive().max(86400),
     units: z
       .object({ time: z.literal("s"), progress: z.literal("fraction") })

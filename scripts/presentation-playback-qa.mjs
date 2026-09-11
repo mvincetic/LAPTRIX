@@ -7,6 +7,8 @@ const browser = await chromium.launch({
   args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const results = [];
+const showcase = process.argv.includes("--showcase");
+const prefix = showcase ? "red-bull-ring" : "presentation-playback";
 try {
   for (const [width, height] of [
     [1600, 1000],
@@ -19,6 +21,20 @@ try {
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("http://127.0.0.1:5173/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
+    if (showcase) {
+      await page
+        .getByRole("combobox", { name: "Track", exact: true })
+        .selectOption("red-bull-ring");
+      await expect(page.locator(".track-caption strong")).toHaveText(
+        "Red Bull Ring",
+      );
+      await expect(
+        page.getByRole("button", { name: "Run Simulation", exact: true }),
+      ).toBeEnabled();
+      await expect(
+        page.getByRole("navigation", { name: "Track source attribution" }),
+      ).toContainText("© OpenStreetMap contributors");
+    }
     await expect(
       page.getByRole("button", { name: "Inspect corner 1", exact: true }),
     ).toBeVisible();
@@ -77,22 +93,40 @@ try {
       expect(metrics.overflow).toBe(false);
       expect(metrics.contained).toBe(true);
       expect(errors).toEqual([]);
+      if (showcase) {
+        const credits = await page
+          .locator(".track-attribution")
+          .evaluate((element) => {
+            const r = element.getBoundingClientRect(),
+              panel = element.closest(".track-panel").getBoundingClientRect();
+            return {
+              text: element.textContent,
+              height: r.height,
+              contained:
+                r.left >= panel.left &&
+                r.right <= panel.right &&
+                r.bottom <= panel.bottom,
+              overflow: element.scrollWidth > element.clientWidth,
+            };
+          });
+        expect(credits.contained).toBe(true);
+        expect(credits.overflow).toBe(false);
+        metrics.credits = credits;
+      }
       await page.screenshot({
-        path: `artifacts/presentation-playback-${width}-${state}.png`,
+        path: `artifacts/${prefix}-${width}-${state}.png`,
         fullPage: state !== "fullscreen",
       });
-      await page
-        .locator(".track-panel")
-        .screenshot({
-          path: `artifacts/presentation-playback-scene-${width}-${state}.png`,
-        });
+      await page.locator(".track-panel").screenshot({
+        path: `artifacts/${prefix}-scene-${width}-${state}.png`,
+      });
       results.push({ width, height, state, ...metrics, errors: [...errors] });
     }
     await page.close();
   }
 } finally {
   await writeFile(
-    "artifacts/presentation-playback-qa.json",
+    `artifacts/${prefix}-qa.json`,
     JSON.stringify(results, null, 2),
   );
   process.stdout.write(JSON.stringify(results, null, 2));

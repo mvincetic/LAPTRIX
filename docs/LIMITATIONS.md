@@ -1,6 +1,10 @@
 # Known limitations
 
-- Geometry, vehicle and environmental responses are synthetic. Selected GT
+- LAPTRIX Dev Track is synthetic. Red Bull Ring uses an approximate mapped GP
+  reconstruction with smoothed2010 terrain; widths, banking and sectors are
+  estimates. The maximum height-smoothing adjustment is6.084m. It is not a current
+  race-surface survey; see [source limitations](../data/sources/red-bull-ring/README.md).
+  Vehicle and environmental responses remain synthetic. Selected GT
   specification anchors do not calibrate estimated grip, mass, aero or power-curve
   shape. Neither profile is an official lap prediction for a real vehicle.
 - Minimum curvature is a small-offset approximation. Optional lap-time refinement

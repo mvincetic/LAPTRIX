@@ -29,6 +29,10 @@ The 50 px scene footer prioritizes current speed, gear and elapsed/full lap time
 with a text playback state and rate. Tabular numerals stay readable at phone widths;
 the strip remains present in fullscreen. Chase instructions describe fixed follow
 behavior, while orbit/top retain their interaction guidance.
+Attributed circuits add a compact wrapping credit row below the playback readout;
+it remains inside the viewer in fullscreen. Track inspection exposes full source
+links and assumptions. The real showcase is labelled as an approximate circuit,
+and CSV actions explicitly say when source credits accompany the table in a ZIP.
 The track key uses a compact labelled toggle above its four familiar symbols.
 It starts collapsed in scenes below 480 px wide or 350 px high; an explicit choice persists
 through display changes. The same panel and focus treatment remain, while hidden

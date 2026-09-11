@@ -72,6 +72,41 @@ export function TrackDetails({ track }: { track: Track }) {
       <div className="track-details-body">
         <strong>{track.name}</strong>
         <p>{track.provenance}</p>
+        {track.attribution && (
+          <div className="track-source-details">
+            <strong>Sources &amp; assumptions</strong>
+            <p>{track.attribution.notes}</p>
+            <ul>
+              {track.attribution.sources.map((source, i) => (
+                <li key={i}>
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {source.title}
+                  </a>
+                  <br />
+                  {source.credit} ·{" "}
+                  <a
+                    href={source.licenseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {source.license}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={track.attribution.documentationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Reconstruction &amp; source files
+            </a>
+          </div>
+        )}
         <dl>
           <div>
             <dt>Source samples / length</dt>

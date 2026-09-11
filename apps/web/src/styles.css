@@ -931,6 +931,24 @@ select {
 .scene-playback-values [data-testid="scene-speed"] {
   min-width: 66px;
 }
+.track-attribution {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 3px;
+  padding: 5px 12px;
+  font-size: 9px;
+  line-height: 1.4;
+  background: #f8fafc;
+  border-top: 1px solid #e7edf3;
+}
+.track-attribution a {
+  color: #526680;
+  text-decoration-color: #b8c4d2;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
 .ghost-tag {
   display: block;
   padding: 2px 4px;

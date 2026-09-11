@@ -1,0 +1,5 @@
+# Optional offline circuit preparation only; not required to run LAPTRIX.
+numpy==2.5.3
+scipy==1.18.1
+pyproj==3.8.0
+rasterio==1.5.1

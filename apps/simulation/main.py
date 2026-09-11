@@ -39,9 +39,13 @@ async def local_requests(request: Request, call_next):
 
 @lru_cache
 def catalog():
-    tracks = [Track.model_validate_json(p.read_text()) for p in sorted((ROOT / "data/tracks").glob("*.json"))]
+    tracks = [
+        Track.model_validate_json(p.read_text(encoding="utf-8"))
+        for p in sorted((ROOT / "data/tracks").glob("*.json"))
+    ]
     vehicles = [
-        Vehicle.model_validate_json(p.read_text()) for p in sorted((ROOT / "data/vehicles").glob("*.json"))
+        Vehicle.model_validate_json(p.read_text(encoding="utf-8"))
+        for p in sorted((ROOT / "data/vehicles").glob("*.json"))
     ]
     return tracks, vehicles
 

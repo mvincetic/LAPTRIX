@@ -50,3 +50,67 @@ corner-overlay mount wait, which was a capture-timing issue, not a rendering def
 These checks establish playback clarity and compatibility. The vehicle is still a
 schematic enlarged mesh and the follow camera/context need the next milestones.
 The development track remains available when the real showcase is added.
+
+## Red Bull Ring GP showcase — 2026-09-11
+
+Both circuits now coexist in the catalog. Red Bull Ring uses pinned OSM GP ways
+and a licensed Steiermark terrain crop; complete licenses, source hashes, flight
+epoch, geometry transformation and assumptions are in
+[the source record](../data/sources/red-bull-ring/README.md). The original Dev Track
+JSON is unchanged in this milestone. The new source fingerprint is
+`sha256:6269176570597be6d70057566a045d193bdbc18f3e59db8cad141c33798c4118`.
+
+The reconstruction has 720 points, a 4311.389 m 3D source length and 63.272 m of
+elevation. It uses the clockwise GP route without motorcycle/pit branches, starts
+at the mapped finish vertex and retains estimated 12 m width and sector thirds.
+An initial 10 m height-filter sigma left a 27.1% grade near a short DGM dip; the
+final 30 m spatial sigma smooths that feature while preserving the broad hills.
+Its maximum 6.084 m height adjustment and 2010 data epoch remain explicit.
+This is approximate terrain reconstruction, not a current road-surface survey.
+
+Optional bounded attribution is carried in the track and new native/timing lap
+metadata. It appears beside the viewer, in track inspection, in JSON exports and
+in credited CSV ZIPs. The archives keep the numerical CSV intact and add text/JSON
+source notices. fflate 0.8.3 is now a pinned direct dependency (previously transitive);
+ZIP entries use STORE to avoid compression of the numerical tables. Source identity
+excludes presentation metadata. New solver-source identity is
+`sha256:5c41ae28ce7434eabb9a4d457c66233f29cd1e4d1ea6f8ab2043dddd69025e8f`
+because the contract/output carries attribution; no equations changed.
+
+The final full gate passes lint, Ruff, strict typecheck, **259 TypeScript tests and
+152 Python tests (46.44 seconds)** plus build. New Python cases cover pinned bytes,
+the closed GP chain, direction, both catalog sources, metadata/URLs and Formula/GT
+solves. New TypeScript cases cover geometry identity and attributed portable
+restoration. The offline importer reproduces both generated files exactly with
+`--check`. Evidence: `artifacts/red-bull-ring-check-final.log`,
+`red-bull-ring-python.log`, `red-bull-ring-reconstruction.log` and
+`red-bull-ring-reproduce.log`. Entry JavaScript is 438.92 / 134.97 kB gzip;
+deferred viewer is 967.84 / 259.53 kB.
+
+Ten existing browser regressions pass, including project recovery, transactional
+track activation, source isolation, comparison export and scene playback.
+The first new browser run caught a Windows catalog decoding defect: implicit
+system encoding garbled UTF-8 credits. Explicit UTF-8 catalog reads fix both track
+and vehicle loading, with a Unicode regression assertion. A subsequent phone
+fixture attempted the hidden desktop project-name field; it now uses the existing
+Rename project dialog. All three final showcase journeys pass in 35.6 seconds.
+They verify both tracks remain available, source/reference alignment, local save,
+reload, portable restore and native/timing/CSV notices. Python's independent ZIP
+reader verifies CRCs; every telemetry value and comparison timing row is retained.
+Evidence: `red-bull-ring-browser.log`, `red-bull-ring-browser-final.log` and
+`red-bull-ring-browser-release.log`. All **11 production journeys pass in 1.1
+minutes**, including those three built-app showcase cases
+(`artifacts/red-bull-ring-production.log`). Final changed-script lint/typecheck pass.
+
+Visual QA uses `node scripts/presentation-playback-qa.mjs --showcase`: overview,
+top, chase and chase fullscreen at 1600×1000, 1280×900, 390×844 and 780×390. All
+16 states retain the readout and source credits within their viewer, with zero
+horizontal overflow or runtime errors. Desktop overview, phone top and short
+fullscreen screenshots were opened and reviewed. The GP plan is recognizable;
+seven detected corner groups are explicitly labelled as detected rather than the
+official ten turns. Evidence: `artifacts/red-bull-ring-qa.json`, corresponding log
+and `red-bull-ring[-scene]-*.png`.
+
+Camera distance, the schematic enlarged vehicle, ground materials and scene
+context remain the next presentation targets. No calibration claim follows from
+successful solves or the similarity of the reconstructed elevation range.

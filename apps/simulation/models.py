@@ -18,6 +18,20 @@ class TrackPoint(StrictModel):
     banking: float = Field(default=0, ge=-0.3, le=0.3)
 
 
+class TrackSource(StrictModel):
+    title: str = Field(min_length=1, max_length=200)
+    credit: str = Field(min_length=1, max_length=200)
+    url: HttpUrl = Field(max_length=2000)
+    license: str = Field(min_length=1, max_length=100)
+    licenseUrl: HttpUrl = Field(max_length=2000)
+
+
+class TrackAttribution(StrictModel):
+    sources: list[TrackSource] = Field(min_length=1, max_length=8)
+    notes: str = Field(min_length=1, max_length=1200)
+    documentationUrl: HttpUrl = Field(max_length=2000)
+
+
 class Track(StrictModel):
     schemaVersion: Literal[1, 2] = 1
     id: str = Field(pattern=r"^[a-z0-9-]{1,64}$")
@@ -25,6 +39,7 @@ class Track(StrictModel):
     country: str = Field(max_length=100)
     provenance: str = Field(max_length=500)
     synthetic: bool
+    attribution: TrackAttribution | None = None
     closed: Literal[True] = True
     sectorFractions: list[float] = Field(min_length=2, max_length=6)
     points: list[TrackPoint] = Field(min_length=40, max_length=2000)
@@ -112,9 +127,7 @@ class ProfilePowerPoint(PowerPoint):
 class ProfileSource(VehicleSource):
     model_config = ConfigDict(strict=True)
     title: str = Field(min_length=1, max_length=200)
-    fields: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(
-        min_length=1, max_length=32
-    )
+    fields: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(min_length=1, max_length=32)
 
 
 class VehicleProfile(Vehicle):

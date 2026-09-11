@@ -450,6 +450,7 @@ def solve(track: Track, vehicle: Vehicle, setup: Setup):
     return dict(
         schemaVersion=1,
         trackId=track.id,
+        trackAttribution=track.attribution.model_dump(mode="json") if track.attribution else None,
         vehicleId=vehicle.id,
         vehicle=vehicle.model_dump(mode="json"),
         setup=setup.model_dump(),

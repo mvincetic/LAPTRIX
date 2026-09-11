@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-11 — Bundle a reproducible, attributed Red Bull Ring showcase
+
+**Decision:** Add a separate Red Bull Ring GP source built offline from OSM relation
+5309181v8 and a pinned Steiermark1m terrain crop. Preserve Dev Track. Record the2010
+flight epoch, all transformations, estimated widths/sectors and6.084m maximum
+height adjustment. Keep source licenses in the repository and exported results.
+**Reasoning:** A recognizable real circuit supports the new presentation priority;
+the data does not establish a surveyed current race surface. **Consequence:** The
+app remains generic and offline, with no circuit-specific solver tuning. Optional
+attribution survives JSON and accompanies CSV in an explicitly labelled ZIP.
+Source identity stays geometric; solver-source identity changes for added metadata
+without changing equations. UTF-8 catalog reads fix Windows credit corruption.
+
 ## 2026-09-11 — Present the preserved development circuit and shared playback
 
 **Decision:** Rename only the installed synthetic circuit's display name to

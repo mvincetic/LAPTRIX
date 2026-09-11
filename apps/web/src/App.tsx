@@ -50,6 +50,7 @@ import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { RenameProjectDialog } from "./components/RenameProjectDialog";
 import { GpxImportDialog, type GpxDraft } from "./components/GpxImportDialog";
 import { download } from "./download";
+import { csvDownload } from "./csvDownload";
 import { useActionsMenuHeight } from "./useActionsMenuHeight";
 import { TimingCsvDialog } from "./components/TimingCsvDialog";
 import {
@@ -939,6 +940,7 @@ export function App() {
                               source:
                                 "LAPTRIX Development Physics Model; simulated timing, not measured telemetry.",
                               trackId: lap.trackId,
+                              trackAttribution: lap.trackAttribution,
                               lapTime: lap.lapTime,
                               units: { time: "s", progress: "fraction" },
                               alignment: lap.alignment,
@@ -976,7 +978,7 @@ export function App() {
                         const keys = Object.keys(
                           lap.samples[0],
                         ) as (keyof (typeof lap.samples)[0])[];
-                        download(
+                        const file = csvDownload(
                           "laptrix-telemetry-si.csv",
                           [
                             keys.join(","),
@@ -984,14 +986,16 @@ export function App() {
                               keys.map((k) => s[k]).join(","),
                             ),
                           ].join("\n"),
-                          "text/csv",
+                          [lap.trackAttribution],
                         );
+                        download(file.name, file.content, file.type);
                       }
                       setMenu(false);
                     }}
                   >
                     <Download size={14} />
                     Export telemetry CSV (SI)
+                    {lap?.trackAttribution ? " + credits (ZIP)" : ""}
                   </button>
                   <button disabled={!track} onClick={exportProject}>
                     <Save size={14} />

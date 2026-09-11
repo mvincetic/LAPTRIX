@@ -32,6 +32,20 @@
   color: #6c7e96;
   margin: 8px 0;
 }
+.track-source-details {
+  margin: 14px 0;
+  padding: 10px 0;
+  border-block: 1px solid #e0e6ee;
+}
+.track-source-details ul {
+  padding-left: 15px;
+}
+.track-source-details li + li {
+  margin-top: 8px;
+}
+.track-source-details a {
+  color: #0866ec;
+}
 .track-details-body dl {
   margin: 12px 0;
 }
