@@ -43,6 +43,7 @@ the last completed result remains visible if a solve fails.
 - Original asphalt grain, edge paint, schematic curbs and grassy shoulder connections for clearer scale and motion.
 - Original Dev Track start signs with grounded foundations and a reproducible, validated GLB export/loading pipeline.
 - Original daylight reflections and current-car shadows, with cached resources and time-based orbit settling.
+- Original instanced spruce foliage with a compact local texture, retained source-grounded placement and optional-load recovery.
 - A paused workspace that stops drawing and scheduling animation frames once settled.
 - Automatic redraw after the browser restores a lost graphics context.
 - Bounded minimum-curvature optimization and a closed-loop speed envelope.

@@ -42,6 +42,15 @@ generates 128 KiB of linear radiance data at runtime. No HDRI or photograph is
 downloaded. Three filters the environment for material reflections; the existing
 playback vehicle anchors a single 1024² shadow map. See `docs/DAYLIGHT.md`.
 
+The sixth package, `environment/spruce.json`, replaces uniform scenery cones with
+original instanced foliage. The original generated bough, complete imagegen prompt
+and reference-free provenance remain in this directory. `npm run export:foliage`
+encodes the unchanged PNG source into the 89.3 KiB runtime WebP. Nine branch tiers,
+a small interior and a tapered trunk use two static batches; positions and tree
+exclusion corridors remain source-grounded. See `docs/FOLIAGE.md` for alpha,
+geometry, resource budgets and optional-load recovery. The original source PNG is
+not included in the browser bundle.
+
 ## Conventions
 
 - Metres, right-handed coordinates, +Y up and +Z forward. Source-world geometry
@@ -58,8 +67,9 @@ playback vehicle anchors a single 1024² shadow map. See `docs/DAYLIGHT.md`.
   culling sphere/box update together before presentation. Ordinary UI edits retain
   GPU resources, and source changes dispose replaced geometry.
 
-The pylon establishes the actual static GLB export/loading pipeline; the other
-four packages remain procedural. Blender is optional and was not used here.
+The pylon establishes the actual static GLB export/loading pipeline; spruce uses
+an original image with procedural geometry, and the other four packages remain
+procedural. Blender is optional and was not used here.
 Future authored vehicle/environment assets should retain editable sources, validate
 metre scale and pivots, normalize materials, export and optimize GLB, then record
 the actual runtime resource and licence in the manifest. Add LODs only with actual

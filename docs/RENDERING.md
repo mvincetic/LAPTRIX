@@ -1,5 +1,15 @@
 # Rendering when the scene changes
 
+The vegetation pass keeps two tree draw batches while replacing uniform cones
+with 348-triangle crowns and 28-triangle tapered trunks. Existing positions and
+normalized crown bounds remain intact. One cached 512² alpha texture adds about
+1.33 MiB of RGBA/mip storage, excluding driver/decoded-image overhead. The 89.3 KiB
+WebP is requested only with Environment; source PNG and prompt stay out of the
+runtime bundle. Failed optional loads retain simple crowns and retry on remount.
+No per-frame callback, extra shadow pass or independent clock is added. See
+FOLIAGE.md for geometry, ownership, compression and verification details. Counts
+below document earlier milestones before this vegetation change.
+
 The daylight pass adds an original 128×64 linear radiance environment and a single
 1024² current-vehicle shadow map. Its direction stays fixed while the map volume
 translates with the real ghost, after the existing telemetry callback. Shadow

@@ -17,6 +17,7 @@
     "check": "npm run lint && npm run lint:python && npm run validate:assets && npm run typecheck && npm test && npm run test:api && npm run build",
     "validate:assets": "node scripts/validate-assets.mjs && node scripts/export-assets.mjs --check",
     "export:assets": "node scripts/export-assets.mjs",
+    "export:foliage": "node scripts/export-foliage.mjs",
     "lint:python": "node scripts/python.mjs -m ruff check apps/simulation scripts/*.py tests/python",
     "format:python": "node scripts/python.mjs -m ruff format apps/simulation scripts/*.py tests/python",
     "study:solver": "node scripts/python.mjs scripts/solver_study.py",

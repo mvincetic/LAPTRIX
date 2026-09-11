@@ -7,6 +7,11 @@ image, manufacturer model or game mesh is embedded. The existing Formula/GT and
 guardrail packages remain procedural because they adapt to physical profiles and
 source geometry. Track geometry remains authoritative simulation data.
 
+The separate foliage package extends the manifest to an original generated texture
+with procedural branch geometry. Its unchanged PNG, complete generation prompt,
+compact runtime WebP, hash validation and offline encoding command are documented
+in FOLIAGE.md. This does not alter the GLB source/export conventions below.
+
 ## Export and validation
 
 Run `npm run export:assets` after editing the pylon source. The builder merges

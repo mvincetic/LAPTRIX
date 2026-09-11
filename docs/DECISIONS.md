@@ -1,5 +1,21 @@
 # Decision log
 
+## 2026-09-11 — Give existing tree sites original instanced foliage
+
+**Decision:** Keep the source-grounded tree sites and crown envelope, replacing
+uniform cones with original textured branch geometry and tapered trunks.
+**Reasoning:** A solid layered study still looked ornamental. An original bough
+cutout gives a natural silhouette within two draw batches and one 89.3 KiB runtime
+texture. The full prompt, unmodified source PNG and encoded WebP remain versioned.
+**Consequence:** A textured interior preserves distant coverage without flat dark
+facets in close views. Triangle work increases within documented bounds; instances,
+texture identity and paused behavior remain stable. Optional load failure retains
+simple crowns and the engineering workspace. No shadow or animation callback is
+added. These schematic trees are not surveyed circuit vegetation. See FOLIAGE.md.
+The preceding green Linux run used 19.4 of 20 minutes on its first development
+shard. Four development shards plus the separate production job reserve headroom
+for this richer scene and its new checks without relaxing existing deadlines.
+
 ## 2026-09-11 — Observe rendered shadow updates and separate the production CI job
 
 **Decision:** Start camera-only cache measurements after the sought frame updates

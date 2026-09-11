@@ -6,6 +6,17 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The original vegetation pass clears the complete final local gate with 311
+TypeScript / 152 Python tests (44.15 seconds), six asset packages, reproducible
+GLB export and lint/type/build checks. Forty-eight final foliage views cover
+both circuits, three widths, four cameras and four close angles. The placement
+also passes 52 onboard captures, and six final continuous sequences record 265
+frames with zero trackside-anchor drift. All 28 combined interaction journeys
+pass in 7.8 minutes, including alpha coverage, retained instances/resources,
+optional texture retry, complete graphics restoration and zero settled rendering.
+All 35 production journeys pass on the final distribution in 9.0 minutes.
+See FOLIAGE.md and PRODUCT_PRESENTATION.md for asset/source and resource limits.
+
 The daylight cycle passes the complete local gate with 309 TypeScript / 152 Python
 tests, five asset packages, reproducible GLB export, lint/typecheck and build.
 Six corrected lighting/recovery/idle journeys pass in 2.0 minutes. Two additional

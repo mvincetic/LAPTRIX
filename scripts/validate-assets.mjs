@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
@@ -31,7 +32,7 @@ assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
   manifest.assets.length,
-  5,
+  6,
   "Register a validator when adding another asset package.",
 );
 const ids = new Set();
@@ -45,6 +46,7 @@ for (const entry of manifest.assets) {
       "laptrix.gt-body.v1",
       "laptrix.dev-start-pylon.v1",
       "laptrix.daylight.v1",
+      "laptrix.spruce.v1",
     ].includes(entry.id),
   );
   for (const field of ["origin", "provenance", "rights"])
@@ -56,7 +58,62 @@ for (const entry of manifest.assets) {
     await readFile(await ownedPath(entry.parameters), "utf8"),
   );
   assert.equal(asset.id, entry.id);
-  if (entry.id === "laptrix.daylight.v1") {
+  if (entry.id === "laptrix.spruce.v1") {
+    assert.equal(entry.format, "textured-procedural");
+    assert.equal(entry.category, "environment");
+    const runtime = await readFile(await ownedPath(entry.runtimeFile));
+    const source = await readFile(await ownedPath(entry.sourceFile));
+    assert.equal(
+      createHash("sha256").update(runtime).digest("hex"),
+      entry.sha256,
+    );
+    assert.equal(
+      createHash("sha256").update(source).digest("hex"),
+      entry.sourceSha256,
+    );
+    bounded(entry.maxBytes, 1, 131072);
+    assert(runtime.length <= entry.maxBytes);
+    assert.equal(runtime.toString("ascii", 0, 4), "RIFF");
+    assert.equal(runtime.toString("ascii", 8, 16), "WEBPVP8X");
+    assert.equal(runtime.readUInt32LE(4) + 8, runtime.length);
+    assert(
+      runtime[20] & 0x10,
+      "The foliage texture must retain its alpha channel.",
+    );
+    assert.equal(runtime.readUIntLE(24, 3) + 1, 512);
+    assert.equal(runtime.readUIntLE(27, 3) + 1, 512);
+    assert.equal(source.toString("hex", 0, 8), "89504e470d0a1a0a");
+    assert.equal(source.readUInt32BE(16), 1254);
+    assert.equal(source.readUInt32BE(20), 1254);
+    assert.equal(source[25], 6, "Preserve the original RGBA cutout.");
+    const generation = JSON.parse(
+      await readFile(await ownedPath(entry.generation), "utf8"),
+    );
+    assert.equal(generation.tool, "OpenAI built-in image_gen");
+    assert.deepEqual(generation.sourceImages, []);
+    assert(generation.prompt.length > 1000);
+    assert.equal(generation.sourceFile, entry.sourceFile);
+    assert.equal(asset.tiers, 9);
+    assert.equal(asset.branches, 7);
+    assert.deepEqual(asset.branchTilts, [-0.62, 0.62]);
+    assert.equal(asset.coreRings, 7);
+    assert.equal(asset.coreSides, 8);
+    assert.deepEqual(asset.coreUv, [0.32, 0.48]);
+    assert.deepEqual(asset.coreUvSpread, [0.12, 0.07]);
+    bounded(asset.alphaTest, 0.35, 0.5);
+    bounded(asset.anisotropy, 1, 4);
+    assert.equal(asset.minHeight, 9);
+    assert.equal(asset.heightVariants, 7);
+    assert.equal(asset.radiusRatio, 0.42);
+    assert.equal(asset.crownBase, 1.5);
+    bounded(asset.trunkRadius, 0.15, 0.3);
+    bounded(asset.trunkTipRatio, 0.03, 0.1);
+    bounded(asset.trunkEmbed, 0.1, 0.25);
+    bounded(asset.trunkTipClearance, 0.1, 0.3);
+    assert.equal(entry.materialBatches, 2);
+    assert.equal(entry.maxTriangles, 384);
+    continue;
+  } else if (entry.id === "laptrix.daylight.v1") {
     assert.equal(entry.format, "procedural");
     assert.equal(entry.category, "environment");
     for (const color of [

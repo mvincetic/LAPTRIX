@@ -1,5 +1,57 @@
 # Product presentation milestones
 
+## Premium V15 — Original instanced vegetation, 2026-09-11
+
+Uniform scenery cones are replaced by original spruce foliage and tapered trunks.
+The first layered solid-cone study looked ornamental, so the final package uses
+one original generated bough, with its unchanged source and full prompt recorded
+in the repository. Offline encoding produces an 89.3 KiB WebP; only that runtime
+image ships. Nine irregular branch tiers and a textured interior preserve the
+former tree envelope, deterministic sites and road exclusions. Two draw batches,
+the same source geometry and the shared playback clock remain. See FOLIAGE.md.
+
+The first 48-camera review found flat dark interior facets in close views. A dense
+needle patch and softer canopy normals resolve those facets without adding
+triangles or textures. All 48 final views pass across both circuits at 1600, 1280
+and 390 px, including four close angles (`foliage-final-qa.json`). Geometry and
+texture identities stay stable; maximum culling-bound overflow is floating-point
+roundoff below 0.001 m, with no page overflow or browser errors. The same placement
+also passes 52 onboard captures across both cars and circuits
+(`foliage-onboard-qa.json`).
+
+The crown uses 348 triangles and each tapered trunk 28. There are still 383 Dev
+Track trees and 474 Red Bull Ring trees. Matched paused Formula Chase captures
+retain 74 / 70 draws and submit 263,812 / 279,146 triangles respectively, increases
+of 127,922 / 158,316 from daylight's cone baseline. Tree geometry plus current
+instance arrays total 81,988 / 94,728 bytes. One additional texture makes ten
+textures in driving views and eleven in overview views. No tree shadow, frame
+callback, time source or camera-facing update is added; these resource counts
+are not hardware frame-rate claims.
+
+The complete final gate passes 311 TypeScript / 152 Python tests (44.15 seconds),
+six asset validators, reproducible GLB export and lint/type/build checks
+(`foliage-complete-check.log`). Entry JavaScript stays 441.35 / 135.96 kB gzip,
+viewer code is 1,007.46 / 272.53 kB, GLB loader 45.20 / 13.46 kB and CSS
+60.84 / 12.70 kB. A local WebP re-export matches the checked-in bytes. List-only
+discovery finds all 173 development journeys without a duplicate or omission.
+The daylight follow-up is green, but its first development shard consumed 19.4 of
+20 minutes. Four development shards now reserve headroom for the richer scene;
+final discovery records 50 / 38 / 42 / 43 cases. Production remains separate,
+with unchanged assertions, worker counts and deadlines.
+
+The six final continuous onboard sequences pass at 1× playback, including both
+vehicle categories and portrait fullscreen on Red Bull Ring. They record 265
+rendered frames with zero world-anchor drift and visible forward parallax
+(`foliage-final-motion-qa.json`). All 28 final development interaction journeys
+pass in 7.8 minutes (`foliage-final-browser.log`), including optional texture and
+GLB recovery, source switching, both complete-image graphics restorations,
+fullscreen, close vehicle framing, layer reachability and empty-queue idle checks.
+All 35 production journeys pass in 9.0 minutes (`foliage-production.log`), including
+visible texture retry, both source/export licence paths, paused graphics recovery,
+worker cancellation and bundled/fallback header rendering. The distribution
+contains the 91,404-byte WebP and excludes the original PNG. Continue into the
+current/reference overlap review after committing and pushing this milestone.
+
 ## Premium V11 — Original daylight, material depth and stable camera decay, 2026-09-11
 
 The authored daylight environment gives the rounded bodywork and glazing sky/

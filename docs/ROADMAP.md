@@ -21,25 +21,28 @@ identities, all engineering contracts and the single playback clock.
 | V9 GT presentation | Implemented: original rounded shell with wheel wells, continuous painted cabin, fitted glazing and telemetry-driven brake lamps. The full gate, 21 browser journeys, 140 visual states and all 31 production journeys pass. The physical profile, road frame and shared clock remain authoritative. |
 | V10 Asset pipeline | Implemented: the first original GLB asset has editable source, three merged material batches, local lazy loading, instancing, physical/byte budgets and reproducible export checks. Other assets remain procedural. |
 | V11 Lighting and materials | Implemented: original dry-day radiance, hemisphere fill and current-vehicle shadows improve material depth. Cached shadows and time-based orbit settling pass the full gate, 24 interaction journeys, 128 visual states and all 34 production journeys. |
-| V12 Visual QA | Active gate: all 128 final daylight close/onboard/motion states pass across both cars/circuits, with laptop, phone and fullscreen coverage. Repeat critical captures after each visible change. |
-| V13 Performance | Active gate: paused shadows reuse their map, camera decay follows elapsed frame time and the viewer reaches an empty animation queue with zero subsequent work. Track resource counts and engineering responsiveness after each richer asset. |
+| V12 Visual QA | Active gate: 48 final foliage views, 52 onboard views and six continuous motion sequences retain visibility, control access and grounded context across both circuits. Repeat affected captures after each visible change. |
+| V13 Performance | Active gate: two instanced tree batches, one bounded texture, cached shadows and zero settled work. Four development CI shards plus a separate production job preserve test coverage and deadline headroom. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
-| V15 Vegetation presentation | Next: replace uniform scenery cones with original shaped conifer crowns and natural colour variation. Preserve source-grounded placement and verify bounds, road visibility and rendering cost. |
+| V15 Vegetation presentation | Implemented: original textured spruce crowns and tapered trunks replace uniform cones while retaining grounded sites and the crown envelope. Complete asset provenance, failure recovery, bounds and resource checks accompany the actual camera review. |
+| V16 Reference ghost clarity | Next: keep the blue current vehicle readable when the reference overlaps it. Review translucent reference presentation across Formula/GT, cameras and widths, preserving each native lap and the shared clock. |
+| V17 Ground material depth | Follow-up: improve terrain/apron material scale and visual depth with original assets, measured rendering cost and unchanged authoritative geometry. |
 
 Both source tracks, their provenance, complete engineering workspaces and the
 shared playback clock remain authoritative. Original Formula/GT bodywork, Dev
 Track start signs, the GLB pipeline, typography, graph readability and close-view
-annotations are implemented. Linux CI is green through `ce1961f`: 306 TypeScript /
-152 Python tests, 166 development and 32 production journeys across three jobs.
+annotations are implemented. Linux CI is green through `0d36126`: 309 TypeScript /
+152 Python tests, 170 development and 34 production journeys across four jobs.
 
-The daylight pass adds original material reflections, cached current-car shadows
-and time-based orbit settling. Its final local gate passes 309 TypeScript /
-152 Python tests, 24 combined interaction journeys, 128 visual states and all 34
-production journeys. After this cycle is committed and pushed,
-continue directly into V15 original vegetation while monitoring its Linux CI.
-The close views reveal uniform cone-shaped trees as the next conspicuous scenery
-limitation. Retain their grounded source placement and improve authored shape and
-colour within a measured geometry budget. See PRODUCT_PRESENTATION.md for evidence.
+The vegetation pass retains the established source placement while replacing cone
+silhouettes with original needle detail. Its final local gate passes 311 TypeScript
+/ 152 Python tests, all 28 combined interaction journeys and all 35 production
+journeys. Forty-eight final foliage views, 52 onboard views and six continuous
+sequences verify the result. After committing and pushing this cycle, proceed
+directly into V16 while monitoring Linux CI. An opaque overlapping reference can obscure
+the current car's blue bodywork, making it the next playback-clarity issue to
+review. Keep both native laps, source identities and the single clock intact.
+See PRODUCT_PRESENTATION.md for evidence and FOLIAGE.md for the original asset.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist

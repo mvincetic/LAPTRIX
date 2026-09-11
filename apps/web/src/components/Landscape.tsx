@@ -1,19 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { useThree } from "@react-three/fiber";
-import {
-  BufferAttribute,
-  BufferGeometry,
-  Color,
-  DoubleSide,
-  Object3D,
-  type InstancedMesh,
-} from "three";
+import { useEffect, useMemo } from "react";
+import { BufferAttribute, BufferGeometry, Color, DoubleSide } from "three";
 import type { Track } from "../../../../packages/shared/schema";
 import { createTerrainSurface } from "../../../../packages/track-engine/terrain";
 import { roadApron } from "../road-presentation";
 import { Trackside } from "./Trackside";
 import { TracksideAssets } from "./TracksideAssets";
 import { presentationForSource } from "../trackside-assets";
+import { Trees } from "./Trees";
 
 export function Landscape({
   track,
@@ -22,7 +15,6 @@ export function Landscape({
   track: Track;
   sourceFingerprint?: string;
 }) {
-  const invalidate = useThree((state) => state.invalidate);
   const presentation = presentationForSource(sourceFingerprint);
   const data = useMemo(() => {
     const surface = createTerrainSurface(track);
@@ -55,31 +47,6 @@ export function Landscape({
     apron.computeVertexNormals();
     return { geometry, apron, trees: surface.trees, surface };
   }, [track]);
-  const treeRef = useRef<InstancedMesh>(null);
-  const trunkRef = useRef<InstancedMesh>(null);
-  useLayoutEffect(() => {
-    const object = new Object3D();
-    data.trees.forEach((position, i) => {
-      const height = 9 + (i % 7),
-        ground = position[1] - 6;
-      object.position.set(position[0], ground + 1.5 + height / 2, position[2]);
-      object.scale.set(height * 0.42, height, height * 0.42);
-      object.updateMatrix();
-      treeRef.current?.setMatrixAt(i, object.matrix);
-      object.position.set(position[0], ground + 1.5, position[2]);
-      object.scale.set(0.28, 3, 0.28);
-      object.updateMatrix();
-      trunkRef.current?.setMatrixAt(i, object.matrix);
-    });
-    for (const mesh of [treeRef.current, trunkRef.current]) {
-      if (!mesh) continue;
-      mesh.instanceMatrix.needsUpdate = true;
-      // Three.js keeps cached object bounds after setMatrixAt/source replacement.
-      mesh.computeBoundingSphere();
-      mesh.computeBoundingBox();
-    }
-    invalidate();
-  }, [data, invalidate]);
   useEffect(() => {
     return () => {
       data.geometry.dispose();
@@ -102,22 +69,7 @@ export function Landscape({
       <mesh name="road-earthworks" geometry={data.apron} receiveShadow>
         <meshStandardMaterial color="#a8b395" roughness={1} side={DoubleSide} />
       </mesh>
-      <instancedMesh
-        name="context-tree-crowns"
-        ref={treeRef}
-        args={[undefined, undefined, data.trees.length]}
-      >
-        <coneGeometry args={[1, 1, 9]} />
-        <meshStandardMaterial color="#819780" roughness={1} />
-      </instancedMesh>
-      <instancedMesh
-        name="context-tree-trunks"
-        ref={trunkRef}
-        args={[undefined, undefined, data.trees.length]}
-      >
-        <cylinderGeometry args={[1, 1, 1, 6]} />
-        <meshStandardMaterial color="#827b6b" roughness={1} />
-      </instancedMesh>
+      <Trees positions={data.trees} />
     </group>
   );
 }

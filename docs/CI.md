@@ -1,5 +1,20 @@
 # Continuous integration
 
+The [daylight synchronization follow-up](https://github.com/mvincetic/LAPTRIX/actions/runs/34625909538)
+passes through `0d36126`: all four jobs succeed with 309 TypeScript tests, 152
+Python tests (42.74 seconds), all 170 development journeys (57 in 19.4 minutes,
+58 in 18.0 minutes and 55 in 17.9 minutes) and all 34 production journeys in 7.3
+minutes. Both rendered-shadow seek checks pass on Linux, and production finishes
+independently within its unchanged job deadline.
+
+The 19.4-minute development shard leaves only about 36 seconds inside the existing
+20-minute development budget. The vegetation milestone adds three journeys and
+richer scene geometry. Its workflow therefore uses four development shards plus
+the separate production job, with all five jobs required. Every test remains
+included, the full quality gate runs once on shard 1, and all worker counts and
+test/job deadlines remain unchanged. List-only discovery verifies the complete
+173-case development suite without omissions or duplicates.
+
 The [daylight run](https://github.com/mvincetic/LAPTRIX/actions/runs/34623193344)
 at `077c17b` passes the full gate (309 TypeScript / 152 Python tests, Python in
 40.61 seconds) and 168 of 170 development journeys. Two new shadow-resource
@@ -20,9 +35,9 @@ measured 6.3-minute local production suite to the first shard would exceed the
 existing 25-minute job budget. Production now occupies its own fourth matrix job;
 the three development shards and their 20-minute limits stay intact. The full
 quality gate runs once on shard 1, production builds and tests once in its own
-job, and all four jobs must pass. No test, assertion or deadline is removed or
-relaxed. The previous complete green baseline remains the run below until this
-follow-up receives a complete Linux result.
+job. All four jobs passed in the follow-up above. No test, assertion or deadline
+was removed or relaxed; the subsequent vegetation pass adds development headroom
+as described at the top of this document.
 
 The [Dev Track asset and fullscreen follow-up run](https://github.com/mvincetic/LAPTRIX/actions/runs/34618439504)
 passes through `ce1961f` (including asset commit `cb3cb11`): 306 TypeScript tests,

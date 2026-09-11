@@ -1,5 +1,10 @@
 # Original trackside context
 
+Original spruce foliage now supplies more natural distant and close scale cues.
+It retains the existing deterministic tree sites and road exclusion corridors,
+with two instanced batches and one compact texture. The placements remain
+schematic on both circuits. See FOLIAGE.md for source, shape, grounding and budgets.
+
 The Dev Track now has two original signs beside its existing timing line. Their
 placements, selected by source fingerprint, and shoulder/apron foundation fitting
 are described in ASSET_PIPELINE.md. They add a small actual GLB consumer to the

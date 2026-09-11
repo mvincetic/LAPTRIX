@@ -6,6 +6,25 @@
   "handedness": "right",
   "assets": [
     {
+      "id": "laptrix.spruce.v1",
+      "category": "environment",
+      "format": "textured-procedural",
+      "parameters": "assets/environment/spruce.json",
+      "implementation": "apps/web/src/foliage-geometry.ts",
+      "runtimeFile": "assets/environment/spruce-bough.webp",
+      "sourceFile": "assets/environment/spruce-bough-source.png",
+      "generation": "assets/environment/spruce-generation.json",
+      "origin": "Normalized crown centre, +Y up; radius at most one and height minus one-half to one-half, scaled into the existing grounded tree envelope",
+      "provenance": "Original generated spruce bough with the built-in OpenAI image_gen tool, no reference images; original procedural branch cards and tapering trunk",
+      "rights": "Original project asset; repository distribution policy applies; no third-party reference assets used",
+      "thirdPartySources": [],
+      "sha256": "c618b147c6dce0a905b7982ae977de0a0ba56d2d353b4d1846ebbfde228bff74",
+      "sourceSha256": "68234ef904cc411ae7f825791a87a98ef562bfe7081b9f03c61c020eefb3c048",
+      "maxBytes": 131072,
+      "maxTriangles": 384,
+      "materialBatches": 2
+    },
+    {
       "id": "laptrix.daylight.v1",
       "category": "environment",
       "format": "procedural",
