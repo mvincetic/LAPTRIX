@@ -29,6 +29,7 @@ import {
 } from "../../../../packages/shared/schema";
 import { TelemetryGhost } from "./TelemetryGhost";
 import { Landscape } from "./Landscape";
+import { RoadDetails } from "./RoadDetails";
 import { CornerCallouts } from "./CornerCallouts";
 import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
@@ -38,6 +39,8 @@ import { ScenePlayback } from "./ScenePlayback";
 import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { CHASE_FOV, ROAD_SURFACE_LIFT, chaseCameraPose } from "../chase-camera";
+import { SHOULDER_SURFACE_LIFT } from "../road-presentation";
+import { surfaceGrain } from "../surface-grain";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
   normalizeTrack,
@@ -109,14 +112,27 @@ function Ribbon({
       data = ribbonGeometry(track.points, frame.normals, left, right, lift);
     const g = new BufferGeometry();
     g.setAttribute("position", new BufferAttribute(data.positions, 3));
+    const uv = new Float32Array((data.positions.length / 3) * 2);
+    for (let i = 0; i < data.positions.length / 3; i++) {
+      uv[i * 2] = (data.positions[i * 3] - frame.center[0]) / 4;
+      uv[i * 2 + 1] = (data.positions[i * 3 + 2] - frame.center[2]) / 4;
+    }
+    g.setAttribute("uv", new BufferAttribute(uv, 2));
     g.setIndex(new BufferAttribute(data.indices, 1));
     g.computeVertexNormals();
     return g;
   }, [track, left, right, lift]);
   useEffect(() => () => geometry.dispose(), [geometry]);
+  const grain = useMemo(() => surfaceGrain(), []);
+  useEffect(() => () => grain.dispose(), [grain]);
   return (
     <mesh geometry={geometry} receiveShadow>
-      <meshStandardMaterial color={color} roughness={1} side={DoubleSide} />
+      <meshStandardMaterial
+        color={color}
+        map={grain}
+        roughness={1}
+        side={DoubleSide}
+      />
     </mesh>
   );
 }
@@ -395,7 +411,7 @@ export function TrackView({
             gl={{ antialias: true, powerPreference: "high-performance" }}
           >
             <PlaybackFrames clock={clock} />
-            <color attach="background" args={["#f0f3f3"]} />
+            <color attach="background" args={["#edf2f5"]} />
             <ambientLight intensity={1.65} />
             <directionalLight position={[-800, 1800, 700]} intensity={2.1} />
             {layers.terrain && <Landscape track={track} />}
@@ -403,16 +419,17 @@ export function TrackView({
               track={track}
               left={widths.shoulderLeft}
               right={widths.shoulderRight}
-              color="#f9faf9"
-              lift={0.25}
+              color="#c9c5b7"
+              lift={SHOULDER_SURFACE_LIFT}
             />
             <Ribbon
               track={track}
               left={widths.left}
               right={widths.right}
-              color="#46566a"
+              color="#363d43"
               lift={ROAD_SURFACE_LIFT}
             />
+            <RoadDetails track={track} />
             {layers.centerline && (
               <Line
                 points={centerline}

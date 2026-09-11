@@ -15,7 +15,7 @@ in [CI.md](CI.md), with exact source/catalog preservation restored in the tests.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 263 tests pass.
+- Vitest: 267 tests pass.
 - Python numerical/API tests: 152 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes

@@ -9,6 +9,7 @@ const browser = await chromium.launch({
   args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const records = [];
+const prefix = process.env.PRESENTATION_QA_PREFIX ?? "vehicle-motion";
 try {
   for (const track of ["ardennes-development", "red-bull-ring"].filter(
     (id) => !process.env.QA_TRACK || process.env.QA_TRACK === id,
@@ -123,7 +124,7 @@ try {
           }
           expect(errors).toEqual([]);
           await page.locator(".track-panel").screenshot({
-            path: `artifacts/vehicle-motion-${track}-${vehicle}-${width}-${fraction}.png`,
+              path: `artifacts/${prefix}-${track}-${vehicle}-${width}-${fraction}.png`,
           });
           records.push({
             track,
@@ -146,7 +147,7 @@ try {
     }
 } finally {
   await writeFile(
-    "artifacts/vehicle-motion-qa.json",
+    `artifacts/${prefix}-qa.json`,
     JSON.stringify(records, null, 2),
   );
   await browser.close();

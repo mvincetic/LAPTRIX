@@ -293,3 +293,10 @@ Blue remains the current lap and grey the reference. Seven-pixel overview dots
 locate vehicles without changing their physical mesh scale. Racing/braking colour
 stays just above the road surface, below bodywork. Decorative shake and automatic
 camera motion are absent; explicit telemetry playback retains its existing controls.
+
+Neutral asphalt and warm gravel shoulders now contrast with muted grass and trees.
+Fine static grain supplies near-camera scale; narrow white edges and alternating
+red/pale curbs describe the road through turns. These are original schematic
+details on both circuits. A grass connection removes the exposed floating shoulder
+edge. Source attribution stays visible, and Analysis Layers explains the scenic
+assumption without adding technical implementation text to the main viewer.

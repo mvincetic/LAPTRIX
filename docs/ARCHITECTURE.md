@@ -42,6 +42,12 @@ for source widths and bases sample the final terrain triangles. See TERRAIN.md.
 Road and shoulder widths share the existing track-keyed memo. Ordinary setup or
 viewer-state renders retain Ribbon geometry and its GPU buffers; track replacement
 still derives fresh widths and disposes replaced geometry normally.
+`road-presentation.ts` builds original paint/curb/finish geometry from those source
+frames and a separate apron from the existing final terrain sampler. RoadDetails
+uses three static material batches. Ribbon UVs are centered world coordinates;
+small deterministic mipmapped grain textures provide surface scale without asset
+downloads. Landscape retains its fixed terrain/placement budget and adds an
+instanced trunk batch. Source, solver and playback data remain unchanged.
 The Fiber canvas renders on demand when paused. A subscription to the existing
 clock requests frames after actions; active playback continues the existing Fiber
 frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes

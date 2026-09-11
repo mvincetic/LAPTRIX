@@ -54,6 +54,9 @@ a fixed field of view. Original Formula and GT meshes use vehicle dimensions in
 metres, including rotating wheels and front steering from telemetry. Small dots
 keep cars visible in overview. Bodywork, contact shading and scenery are visual
 approximations; they do not change vehicle parameters or simulation results.
+Static asphalt grain, edge paint, alternating curbs and a finish stripe give the
+follow view physical scale cues. Grass aprons join shoulders to contextual terrain.
+The Analysis Layers panel identifies these details and tree placements as schematic.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

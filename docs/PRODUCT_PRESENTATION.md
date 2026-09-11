@@ -177,3 +177,40 @@ and corresponding scene PNGs. These are in addition to the 64 pose captures.
 All 11 production browser journeys pass on the final build in 1.1 minutes
 (`artifacts/vehicle-camera-production.log`), covering module/graphics recovery,
 the real CSV worker and complete showcase persistence/licensing exports.
+
+## Track grounding and road detail — 2026-09-11
+
+The next milestone adds original static asphalt grain, warm shoulders, white edge
+paint, alternating schematic curbs and a checker stripe at the source finish.
+Grass aprons join the shoulders to the existing conservative terrain; original
+trunks and muted crowns improve the tree silhouettes. All detail follows source
+frames in metres. The Analysis Layers panel identifies the scenery as schematic.
+The Dev Track and Red Bull Ring source JSON, fingerprints, solver and playback
+remain unchanged. [TERRAIN.md](TERRAIN.md) specifies the dimensions, geometry
+budget, approximation limits and resource ownership.
+
+The full quality gate passes lint, Ruff, strict typecheck, **267 TypeScript tests**,
+**152 Python tests (39.75 seconds)** and build. Four new independent cases check
+asymmetric paint/curb placement, physical curb intervals, closed seams, upward
+triangles, a finish stripe, an analytical ground plane and bounded 2,000-point
+output. Ten browser regressions pass in 1.8 minutes, including sparse/sloped
+terrain-on/off visibility, large imported camera framing, ghost labels, track-key
+layouts and zero idle draws/callbacks/buffer replacement. Evidence:
+`artifacts/track-grounding-check.log`, `track-grounding-unit.log` and
+`track-grounding-browser.log`. Entry JavaScript is unchanged at 438.92 / 134.97 kB
+gzip; deferred viewer is 976.55 / 262.47 kB.
+
+The 64-pose camera/vehicle sweep passes again with the finished scenery on both
+circuits and both vehicles, at desktop and phone sizes (`track-grounding-motion-qa`
+JSON/log and corresponding PNGs). An additional 32 overview/top/chase/fullscreen
+states use Formula on Red Bull Ring and GT on Dev Track at 1600×1000, 1280×900,
+390×844 and 780×390. Readouts and credits remain contained with no horizontal
+overflow or runtime errors. Evidence: `track-grounding-rbr-initial-qa.json`,
+`track-grounding-dev-gt-qa.json` and corresponding logs/images. The RBR capture's
+initial label identifies its first material pass, which was retained after review.
+Desktop overview, the phone hairpin and finish stripe, a Dev Track hillside and
+short fullscreen views were opened and reviewed. Detail provides scale cues;
+terrain cuts and generic curb locations remain visible approximations.
+All 11 production browser journeys pass in 1.1 minutes on the final build
+(`artifacts/track-grounding-production.log`), including attributed circuit exports
+and viewer/graphics recovery. Dashboard and in-viewer playback polish follow next.

@@ -39,6 +39,9 @@ QA, documentation, a clean commit and working-branch push:
 4. Improve track grounding, materials, curbs, surroundings and vehicle presentation
    with original or appropriately licensed assets. Keep visual detail separate
    from source geometry and approximate physics; review close and overview views.
+   Implemented: original asphalt/shoulder materials, edge paint, schematic curbs,
+   finish stripe, grassy terrain connections and tree trunks. Source geometry
+   and simulation remain unchanged. Continue directly into dashboard/playback polish.
 5. Refine spacing, density, typography and information hierarchy across the
    dashboard, then repeat representative interaction and visual regressions.
 
@@ -322,7 +325,7 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 152 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 263 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 267 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,

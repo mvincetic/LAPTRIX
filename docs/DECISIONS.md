@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-11 — Ground the source road with original scene detail
+
+**Decision:** Add static world-scale grain, edge paint, curvature-based schematic
+curbs, a finish stripe and grass aprons from shoulders to the existing terrain.
+Retain original source geometry, conservative ground caps and seeded tree locations.
+**Reasoning:** Close chase views need road-scale cues and a visible ground connection;
+licensed centerline/elevation data does not specify actual scenery or curbs.
+**Consequence:** Scene detail is generic, explicitly schematic and disconnected
+from physics. Memoized batches and instanced trunks retain settled zero-draw
+behavior. No commercial circuit artwork, runtime map or external asset is used.
+
 ## 2026-09-11 — Follow source metres with original vehicle bodywork
 
 **Decision:** Replace the distant heading-offset chase pose with physical-distance
