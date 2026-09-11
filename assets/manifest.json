@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "units": "metres",
+  "up": "+Y",
+  "forward": "+Z",
+  "handedness": "right",
+  "assets": [
+    {
+      "id": "laptrix.guardrail.v1",
+      "category": "trackside",
+      "format": "procedural",
+      "parameters": "assets/trackside/guardrail.json",
+      "implementation": "apps/web/src/roadside-context.ts",
+      "origin": "Ground at each support centre; rail profile uses lateral offset and height",
+      "provenance": "Original procedural geometry authored for LAPTRIX",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": []
+    }
+  ]
+}

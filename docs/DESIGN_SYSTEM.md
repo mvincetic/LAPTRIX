@@ -7,6 +7,11 @@ Terrain remains a muted generated context beneath the authoritative road. Sparse
 source interpolation and conservative clearance must not cut visible gaps through
 the racing line. Road, vehicle, camera and annotation scales remain unchanged;
 surrounding ground and trees are not presented as surveyed scenery. See TERRAIN.md.
+Original guardrails and their regularly spaced supports establish nearby scale
+in driving cameras. Muted metal and small reflectors stay subordinate to blue
+racing-line and red braking information. Placements follow the rendered ground
+and remain schematic on real circuits as well as the development track; see
+TRACKSIDE.md. No branding or surveyed-infrastructure claim is implied.
 
 - Background: `#f3f6f9`; white panel surfaces; borders `#e0e6ee`.
 - Primary: `#0866ec`; dark text `#23344d`; muted annotations `#79869a`.

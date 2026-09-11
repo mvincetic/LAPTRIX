@@ -89,7 +89,10 @@ async function groundOcclusion(page, lap) {
     const terrain = scene.getObjectByName("context-terrain");
     if (!terrain)
       throw new Error("Terrain mesh is missing from the reviewed scene.");
-    const obstacles = terrain.parent.children.filter((node) => node.isMesh);
+    const obstacles = [];
+    terrain.parent.traverse((node) => {
+      if (node.isMesh) obstacles.push(node);
+    });
     obstacles.push(
       scene.getObjectByName("road-asphalt"),
       scene.getObjectByName("road-shoulders"),

@@ -13,13 +13,13 @@ identities, all engineering contracts and the single playback clock.
 | V1 Playback clarity | Implemented: first Play finds the current car; explicit camera choices persist. Vehicle identities, follow, restart and rate stay with the viewer transport. |
 | V2 Cameras and speed | Implemented: vehicle-mounted Formula/GT onboard views with deterministic seeking, fixed field of view and stable horizon. Grounded scale cues continue in V4. |
 | V3 Track grounding | Implemented ahead of V2: closer terrain with conservative clearance, separate outside shoulders and render-only cross-sections that prevent coarse pavement from covering the canonical line. |
-| V4 Surface and environment | Next: add measured procedural reference objects where they improve scale and speed, using generic track geometry. |
-| V5 UI clarity | Refine the primary Track → Car → Conditions → Run → Play → Analyze workflow and separate technical/debug layers. |
+| V4 Surface and environment | Implemented: source-framed guardrails, supports and reflectors follow shoulder crests and exclude nearby roads. Final terrain/motion/production checks pass on both circuits/imports. |
+| V5 UI clarity | Next: group normal lap overlays and environment controls, put source inspection behind a disclosure, and retain readable camera/playback controls on compact screens. Continue the Track → Car → Conditions → Run → Play → Analyze audit. |
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
 | V7 Showcase selection | Existing licensed Red Bull Ring package is complete. Distinguish Development Tracks / Real Circuits and make provenance visible when selecting. |
 | V8 Formula presentation | Refine original category-correct bodywork and road contact after camera/environment review. |
 | V9 GT presentation | Refine separate coupe proportions and telemetry-driven brake-light/vehicle presentation. |
-| V10 Asset pipeline | Establish real scale/origin/material conventions, a manifest and reproducible export/validation for original reusable assets. Use Blender only if locally useful. |
+| V10 Asset pipeline | Started in V4: actual original guardrail parameters, manifest, conventions and quality-gate validation. Authored vehicle assets, GLB export/optimization and broader validation remain. Use Blender only if locally useful. |
 | V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |
 | V12 Visual QA | Repeat actual desktop/laptop/narrow/fullscreen and playback inspection across both cars and circuits; keep reproducible critical captures. |
 | V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |

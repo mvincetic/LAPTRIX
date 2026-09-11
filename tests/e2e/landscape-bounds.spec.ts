@@ -45,7 +45,7 @@ for (const width of [1600, 390])
         scene.traverse((node) => {
           if (
             !(node instanceof InstancedMesh) ||
-            !node.name.startsWith("context-tree-") ||
+            !node.name.startsWith("context-") ||
             !node.count
           )
             return;
@@ -66,7 +66,7 @@ for (const width of [1600, 390])
         });
         return result;
       });
-      expect(bounds.length).toBe(2);
+      expect(bounds.length).toBe(4);
       for (const batch of bounds) {
         expect(batch.count).toBeGreaterThan(100);
         expect(batch.overflow).toBeLessThan(0.001);

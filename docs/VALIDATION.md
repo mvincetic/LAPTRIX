@@ -6,6 +6,14 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V4 passes the complete gate with 286 TypeScript and 152 Python
+tests, including asset validation. Six final integration journeys retain scenery
+bounds, road visibility and zero settled rendering. All 45 terrain visual states
+pass 9,618 line-visibility probes, and six actual 1× motion sequences verify fixed
+world supports with vehicle-relative parallax. Eight GT quarter-lap poses and
+four matched rendering-budget captures pass. All 26 final production journeys
+pass in 3.4 minutes. See PRODUCT_PRESENTATION.md for the slope-placement correction.
+
 Premium phase V2 passes 280 TypeScript and 152 Python tests plus lint/type/build
 gates. Its new onboard views have independent body-transform and foreground-pixel
 checks across both vehicles and circuits, with complete project/cursor retention.

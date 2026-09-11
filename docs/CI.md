@@ -1,5 +1,11 @@
 # Continuous integration
 
+Premium-phase [V2 onboard cameras and scenery bounds](https://github.com/mvincetic/LAPTRIX/actions/runs/34591968942)
+passes through `b2dfff5`: 280 TypeScript tests, 152 Python tests (42.95 seconds),
+all 154 development journeys (78 in 15.2 minutes and 76 in 14.9 minutes), all
+26 production journeys (3.7 minutes), lint, typecheck and build. The branch
+continues directly into original trackside scale cues and asset validation.
+
 Premium-phase [V3 pavement grounding](https://github.com/mvincetic/LAPTRIX/actions/runs/34588643267)
 passes through `00c6681`: 275 TypeScript tests, 152 Python tests (43.30 seconds),
 all 148 development journeys (74 in 14.7 minutes and 74 in 14.2 minutes), all

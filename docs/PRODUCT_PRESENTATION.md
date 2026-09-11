@@ -1,5 +1,58 @@
 # Product presentation milestones
 
+## Premium phase V4 — Trackside scale, 2026-09-11
+
+Original guardrails, regularly spaced supports and reflectors provide nearby
+reference objects in Chase and Onboard. The same pipeline places them on Dev
+Track, Red Bull Ring and imports. Bases follow actual apron cross-sections four to
+eight metres beyond road edges; six-metre source-distance gates establish a consistent
+visual rhythm. A spatial index over road triangles omits spans which enter or
+approach the driving surface, conservatively including crossings at other heights.
+Source geometry, telemetry, vehicles, cameras and the single clock remain unchanged.
+See TRACKSIDE.md for exact dimensions, placement, contact and omission semantics.
+
+The first actual procedural asset package is registered in `assets/manifest.json`.
+Its parameter, origin, axis, material and provenance conventions are documented
+in `assets/README.md`. `npm run validate:assets` joins the full quality gate. This
+starts V10's asset work with a used, validated original package; GLB/Blender and
+vehicle asset work remain. No third-party models, textures or licences are added.
+
+Six geometry cases use analytical boundaries, independent mesh rays, source
+crossings, sparse slopes, large offsets and a valid 2,000-point nearly 30 km source.
+The Dev Track GT motion capture exposed a placement defect: an eight-
+metre offset could put a rail below the crest of a steep embankment. The independent
+sparse-slope regression reproduced a 6.51 m drop. Placement now stays on the apron
+while limiting the base's height change from the shoulder crest to 0.20 m; the
+six numerical cases pass, including large-coordinate contact. The corrected Dev
+Track desktop and Red Bull Ring portrait captures were opened and reviewed.
+Six final 1× motion sequences pass across both circuits/vehicles and showcase
+portrait fullscreen (`trackside-crest-qa.json`): 312 observed frames, zero support
+anchor drift, 134–202 m of car travel and clearly changing projected support
+positions. These measure world-relative motion, not hardware frame rate.
+
+Final terrain QA passes all **45 states** at 1600, 1280 and 390 px across both
+bundled tracks and a sparse slope import. All **9,618 line-visibility probes** are
+clear, with zero shoulder-covered road interiors. Terrain-on/off depth comparisons,
+exact paused cursor, pending setup, Canvas and complete exported project checks
+pass without extra solves or runtime errors (`trackside-crest-terrain-qa.json`).
+The Red Bull Ring laptop overview was also opened and reviewed.
+
+The final gate passes all 286 TypeScript / 152 Python tests (58.47 seconds),
+lint, Ruff, asset validation, typecheck and build (`trackside-final-check.log`).
+Entry JavaScript remains 438.62 / 134.83 kB gzip, the deferred viewer is
+989.56 / 266.07 kB and CSS remains 59.74 / 12.47 kB. The environment adds three
+static material batches and zero image textures, with track-keyed geometry reuse
+and explicit instance-bound refreshes. Eight additional GT quarter-lap poses on
+both tracks pass and the Dev Track midpoint capture was reviewed. Four matched
+Chase budget captures pass: 70 Formula / 54 GT draws; Dev Track submits 132,724 /
+130,952 triangles and Red Bull Ring 118,460 / 116,688 (`trackside-budget-qa.json`).
+This adds 53,392 / 43,720 triangles respectively against the pavement baseline,
+with unchanged vehicle transforms, telemetry-driven wheels and camera field of view.
+All six final source-switching, sparse-road and zero-idle/browser-resource journeys
+pass in 1.5 minutes (`trackside-final-browser.log`).
+All **26 final production journeys pass in 3.4 minutes** against the completed
+build (`trackside-production.log`). Continue directly into V5 layer/workflow clarity.
+
 ## Premium phase V2 — Onboard camera, 2026-09-11
 
 Onboard now provides an original Formula roll-hoop and GT roof mount, using the

@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-11 — Build original reference objects from source geometry
+
+**Decision:** Place generic guardrails on the existing apron using original asset
+parameters and physical source-distance gates. **Reasoning:** Onboard review lacks
+nearby reference objects for scale and speed; these can improve motion perception
+without artificial blur or another camera animation. **Consequence:** Both tracks
+and imports share one implementation. Road-triangle proximity excludes unsafe
+spans, including across source heights. Three static batches retain bounded
+geometry, refreshed instance bounds and demand rendering. Placements remain
+schematic, and no source/solver/telemetry fields change. The first real procedural
+asset manifest and validation gate begin the broader asset-pipeline milestone;
+they do not claim a completed Blender/GLB workflow.
+
 ## 2026-09-11 — Mount onboard cameras to the authoritative vehicle frame
 
 **Decision:** Add one original roll-hoop/roof view using the same interpolated

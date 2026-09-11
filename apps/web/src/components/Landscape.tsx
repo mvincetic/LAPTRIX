@@ -11,6 +11,7 @@ import {
 import type { Track } from "../../../../packages/shared/schema";
 import { createTerrainSurface } from "../../../../packages/track-engine/terrain";
 import { roadApron } from "../road-presentation";
+import { Trackside } from "./Trackside";
 
 export function Landscape({ track }: { track: Track }) {
   const invalidate = useThree((state) => state.invalidate);
@@ -43,7 +44,7 @@ export function Landscape({ track }: { track: Track }) {
       new BufferAttribute(roadApron(track, surface), 3),
     );
     apron.computeVertexNormals();
-    return { geometry, apron, trees: surface.trees };
+    return { geometry, apron, trees: surface.trees, surface };
   }, [track]);
   const treeRef = useRef<InstancedMesh>(null);
   const trunkRef = useRef<InstancedMesh>(null);
@@ -78,6 +79,7 @@ export function Landscape({ track }: { track: Track }) {
   }, [data]);
   return (
     <group>
+      <Trackside track={track} surface={data.surface} />
       <mesh name="context-terrain" geometry={data.geometry} receiveShadow>
         <meshStandardMaterial vertexColors roughness={1} />
       </mesh>

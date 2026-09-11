@@ -48,7 +48,7 @@ export function roadSurface(track: Track) {
 }
 
 /** Pieces retain every source vertex and split at uniform physical-distance gates. */
-function roadPieces(track: Track, step: number) {
+export function roadPieces(track: Track, step: number) {
   const frame = normalizeTrack(track);
   const pieces: {
     i: number;

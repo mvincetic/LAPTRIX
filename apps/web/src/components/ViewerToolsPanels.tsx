@@ -102,7 +102,10 @@ export function ViewerToolsPanels({
             }
           </label>
         ))}
-        <p>Road paint, curbs, terrain and trees are schematic scene detail.</p>
+        <p>
+          Road paint, curbs, terrain, trees and barriers are schematic scene
+          detail.
+        </p>
       </div>
       <div
         {...tabPanelProps(prefix, 2, active === 2)}

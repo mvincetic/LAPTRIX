@@ -1,5 +1,13 @@
 # Rendering when the scene changes
 
+The V4 guardrail package adds three static batches: merged folded rails, instanced
+supports and instanced reflectors. Matched first-frame probes now submit 70 Formula
+/ 54 GT draws. Dev Track submits 132,724 / 130,952 triangles; Red Bull Ring submits
+118,460 / 116,688. Relative to the pavement baseline below, this adds 53,392 and
+43,720 triangles respectively, with no new image textures or per-frame placement.
+The terrain surface is shared with Landscape. Source-keyed buffers and refreshed
+instance bounds retain the existing demand-rendering contract. See TRACKSIDE.md.
+
 The premium grounding pass retains the same draw-call structure while subdividing
 road cross-sections at three-metre gates and separating shoulders outside the
 asphalt. Actual first-frame probes retain 67 Formula / 51 GT draws and submit

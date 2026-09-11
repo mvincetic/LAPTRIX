@@ -59,6 +59,12 @@ instanced trunk batch. Source, solver and playback data remain unchanged.
 Tree instance matrices and their culling sphere/box are refreshed together in a
 layout effect, followed by demand invalidation. Updating `instanceMatrix` alone
 leaves Three.js's cached bounds stale after source changes and can hide scenery.
+Landscape also passes its existing TerrainSurface to Trackside. Source-distance
+gates place original guardrail bases on the same apron cross-sections, with a
+plan-view road-triangle index rejecting unsafe spans. One merged rail mesh and
+two instance batches add physical reference objects without a clock or solver
+dependency. The actual parameter asset is registered and checked in the asset
+manifest; see TRACKSIDE.md and assets/README.md.
 The Fiber canvas renders on demand when paused. A subscription to the existing
 clock requests frames after actions; active playback continues the existing Fiber
 frame loop. Controls invalidate during orbit/damping and fitting explicitly wakes

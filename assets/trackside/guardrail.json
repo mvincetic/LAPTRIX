@@ -1,0 +1,23 @@
+{
+  "id": "laptrix.guardrail.v1",
+  "edgeOffset": 8,
+  "maxGroundChange": 0.2,
+  "postSpacing": 6,
+  "roadReserve": 0.8,
+  "profile": [
+    [0, 0.4],
+    [0.04, 0.48],
+    [-0.025, 0.56],
+    [0.04, 0.64],
+    [0, 0.72]
+  ],
+  "post": { "width": 0.1, "depth": 0.16, "height": 0.9, "embed": 0.15 },
+  "reflector": {
+    "everyPosts": 5,
+    "width": 0.12,
+    "height": 0.16,
+    "depth": 0.045,
+    "elevation": 0.65
+  },
+  "materials": { "rail": "#b7bec3", "post": "#77818b", "reflector": "#f3eee4" }
+}
