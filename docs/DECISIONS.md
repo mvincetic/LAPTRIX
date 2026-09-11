@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-11 — Keep the current car readable through reference overlap
+
+**Decision:** Render reference standard materials at 28% opacity with depth testing
+and no depth writing, contact shade or received/cast shadow. **Reasoning:** Actual
+compositor comparisons show opaque reference surfaces replacing the current car's
+blue silhouette at coincident positions. Translucency preserves the current car
+while keeping a separated reference readable in driving views. **Consequence:**
+Each vehicle retains its own geometry, native lap, material instances and GT brake
+signals on the same clock. The appearance is a comparison aid, with visible inner
+surfaces; no optical-glass realism is claimed. See REFERENCE_PRESENTATION.md.
+The preceding Linux run used 19.8 of 20 minutes on one development shard. A measured
+distribution study supports five development jobs plus separate production, with
+unchanged worker counts, assertions and deadlines. See CI.md for estimates.
+
 ## 2026-09-11 — Give existing tree sites original instanced foliage
 
 **Decision:** Keep the source-grounded tree sites and crown envelope, replacing

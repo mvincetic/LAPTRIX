@@ -19,6 +19,8 @@ vehicle, with 1–80 m depth bounds and a 40 m light offset. This retains centim
 scale shadow texels without allocating a circuit-sized map. Only the current
 vehicle casts a shadow. The native reference remains a comparison overlay; it
 receives lighting without darkening the current car or road with a second shadow.
+Its translucent material treatment also omits received shadows and the separate
+contact shade; see REFERENCE_PRESENTATION.md.
 The road, road paint, shoulder and earthworks receive vehicle shadows.
 
 The lighting frame runs after the existing vehicle telemetry frame, reads its

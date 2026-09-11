@@ -37,6 +37,14 @@ for (const [track, vehicle, width] of [
     await expect(
       page.getByRole("button", { name: "Inspect corner 1", exact: true }),
     ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Set reference", exact: true })
+      .click();
+    await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+    await page
+      .getByRole("checkbox", { name: "Show reference ghost", exact: true })
+      .check();
+    await page.getByRole("tab", { name: "Track View", exact: true }).click();
     await page.getByRole("button", { name: "Chase", exact: true }).click();
     const cursor = page.getByRole("slider", { name: "Viewer lap position" });
     await cursor.fill("5");

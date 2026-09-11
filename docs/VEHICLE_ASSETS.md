@@ -35,7 +35,7 @@ the wheel-well ceiling for the tested custom radii. No physics dimensions change
 
 The continuous painted cabin forms the roof and pillars. Six inset glass panels
 follow the same skin, with shared offsets at adjoining facets to prevent cracks.
-Glass adds no transparency sorting or image textures. The geometry builder caps
+The current car's glass adds no transparency sorting or image textures. The geometry builder caps
 concave body sections with triangulated faces and keeps cap normals independent
 from smooth side normals. Shared original loft/strut/wing primitives supply
 mirrors and restrained aero details; the GT does not borrow a manufacturer model.
@@ -72,8 +72,12 @@ clock, suspension simulation or independent animation timeline.
 ## Materials and resources
 
 Current body paint retains LAPTRIX blue; native reference bodywork retains grey.
-Opaque standard materials separate paint, dark floor/wing elements, rubber,
-glass and metal. The existing small generated contact-shade texture is retained.
+The current car uses opaque standard materials for paint, dark floor/wing
+elements, rubber, glass and metal, plus the existing small contact-shade texture.
+The reference uses 28% opacity without depth writing or a contact shade, so
+overlapping surfaces preserve the current car's blue silhouette. Each vehicle
+keeps its own material instances. See REFERENCE_PRESENTATION.md for the comparison
+treatment, depth/shadow policy and actual compositor regressions.
 The Formula contours and tyres introduce no image textures or extra draw batches.
 Each tyre uses 32 circumferential segments and eight section spans, 512 triangles.
 Memoized vehicles retain geometry during normal parent/UI edits; replaced custom

@@ -1,5 +1,13 @@
 # Rendering when the scene changes
 
+The reference-clarity pass changes only reference material flags and omits its
+contact-shade plane. It adds no geometry, texture, frame callback or independent
+clock. Standard depth-tested transparency keeps the current vehicle's blue paint
+readable through overlap. Omitting the shade removes one reference draw, two
+triangles and one 32² RGBA texture. Existing current-car shadow caching remains
+unchanged; reference surfaces neither cast nor receive that shadow. See
+REFERENCE_PRESENTATION.md for visual/interaction evidence and the sorting limits.
+
 The vegetation pass keeps two tree draw batches while replacing uniform cones
 with 348-triangle crowns and 28-triangle tapered trunks. Existing positions and
 normalized crown bounds remain intact. One cached 512² alpha texture adds about

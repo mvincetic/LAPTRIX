@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, production]
+        shard: [1, 2, 3, 4, 5, production]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,7 +35,7 @@ jobs:
           done
       - run: npx playwright install --with-deps chromium
       - if: matrix.shard != 'production'
-        run: npm run test:e2e -- --reporter=list --global-timeout=1200000 --shard=${{ matrix.shard }}/4
+        run: npm run test:e2e -- --reporter=list --global-timeout=1200000 --shard=${{ matrix.shard }}/5
       - if: matrix.shard == 'production'
         run: npm run test:production
       - uses: actions/upload-artifact@v4

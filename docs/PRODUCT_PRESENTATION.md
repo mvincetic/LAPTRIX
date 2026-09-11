@@ -1,5 +1,41 @@
 # Product presentation milestones
 
+## Premium V16 — Current/reference clarity, 2026-09-11
+
+The opaque reference could replace the current car's blue paint at coincident
+positions. Reference materials now use 28% opacity, test scene depth without
+writing it, and omit contact/cast/received shadows. The current car stays opaque.
+Both vehicles retain their native telemetry, independent materials and shared
+clock. No geometry, texture or animation callback is added; omitting the reference
+contact shade removes one draw, two triangles and one small texture.
+
+All 96 final camera states pass across both tracks, Formula/GT, 1600/1280/390 px
+and four cameras (`reference-qa.json`). Native overlapping and separated laps
+retain independently checked positions, resource identities and complete saved
+workspaces. Actual Chase, Onboard and overview screenshots were inspected.
+The compositor regression isolates blue car paint from the racing line, requires
+over 90% retention through overlap, and verifies a visible reference alone.
+
+The complete gate passes 311 TypeScript / 152 Python tests (46.67 seconds), six
+asset validators, reproducible GLB export and lint/type/build checks
+(`reference-complete-check.log`). All 20 final interaction journeys pass in 7.3
+minutes (`reference-final-browser.log`), including independent reference vehicles,
+GT lamps, labels, playback entry, onboard framing, shadow caching, complete-image
+graphics restoration with both cars visible, and zero settled rendering.
+See REFERENCE_PRESENTATION.md for the treatment and its transparency limits.
+
+At the user's request to commit promptly, the broader 37-case production run is
+still finishing. Both new reference-paint checks and both complete-image graphics
+restoration checks have passed in that run. Its full result is not yet claimed;
+the local log is `artifacts/reference-production.log` and the working-branch push
+also runs the complete Linux workflow.
+
+The preceding vegetation commit `fafc0eb` is green on Linux with 173 development
+and 35 production journeys. A measured timing study now supports five development
+shards plus separate production. Discovery verifies all 175 development cases
+without duplicates or omissions; assertions, workers and deadlines are unchanged.
+The latest user request closes this cycle and pauses before ground-material work.
+
 ## Premium V15 — Original instanced vegetation, 2026-09-11
 
 Uniform scenery cones are replaced by original spruce foliage and tapered trunks.

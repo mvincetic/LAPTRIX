@@ -1,5 +1,23 @@
 # Continuous integration
 
+The reference-presentation cycle uses five development shards plus the separate
+production job. On the last green run, four development shards left only about
+12 seconds before one shard's 20-minute limit. A list-only study using those
+measured test durations estimates 12.4–15.6 minutes per five-shard job, compared
+with 13.9–19.7 minutes for four file-based shards or 15.4–18.4 minutes when splitting
+individual tests across four jobs. The two new visual cases use a conservative
+25-second estimate each in this comparison. These are planning estimates, not a
+claim about future runner speed. Five file-based shards preserve the existing
+one-worker execution model and reserve headroom without relaxing deadlines or
+changing assertions. The full gate and production still each run once.
+
+The [original vegetation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34628778318)
+passes through `fafc0eb`: all five jobs succeed with 311 TypeScript / 152 Python
+tests (Python in 42.42 seconds), 173 development journeys and 35 production
+journeys. Development shards contain 50 / 38 / 42 / 43 cases and take 19.8 / 14.0 /
+17.7 / 18.0 minutes; production takes 12.0 minutes. Foliage delivery, alpha coverage,
+source switching, graphics restoration and both source-credit exports pass on Linux.
+
 The [daylight synchronization follow-up](https://github.com/mvincetic/LAPTRIX/actions/runs/34625909538)
 passes through `0d36126`: all four jobs succeed with 309 TypeScript tests, 152
 Python tests (42.74 seconds), all 170 development journeys (57 in 19.4 minutes,

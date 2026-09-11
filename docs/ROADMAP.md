@@ -21,31 +21,32 @@ identities, all engineering contracts and the single playback clock.
 | V9 GT presentation | Implemented: original rounded shell with wheel wells, continuous painted cabin, fitted glazing and telemetry-driven brake lamps. The full gate, 21 browser journeys, 140 visual states and all 31 production journeys pass. The physical profile, road frame and shared clock remain authoritative. |
 | V10 Asset pipeline | Implemented: the first original GLB asset has editable source, three merged material batches, local lazy loading, instancing, physical/byte budgets and reproducible export checks. Other assets remain procedural. |
 | V11 Lighting and materials | Implemented: original dry-day radiance, hemisphere fill and current-vehicle shadows improve material depth. Cached shadows and time-based orbit settling pass the full gate, 24 interaction journeys, 128 visual states and all 34 production journeys. |
-| V12 Visual QA | Active gate: 48 final foliage views, 52 onboard views and six continuous motion sequences retain visibility, control access and grounded context across both circuits. Repeat affected captures after each visible change. |
-| V13 Performance | Active gate: two instanced tree batches, one bounded texture, cached shadows and zero settled work. Four development CI shards plus a separate production job preserve test coverage and deadline headroom. |
+| V12 Visual QA | Active gate: 96 current/reference camera states join the foliage, onboard and continuous-motion reviews. Repeat affected captures after each visible change. |
+| V13 Performance | Active gate: two instanced tree batches, one bounded texture, cached shadows and zero settled work. Five development CI shards plus a separate production job preserve coverage and deadline headroom after measured runner timings. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
 | V15 Vegetation presentation | Implemented: original textured spruce crowns and tapered trunks replace uniform cones while retaining grounded sites and the crown envelope. Complete asset provenance, failure recovery, bounds and resource checks accompany the actual camera review. |
-| V16 Reference ghost clarity | Next: keep the blue current vehicle readable when the reference overlaps it. Review translucent reference presentation across Formula/GT, cameras and widths, preserving each native lap and the shared clock. |
-| V17 Ground material depth | Follow-up: improve terrain/apron material scale and visual depth with original assets, measured rendering cost and unchanged authoritative geometry. |
+| V16 Reference ghost clarity | Implemented: 28% translucent reference bodywork preserves the opaque blue current car, with no reference contact shade or depth writing. The complete gate, 20 interaction journeys and 96 native overlap/separation camera states pass across Formula/GT, both tracks and three widths. |
+| V17 Ground material depth | Next: improve terrain/apron material scale and visual depth with original assets, measured rendering cost and unchanged authoritative geometry. |
 
 Both source tracks, their provenance, complete engineering workspaces and the
 shared playback clock remain authoritative. Original Formula/GT bodywork, Dev
 Track start signs, the GLB pipeline, typography, graph readability and close-view
-annotations are implemented. Linux CI is green through `0d36126`: 309 TypeScript /
-152 Python tests, 170 development and 34 production journeys across four jobs.
+annotations are implemented. Linux CI is green through `fafc0eb`: 311 TypeScript /
+152 Python tests, 173 development and 35 production journeys across five jobs.
 
 The vegetation pass retains the established source placement while replacing cone
 silhouettes with original needle detail. Its final local gate passes 311 TypeScript
 / 152 Python tests, all 28 combined interaction journeys and all 35 production
 journeys. Forty-eight final foliage views, 52 onboard views and six continuous
-sequences verify the result. After committing and pushing this cycle, proceed
-directly into V16 while monitoring Linux CI. An opaque overlapping reference can obscure
-the current car's blue bodywork, making it the next playback-clarity issue to
-review. Keep both native laps, source identities and the single clock intact.
-See PRODUCT_PRESENTATION.md for evidence and FOLIAGE.md for the original asset.
+sequences verify the result. V16 now preserves the current car's blue paint through
+reference overlap. Its complete local gate passes 311 TypeScript / 152 Python tests
+and all 20 final interaction journeys. At the user's latest request, close and
+commit this work cycle, then pause. V17 remains the next priority when work resumes.
+Keep both native laps, source identities and the single clock intact. See
+PRODUCT_PRESENTATION.md, FOLIAGE.md and REFERENCE_PRESENTATION.md for evidence.
 
-Reassess after every stable implementation/test/visual-QA/documentation/commit/push
-cycle and continue directly. Do not add low-quality camera modes for checklist
+When autonomous work resumes, reassess after each stable implementation/test/
+visual-QA/documentation/commit/push cycle. Do not add low-quality camera modes for checklist
 coverage, broaden the solver, merge main, rewrite history or change repo settings.
 
 The initial sequence has been grouped into vertical slices so the dashboard always

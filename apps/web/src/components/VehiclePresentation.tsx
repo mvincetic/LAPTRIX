@@ -33,7 +33,11 @@ function ContactShade({ width, length }: { width: number; length: number }) {
   }, []);
   useEffect(() => () => texture.dispose(), [texture]);
   return (
-    <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+    <mesh
+      name="vehicle-contact-shade"
+      position={[0, 0.01, 0]}
+      rotation={[-Math.PI / 2, 0, 0]}
+    >
       <planeGeometry args={[width * 1.4, length * 1.1]} />
       <meshBasicMaterial map={texture} transparent depthWrite={false} />
     </mesh>
@@ -58,10 +62,12 @@ export const VehicleMesh = memo(function VehicleMesh({
   vehicle,
   color = "#0866ec",
   motion,
+  contactShade = true,
 }: {
   vehicle?: Vehicle;
   color?: string;
   motion: RefObject<VehicleMotion>;
+  contactShade?: boolean;
 }) {
   const width = vehicle?.width ?? 2,
     wheelbase = vehicle?.wheelbase ?? 3.6;
@@ -85,7 +91,7 @@ export const VehicleMesh = memo(function VehicleMesh({
   );
   return (
     <group name="vehicle-body">
-      <ContactShade width={width} length={length} />
+      {contactShade && <ContactShade width={width} length={length} />}
       {!coupe && (
         <VehicleBody
           color="#1e2938"

@@ -6,6 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The reference-presentation pass clears the complete local gate with 311 TypeScript
+/ 152 Python tests (46.67 seconds), six asset packages, reproducible GLB export and
+lint/type/build checks. All 96 native overlap/separation camera states pass on both
+circuits and vehicle categories at desktop, laptop and phone widths. All 20 final
+interaction journeys pass in 7.3 minutes, including compositor paint retention,
+independent reference playback, GT lamps, label placement, graphics restoration
+with both cars visible and zero settled rendering. See REFERENCE_PRESENTATION.md.
+At commit time, both new production reference checks and both graphics-restoration
+checks have passed; the broader 37-case production run is still in progress.
+
 The original vegetation pass clears the complete final local gate with 311
 TypeScript / 152 Python tests (44.15 seconds), six asset packages, reproducible
 GLB export and lint/type/build checks. Forty-eight final foliage views cover

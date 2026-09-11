@@ -36,7 +36,12 @@ export function TelemetryGhost({
         object.material instanceof MeshStandardMaterial
       ) {
         object.castShadow = !reference;
-        object.receiveShadow = true;
+        object.receiveShadow = !reference;
+        // The comparison remains visible without writing over the current car's depth.
+        object.material.transparent = reference;
+        object.material.opacity = reference ? 0.28 : 1;
+        object.material.depthWrite = !reference;
+        object.material.needsUpdate = true;
       }
     });
   }, [groupRef, reference, vehicle]);
@@ -63,7 +68,12 @@ export function TelemetryGhost({
       ref={groupRef}
       name={reference ? "reference-ghost" : "current-ghost"}
     >
-      <VehicleMesh vehicle={vehicle} color={color} motion={motion} />
+      <VehicleMesh
+        vehicle={vehicle}
+        color={color}
+        motion={motion}
+        contactShade={!reference}
+      />
       {marker && (
         <Html
           center
