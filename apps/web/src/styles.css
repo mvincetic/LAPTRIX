@@ -2453,6 +2453,21 @@ select {
     margin-left: auto;
   }
 }
+@media (max-width: 360px) {
+  .scene-footer {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .scene-playback-state {
+    margin-left: auto;
+  }
+  .scene-playback-values {
+    justify-content: space-between;
+  }
+  .scene-scrub {
+    grid-row: 3;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .spin {
     animation: none;

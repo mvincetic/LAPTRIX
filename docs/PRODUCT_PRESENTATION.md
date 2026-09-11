@@ -259,3 +259,76 @@ All **14 production journeys pass in 1.4 minutes** on the final build
 grounding commits also pass their full remote CI runs, including all 137 existing
 development journeys; see CI.md. The implemented presentation sequence retains
 both source circuits and the engineering MVP without a merge to main.
+
+## Continuous playback and portrait camera correction — 2026-09-11
+
+Four uninterrupted normal-phone 1× laps retain the rendered body bounds on both
+circuits with both cars: 5,096 observed frames, no offscreen bound and no runtime
+error (`artifacts/continuous-chase-qa.json` and its log). Extending the same sweep
+to portrait fullscreen found an out-of-frustum world box near the Red Bull Ring
+hairpin. World boxes are conservative, so independent composited car-visible/
+car-hidden screenshots were used to establish the visible problem: the GT body
+touches the left canvas edge at 27.69 seconds, while Formula has just 14 px of
+clearance at 21.92 seconds. Both initial pixel cases fail the 16 px margin check
+(`portrait-chase-before.log`, `portrait-chase-gt-before.png`,
+`portrait-chase-formula-before.png`). The GT screenshot was opened and reviewed.
+
+Chase now retreats from its target along the same view ray when canvas aspect
+is below 0.9. Bearing, fixed 55-degree field of view and telemetry remain unchanged.
+Normal wider canvases retain their exact pose. One new analytical test protects
+bearing, distance, deterministic seeks and invalid aspects; the existing three
+stadium-hairpin fixtures now project all car corners at four aspects down to 0.3.
+Two new browser journeys verify actual car-pixel margins at 390 and 320 px, native
+fullscreen entry/exit, an unchanged paused cursor and zero new solves. These are
+also part of the production suite. The screenshot comparison hides HTML overlays
+and checks the composited canvas, independently of the camera helper.
+
+The final complete quality gate passes lint, Ruff, strict typecheck, **268
+TypeScript tests**, **152 Python tests (49.55 seconds)** and build
+(`artifacts/portrait-chase-check-final.log`). All **18 relevant browser journeys
+pass in 2.3 minutes** (`portrait-chase-browser-final.log`): new pixel checks,
+fullscreen recovery/layout, north orientation, shared scene telemetry, viewer
+transport and zero settled frames/draws/buffer replacement. Entry JavaScript is
+unchanged at 438.95 / 134.98 kB gzip; deferred viewer is 977.90 / 262.90 kB.
+
+The 320 px visual review also found elapsed time and the seek bar outside the
+footer: the elapsed row extended 19 px beyond the fullscreen panel, and 35 px in
+the normal panel (`compact-viewer-before.json`, log and 320 px screenshots).
+At widths up to 360 px, playback now uses three rows with controls/state, values,
+then scrubbing. Both updated portrait journeys pass in 13.9 seconds and protect
+footer containment before/after fullscreen with no page overflow. They wait for
+the real WebGL backing size, since CSS can resize before the canvas buffer.
+The continuous and layout QA scripts use the same resize check; the layout script
+adds `--compact` for 320/360 px. Final compact QA passes all eight overview/top/
+chase/fullscreen states on Red Bull Ring with GT, retaining contained controls,
+readouts and source credits and no runtime error or horizontal overflow.
+The 320 px fullscreen screenshot was opened and reviewed. Evidence:
+`portrait-compact-browser.log`, `portrait-compact-qa.log`,
+`portrait-compact-final-qa.json` and corresponding PNGs in `artifacts/`.
+
+After the compact correction, the complete quality gate passes again with 268
+TypeScript tests and 152 Python tests in 41.67 seconds, plus lint, Ruff, strict
+typecheck and build (`artifacts/portrait-viewer-check.log`). JavaScript sizes are
+unchanged from the camera correction; CSS is 58.50 / 12.27 kB gzip.
+
+The final uninterrupted portrait-fullscreen sweep passes all four 1× laps:
+1,007 Formula and 1,267 GT frames on Red Bull Ring, plus 944 Formula and 1,175 GT
+frames on Dev Track. All 4,393 observed world boxes remain inside the camera
+frustum, with no runtime error; the largest absolute horizontal projection is
+0.782126 (the frustum edge is 1). Combined with the unchanged normal-phone poses,
+the eight complete laps cover 9,489 observed frames. Each finish and the time with
+the widest projected box have a retained screenshot. Both Red Bull Ring hairpins
+and both Dev Track corner screenshots were opened and reviewed. Evidence:
+`continuous-fullscreen-qa.json`, `continuous-fullscreen-final.log` and corresponding
+`continuous-fullscreen-*.png` files. This is camera containment evidence, not a
+hardware frame-rate claim or proof of collision-free scenery on arbitrary imports.
+
+All **16 production journeys pass in 1.5 minutes** on the final compact build
+(`artifacts/portrait-viewer-production.log`). A further 16 final visual states
+cover Formula on Red Bull Ring with an active sector loop at 1600×1000, 1280×900,
+390×844 and 780×390. All controls, readouts and source credits remain contained;
+there is no page overflow or runtime error. The full desktop dashboard and short
+fullscreen capture were opened and reviewed. These join the eight compact states
+for 24 final layout captures (`portrait-viewer-final-qa.json`,
+`portrait-viewer-layout-qa.log` and matching PNGs). The working branch retains the
+same source geometry, solver and project contracts throughout this continuation.

@@ -1,5 +1,20 @@
 # Decision log
 
+## 2026-09-11 — Preserve car framing in portrait fullscreen
+
+**Decision:** For canvas aspect ratios below 0.9, retreat the chase camera from
+its existing target along the same view ray by `0.9 / aspect`. Keep the vertical
+field of view fixed at 55 degrees. **Reasoning:** A full-lap projection sweep
+identified a narrow fullscreen risk; composited pixel checks confirmed the GT
+car was cropped at a Red Bull Ring hairpin. **Consequence:** Tall views retain
+road and car clearance with unchanged bearing, clock and source telemetry.
+Ordinary wider views retain their exact pose; the adaptation depends only on
+viewport size, with no time smoothing or animated field of view.
+The 320 px review also exposed clipped elapsed time and a seek bar extending
+outside the footer. At widths up to 360 px, controls, readouts and scrubbing use
+three rows. Browser pixel checks wait for the actual WebGL backing size after
+fullscreen changes, then verify footer containment as well as car clearance.
+
 ## 2026-09-11 — Keep playback controls inside the viewer
 
 **Decision:** Add native play/pause, loop and seek controls to the existing isolated

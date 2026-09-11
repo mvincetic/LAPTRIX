@@ -91,21 +91,42 @@ Follow distance is `10 + 2 * wheelbase` metres; the look-ahead sample is
 `8 + 0.18 * speed` metres ahead (speed in m/s). Both distances are capped at 8% of
 lap length and wrap over the closed source. The target blends 35% towards that
 sample from the car, keeping tight hairpins from cropping it on narrow screens.
-Camera height is `3.4 + 0.35 * wheelbase` above the current
+Base camera height is `3.4 + 0.35 * wheelbase` above the current
 sample, with at least 3.2 m clearance above its sampled rear position. The fixed
 55-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
 in phone and landscape views. Overview modes restore their 45-degree fit.
 
-The pose is a pure function of the installed Lap and clock time: seeking, pausing,
-changing playback rate and crossing the finish need no damping history. There is
+Portrait fullscreen narrows horizontal field of view further than the normal
+phone panel. Below aspect 0.9, the camera retreats from its target along the same
+view ray by `0.9 / aspect`. Target, bearing and vertical field of view stay fixed;
+the ordinary pose is returned unchanged for wider canvases. This preserves space
+around the car through hairpins without introducing a separate animation.
+
+The pose is a pure function of the installed Lap, clock time and canvas aspect.
+Seeking, pausing, changing playback rate and crossing the finish need no damping history. There is
 no extra clock, shake, roll, motion blur or animated field of view. Explicit Play
 still works with reduced motion; opening the workspace or switching cameras does
-not start playback. Four analytical checks cover physical circle positions,
+not start playback. Five analytical checks cover physical circle positions,
 translation, finish continuity, endpoint clamping, deterministic seeks and vehicle
-projection at three aspect ratios and complete cars through three tight stadium
-hairpins. The hairpin check fails with the initial unblended target. Existing north-direction browser checks use
-the new pose and independently rotate world north through the camera quaternion.
+projection, unchanged bearing and complete cars through three tight stadium
+hairpins at aspects 2.6, 0.9, 0.5 and 0.3. Nonpositive/nonfinite aspects are rejected.
+The hairpin check fails with the initial unblended target. Two browser journeys
+compare composited car-visible/car-hidden pixels at a real showcase hairpin,
+requiring at least 16 px clearance at every canvas edge for both cars at 390 and
+320 px portrait fullscreen. The old pose clips the GT car and leaves just 14 px
+for Formula. These checks also run against production assets.
+Existing north-direction browser checks use the new pose and independently rotate
+world north through the camera quaternion.
 
 This follows the calculated path; it is not a suspension or collision camera.
 Imported trajectories outside the source road and distant terrain can still
 occlude a low view. Top/3D and Reset remain available.
+
+`node scripts/continuous-chase-qa.mjs` inspects the rendered body's world bounds
+after every presented frame over four complete 1× laps (both cars, both tracks).
+Add `--fullscreen` for portrait fullscreen. Each run records JSON, finish and
+widest-projection screenshots under ignored `artifacts/`; an optional
+`PRESENTATION_QA_PREFIX` preserves separate runs. It uses the existing development
+renderer read-only, stopping playback on an out-of-frustum bound. World boxes
+are conservative; the separate pixel regression establishes actual car clearance.
+Frame counts depend on the software renderer and do not establish hardware FPS.

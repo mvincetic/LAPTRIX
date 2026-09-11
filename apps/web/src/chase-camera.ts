@@ -11,7 +11,10 @@ export function chaseCameraPose(
   lap: Pick<Lap, "samples" | "length" | "vehicle">,
   time: number,
   vehicle?: Vehicle,
+  aspect = 1,
 ) {
+  if (!Number.isFinite(aspect) || aspect <= 0)
+    throw new Error("Chase camera aspect must be finite and positive.");
   const current = interpolate(lap.samples, time);
   const wheelbase = vehicle?.wheelbase ?? lap.vehicle?.wheelbase ?? 3.6;
   const follow = Math.min(10 + wheelbase * 2, lap.length * 0.08);
@@ -29,18 +32,28 @@ export function chaseCameraPose(
     wrap(current.distance + ahead),
     "distance",
   );
+  const position: Vec3 = [
+    rear.x,
+    Math.max(current.y + height, rear.y + 3.2) + VEHICLE_SURFACE_LIFT,
+    rear.z,
+  ];
+  // A full look-ahead target can point past a hairpin and crop the car on phones.
+  // Retain forward context while anchoring the view predominantly to the car.
+  const aim: Vec3 = [
+    current.x + (target.x - current.x) * 0.35,
+    current.y + (target.y - current.y) * 0.35 + 0.9 + VEHICLE_SURFACE_LIFT,
+    current.z + (target.z - current.z) * 0.35,
+  ];
+  // A taller canvas narrows the horizontal FOV. Retreat on the same view ray
+  // to retain the car at portrait fullscreen sizes without changing its bearing.
+  const retreat = Math.max(1, 0.9 / aspect);
   return {
-    position: [
-      rear.x,
-      Math.max(current.y + height, rear.y + 3.2) + VEHICLE_SURFACE_LIFT,
-      rear.z,
-    ] as Vec3,
-    // A full look-ahead target can point past a hairpin and crop the car on phones.
-    // Retain forward context while anchoring the view predominantly to the car.
-    target: [
-      current.x + (target.x - current.x) * 0.35,
-      current.y + (target.y - current.y) * 0.35 + 0.9 + VEHICLE_SURFACE_LIFT,
-      current.z + (target.z - current.z) * 0.35,
-    ] as Vec3,
+    position:
+      retreat === 1
+        ? position
+        : (position.map(
+            (value, i) => aim[i] + (value - aim[i]) * retreat,
+          ) as Vec3),
+    target: aim,
   };
 }

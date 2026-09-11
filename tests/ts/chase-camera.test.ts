@@ -74,6 +74,28 @@ describe("deterministic telemetry chase camera", () => {
     ).toBeLessThan(0.001);
     expect(() => chaseCameraPose(lap, NaN)).toThrow(/finite/);
   });
+  it("preserves bearing and the ordinary pose while retreating for a tall canvas", () => {
+    const lap = circle(true),
+      time = 3.123;
+    const ordinary = chaseCameraPose(lap, time);
+    for (const aspect of [0.9, 1, 2.6])
+      expect(chaseCameraPose(lap, time, undefined, aspect)).toEqual(ordinary);
+    const portrait = chaseCameraPose(lap, time, undefined, 0.45);
+    expect(portrait.target).toEqual(ordinary.target);
+    const a = new Vector3(...ordinary.position).sub(
+      new Vector3(...ordinary.target),
+    );
+    const b = new Vector3(...portrait.position).sub(
+      new Vector3(...portrait.target),
+    );
+    expect(b.length()).toBeCloseTo(a.length() * 2, 10);
+    expect(a.normalize().distanceTo(b.normalize())).toBeLessThan(1e-12);
+    expect(chaseCameraPose(lap, time, undefined, 0.45)).toEqual(portrait);
+    for (const aspect of [0, -1, NaN, Infinity])
+      expect(() => chaseCameraPose(lap, time, undefined, aspect)).toThrow(
+        /finite and positive/,
+      );
+  });
   it("preserves a translated scene and keeps the vehicle inside desktop, phone and short camera projections", () => {
     const lap = circle(),
       translated = {
@@ -114,7 +136,7 @@ describe("deterministic telemetry chase camera", () => {
           }
     }
   });
-  it("retains the complete car through tight hairpins on a long lap at phone aspect", () => {
+  it("retains the complete car through tight hairpins on a long lap across landscape and tall portrait aspects", () => {
     for (const radius of [12, 20, 35]) {
       const straight = 400,
         arc = Math.PI * radius;
@@ -142,35 +164,39 @@ describe("deterministic telemetry chase camera", () => {
       });
       for (const fraction of [0.1, 0.3, 0.5, 0.7, 0.9]) {
         const angle = Math.PI * fraction;
-        const pose = chaseCameraPose(
-          { samples, length },
-          (straight + arc * fraction) / 20,
-        );
-        const camera = new PerspectiveCamera(CHASE_FOV, 0.9, 0.2, 10000);
-        camera.position.set(...pose.position);
-        camera.lookAt(...pose.target);
-        camera.updateMatrixWorld();
-        for (const x of [-1, 1])
-          for (const y of [0, 1.4])
-            for (const z of [-2.7, 2.7]) {
-              const point = new Vector3(
-                radius * (1 - Math.cos(angle)) +
-                  x * Math.cos(angle) +
-                  z * Math.sin(angle),
-                y + VEHICLE_SURFACE_LIFT,
-                straight +
-                  radius * Math.sin(angle) -
-                  x * Math.sin(angle) +
-                  z * Math.cos(angle),
-              ).project(camera);
-              expect(
-                Math.max(
-                  Math.abs(point.x),
-                  Math.abs(point.y),
-                  Math.abs(point.z),
-                ),
-              ).toBeLessThan(1);
-            }
+        for (const aspect of [2.6, 0.9, 0.5, 0.3]) {
+          const pose = chaseCameraPose(
+            { samples, length },
+            (straight + arc * fraction) / 20,
+            undefined,
+            aspect,
+          );
+          const camera = new PerspectiveCamera(CHASE_FOV, aspect, 0.2, 10000);
+          camera.position.set(...pose.position);
+          camera.lookAt(...pose.target);
+          camera.updateMatrixWorld();
+          for (const x of [-1, 1])
+            for (const y of [0, 1.4])
+              for (const z of [-2.7, 2.7]) {
+                const point = new Vector3(
+                  radius * (1 - Math.cos(angle)) +
+                    x * Math.cos(angle) +
+                    z * Math.sin(angle),
+                  y + VEHICLE_SURFACE_LIFT,
+                  straight +
+                    radius * Math.sin(angle) -
+                    x * Math.sin(angle) +
+                    z * Math.cos(angle),
+                ).project(camera);
+                expect(
+                  Math.max(
+                    Math.abs(point.x),
+                    Math.abs(point.y),
+                    Math.abs(point.z),
+                  ),
+                ).toBeLessThan(1);
+              }
+        }
       }
     }
   });

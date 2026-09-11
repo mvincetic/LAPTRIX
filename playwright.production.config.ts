@@ -9,6 +9,7 @@ export default defineConfig({
     "csv-worker.spec.ts",
     "showcase-track.spec.ts",
     "viewer-controls.spec.ts",
+    "portrait-chase.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

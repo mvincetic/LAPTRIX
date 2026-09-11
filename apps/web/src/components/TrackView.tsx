@@ -193,7 +193,12 @@ function CameraRig({
   }, [camera, fit, reset, invalidate, mode]);
   useFrame(() => {
     if (mode === "chase" && lap) {
-      const pose = chaseCameraPose(lap, clock.getSnapshot().time, vehicle);
+      const pose = chaseCameraPose(
+        lap,
+        clock.getSnapshot().time,
+        vehicle,
+        Math.max(1, size.width) / Math.max(1, size.height),
+      );
       camera.position.set(...pose.position);
       camera.lookAt(...pose.target);
     }
@@ -588,7 +593,7 @@ export function TrackView({
           <span className="scene-instruction">
             <MousePointer2 size={12} />{" "}
             {mode === "chase"
-                ? "Chase camera · play or scrub below"
+              ? "Chase camera · play or scrub below"
               : "Drag to orbit · scroll to zoom"}
           </span>
         </div>

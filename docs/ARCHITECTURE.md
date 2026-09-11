@@ -75,7 +75,9 @@ The same snapshot drives both sliders, current readouts and the interval-loop
 notice. Native fullscreen retains these controls inside the fullscreen element;
 no secondary state, persistence field or input-to-simulation path is introduced.
 `chase-camera.ts` derives distance-follow and look-ahead poses from the same Lap,
-with a fixed field of view and no history-dependent smoothing. VehiclePresentation
+with a fixed field of view and no history-dependent smoothing. Below canvas aspect
+0.9 it retreats on the same view ray to retain portrait fullscreen car clearance.
+VehiclePresentation
 contains original Formula/GT bodywork in metres. Its memoized geometry survives
 ordinary setup/viewer edits; TelemetryGhost updates wheel spin from travelled
 distance and front steering from the existing sample in the same pose callback.

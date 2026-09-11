@@ -293,6 +293,8 @@ Blue remains the current lap and grey the reference. Seven-pixel overview dots
 locate vehicles without changing their physical mesh scale. Racing/braking colour
 stays just above the road surface, below bodywork. Decorative shake and automatic
 camera motion are absent; explicit telemetry playback retains its existing controls.
+Portrait fullscreen adds follow distance along the same view direction so a tight
+corner retains clear space around the car. Wider views keep their existing framing.
 
 Neutral asphalt and warm gravel shoulders now contrast with muted grass and trees.
 Fine static grain supplies near-camera scale; narrow white edges and alternating
@@ -309,3 +311,7 @@ Labels and values remain visible and tabular; numerical updates are not live
 announcements. Result metadata now uses 10 px text with stronger contrast, and
 corner headers, units and values gain a readable step in size. Wider desktop
 side panels retain breathing room without removing information or changing data.
+At widths up to 360 px the footer uses three rows: play/loop with state, numerical
+readouts, then the lap-position slider. This keeps elapsed time and the slider
+inside the viewer without reducing the existing text size. Interval notices add
+a fourth row when active.

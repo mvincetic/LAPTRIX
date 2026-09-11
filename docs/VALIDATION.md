@@ -16,10 +16,23 @@ The final viewer-transport milestone passes all 267 TypeScript and 152 Python
 tests, 22 relevant browser regressions and 14 production journeys. Its visual
 review covers 32 final desktop/phone/landscape states with control, readout and
 attribution containment, including active interval loops in fullscreen.
+The portrait continuation adds viewport-aware chase distance and a three-row
+compact footer. The complete gate passes **268 TypeScript / 152 Python tests**,
+lint, Ruff, strict typecheck and build. Both rendered-car checks pass at 390/320 px,
+including native fullscreen, settled canvas resizing, paused cursor preservation,
+contained controls/readouts and no additional solves. Eight additional compact
+visual states at 320/360 px pass layout and attribution checks; screenshots were
+opened and reviewed. See PRODUCT_PRESENTATION.md for the before/after evidence.
+The final production suite passes all 16 journeys. Four continuous portrait
+fullscreen laps add 4,393 observed body projections with no frustum escape or
+runtime error; eight normal/fullscreen laps total 9,489 observed frames. The final
+layout sweep covers 24 states across six viewport sizes, with contained controls,
+readouts and credits, including sector loops. Camera, compact and desktop/short
+screenshots were opened and reviewed. Source geometry and simulation are unchanged.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 267 tests pass.
+- Vitest: 268 tests pass.
 - Python numerical/API tests: 152 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes

@@ -234,3 +234,13 @@ and settled-render/buffer cases pass with the added road and landscape detail.
 
 Production coverage now also includes three native fullscreen viewer-transport
 journeys at desktop, phone and short landscape, bringing that suite to 14 cases.
+
+The [viewer-transport run](https://github.com/mvincetic/LAPTRIX/actions/runs/34575210189)
+passes through `a075264`: all **140 development journeys** (70 in 13.6 minutes and
+70 in 13.1 minutes), 267 TypeScript tests, 152 Python tests (43.09 seconds), all
+quality gates and 14 production journeys (2.1 minutes). All three new fullscreen
+transport cases pass on both development and built assets.
+
+The portrait continuation adds two car-pixel/fullscreen journeys on both servers,
+covering Formula and GT at 390/320 px with retained footer controls and paused
+telemetry. The suite now discovers 142 development and 16 production journeys.

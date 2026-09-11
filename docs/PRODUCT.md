@@ -50,7 +50,8 @@ rate and ready/playing/paused/complete state, including in fullscreen. These val
 follow the same clock as the car, graphs and audio; reference data does not replace
 them. Source units and geometry details remain in track inspection.
 The chase camera follows the calculated racing line at a physical distance with
-a fixed field of view. Original Formula and GT meshes use vehicle dimensions in
+a fixed field of view and more viewing distance on tall fullscreen canvases.
+Original Formula and GT meshes use vehicle dimensions in
 metres, including rotating wheels and front steering from telemetry. Small dots
 keep cars visible in overview. Bodywork, contact shading and scenery are visual
 approximations; they do not change vehicle parameters or simulation results.
@@ -63,6 +64,8 @@ interval loops show their bounds beside the viewer controls; seeking outside
 retains the existing return to full-lap looping. Rate and current telemetry remain
 visible. More readable result metadata and table text preserve the engineering
 context while the surrounding panels retain their compact layout.
+At 320/360 px the viewer footer stacks controls, values and scrubbing into three
+rows, keeping elapsed time and the full slider visible in normal and fullscreen views.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

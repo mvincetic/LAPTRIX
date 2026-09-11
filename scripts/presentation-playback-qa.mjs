@@ -12,12 +12,18 @@ const prefix =
   process.env.PRESENTATION_QA_PREFIX ??
   (showcase ? "red-bull-ring" : "presentation-playback");
 try {
-  for (const [width, height] of [
-    [1600, 1000],
-    [1280, 900],
-    [390, 844],
-    [780, 390],
-  ]) {
+  const sizes = process.argv.includes("--compact")
+    ? [
+        [320, 844],
+        [360, 844],
+      ]
+    : [
+        [1600, 1000],
+        [1280, 900],
+        [390, 844],
+        [780, 390],
+      ];
+  for (const [width, height] of sizes) {
     const page = await browser.newPage({ viewport: { width, height } });
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -80,6 +86,17 @@ try {
           page.getByRole("button", { name: "Inspect corner 1", exact: true }),
         ).toBeVisible();
       await page.locator(".scene-footer").scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          page.locator(".scene canvas").evaluate((canvas) => {
+            const box = canvas.getBoundingClientRect();
+            return (
+              canvas.width === Math.floor(box.width) &&
+              canvas.height === Math.floor(box.height)
+            );
+          }),
+        )
+        .toBe(true);
       await page.evaluate(
         () =>
           new Promise((resolve) =>
