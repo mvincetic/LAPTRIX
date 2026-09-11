@@ -6,6 +6,9 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 const original = JSON.parse(
   await readFile("data/tracks/ardennes-development.json", "utf8"),
 );
+const showcase = JSON.parse(
+  await readFile("data/tracks/red-bull-ring.json", "utf8"),
+);
 const sparse = {
   ...original,
   id: "terrain-slope-40",
@@ -30,6 +33,7 @@ const browser = await chromium.launch({
   args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const findings = [];
+const prefix = process.env.PRESENTATION_QA_PREFIX ?? "terrain";
 async function project(page) {
   await page.getByRole("button", { name: "Additional actions" }).click();
   const pending = page.waitForEvent("download");
@@ -42,12 +46,10 @@ async function project(page) {
   return JSON.parse(Buffer.concat(chunks).toString());
 }
 async function bluePixels(page) {
-  const png = await page
-    .locator(".scene canvas")
-    .screenshot({
-      style:
-        ".scene * { visibility: hidden !important; } .scene canvas { visibility: visible !important; }",
-    });
+  const png = await page.locator(".scene canvas").screenshot({
+    style:
+      ".scene * { visibility: hidden !important; } .scene canvas { visibility: visible !important; }",
+  });
   return page.evaluate(async (base64) => {
     const bitmap = await createImageBitmap(
       await (await fetch(`data:image/png;base64,${base64}`)).blob(),
@@ -75,13 +77,149 @@ async function bluePixels(page) {
     }
   }, png.toString("base64"));
 }
+async function groundOcclusion(page, lap) {
+  return page.evaluate(async (samples) => {
+    const { _roots } =
+      await import("/node_modules/.vite/deps/@react-three_fiber.js");
+    const { Raycaster, Vector3 } =
+      await import("/node_modules/.vite/deps/three.js");
+    const { scene, camera } = _roots
+      .get(document.querySelector(".scene canvas"))
+      .store.getState();
+    const terrain = scene.getObjectByName("context-terrain");
+    if (!terrain)
+      throw new Error("Terrain mesh is missing from the reviewed scene.");
+    const obstacles = terrain.parent.children.filter((node) => node.isMesh);
+    obstacles.push(
+      scene.getObjectByName("road-asphalt"),
+      scene.getObjectByName("road-shoulders"),
+    );
+    const ray = new Raycaster(),
+      occluded = [];
+    let inspected = 0;
+    const probes = samples.flatMap((sample, index) => {
+      const next = samples[index + 1];
+      if (!next) return [sample];
+      const fractions =
+        Math.hypot(next.x - sample.x, next.y - sample.y, next.z - sample.z) > 12
+          ? [0, 0.25, 0.5, 0.75]
+          : [0];
+      return fractions.map((t) => ({
+        x: sample.x + (next.x - sample.x) * t,
+        y: sample.y + (next.y - sample.y) * t,
+        z: sample.z + (next.z - sample.z) * t,
+      }));
+    });
+    probes.forEach((sample, index) => {
+      const point = new Vector3(sample.x, sample.y + 0.63, sample.z);
+      const screen = point.clone().project(camera);
+      if (
+        Math.abs(screen.x) > 1 ||
+        Math.abs(screen.y) > 1 ||
+        Math.abs(screen.z) > 1
+      )
+        return;
+      inspected++;
+      const direction = point.clone().sub(camera.position),
+        distance = direction.length();
+      ray.set(camera.position, direction.normalize());
+      ray.far = distance - 0.02;
+      const hits = ray.intersectObjects(obstacles, false);
+      if (hits.length)
+        occluded.push({
+          index,
+          ahead: distance - hits[0].distance,
+          object: hits[0].object.name || hits[0].object.type,
+        });
+    });
+    return { inspected, occluded };
+  }, lap.samples);
+}
+async function shoulderCoverage(page) {
+  return page.evaluate(async () => {
+    const { _roots } =
+      await import("/node_modules/.vite/deps/@react-three_fiber.js");
+    const { Raycaster, Vector3 } =
+      await import("/node_modules/.vite/deps/three.js");
+    const { scene } = _roots
+      .get(document.querySelector(".scene canvas"))
+      .store.getState();
+    const road = scene.getObjectByName("road-asphalt"),
+      shoulders = scene.getObjectByName("road-shoulders");
+    if (!road || !shoulders) throw new Error("Pavement meshes are missing.");
+    const vertices = road.geometry.attributes.position,
+      indices = road.geometry.index.array;
+    const ray = new Raycaster(),
+      origin = new Vector3(),
+      vertex = new Vector3();
+    const covered = [];
+    for (let i = 0; i < indices.length; i += 3) {
+      origin.set(0, 0, 0);
+      for (let j = 0; j < 3; j++)
+        origin.add(vertex.fromBufferAttribute(vertices, indices[i + j]));
+      road.localToWorld(origin.multiplyScalar(1 / 3));
+      origin.y += 30;
+      ray.set(origin, new Vector3(0, -1, 0));
+      ray.far = 30 - 0.005;
+      if (ray.intersectObject(shoulders, false).length) covered.push(i / 3);
+    }
+    return { inspected: indices.length / 3, covered };
+  });
+}
+// Preserve real terrain depth while matching the terrain-off background colour.
+// Otherwise antialiasing against grass changes the mask even with no occlusion.
+async function depthOnlyPixels(page) {
+  const previous = await page.evaluate(async () => {
+    const { _roots } =
+      await import("/node_modules/.vite/deps/@react-three_fiber.js");
+    const state = _roots
+      .get(document.querySelector(".scene canvas"))
+      .store.getState();
+    const values = new Map();
+    state.scene.getObjectByName("context-terrain").parent.traverse((node) => {
+      if (!node.isMesh) return;
+      for (const material of Array.isArray(node.material)
+        ? node.material
+        : [node.material]) {
+        if (!values.has(material.uuid))
+          values.set(material.uuid, material.colorWrite);
+        material.colorWrite = false;
+      }
+    });
+    state.invalidate();
+    return [...values];
+  });
+  try {
+    return await bluePixels(page);
+  } finally {
+    await page.evaluate(async (previous) => {
+      const { _roots } =
+        await import("/node_modules/.vite/deps/@react-three_fiber.js");
+      const state = _roots
+        .get(document.querySelector(".scene canvas"))
+        .store.getState();
+      const values = new Map(previous);
+      state.scene.getObjectByName("context-terrain").parent.traverse((node) => {
+        if (!node.isMesh) return;
+        for (const material of Array.isArray(node.material)
+          ? node.material
+          : [node.material])
+          if (values.has(material.uuid))
+            material.colorWrite = values.get(material.uuid);
+      });
+      state.invalidate();
+    }, previous);
+  }
+}
 try {
   for (const [width, height] of [
     [1600, 1000],
     [1280, 900],
     [390, 844],
   ])
-    for (const source of [original, sparse]) {
+    for (const source of [original, sparse, showcase].filter(
+      (source) => !process.env.QA_TRACK || source.id === process.env.QA_TRACK,
+    )) {
       const page = await browser.newPage({ viewport: { width, height } }),
         errors = [];
       page.setDefaultTimeout(30000);
@@ -91,7 +229,14 @@ try {
       });
       await page.goto("http://127.0.0.1:5173/");
       await expect(page.getByTestId("lap-time")).toBeVisible();
-      if (source.id !== original.id) {
+      if (source.id === showcase.id) {
+        await page
+          .getByRole("combobox", { name: "Track", exact: true })
+          .selectOption(source.id);
+        await expect(page.locator(".track-caption strong")).toHaveText(
+          source.name,
+        );
+      } else if (source.id !== original.id) {
         await page
           .getByLabel("Import track file", { exact: true })
           .setInputFiles({
@@ -124,11 +269,9 @@ try {
         await page
           .getByRole("tab", { name: "Track View", exact: true })
           .click();
-        await page
-          .locator(".track-panel")
-          .screenshot({
-            path: `artifacts/terrain-${width}-${source.id}-${mode.replaceAll(" ", "-")}-${terrain ? "on" : "off"}.png`,
-          });
+        await page.locator(".track-panel").screenshot({
+          path: `artifacts/${prefix}-${width}-${source.id}-${mode.replaceAll(" ", "-")}-${terrain ? "on" : "off"}.png`,
+        });
         const pixels = await bluePixels(page);
         const finding = {
           width,
@@ -157,6 +300,9 @@ try {
         finding.passed = true;
         return pixels;
       }
+      const pavement = await shoulderCoverage(page);
+      expect(pavement.inspected).toBeGreaterThan(0);
+      expect(pavement.covered).toEqual([]);
       for (const mode of ["Top View", "3D View"]) {
         await page.getByRole("button", { name: mode, exact: true }).click();
         await page
@@ -172,9 +318,16 @@ try {
         await page
           .getByRole("checkbox", { name: "Terrain & trees", exact: true })
           .check();
-        const withTerrain = await capture(mode, true);
+        await capture(mode, true);
         expect(without).toBeGreaterThan(100);
-        expect(withTerrain / without).toBeGreaterThan(0.98);
+        const visibility = await groundOcclusion(page, before.lap);
+        findings.at(-1).visibility = visibility;
+        findings.at(-1).pavement = pavement;
+        expect(visibility.inspected).toBeGreaterThan(0);
+        expect(visibility.occluded).toEqual([]);
+        const depthPixels = await depthOnlyPixels(page);
+        findings.at(-1).depthPixels = depthPixels;
+        expect(depthPixels / without).toBeGreaterThan(0.98);
       }
       await page.getByRole("button", { name: "Chase", exact: true }).click();
       await capture("Chase", true);
@@ -183,7 +336,7 @@ try {
     }
 } finally {
   await writeFile(
-    "artifacts/terrain-qa.json",
+    `artifacts/${prefix}-qa.json`,
     JSON.stringify(findings, null, 2),
   );
   await browser.close();

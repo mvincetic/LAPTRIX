@@ -45,9 +45,11 @@ The deferred Landscape component consumes a pure fixed-grid terrain builder.
 Nearest source-segment interpolation and conservative road/shoulder cell caps
 prevent contextual ground from cutting through the road. Tree clearance accounts
 for source widths and bases sample the final terrain triangles. See TERRAIN.md.
-Road and shoulder widths share the existing track-keyed memo. Ordinary setup or
-viewer-state renders retain Ribbon geometry and its GPU buffers; track replacement
-still derives fresh widths and disposes replaced geometry normally.
+Road and separate shoulder strips use track-keyed memos. Both retain every source
+cross-section and boundary, adding render-only sections at three-metre gates to
+limit the twist of coarse, nonplanar quads. Shoulder geometry joins the exact outer
+road edges instead of spanning under its full width. Ordinary setup or viewer-state renders retain both GPU
+geometries; track replacement derives fresh surfaces and disposes old buffers.
 `road-presentation.ts` builds original paint/curb/finish geometry from those source
 frames and a separate apron from the existing final terrain sampler. RoadDetails
 uses three static material batches. Ribbon UVs are centered world coordinates;

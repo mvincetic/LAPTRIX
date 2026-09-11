@@ -1,5 +1,13 @@
 # Rendering when the scene changes
 
+The premium grounding pass retains the same draw-call structure while subdividing
+road cross-sections at three-metre gates and separating shoulders outside the
+asphalt. Actual first-frame probes retain 67 Formula / 51 GT draws and submit
+72,968–79,332 triangles across the two bundled circuits/vehicles. The extra static
+geometry prevents coarse-surface intersections; memoization and zero settled
+draw/RAF checks remain intact. See PRODUCT_PRESENTATION.md for matched before/after
+counts and source/viewport verification. These are not hardware FPS measurements.
+
 The viewer uses React Three Fiber's demand frame loop. Once a paused camera settles,
 it stops submitting repeated WebGL draws. Playback, seeking, camera movement,
 resizing and scene changes still request frames at the same geometry and resolution.

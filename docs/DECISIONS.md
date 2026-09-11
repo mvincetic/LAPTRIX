@@ -1,5 +1,31 @@
 # Decision log
 
+## 2026-09-11 — Reduce artificial raised-road terrain clearance
+
+**Decision:** Retain the conservative terrain-cell cap but reduce its vertical
+reserve from 9 m to 0.35 m below the source. Aprons use the same reserve if their
+outer endpoint is outside the grid. **Reasoning:** First-Play review shows an
+unnecessary continuous embankment even where the road is nearly flat. The cell
+footprint constraint already prevents road intersections. **Consequence:** Ground
+and tree bases rise towards the unchanged source road; no source/lap/vehicle or
+camera values change. Existing sparse, sloped, wide, crossing and large-offset
+checks retain a positive clearance bound; a flat-road proximity check prevents
+regression to a blanket raised circuit. Context remains schematic terrain.
+
+Actual low-camera QA then exposed a separate coarse-input pavement defect: the
+wider under-road shoulder triangles could rise through the asphalt. Shoulders
+now consist of two outside strips sharing exact road edges, with 0.09 m crossfall
+over four metres. Original source cross-sections and boundaries are retained. An independent
+480-probe mesh check changes from 24 covered interior positions to none; ordinary
+and translated-source unit checks protect the spatial separation and welded edges.
+
+The same sparse input revealed up to 0.13354 m of asphalt triangulation error
+relative to its interpolated source cross-section, hiding parts of the canonical
+racing line. Asphalt and shoulders now include three-metre render gates while
+retaining every original edge vertex. The measured error drops to 0.00601 m;
+tests bound it below 0.025 m including large-coordinate float32 rounding. This is
+surface tessellation, not solver resampling or a change to authoritative points.
+
 ## 2026-09-11 — Find the vehicle when playback begins
 
 **Decision:** Start the untouched overview in Chase on the first Play from either

@@ -40,14 +40,10 @@ import { ScenePlayback } from "./ScenePlayback";
 import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { CHASE_FOV, ROAD_SURFACE_LIFT, chaseCameraPose } from "../chase-camera";
-import { SHOULDER_SURFACE_LIFT } from "../road-presentation";
+import { roadShoulders, roadSurface } from "../road-presentation";
 import { surfaceGrain } from "../surface-grain";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
-import {
-  normalizeTrack,
-  ribbonGeometry,
-  type Vec3,
-} from "../../../../packages/track-engine";
+import { normalizeTrack, type Vec3 } from "../../../../packages/track-engine";
 import {
   alignedNativeReference,
   type PlaybackClock,
@@ -96,20 +92,18 @@ function PlaybackFrames({ clock }: { clock: PlaybackClock }) {
 
 function Ribbon({
   track,
-  left,
-  right,
   color,
-  lift = 0,
+  shoulder = false,
 }: {
   track: Track;
-  left: number | number[];
-  right: number | number[];
   color: string;
-  lift?: number;
+  shoulder?: boolean;
 }) {
   const geometry = useMemo(() => {
     const frame = normalizeTrack(track),
-      data = ribbonGeometry(track.points, frame.normals, left, right, lift);
+      data = shoulder
+        ? { positions: roadShoulders(track), indices: null }
+        : roadSurface(track);
     const g = new BufferGeometry();
     g.setAttribute("position", new BufferAttribute(data.positions, 3));
     const uv = new Float32Array((data.positions.length / 3) * 2);
@@ -118,15 +112,19 @@ function Ribbon({
       uv[i * 2 + 1] = (data.positions[i * 3 + 2] - frame.center[2]) / 4;
     }
     g.setAttribute("uv", new BufferAttribute(uv, 2));
-    g.setIndex(new BufferAttribute(data.indices, 1));
+    if (data.indices) g.setIndex(new BufferAttribute(data.indices, 1));
     g.computeVertexNormals();
     return g;
-  }, [track, left, right, lift]);
+  }, [track, shoulder]);
   useEffect(() => () => geometry.dispose(), [geometry]);
   const grain = useMemo(() => surfaceGrain(), []);
   useEffect(() => () => grain.dispose(), [grain]);
   return (
-    <mesh geometry={geometry} receiveShadow>
+    <mesh
+      name={shoulder ? "road-shoulders" : "road-asphalt"}
+      geometry={geometry}
+      receiveShadow
+    >
       <meshStandardMaterial
         color={color}
         map={grain}
@@ -346,15 +344,6 @@ export function TrackView({
   const northIndicator = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null),
     frame = useMemo(() => normalizeTrack(track), [track]);
-  const widths = useMemo(
-    () => ({
-      left: track.points.map((p) => p.widthLeft),
-      right: track.points.map((p) => p.widthRight),
-      shoulderLeft: track.points.map((p) => p.widthLeft + 4),
-      shoulderRight: track.points.map((p) => p.widthRight + 4),
-    }),
-    [track],
-  );
   const racing = useMemo(
     () =>
       lap?.samples.map(
@@ -440,20 +429,8 @@ export function TrackView({
             <ambientLight intensity={1.65} />
             <directionalLight position={[-800, 1800, 700]} intensity={2.1} />
             {layers.terrain && <Landscape track={track} />}
-            <Ribbon
-              track={track}
-              left={widths.shoulderLeft}
-              right={widths.shoulderRight}
-              color="#c9c5b7"
-              lift={SHOULDER_SURFACE_LIFT}
-            />
-            <Ribbon
-              track={track}
-              left={widths.left}
-              right={widths.right}
-              color="#363d43"
-              lift={ROAD_SURFACE_LIFT}
-            />
+            <Ribbon track={track} color="#c9c5b7" shoulder />
+            <Ribbon track={track} color="#363d43" />
             <RoadDetails track={track} />
             {layers.centerline && (
               <Line

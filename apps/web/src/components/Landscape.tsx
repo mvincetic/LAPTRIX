@@ -68,10 +68,10 @@ export function Landscape({ track }: { track: Track }) {
   }, [data]);
   return (
     <group>
-      <mesh geometry={data.geometry} receiveShadow>
+      <mesh name="context-terrain" geometry={data.geometry} receiveShadow>
         <meshStandardMaterial vertexColors roughness={1} />
       </mesh>
-      <mesh geometry={data.apron}>
+      <mesh name="road-earthworks" geometry={data.apron}>
         <meshStandardMaterial color="#a8b395" roughness={1} side={DoubleSide} />
       </mesh>
       <instancedMesh

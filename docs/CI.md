@@ -1,5 +1,11 @@
 # Continuous integration
 
+Premium-phase [V1 playback entry](https://github.com/mvincetic/LAPTRIX/actions/runs/34584831004)
+passes through `ea810bd`: 272 TypeScript tests, 152 Python tests (31.58 seconds),
+all 148 development journeys (74 in 11.0 minutes and 74 in 14.9 minutes), all
+22 production journeys (2.3 minutes), lint, typecheck and build. The branch
+continues directly into terrain/pavement grounding after this stable milestone.
+
 The completed [sector annotation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34581701470)
 passes through `c32f9af`: 272 TypeScript tests, 152 Python tests (40.88 seconds),
 all 146 development journeys (74/72 across both shards) and 20 production journeys

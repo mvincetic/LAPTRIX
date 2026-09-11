@@ -1,7 +1,8 @@
 import type { Track } from "../shared/schema";
 import { normalizeTrack, type Vec3 } from "./index";
 
-const groundOffset = 9;
+// Keep a float32 reserve below source roads without raising every road on a berm.
+export const TERRAIN_CLEARANCE = 0.35;
 const columns = 110;
 const rows = 80;
 
@@ -124,7 +125,7 @@ export function createTerrainSurface(track: Track): TerrainSurface {
         [
           px,
           ground.elevation -
-            groundOffset -
+            TERRAIN_CLEARANCE -
             Math.min(25, ground.distance * 0.055),
           pz,
         ],
@@ -160,7 +161,7 @@ export function createTerrainSurface(track: Track): TerrainSurface {
       rows - 1,
       Math.floor((Math.max(a.z, b.z) + width - surface.zMin) / stepZ),
     );
-    const ceiling = Math.min(a.y, b.y) - groundOffset;
+    const ceiling = Math.min(a.y, b.y) - TERRAIN_CLEARANCE;
     for (let z = z0; z <= z1 + 1; z++)
       for (let x = x0; x <= x1 + 1; x++) {
         const index = (z * (columns + 1) + x) * 3 + 1;

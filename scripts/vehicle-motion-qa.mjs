@@ -50,9 +50,16 @@ try {
       const cursor = page.getByRole("slider", {
         name: "Lap playback position",
       });
-      for (const width of [1600, 390]) {
+      for (const width of [1600, 390].filter(
+        (width) =>
+          !process.env.QA_WIDTH || Number(process.env.QA_WIDTH) === width,
+      )) {
         await page.setViewportSize({ width, height: 1000 });
-        for (const fraction of [0, 0.05, 0.15, 0.3, 0.5, 0.7, 0.9, 1]) {
+        for (const fraction of [0, 0.05, 0.15, 0.3, 0.5, 0.7, 0.9, 1].filter(
+          (fraction) =>
+            !process.env.QA_FRACTION ||
+            Number(process.env.QA_FRACTION) === fraction,
+        )) {
           await cursor.fill(
             String(Math.floor(lap.lapTime * fraction * 100) / 100),
           );
@@ -124,7 +131,7 @@ try {
           }
           expect(errors).toEqual([]);
           await page.locator(".track-panel").screenshot({
-              path: `artifacts/${prefix}-${track}-${vehicle}-${width}-${fraction}.png`,
+            path: `artifacts/${prefix}-${track}-${vehicle}-${width}-${fraction}.png`,
           });
           records.push({
             track,

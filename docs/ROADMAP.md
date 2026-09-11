@@ -11,8 +11,8 @@ identities, all engineering contracts and the single playback clock.
 | Milestone | Product outcome and current state |
 | --- | --- |
 | V1 Playback clarity | Implemented: first Play finds the current car; explicit camera choices persist. Vehicle identities, follow, restart and rate stay with the viewer transport. |
-| V2 Cameras and speed | After grounding: a usable onboard view, grounded forward motion and clear camera selection. Keep deterministic seeking, horizon and clipping checks. |
-| V3 Track grounding | Next: remove the blanket raised-road appearance identified in first-Play QA, retaining conservative source-road clearance and low-camera visibility. |
+| V2 Cameras and speed | Next: a usable onboard view, grounded forward motion and clear camera selection. Keep deterministic seeking, horizon and clipping checks. |
+| V3 Track grounding | Implemented ahead of V2: closer terrain with conservative clearance, separate outside shoulders and render-only cross-sections that prevent coarse pavement from covering the canonical line. |
 | V4 Surface and environment | Add measured procedural reference objects where they improve scale and speed, using generic track geometry. |
 | V5 UI clarity | Refine the primary Track → Car → Conditions → Run → Play → Analyze workflow and separate technical/debug layers. |
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |

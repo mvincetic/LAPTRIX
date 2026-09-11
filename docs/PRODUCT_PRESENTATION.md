@@ -1,5 +1,67 @@
 # Product presentation milestones
 
+## Premium phase V3 — Terrain and pavement, 2026-09-11
+
+First-Play review identified the next dependency for low cameras: every road sat
+over a blanket nine-metre ground offset. The terrain now retains 0.35 m below the
+source, with the existing conservative footprint cap, earth aprons and finite
+grid. Source positions, widths, solver inputs and telemetry do not change.
+
+Actual sparse-slope QA found two further pavement defects. The wider shoulder
+surface covered 24 of 480 interior road probes, up to 0.03782 m above asphalt.
+Two separate outside strips now share the exact road edges and all 480 probes
+are clear. Coarse asphalt triangulation also departed by 0.13354 m from the
+interpolated source cross-section, obscuring the canonical racing line. Retaining
+all source edges and adding render sections at three-metre gates reduces that
+measured error to 0.00601 m. The original input stays a 40-point polygon; this is
+not source smoothing or solver resampling. See TERRAIN.md.
+
+The final complete gate passes lint, Ruff, typecheck, **275 TypeScript tests**,
+**152 Python tests (39.86 seconds)** and build. Three new geometry cases cover
+ground proximity, paved-surface separation, cross-section error, exact retained
+source vertices/welded edges, render spacing and a 90 km coordinate translation.
+All six relevant browser journeys pass in 1.2 minutes, including sparse-road
+visibility, both portrait car pixel checks and zero settled draws/RAFs with stable
+GPU buffers across ordinary edits. All **22 production journeys pass in 2.0
+minutes** on the final build. Entry JavaScript is 438.62 / 134.83 kB gzip,
+deferred viewer 983.81 / 264.29 kB and CSS 59.66 / 12.45 kB.
+
+The final material/geometry sweep passes **45 states** across Dev Track, Red Bull
+Ring and the original sparse slope at 1600, 1280 and 390 px: Top/3D with terrain
+on/off and Chase. Eighteen overview checks find no occlusion among **9,618**
+canonical and intermediate coarse-segment line probes. Actual asphalt triangle
+centres remain clear of shoulders across all nine source/viewport combinations.
+Full exported projects, pending fuel, cursor, Canvas and lap results are retained;
+there are no new solves, page overflow or runtime errors. Desktop sparse Chase,
+laptop Dev Track overview and phone sparse/showcase Chase images were opened and
+reviewed. The former shoulder slices and buried line are visibly corrected.
+
+A diagnostic initially found 4.7–22% fewer blue pixels against grass. No line
+probes were occluded. Keeping real terrain depth while suppressing its colour
+gave exactly matching narrow-view pixel counts: 2028/2028 in 3D and 1670/1670 in
+Top. The QA script now uses this background-matched depth comparison with the
+original 2% allowance, retains natural screenshots separately, and restores all
+colour-write flags. Its additional rays include terrain, trees, aprons, asphalt
+and shoulders. No app timer or alternate rendering mode was introduced.
+
+Final evidence in ignored `artifacts/`: `pavement-check-final.log`,
+`pavement-browser-final.log`, `pavement-production-final.log`,
+`pavement-final-qa.json` and `pavement-final-*.png`. Before/after mesh measurements
+are in `shoulder-probe-before.log`, `shoulder-probe-after.log`,
+`pavement-probe-before.log` and `pavement-probe-after.log`; antialiasing findings
+are in `terrain-line-probe-final.log` and `terrain-line-probe-narrow.log`.
+Earlier intermediate captures are retained under `terrain-conform*` and
+`terrain-shoulders*`; they document the defects found before the final correction.
+
+Four final first-frame vehicle/camera probes retain metre scale, wheel/steering
+alignment and viewport containment on both circuits and cars. Draw calls remain
+67 for Formula and 51 for GT. The finer pavement increases submitted triangles:
+Dev Track 66,684→79,332 (Formula), 64,912→77,560 (GT); Red Bull Ring
+64,678→74,740 (Formula), 62,906→72,968 (GT). This is a bounded static geometry
+cost, not a frame-rate claim. `pavement-budget-qa.json` records the final probes;
+`track-grounding-motion-qa.json` is the previous matching baseline. The existing
+vehicle script accepts `QA_WIDTH` and `QA_FRACTION` for focused comparisons.
+
 ## Premium phase V1 — Playback entry, 2026-09-11
 
 The expanded product brief starts a new sequence in ROADMAP.md. The initial

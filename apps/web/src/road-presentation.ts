@@ -2,6 +2,7 @@ import type { Track } from "../../../packages/shared/schema";
 import { normalizeTrack, type Vec3 } from "../../../packages/track-engine";
 import {
   terrainHeightAt,
+  TERRAIN_CLEARANCE,
   type TerrainSurface,
 } from "../../../packages/track-engine/terrain";
 import { ROAD_SURFACE_LIFT } from "./chase-camera";
@@ -12,6 +13,38 @@ function quad(output: number[], a: Vec3, b: Vec3, c: Vec3, d: Vec3) {
   const up = (c[2] - a[2]) * (b[0] - a[0]) - (c[0] - a[0]) * (b[2] - a[2]);
   if (up >= 0) output.push(...a, ...c, ...b, ...b, ...c, ...d);
   else output.push(...a, ...b, ...c, ...b, ...d, ...c);
+}
+
+/** Separate shoulders share the exact road edges and never span the driving surface. */
+export function roadShoulders(track: Track) {
+  const { pieces, edge } = roadPieces(track, 3),
+    positions: number[] = [];
+  for (const { i, from, to } of pieces) {
+    for (const side of [1, -1] as const)
+      quad(
+        positions,
+        edge(i, from, side, 0, ROAD_SURFACE_LIFT),
+        edge(i, from, side, 4, SHOULDER_SURFACE_LIFT),
+        edge(i, to, side, 0, ROAD_SURFACE_LIFT),
+        edge(i, to, side, 4, SHOULDER_SURFACE_LIFT),
+      );
+  }
+  return new Float32Array(positions);
+}
+
+/** Render ruled source cross-sections at <=3 m spacing to limit coarse-quad twist. */
+export function roadSurface(track: Track) {
+  const { pieces, edge } = roadPieces(track, 3);
+  const positions = new Float32Array(pieces.length * 6),
+    indices = new Uint32Array(pieces.length * 6);
+  pieces.forEach(({ i, from }, index) => {
+    positions.set(edge(i, from, 1, 0, ROAD_SURFACE_LIFT), index * 6);
+    positions.set(edge(i, from, -1, 0, ROAD_SURFACE_LIFT), index * 6 + 3);
+    const a = index * 2,
+      b = ((index + 1) % pieces.length) * 2;
+    indices.set([a, a + 1, b, b, a + 1, b + 1], index * 6);
+  });
+  return { positions, indices };
 }
 
 /** Pieces retain every source vertex and split at uniform physical-distance gates. */
@@ -141,7 +174,8 @@ export function roadApron(track: Track, surface: TerrainSurface) {
       const outer = (t: number) => {
         const point = edge(i, t, side, 18, 0);
         point[1] =
-          (terrainHeightAt(surface, point[0], point[2]) ?? point[1] - 9) - 0.1;
+          (terrainHeightAt(surface, point[0], point[2]) ??
+            point[1] - TERRAIN_CLEARANCE) - 0.1;
         return point;
       };
       quad(positions, inner(from), outer(from), inner(to), outer(to));

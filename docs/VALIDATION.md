@@ -6,6 +6,12 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V3 passes 275 TypeScript and 152 Python tests, lint/type/build gates,
+six terrain/vehicle/idle browser journeys and all 22 production journeys. Its 45
+final visual states cover both bundled tracks and a sparse sloped import, with
+depth-based line visibility and clear asphalt interiors. See the current
+PRODUCT_PRESENTATION.md record for the two pavement defects corrected by this pass.
+
 Premium phase V1 passes 272 TypeScript and 152 Python tests, lint/type/build gates,
 13 relevant browser journeys and all 22 production journeys. First-Play visual QA
 includes actual vehicle framing and compact/fullscreen control containment.

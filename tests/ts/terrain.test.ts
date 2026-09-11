@@ -121,9 +121,29 @@ describe("synthetic terrain clearance", () => {
           }
       });
       // Preserve a conservative reserve including float32 geometry at large offsets.
-      expect(minimum).toBeGreaterThan(8.9);
+      expect(minimum).toBeGreaterThan(0.3);
       expect(JSON.stringify(track)).toBe(original);
     });
+
+  it("keeps flat roads close to their surrounding ground instead of a continuous raised embankment", () => {
+    const track = slopedTerrainTrack(720);
+    track.points = track.points.map((point) => ({ ...point, y: 0 }));
+    const surface = createTerrainSurface(track);
+    const frame = normalizeTrack(track);
+    for (const [i, point] of track.points.entries()) {
+      for (const distance of [-26, -12, 0, 12, 26]) {
+        const height = terrainHeightAt(
+          surface,
+          point.x + frame.normals[i][0] * distance,
+          point.z + frame.normals[i][2] * distance,
+        )!;
+        expect(height).not.toBeNull();
+        expect(height).toBeLessThan(-0.3);
+        // Beyond the shoulder, the old blanket offset left a 9–11 m drop.
+        expect(height).toBeGreaterThan(-2.5);
+      }
+    }
+  });
 
   it("builds finite bounded deterministic geometry and seats trees on its actual triangles", () => {
     const track = slopedTerrainTrack();
