@@ -57,6 +57,12 @@ approximations; they do not change vehicle parameters or simulation results.
 Static asphalt grain, edge paint, alternating curbs and a finish stripe give the
 follow view physical scale cues. Grass aprons join shoulders to contextual terrain.
 The Analysis Layers panel identifies these details and tree placements as schematic.
+Play/pause, loop and lap-position controls now sit inside the viewer, including
+fullscreen. They operate the same clock as the graph transport and audio. Active
+interval loops show their bounds beside the viewer controls; seeking outside
+retains the existing return to full-lap looping. Rate and current telemetry remain
+visible. More readable result metadata and table text preserve the engineering
+context while the surrounding panels retain their compact layout.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

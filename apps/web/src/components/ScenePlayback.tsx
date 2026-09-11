@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { Pause, Play, Repeat2 } from "lucide-react";
 import type { Lap } from "../../../../packages/shared/schema";
 import {
   formatTime,
@@ -6,7 +7,7 @@ import {
   type PlaybackClock,
 } from "../../../../packages/telemetry";
 
-/** A readout of the current lap; subscribing here keeps the scene off UI clock renders. */
+/** Viewer transport shares the existing clock without rerendering scene geometry. */
 export function ScenePlayback({
   lap,
   clock,
@@ -36,15 +37,65 @@ export function ScenePlayback({
       aria-label="Current lap playback"
       aria-live="off"
     >
-      <span className="scene-playback-state" data-playing={playback.playing}>
-        <span className="scene-playback-state-label">
-          <i aria-hidden="true" />
-          {state}
+      <div className="scene-transport-actions">
+        <button
+          className="scene-play-button"
+          disabled={!lap}
+          aria-label={playback.playing ? "Pause viewer lap" : "Play viewer lap"}
+          title={playback.playing ? "Pause lap" : "Play lap"}
+          onClick={() => clock.play(!playback.playing)}
+        >
+          {playback.playing ? (
+            <Pause size={15} />
+          ) : (
+            <Play size={15} fill="currentColor" />
+          )}
+        </button>
+        <button
+          className={`scene-loop-button${playback.loop ? " active" : ""}`}
+          disabled={!lap}
+          aria-label="Loop viewer playback"
+          aria-pressed={playback.loop}
+          title={
+            playback.loopRange
+              ? "Toggle interval looping"
+              : "Toggle full-lap looping"
+          }
+          onClick={() => clock.loop(!playback.loop)}
+        >
+          <Repeat2 size={15} />
+        </button>
+        <span className="scene-playback-state" data-playing={playback.playing}>
+          <span className="scene-playback-state-label">
+            <i aria-hidden="true" />
+            {state}
+          </span>
+          {lap && (
+            <span className="scene-playback-rate">
+              {playback.rate}× playback
+            </span>
+          )}
         </span>
-        {lap && (
-          <span className="scene-playback-rate">{playback.rate}× playback</span>
-        )}
-      </span>
+      </div>
+      <label className="scene-scrub">
+        <span>Lap position</span>
+        <input
+          className="seek scene-seek"
+          type="range"
+          aria-label="Viewer lap position"
+          aria-valuetext={
+            sample
+              ? `${sample.time.toFixed(3)} seconds, ${sample.distance.toFixed(3)} metres`
+              : undefined
+          }
+          min={0}
+          max={lap?.lapTime ?? 1}
+          step={0.01}
+          value={playback.time}
+          disabled={!lap}
+          onChange={(event) => clock.seek(Number(event.target.value))}
+        />
+      </label>
       <dl className="scene-playback-values">
         <div>
           <dt>Speed</dt>
@@ -67,6 +118,12 @@ export function ScenePlayback({
           </dd>
         </div>
       </dl>
+      {playback.loopRange && (
+        <span className="scene-loop-summary">
+          Interval loop · {formatTime(playback.loopRange.start)}–
+          {formatTime(playback.loopRange.end)}
+        </span>
+      )}
     </div>
   );
 }

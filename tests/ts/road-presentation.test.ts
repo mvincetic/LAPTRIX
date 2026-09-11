@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { Buffer } from "node:buffer";
 import source from "../../data/tracks/ardennes-development.json" with { type: "json" };
 import type { Track } from "../../packages/shared/schema";
 import type { TerrainSurface } from "../../packages/track-engine/terrain";
@@ -141,11 +142,14 @@ describe("schematic road presentation", () => {
       before = structuredClone(track);
     const a = roadDetails(track),
       b = roadDetails({ ...track, name: "Presentation only" });
-    expect(a).toEqual(b);
+    for (const key of ["white", "red", "dark"] as const)
+      expect(
+        Buffer.from(a[key].buffer).equals(Buffer.from(b[key].buffer)),
+      ).toBe(true);
     expect(a.red).toHaveLength(0); // A broad analytic circle needs no schematic tight-turn curbs.
     for (const buffer of [...Object.values(a), roadApron(track, plane())]) {
       expect(buffer.length).toBeLessThan(500000);
-      expect([...buffer].every(Number.isFinite)).toBe(true);
+      expect(buffer.every(Number.isFinite)).toBe(true);
     }
     expect(track).toEqual(before);
   });

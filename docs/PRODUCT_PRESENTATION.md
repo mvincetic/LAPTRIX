@@ -214,3 +214,48 @@ terrain cuts and generic curb locations remain visible approximations.
 All 11 production browser journeys pass in 1.1 minutes on the final build
 (`artifacts/track-grounding-production.log`), including attributed circuit exports
 and viewer/graphics recovery. Dashboard and in-viewer playback polish follow next.
+
+## Viewer transport and dashboard polish — 2026-09-11
+
+Play/pause, loop and lap-position controls now sit beside the viewer readout,
+remaining available in native fullscreen. They call the same PlaybackClock as the
+graph transport; both sliders and time displays update together. Active interval
+loops display their exact bounds, and outside seeking keeps the existing full-lap
+loop behavior. Desktop uses a horizontal footer; phone places the slider below
+the controls and values. Larger result metadata and corner-table text, stronger
+text contrast and slightly wider desktop side panels improve the hierarchy.
+No result, source, reference, setup or saved-project contract changes.
+
+The final full gate passes lint, Ruff, strict typecheck, **267 TypeScript tests**,
+**152 Python tests (42.41 seconds)** and build (`artifacts/viewer-controls-check-final.log`).
+The first run hit a five-second timeout in the near-30-km road test's deep recursive
+typed-array comparison while browser checks were also running. Exact Buffer byte
+equality replaces that assertion and the finite check uses the typed array directly;
+all data is still compared, and no deadline or input size changed. The final
+TypeScript suite completes in 2.75 seconds. Entry JavaScript is 438.95 / 134.98 kB
+gzip; deferred viewer is 977.70 / 262.83 kB.
+
+All **22 relevant browser journeys pass in 2.8 minutes**
+(`artifacts/viewer-controls-browser.log`). Three new journeys at desktop, phone
+and short landscape exercise actual fullscreen, native keyboard play and Home,
+shared sliders/readouts, interval notices, outside seeks, pause, loop toggling,
+non-looping completion and replay. They preserve the same Canvas and complete
+project, pending fuel and reference with zero simulation requests. Phone uses
+reduced motion. Existing keyboard, fullscreen recovery, scene telemetry, interval
+loop, ghost-label and zero-idle-render/buffer checks also pass. The three new
+journeys are included in the production suite.
+
+Final visual QA captures 32 states using Formula on Red Bull Ring and GT on Dev
+Track with an active interval loop: overview, top, chase and fullscreen at
+1600×1000, 1280×900, 390×844 and 780×390. Every control, slider, loop notice and
+numerical readout remains within its footer; source credits remain within the
+viewer. There is no horizontal overflow or runtime error. The full desktop
+dashboard, phone overview/chase and short fullscreen interval were opened and
+reviewed. Evidence: `viewer-controls-rbr-final-qa.json`,
+`viewer-controls-dev-gt-interval-qa.json`, corresponding logs and scene PNGs.
+The initial 16 RBR captures are retained under `viewer-controls-rbr-initial-*`.
+All **14 production journeys pass in 1.4 minutes** on the final build
+(`artifacts/viewer-controls-production.log`). The preceding camera/vehicle and
+grounding commits also pass their full remote CI runs, including all 137 existing
+development journeys; see CI.md. The implemented presentation sequence retains
+both source circuits and the engineering MVP without a merge to main.

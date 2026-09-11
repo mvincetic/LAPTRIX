@@ -60,6 +60,7 @@ the last completed result remains visible if a solve fails.
 - Orbit, top and chase cameras; configurable analysis layers.
 - A lower distance-follow camera and original metre-scale Formula/GT bodywork with telemetry-driven wheels.
 - Current speed, gear, elapsed time and playback state beside the track, including fullscreen.
+- Play, pause, loop and scrub directly inside the viewer; graph and fullscreen controls share one clock.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
 - Camera-derived north direction and stable reset after orbiting.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.

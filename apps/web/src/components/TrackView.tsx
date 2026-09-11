@@ -588,7 +588,7 @@ export function TrackView({
           <span className="scene-instruction">
             <MousePointer2 size={12} />{" "}
             {mode === "chase"
-              ? "Chase camera · playback controls below"
+                ? "Chase camera · play or scrub below"
               : "Drag to orbit · scroll to zoom"}
           </span>
         </div>

@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-11 — Keep playback controls inside the viewer
+
+**Decision:** Add native play/pause, loop and seek controls to the existing isolated
+ScenePlayback subscriber, with an explicit active-interval notice. Refine footer
+layout and result/table typography. **Reasoning:** A readout alone left fullscreen
+playback dependent on controls outside the fullscreen element. **Consequence:**
+Both transports operate one clock and immediately reflect the same time and loop
+state; keyboard input and completion keep their established semantics. Unique
+accessible control names distinguish viewer actions from graph actions.
+
 ## 2026-09-11 — Ground the source road with original scene detail
 
 **Decision:** Add static world-scale grain, edge paint, curvature-based schematic

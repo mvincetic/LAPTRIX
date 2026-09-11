@@ -278,7 +278,7 @@ small,
 }
 .workspace {
   display: grid;
-  grid-template-columns: 228px minmax(450px, 1fr) 330px;
+  grid-template-columns: 240px minmax(450px, 1fr) 348px;
   gap: 10px;
   padding: 10px;
   flex: 1;
@@ -870,19 +870,65 @@ select {
   font-weight: 650;
 }
 .scene-footer {
-  height: 50px;
-  display: flex;
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: auto minmax(70px, 1fr) auto;
   align-items: center;
   gap: 18px;
   justify-content: space-between;
-  padding: 0 12px;
+  padding: 10px 12px;
   font-size: 11px;
   color: #23344d;
   border-top: 1px solid #e7edf3;
   background: #fdfefe;
 }
+.scene-transport-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.scene-transport-actions button {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  padding: 0;
+}
+.scene-play-button,
+.scene-play-button:hover {
+  color: white;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.scene-loop-button.active {
+  color: var(--blue);
+  border-color: #c9defa;
+  background: #edf5ff;
+}
+.scene-scrub {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.scene-scrub > span {
+  color: #64758b;
+  font-size: 10px;
+}
+.scene-scrub .scene-seek {
+  width: 100%;
+  min-width: 0;
+  flex: none;
+}
+.scene-loop-summary {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  color: #426487;
+  padding-top: 6px;
+  border-top: 1px solid #e7edf3;
+  font-variant-numeric: tabular-nums;
+}
 .scene-playback-state {
-  min-width: 70px;
+  min-width: 62px;
 }
 .scene-playback-state-label {
   display: flex;
@@ -908,18 +954,18 @@ select {
 .scene-playback-values {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   margin: 0;
   white-space: nowrap;
 }
 .scene-playback-values dt {
-  font-size: 9px;
+  font-size: 10px;
   color: #66758a;
   margin-bottom: 2px;
 }
 .scene-playback-values dd {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
 }
@@ -1345,8 +1391,8 @@ select {
   transform: rotate(-90deg);
 }
 .lap-result small {
-  font-size: 8px;
-  color: #8995a4;
+  font-size: 10px;
+  color: #66768b;
   display: block;
   line-height: 1.5;
 }
@@ -1410,21 +1456,21 @@ select {
   text-align: center;
 }
 .corner-table th {
-  font-size: 8px;
+  font-size: 9px;
   color: #748397;
   font-weight: 500;
   background: #fafcff;
   padding: 5px 3px 1px;
 }
 .corner-table tr.units th {
-  font-size: 7px;
+  font-size: 8px;
   padding: 0 3px 6px;
   color: #9aa5b4;
 }
 .corner-table td {
   border-bottom: 1px solid #edf1f6;
   padding: 4px 2px;
-  font-size: 9px;
+  font-size: 10px;
   font-variant-numeric: tabular-nums;
 }
 .corner-table td:first-child {
@@ -2162,11 +2208,27 @@ select {
   }
   .scene-footer {
     font-size: 10px;
-    padding: 0 8px;
-    gap: 5px;
+    padding: 9px 8px;
+    gap: 10px 6px;
+    grid-template-columns: auto auto;
+  }
+  .scene-scrub {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .scene-transport-actions {
+    gap: 4px;
+  }
+  .scene-transport-actions button {
+    width: 28px;
+    height: 32px;
+    flex-basis: 28px;
+  }
+  .scene-playback-state {
+    min-width: 56px;
   }
   .scene-playback-values {
-    gap: 13px;
+    gap: 10px;
   }
   .scene-playback-values dd {
     font-size: 12px;

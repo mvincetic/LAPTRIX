@@ -300,3 +300,12 @@ red/pale curbs describe the road through turns. These are original schematic
 details on both circuits. A grass connection removes the exposed floating shoulder
 edge. Source attribution stays visible, and Analysis Layers explains the scenic
 assumption without adding technical implementation text to the main viewer.
+
+The viewer footer now groups blue play/pause and loop buttons with state/rate,
+a lap-position slider, and speed/gear/time. Desktop uses one horizontal row; phone
+places the slider beneath controls and values. Interval loops add one concise
+range line only while active. All controls stay inside the native fullscreen panel.
+Labels and values remain visible and tabular; numerical updates are not live
+announcements. Result metadata now uses 10 px text with stronger contrast, and
+corner headers, units and values gain a readable step in size. Wider desktop
+side panels retain breathing room without removing information or changing data.

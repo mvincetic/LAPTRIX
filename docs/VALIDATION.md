@@ -12,6 +12,10 @@ Red Bull Ring showcase and improves playback, camera and vehicle presentation.
 visual review and the hairpin regression found by the 64-pose camera sweep.
 The four older catalog fixture failures in the first showcase CI run are recorded
 in [CI.md](CI.md), with exact source/catalog preservation restored in the tests.
+The final viewer-transport milestone passes all 267 TypeScript and 152 Python
+tests, 22 relevant browser regressions and 14 production journeys. Its visual
+review covers 32 final desktop/phone/landscape states with control, readout and
+attribution containment, including active interval loops in fullscreen.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.

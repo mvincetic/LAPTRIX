@@ -219,3 +219,18 @@ new null attribution field, and failed-project imports expected only one install
 track. The repair captures the loaded source and complete option values/labels
 before each operation, then verifies exact preservation. No application contract,
 source geometry or assertion deadline is relaxed.
+
+The [camera/vehicle run](https://github.com/mvincetic/LAPTRIX/actions/runs/34572868896)
+passes through `77d633e`: all **137 development journeys** (70 in 12.5 minutes and
+67 in 11.7 minutes), 263 TypeScript tests, 152 Python tests (40.89 seconds), all
+quality gates and 11 production journeys (1.5 minutes). All four repaired catalog
+cases and the updated chase, reference, reduced-motion and idle checks pass remotely.
+
+The [grounding run](https://github.com/mvincetic/LAPTRIX/actions/runs/34573992998)
+passes through `5f41b60`: all 137 development journeys (70 in 10.4 minutes and
+67 in 12.5 minutes), 267 TypeScript tests, 152 Python tests (31.94 seconds), all
+quality gates and 11 production journeys (1.3 minutes). Both terrain-visibility
+and settled-render/buffer cases pass with the added road and landscape detail.
+
+Production coverage now also includes three native fullscreen viewer-transport
+journeys at desktop, phone and short landscape, bringing that suite to 14 cases.

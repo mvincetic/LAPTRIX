@@ -23,27 +23,31 @@ QA, documentation, a clean commit and working-branch push:
    baseline. Prioritize readable playback state, cleaner scene overlays and a
    coherent track/vehicle scale against the supplied interface reference.
    Implemented: preserved track identity and current-lap playback readout; camera
-   motion and vehicle scale remain in the following presentation milestones.
+   motion and vehicle scale are delivered in milestone 3.
 2. Source, attribute and bundle the Red Bull Ring showcase. Verify the complete GP
    layout, direction/start line, geometry and source limitations. Keep both tracks
    selectable and exercise activation, saved projects and reference isolation.
    Implemented: pinned OSM GP data, Steiermark
    terrain/flight epoch, reproducible transformation, visible/portable attribution.
-   See data/sources/red-bull-ring/README.md. Next: camera and vehicle presentation.
+   See data/sources/red-bull-ring/README.md.
 3. Improve camera framing and follow behavior, speed perception and playback
    clarity using the existing telemetry and single clock. Verify pause/seek/rate,
    loops, camera transitions, reduced motion and responsive/fullscreen use.
    Implemented: deterministic distance-follow camera, fixed field of view, original
    metre-scale Formula/GT bodywork and telemetry-driven wheels. Road-edge context
-   and materials continue directly in milestone 4; see PRODUCT_PRESENTATION.md.
+   and materials are delivered in milestone 4; see PRODUCT_PRESENTATION.md.
 4. Improve track grounding, materials, curbs, surroundings and vehicle presentation
    with original or appropriately licensed assets. Keep visual detail separate
    from source geometry and approximate physics; review close and overview views.
    Implemented: original asphalt/shoulder materials, edge paint, schematic curbs,
    finish stripe, grassy terrain connections and tree trunks. Source geometry
-   and simulation remain unchanged. Continue directly into dashboard/playback polish.
+   and simulation remain unchanged. Dashboard/playback polish is delivered in 5.
 5. Refine spacing, density, typography and information hierarchy across the
    dashboard, then repeat representative interaction and visual regressions.
+   Implemented: in-viewer play/pause, loop and scrubbing, an active interval notice,
+   responsive/fullscreen control layout and clearer result/table typography.
+   Both transports retain the single clock and complete workspace. Final visual
+   and interaction evidence is recorded in PRODUCT_PRESENTATION.md.
 
 Continue directly into the next milestone after each stable cycle. Numerical fixes
 remain eligible when required for correct product behavior; new solver expansion,
@@ -331,7 +335,7 @@ eligibility, native channel plots/scales, sector viewport mapping, vehicle contr
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and thirty-seven browser journeys cover the
+One hundred and forty browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -344,7 +348,8 @@ neutral displayed deltas with full-precision reference preservation,
 device-storage and audio-start recovery, declared/legacy load telemetry, separate
 corner event callouts through camera/layer changes, and the
 optional structured-tool contract. Four viewer loading/restoration and four CSV
-worker journeys also run against production assets. See VALIDATION.md
+worker journeys also run against production assets, alongside three showcase
+and three viewer-transport journeys. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy

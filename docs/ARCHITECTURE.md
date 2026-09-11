@@ -69,6 +69,11 @@ An isolated `ScenePlayback` subscribes to the same PlaybackClock through
 `useSyncExternalStore`. Its footer interpolates the current canonical Lap; clock
 notifications do not rerender TrackView or rebuild geometry. The readout has no
 timer and does not announce numerical updates as a live region.
+Its viewer play/pause, loop and seek controls call the existing PlaybackClock
+methods directly, with unique accessible names beside the graph transport.
+The same snapshot drives both sliders, current readouts and the interval-loop
+notice. Native fullscreen retains these controls inside the fullscreen element;
+no secondary state, persistence field or input-to-simulation path is introduced.
 `chase-camera.ts` derives distance-follow and look-ahead poses from the same Lap,
 with a fixed field of view and no history-dependent smoothing. VehiclePresentation
 contains original Formula/GT bodywork in metres. Its memoized geometry survives

@@ -54,6 +54,15 @@ try {
     await page
       .getByRole("slider", { name: "Lap playback position" })
       .fill("20");
+    if (process.argv.includes("--interval")) {
+      await page
+        .getByRole("combobox", { name: "Plot range", exact: true })
+        .selectOption("2");
+      await page
+        .getByRole("button", { name: "Loop sector", exact: true })
+        .click();
+      await expect(page.locator(".scene-loop-summary")).toBeVisible();
+    }
     for (const [state, label] of [
       ["overview", null],
       ["top", "Top View"],
@@ -81,7 +90,9 @@ try {
         const footer = document.querySelector(".scene-footer");
         const bounds = footer.getBoundingClientRect();
         const elements = [
-          ...footer.querySelectorAll("dt, dd, .scene-playback-state"),
+          ...footer.querySelectorAll(
+            "dt, dd, .scene-playback-state, .scene-transport-actions button, .scene-scrub, .scene-loop-summary",
+          ),
         ];
         return {
           playback: footer.textContent,

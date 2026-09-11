@@ -41,3 +41,20 @@ natural heights. The normal workspace retains its existing minimum scene height.
 and restored views at 1600×1000, 1280×900, 390×844 and 780×390. It records actual
 control/panel/canvas bounds, cursor and Canvas identity, project equality, requests
 and runtime/console errors. No fullscreen permission or browser setting is changed.
+
+## Playback inside fullscreen — 2026-09-11
+
+The existing ScenePlayback subscriber now contains play/pause, loop and lap-position
+controls as well as the readout. All remain inside the fullscreen element and
+operate the same PlaybackClock as the graph transport. An active sector/custom
+interval displays its actual bounds. An outside seek retains the established
+return to full-lap looping; the loop button uses the same toggle semantics as the
+graph control. Paused, playing, complete and restart behavior stay synchronized.
+
+Three browser journeys use native fullscreen at 1600×1000, 390×844 and 780×390,
+with reduced motion on the phone. They verify contained controls, interval bounds,
+outside seeking, native keyboard activation/Home, synchronized sliders/readouts,
+pause, non-looping completion and replay from the finish. They retain the same
+Canvas and full project, pending fuel and reference, with zero simulation calls.
+The same journeys run against production assets. Existing rejection, unavailable
+API, stale completion and external-exit cases remain in the regression suite.

@@ -86,7 +86,7 @@ for (const width of [1600, 390]) {
     expect(await readout(page, lap)).toBe(exact);
     await page.getByRole("button", { name: "Chase", exact: true }).click();
     await expect(page.locator(".scene-instruction")).toHaveText(
-      "Chase camera · playback controls below",
+      "Chase camera · play or scrub below",
     );
     await page
       .getByRole("combobox", { name: "Playback speed" })
