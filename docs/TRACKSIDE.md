@@ -1,5 +1,11 @@
 # Original trackside context
 
+The Dev Track now has two original signs beside its existing timing line. Their
+placements, selected by source fingerprint, and shoulder/apron foundation fitting
+are described in ASSET_PIPELINE.md. They add a small actual GLB consumer to the
+procedural context below. Red Bull Ring retains its schematic generic facilities
+and documented source data, without inheriting the fictional Dev Track identity.
+
 The guardrail package adds nearby reference objects to make road scale and motion
 readable in Chase and Onboard. It uses the same generic source pipeline on LAPTRIX
 Dev Track, Red Bull Ring and imports. These are schematic placements, not surveyed

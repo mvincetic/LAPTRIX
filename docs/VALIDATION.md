@@ -6,6 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The Dev Track asset cycle passes the complete local gate with 306 TypeScript /
+152 Python tests (49.40 seconds), four asset packages, reproducible GLB export,
+lint/typecheck and build. Six new unit cases cover physical source identity,
+metre scale, visible painted glyphs, exact foundation bounds and independent ground
+contact. The 60 camera/sign views, 45 terrain states (9,618 visibility probes)
+and six continuous motion sequences (307 frames, zero anchor drift) pass.
+All 15 final integration journeys pass in 3.3 minutes, including asset retry,
+retention, idle rendering and context restoration. All 32 production journeys pass
+on the final build in 4.5 minutes. See ASSET_PIPELINE.md and PRODUCT_PRESENTATION.md.
+
 The apex/ghost-panel follow-up passes the complete final gate: 300 TypeScript /
 152 Python tests (67.07 seconds), all lint/asset/type/build checks, 17 final browser
 journeys (4.0 minutes) and 60 visual states. Pixel differences independently check

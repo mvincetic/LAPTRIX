@@ -6,6 +6,22 @@
   "handedness": "right",
   "assets": [
     {
+      "id": "laptrix.dev-start-pylon.v1",
+      "category": "trackside",
+      "format": "glb",
+      "parameters": "assets/trackside/dev-start-pylon.json",
+      "implementation": "assets/trackside/dev-start-pylon.mjs",
+      "runtimeFile": "assets/trackside/dev-start-pylon.glb",
+      "placement": "assets/trackside/dev-track-presentation.json",
+      "origin": "Centre of the flat base at ground contact; upright +Y and approach direction +Z",
+      "provenance": "Original LAPTRIX Dev Track sign, including original capital outlines; no external font, image or model",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": [],
+      "maxBytes": 65536,
+      "maxTriangles": 500,
+      "materialBatches": 3
+    },
+    {
       "id": "laptrix.guardrail.v1",
       "category": "trackside",
       "format": "procedural",

@@ -15,11 +15,11 @@ identities, all engineering contracts and the single playback clock.
 | V3 Track grounding | Implemented ahead of V2: closer terrain with conservative clearance, separate outside shoulders and render-only cross-sections that prevent coarse pavement from covering the canonical line. |
 | V4 Surface and environment | Implemented: source-framed guardrails, supports and reflectors follow shoulder crests and exclude nearby roads. Final terrain/motion/production checks pass on both circuits/imports. |
 | V5 UI clarity | Implemented: grouped lap overlays/environment, collapsed source inspection and bounded scrolling panels retain camera/playback access. All 48 visual states and 29 production journeys pass. Continue the workflow audit through showcase selection next. |
-| V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
+| V6 Dev Track presentation | Implemented: original signs frame the existing timing line, with small foundations fitted to the rendered shoulder. Source geometry and the shared clock remain intact. |
 | V7 Showcase selection | Implemented: native source groups and compact provenance descriptions retain identity and import/restore behavior. Fifteen visual states and 30 production journeys pass; narrow/tablet headers remain aligned through loading and cancellation. The licensed Red Bull Ring data package is complete. |
 | V8 Formula presentation | Implemented: original rounded body contours, sidepod/engine-cover silhouettes, tapered floor, shallow wings and tyre shoulders. Closed-surface/dimension tests, 128 final visual states and all 30 production journeys pass. |
 | V9 GT presentation | Implemented: original rounded shell with wheel wells, continuous painted cabin, fitted glazing and telemetry-driven brake lamps. The full gate, 21 browser journeys, 140 visual states and all 31 production journeys pass. The physical profile, road frame and shared clock remain authoritative. |
-| V10 Asset pipeline | Three original procedural packages now cover guardrails, Formula and GT bodywork, with authored parameters, conventions and validation. GLB export/optimization and runtime loading remain. Use Blender only if locally useful. |
+| V10 Asset pipeline | Implemented: the first original GLB asset has editable source, three merged material batches, local lazy loading, instancing, physical/byte budgets and reproducible export checks. The other three packages remain procedural. |
 | V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |
 | V12 Visual QA | Repeat actual desktop/laptop/narrow/fullscreen and playback inspection across both cars and circuits; keep reproducible critical captures. |
 | V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
@@ -35,8 +35,12 @@ eight-metre apex spheres dominating close Orbit views. The immediate follow-up
 uses small screen-sized analysis dots and a less crowded ghost panel. All 40 final
 overview states retain every sector badge, and six close GT views resolve the
 original sphere defect. The final gate, 17 integration journeys, 60 visual states
-and all 31 production journeys pass. Continue directly with original start-area
-identity for LAPTRIX Dev Track and the authored GLB export/loading pipeline.
+and all 31 production journeys pass. Original Dev Track start signs and the GLB
+pipeline now pass the complete gate, 15 integration journeys, 105 static visual
+states, six continuous motion sequences and all 32 production journeys. Linux CI
+exposed a phone fullscreen transition assertion on the separately committed
+three-shard workflow; inspect and resolve that check while retaining its coverage.
+Continue directly into V11 daylight lighting and vehicle material depth.
 See PRODUCT_PRESENTATION.md for the evidence.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push

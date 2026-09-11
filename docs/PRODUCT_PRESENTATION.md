@@ -1,5 +1,52 @@
 # Product presentation milestones
 
+## Premium V6/V10 — Dev Track start identity and static asset pipeline, 2026-09-11
+
+Two original signs now frame the Dev Track's existing timing stripe. The editable
+mesh source exports to a real GLB, with three merged material batches, lazy local
+loading and instancing. Original polygonal lettering avoids a font or texture
+dependency. Source fingerprints select the site metadata, leaving Red Bull Ring
+and unrelated imports free of fictional Dev Track signs. See ASSET_PIPELINE.md.
+
+The first outside-barrier sites failed the one-metre foundation guard: exact
+apron contact required 1.74–1.90 m pedestals (`pylon-placement-first.log`,
+`pylon-foundation-probe.log`). Narrowing the model and placing it on the shoulder
+retains road clearance and yields 0.376/0.382 m foundations. Surface triangles are
+clipped against each footprint, including interior extrema, rather than moving
+the track or using a centre-only ground sample. Six unit cases cover physical
+identity, geometry/paint visibility from both sides, exact plane/extremum bounds,
+unsupported/unsafe omission and 180 independent ground rays at native/90 km
+translated coordinates (`pylon-unit.log`). Source and surface arrays remain intact.
+
+Both native asset journeys pass in 30 seconds (`pylon-browser-first.log`), covering
+four cameras, two instances per batch, metre scale, retained geometry through
+environment/circuit switches, playback and complete project/pending-edit retention.
+The phone case injects a 503 for the optional GLB and retries through Environment.
+The independent compositor recovery journey passes in 9.1 seconds
+(`pylon-delivery-first.log`) and is included in the production configuration.
+
+All 60 camera and sign views pass on both circuits/cars at
+1600/1280/390 px (`pylon-first-qa.json`): four cameras plus both close sign faces
+on Dev Track. Reviewed desktop Chase and phone detail images show readable signs
+and small grounded bases. Dev Track adds four draw batches and 796 triangles:
+Formula 74 / 135,890, GT 65 / 135,394. Red Bull Ring retains Formula 70 / 120,830
+and GT 61 / 120,334. Driving cameras retain four textures; Orbit/Top use five
+including the existing apex dot. These are resource counts, not frame-rate claims.
+
+The complete gate passes 306 TypeScript / 152 Python tests (49.40 seconds), all
+lint/asset/type/build checks and byte-for-byte GLB reproducibility (`pylon-check.log`).
+The GLB is 22,528 bytes; its lazy loader is 45.20 / 13.46 kB gzip. Entry JavaScript
+is 441.35 / 135.95 kB, viewer 1,001.42 / 270.26 kB, and CSS 60.84 / 12.70 kB.
+All 45 terrain states pass, including 9,618 road-visibility probes with no scenery
+occlusion or runtime error (`pylon-terrain-qa.json`). The six continuous 1× motion
+sequences pass across both circuits/cars, including portrait fullscreen: 307 real
+frames and zero world-anchor drift (`pylon-motion-qa.json`). Reviewed Onboard
+captures retain a clear forward road view. All 15 final interaction journeys pass
+in 3.3 minutes (`pylon-browser.log`), including idle drawing and graphics-context
+restoration. All 32 production journeys pass on the final distribution in 4.5
+minutes (`pylon-production.log`), including the optional asset failure/retry and
+composited-pixel recovery check. Continue into daylight lighting and materials.
+
 ## Premium annotation follow-up — Close Orbit apex scale, 2026-09-11
 
 The close GT lamp views exposed eight-metre green apex spheres that dominated

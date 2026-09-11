@@ -455,7 +455,12 @@ export function TrackView({
             <color attach="background" args={["#edf2f5"]} />
             <ambientLight intensity={1.65} />
             <directionalLight position={[-800, 1800, 700]} intensity={2.1} />
-            {layers.terrain && <Landscape track={track} />}
+            {layers.terrain && (
+              <Landscape
+                track={track}
+                sourceFingerprint={lap?.alignment?.trackFingerprint}
+              />
+            )}
             <Ribbon track={track} color="#c9c5b7" shoulder />
             <Ribbon track={track} color="#363d43" />
             <RoadDetails track={track} />

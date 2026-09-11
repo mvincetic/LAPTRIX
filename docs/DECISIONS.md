@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Introduce original Dev Track assets through a real GLB pipeline
+
+**Decision:** Give the existing timing line two source-bound original signs and
+ship their editable source through validated GLB export, local lazy loading and
+instancing. **Reasoning:** The Dev Track needs deliberate identity and the static
+asset pipeline needs a small actual consumer. **Consequence:** One 22 KiB asset
+uses three material batches and no font/image texture. Narrower shoulder sites
+avoid the nearly two-metre foundations required outside the barriers. Exact
+surface clipping fits the bases without moving source geometry. Failed optional
+loads retain the engineering workspace and can retry through Environment. Source
+fingerprints select sites; camera, reference and playback behavior remain intact.
+
 ## 2026-09-11 — Keep apex annotations legible at every Orbit scale
 
 **Decision:** Replace world-sized apex spheres with one fixed-screen-size Points

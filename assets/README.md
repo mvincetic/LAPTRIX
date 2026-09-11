@@ -1,10 +1,10 @@
 # Original LAPTRIX assets
 
-`manifest.json` describes the assets actually used by the viewer. The first
+`manifest.json` describes the assets actually used by the viewer. The guardrail
 package is an original corrugated guardrail, supports and reflectors. Its metre
 dimensions and colours are in `trackside/guardrail.json`; `roadside-context.ts`
 constructs source-framed geometry and `Trackside.tsx` renders three static batches.
-No downloaded model, photograph, texture or circuit-specific mesh is included.
+No downloaded model, photograph or texture is included.
 
 The second package is original Formula bodywork in `vehicles/formula.json`:
 rounded section contours, chassis, sidepods, engine cover and a tapered floor.
@@ -29,6 +29,13 @@ The geometry tests separately check support contact with real apron triangles,
 road exclusions, source immutability and maximum input budgets. Asset validation
 does not establish third-party licensing rights.
 
+The fourth package is the original Dev Track start pylon. Its editable dimensions,
+materials and capital outlines are in `trackside/dev-start-pylon.json`, with the
+builder alongside it. `npm run export:assets` produces the actual 22 KiB runtime
+GLB. Validation reloads it and checks byte-for-byte export reproducibility. Two
+source-bound sites use three shared material batches and grounded foundations.
+See `docs/ASSET_PIPELINE.md` for export, loading, source binding and failure behavior.
+
 ## Conventions
 
 - Metres, right-handed coordinates, +Y up and +Z forward. Source-world geometry
@@ -45,8 +52,9 @@ does not establish third-party licensing rights.
   culling sphere/box update together before presentation. Ordinary UI edits retain
   GPU resources, and source changes dispose replaced geometry.
 
-These are procedural packages, not a completed GLB/Blender pipeline. Future
-authored vehicle/environment assets should retain editable sources, validate
+The pylon establishes the actual static GLB export/loading pipeline; the other
+three packages remain procedural. Blender is optional and was not used here.
+Future authored vehicle/environment assets should retain editable sources, validate
 metre scale and pivots, normalize materials, export and optimize GLB, then record
 the actual runtime resource and licence in the manifest. Add LODs only with actual
 visual and performance evidence. Track geometry must continue to come from its

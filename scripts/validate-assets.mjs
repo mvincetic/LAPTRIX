@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile, realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
+import { Box3 } from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const root = await realpath(fileURLToPath(new URL("../", import.meta.url)));
 async function ownedPath(path) {
@@ -29,7 +31,7 @@ assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
   manifest.assets.length,
-  3,
+  4,
   "Register a validator when adding another asset package.",
 );
 const ids = new Set();
@@ -41,9 +43,9 @@ for (const entry of manifest.assets) {
       "laptrix.guardrail.v1",
       "laptrix.formula-body.v1",
       "laptrix.gt-body.v1",
+      "laptrix.dev-start-pylon.v1",
     ].includes(entry.id),
   );
-  assert.equal(entry.format, "procedural");
   for (const field of ["origin", "provenance", "rights"])
     assert(entry[field]?.length > 10);
   assert.deepEqual(entry.thirdPartySources, []);
@@ -53,6 +55,99 @@ for (const entry of manifest.assets) {
     await readFile(await ownedPath(entry.parameters), "utf8"),
   );
   assert.equal(asset.id, entry.id);
+  if (entry.id === "laptrix.dev-start-pylon.v1") {
+    assert.equal(entry.format, "glb");
+    assert.equal(entry.category, "trackside");
+    const bytes = await readFile(await ownedPath(entry.runtimeFile));
+    bounded(entry.maxBytes, 1, 65536);
+    assert(bytes.length <= entry.maxBytes);
+    assert.equal(bytes.readUInt32LE(0), 0x46546c67);
+    assert.equal(bytes.readUInt32LE(4), 2);
+    assert.equal(bytes.readUInt32LE(8), bytes.length);
+    assert.equal(bytes.readUInt32LE(16), 0x4e4f534a);
+    const json = JSON.parse(
+      bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString(),
+    );
+    assert(
+      json.buffers.every((buffer) => !buffer.uri),
+      "GLB must embed every buffer.",
+    );
+    assert.equal(json.images?.length ?? 0, 0);
+    assert.equal(json.animations?.length ?? 0, 0);
+    assert.equal(json.extensionsRequired?.length ?? 0, 0);
+    const model = await new GLTFLoader().parseAsync(
+      Uint8Array.from(bytes).buffer,
+      "",
+    );
+    let batches = 0,
+      triangles = 0;
+    model.scene.traverse((mesh) => {
+      if (!mesh.isMesh) return;
+      batches++;
+      assert(!Array.isArray(mesh.material));
+      assert(mesh.material.isMeshStandardMaterial);
+      assert(mesh.geometry.index);
+      triangles += mesh.geometry.index.count / 3;
+      for (const name of ["position", "normal"])
+        assert(
+          Array.from(mesh.geometry.getAttribute(name).array).every(
+            Number.isFinite,
+          ),
+        );
+      mesh.geometry.dispose();
+      mesh.material.dispose();
+    });
+    assert.equal(batches, entry.materialBatches);
+    assert.equal(batches, 3);
+    bounded(entry.maxTriangles, 1, 500);
+    assert(triangles <= entry.maxTriangles);
+    const bounds = new Box3().setFromObject(model.scene);
+    const expected = [
+      -asset.foot.width / 2,
+      0,
+      -asset.foot.depth / 2,
+      asset.foot.width / 2,
+      asset.frame.height,
+      asset.foot.depth / 2,
+    ];
+    [...bounds.min.toArray(), ...bounds.max.toArray()].forEach((value, i) =>
+      assert(Math.abs(value - expected[i]) < 1e-5),
+    );
+    bounded(asset.frame.width, 2, 4);
+    bounded(asset.frame.height, 3, 5);
+    bounded(asset.frame.depth, 0.3, 0.6);
+    assert.equal(asset.materials.length, 3);
+    for (const material of asset.materials) {
+      assert(/^#[0-9a-f]{6}$/i.test(material.color));
+      bounded(material.roughness, 0, 1);
+      bounded(material.metalness, 0, 1);
+    }
+    const placement = JSON.parse(
+      await readFile(await ownedPath(entry.placement), "utf8"),
+    );
+    assert.equal(placement.assetId, entry.id);
+    assert(/^sha256:[a-f0-9]{64}$/.test(placement.sourceFingerprint));
+    bounded(placement.placements.length, 1, 8);
+    for (const site of placement.placements) {
+      bounded(site.progress, 0, 0.9999);
+      assert([1, -1].includes(site.side));
+      bounded(
+        site.edgeOffset,
+        Math.hypot(placement.foundation.width, placement.foundation.depth) / 2 +
+          placement.roadReserve +
+          0.1,
+        14,
+      );
+    }
+    bounded(placement.foundation.width, asset.foot.width, 4.5);
+    bounded(placement.foundation.depth, asset.foot.depth, 2);
+    bounded(placement.foundation.embed, 0.1, 0.3);
+    bounded(placement.foundation.clearance, 0.03, 0.15);
+    bounded(placement.foundation.maxHeight, 0.5, 1.2);
+    bounded(placement.roadReserve, 0.5, 1.5);
+    continue;
+  }
+  assert.equal(entry.format, "procedural");
   if (entry.id === "laptrix.gt-body.v1") {
     assert.equal(entry.category, "vehicles");
     bounded(asset.overhang, 1.4, 2.2);
@@ -182,4 +277,4 @@ for (const entry of manifest.assets) {
   for (const key of ["rail", "post", "reflector"])
     assert(/^#[0-9a-f]{6}$/i.test(asset.materials[key]));
 }
-console.log(`Validated ${ids.size} original procedural asset package.`);
+console.log(`Validated ${ids.size} original asset packages.`);

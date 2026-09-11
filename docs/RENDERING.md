@@ -1,5 +1,15 @@
 # Rendering when the scene changes
 
+The Dev Track GLB signs add three instanced material batches and one foundation
+batch: 796 triangles for both sites together. Matched Chase counts are 74 draws /
+135,890 triangles for Formula and 65 / 135,394 for GT. Red Bull Ring remains at
+70 / 120,830 and 61 / 120,334 respectively. There are no new textures. The local
+22 KiB asset and its 45.20 kB loader load separately from the viewer. Original
+source geometry is cached across environment/circuit remounts; instance matrices
+and bounds update together before demand rendering. Surface fitting is memoized
+by source geometry, not playback. See ASSET_PIPELINE.md for ownership and failure
+behavior, and PRODUCT_PRESENTATION.md for actual camera/resource evidence.
+
 Orbit and Top apex annotations use one Points batch with eight-CSS-pixel dots.
 Three's built-in point material applies renderer pixel ratio without distance
 attenuation; no camera subscription or per-frame sizing code is needed. Positions

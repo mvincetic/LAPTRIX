@@ -1,0 +1,16 @@
+{
+  "sourceFingerprint": "sha256:a2e611b0d0a69621ff5c04d0003f15e3a92f49fb78ee623a8cda1a60f9d5f689",
+  "assetId": "laptrix.dev-start-pylon.v1",
+  "placements": [
+    { "progress": 0, "side": 1, "edgeOffset": 2.5 },
+    { "progress": 0, "side": -1, "edgeOffset": 2.5 }
+  ],
+  "foundation": {
+    "width": 2.8,
+    "depth": 1.1,
+    "embed": 0.15,
+    "clearance": 0.08,
+    "maxHeight": 1
+  },
+  "roadReserve": 0.8
+}

@@ -12,9 +12,18 @@ import type { Track } from "../../../../packages/shared/schema";
 import { createTerrainSurface } from "../../../../packages/track-engine/terrain";
 import { roadApron } from "../road-presentation";
 import { Trackside } from "./Trackside";
+import { TracksideAssets } from "./TracksideAssets";
+import { presentationForSource } from "../trackside-assets";
 
-export function Landscape({ track }: { track: Track }) {
+export function Landscape({
+  track,
+  sourceFingerprint,
+}: {
+  track: Track;
+  sourceFingerprint?: string;
+}) {
   const invalidate = useThree((state) => state.invalidate);
+  const presentation = presentationForSource(sourceFingerprint);
   const data = useMemo(() => {
     const surface = createTerrainSurface(track);
     const colors = new Float32Array(surface.distances.length * 3);
@@ -80,6 +89,13 @@ export function Landscape({ track }: { track: Track }) {
   return (
     <group>
       <Trackside track={track} surface={data.surface} />
+      {presentation && (
+        <TracksideAssets
+          track={track}
+          apron={data.apron.getAttribute("position").array}
+          presentation={presentation}
+        />
+      )}
       <mesh name="context-terrain" geometry={data.geometry} receiveShadow>
         <meshStandardMaterial vertexColors roughness={1} />
       </mesh>
