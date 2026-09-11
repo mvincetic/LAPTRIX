@@ -33,6 +33,9 @@ QA, documentation, a clean commit and working-branch push:
 3. Improve camera framing and follow behavior, speed perception and playback
    clarity using the existing telemetry and single clock. Verify pause/seek/rate,
    loops, camera transitions, reduced motion and responsive/fullscreen use.
+   Implemented: deterministic distance-follow camera, fixed field of view, original
+   metre-scale Formula/GT bodywork and telemetry-driven wheels. Road-edge context
+   and materials continue directly in milestone 4; see PRODUCT_PRESENTATION.md.
 4. Improve track grounding, materials, curbs, surroundings and vehicle presentation
    with original or appropriately licensed assets. Keep visual detail separate
    from source geometry and approximate physics; review close and overview views.
@@ -317,15 +320,15 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 ## Stabilization evidence
 
-The local numerical/API suite contains 146 passing tests, including coupled quadratic
+The local numerical/API suite contains 152 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 256 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 263 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and thirty-two browser journeys cover the
+One hundred and thirty-seven browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,

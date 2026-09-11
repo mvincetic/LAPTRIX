@@ -1,9 +1,11 @@
-import type { RefObject } from "react";
+import { useRef, type RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
-import { DoubleSide, type Group } from "three";
+import { Html } from "@react-three/drei";
+import type { Group } from "three";
 import type { Lap, Vehicle } from "../../../../packages/shared/schema";
 import { ghostPose, type PlaybackClock } from "../../../../packages/telemetry";
-import { VehicleMesh } from "./VehicleMesh";
+import { VehicleMesh, type VehicleMotion } from "./VehiclePresentation";
+import { VEHICLE_SURFACE_LIFT } from "../chase-camera";
 
 export function TelemetryGhost({
   lap,
@@ -21,33 +23,42 @@ export function TelemetryGhost({
   groupRef: RefObject<Group | null>;
 }) {
   const color = reference ? "#78879c" : "#0866ec";
+  const motion = useRef<VehicleMotion>({ wheels: [], front: [] });
   useFrame(() => {
     if (!groupRef.current) return;
     const pose = ghostPose(lap, clock.getSnapshot().time);
     groupRef.current.position.set(
       pose.sample.x,
-      pose.sample.y + 0.3,
+      pose.sample.y + VEHICLE_SURFACE_LIFT,
       pose.sample.z,
     );
     groupRef.current.rotation.set(pose.pitch, pose.yaw, 0, "YXZ");
+    for (const wheel of motion.current.wheels)
+      if (wheel)
+        wheel.rotation.x =
+          pose.sample.distance / (vehicle?.wheelRadius ?? 0.34);
+    for (const front of motion.current.front)
+      if (front) front.rotation.y = pose.sample.steering;
   }, -0.5);
   return (
     <group
       ref={groupRef}
-      scale={3}
       name={reference ? "reference-ghost" : "current-ghost"}
     >
-      <VehicleMesh vehicle={vehicle} color={color} />
+      <VehicleMesh vehicle={vehicle} color={color} motion={motion} />
       {marker && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, 0]}>
-          <ringGeometry args={[3.2, 3.7, 32]} />
-          <meshBasicMaterial
-            color={color}
-            transparent
-            opacity={0.7}
-            side={DoubleSide}
+        <Html
+          center
+          position={[0, 1.35, 0]}
+          zIndexRange={[7, 0]}
+          style={{ pointerEvents: "none" }}
+        >
+          <span
+            className="vehicle-position-dot"
+            style={{ background: color }}
+            aria-hidden="true"
           />
-        </mesh>
+        </Html>
       )}
     </group>
   );

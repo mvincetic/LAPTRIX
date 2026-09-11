@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Follow source metres with original vehicle bodywork
+
+**Decision:** Replace the distant heading-offset chase pose with physical-distance
+sampling of the canonical lap, and replace enlarged boxes with original metre-scale
+Formula/GT lofts and components. Drive wheel rotation and steering from the same
+sample as each ghost. **Reasoning:** A closer road perspective and recognizable
+vehicle give useful speed/scale cues without decorative motion or fake telemetry.
+**Consequence:** Paused seeks are deterministic, finish wrapping is continuous,
+overview uses screen-space locator dots, and the racing line sits below bodywork.
+The fixed field of view avoids zoom pumping. Models and contact shading remain
+original visual approximations, not manufacturer geometry or suspension dynamics.
+
 ## 2026-09-11 — Bundle a reproducible, attributed Red Bull Ring showcase
 
 **Decision:** Add a separate Red Bull Ring GP source built offline from OSM relation

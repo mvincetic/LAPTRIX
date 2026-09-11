@@ -20,6 +20,8 @@ for (const width of [1600, 390]) {
   }) => {
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
+    const catalogSource = (await exportProject(page)).track;
+    expect(catalogSource).toEqual({ ...source, attribution: null });
     await page.getByLabel("Import track file", { exact: true }).setInputFiles({
       name: "original-ramp.json",
       mimeType: "application/json",
@@ -215,7 +217,7 @@ for (const width of [1600, 390]) {
     );
     await closeProfile.click();
     const after = await exportProject(page);
-    expect(after.track).toEqual(source);
+    expect(after.track).toEqual(catalogSource);
     expect(after.lap.samples.length).toBeGreaterThan(1000);
     await cursor.fill("8");
     await page.getByRole("button", { name: "Additional actions" }).click();

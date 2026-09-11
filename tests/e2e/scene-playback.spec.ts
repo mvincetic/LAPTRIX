@@ -46,6 +46,7 @@ for (const width of [1600, 390]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 1000 });
+    if (width === 390) await page.emulateMedia({ reducedMotion: "reduce" });
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");

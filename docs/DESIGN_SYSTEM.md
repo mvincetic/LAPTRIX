@@ -284,3 +284,12 @@ with a concise Preparing preview status; Cancel remains usable during processing
 Errors remain local with room for wrapped record details. Escape/Cancel return
 focus to Additional actions; all modal content fits desktop, phone and short
 landscape viewports with vertical scrolling where needed.
+
+The follow view uses a lower, closer 55-degree camera and physical metre-scale
+vehicles. Original Formula bodywork includes tapered sidepods, cockpit/helmet,
+halo, wings and suspension; GT includes sloping glazing, roof, lamps and rear wing.
+Dark tyres, metallic hubs and subtle contact shading separate the car from asphalt.
+Blue remains the current lap and grey the reference. Seven-pixel overview dots
+locate vehicles without changing their physical mesh scale. Racing/braking colour
+stays just above the road surface, below bodywork. Decorative shake and automatic
+camera motion are absent; explicit telemetry playback retains its existing controls.

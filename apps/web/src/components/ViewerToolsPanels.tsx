@@ -134,7 +134,8 @@ export function ViewerToolsPanels({
             : "Playback follows the current calculated lap. Use the transport below to play or seek."}
         </p>
         <span className="tiny muted">
-          Blue current · grey reference · vehicles shown at 3× scale.
+          Blue current · grey reference · vehicles use source metres; dots
+          locate them in overview.
         </span>
       </div>
       <div

@@ -49,6 +49,11 @@ The track footer shows the current lap's speed, gear, elapsed/full time, playbac
 rate and ready/playing/paused/complete state, including in fullscreen. These values
 follow the same clock as the car, graphs and audio; reference data does not replace
 them. Source units and geometry details remain in track inspection.
+The chase camera follows the calculated racing line at a physical distance with
+a fixed field of view. Original Formula and GT meshes use vehicle dimensions in
+metres, including rotating wheels and front steering from telemetry. Small dots
+keep cars visible in overview. Bodywork, contact shading and scenery are visual
+approximations; they do not change vehicle parameters or simulation results.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

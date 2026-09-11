@@ -961,6 +961,14 @@ select {
   white-space: nowrap;
   pointer-events: none;
 }
+.vehicle-position-dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #23344d55;
+}
 .viewer-popover {
   overflow-wrap: anywhere;
   position: absolute;

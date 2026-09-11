@@ -85,8 +85,9 @@
   Terrain cells are conservatively lowered below source roads and shoulders;
   sparse segments and crossings can leave exaggerated ground clearance. This
   does not establish surveyed ground, bridge structures or sight lines from every
-  camera. See TERRAIN.md. The ghost is intentionally
-  enlarged three times for engineering visibility, not a physically scaled asset.
+  camera. See TERRAIN.md. Vehicles now use source metres with original approximate
+  Formula/GT bodywork; the shape and soft contact shade are not measured assets or
+  a suspension/contact model. Overview dots deliberately use a fixed pixel size.
 - Procedural audio is a synchronization foundation, not realistic engine sampling.
 - Project saving is device-local browser storage. There are no accounts, cloud
   synchronization, access controls or production hosting configuration.

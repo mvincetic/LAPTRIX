@@ -70,6 +70,21 @@ for (const failedSolver of ["optimized", "centerline"]) {
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
     const before = await exportJson(page);
+    const tracks = page
+      .getByRole("combobox", { name: "Track", exact: true })
+      .locator("option");
+    const vehicles = page
+      .getByRole("combobox", { name: "Car profile" })
+      .locator("option");
+    const catalog = async () => ({
+      tracks: await tracks.evaluateAll((items) =>
+        items.map((item) => [item.getAttribute("value"), item.textContent]),
+      ),
+      vehicles: await vehicles.evaluateAll((items) =>
+        items.map((item) => [item.getAttribute("value"), item.textContent]),
+      ),
+    });
+    const beforeCatalog = await catalog();
     const project = {
       ...before,
       projectName: "Embedded study",
@@ -92,14 +107,7 @@ for (const failedSolver of ["optimized", "centerline"]) {
       "Embedded solve unavailable",
     );
     expect(await exportJson(page)).toEqual(before);
-    await expect(
-      page.getByRole("combobox", { name: "Car profile" }).locator("option"),
-    ).toHaveCount(2);
-    await expect(
-      page
-        .getByRole("combobox", { name: "Track", exact: true })
-        .locator("option"),
-    ).toHaveCount(1);
+    expect(await catalog()).toEqual(beforeCatalog);
     await page.unroute("**/api/simulate");
     await upload(page, project, "project");
     await expect(page.getByTestId("result-vehicle")).toHaveText(profile.name);

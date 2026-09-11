@@ -82,3 +82,30 @@ buffer is discarded. It also retains the context's error check. See RENDERING.md
 `node --experimental-strip-types scripts/camera-framing-qa.mjs` captures original
 and large source orbit/top/chase views at 1600, 1280 and 390 px. Images and numerical
 findings are retained locally in ignored `artifacts/`.
+
+## Product chase camera — 2026-09-11
+
+The follow camera now samples the canonical racing line at a physical distance
+behind the car, instead of placing it 50 m behind the instantaneous heading.
+Follow distance is `10 + 2 * wheelbase` metres; the look-ahead sample is
+`8 + 0.18 * speed` metres ahead (speed in m/s). Both distances are capped at 8% of
+lap length and wrap over the closed source. The target blends 35% towards that
+sample from the car, keeping tight hairpins from cropping it on narrow screens.
+Camera height is `3.4 + 0.35 * wheelbase` above the current
+sample, with at least 3.2 m clearance above its sampled rear position. The fixed
+55-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
+in phone and landscape views. Overview modes restore their 45-degree fit.
+
+The pose is a pure function of the installed Lap and clock time: seeking, pausing,
+changing playback rate and crossing the finish need no damping history. There is
+no extra clock, shake, roll, motion blur or animated field of view. Explicit Play
+still works with reduced motion; opening the workspace or switching cameras does
+not start playback. Four analytical checks cover physical circle positions,
+translation, finish continuity, endpoint clamping, deterministic seeks and vehicle
+projection at three aspect ratios and complete cars through three tight stadium
+hairpins. The hairpin check fails with the initial unblended target. Existing north-direction browser checks use
+the new pose and independently rotate world north through the camera quaternion.
+
+This follows the calculated path; it is not a suspension or collision camera.
+Imported trajectories outside the source road and distant terrain can still
+occlude a low view. Top/3D and Reset remain available.

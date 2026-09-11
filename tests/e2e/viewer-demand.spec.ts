@@ -5,6 +5,7 @@ for (const width of [1600, 390]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 1000 });
+    if (width === 390) await page.emulateMedia({ reducedMotion: "reduce" });
     await page.addInitScript(() => {
       const stats = { draws: 0, frames: 0, uploads: 0, deletions: 0 };
       Object.assign(window, { laptrixRenderProbe: stats });

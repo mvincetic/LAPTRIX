@@ -63,6 +63,14 @@ An isolated `ScenePlayback` subscribes to the same PlaybackClock through
 `useSyncExternalStore`. Its footer interpolates the current canonical Lap; clock
 notifications do not rerender TrackView or rebuild geometry. The readout has no
 timer and does not announce numerical updates as a live region.
+`chase-camera.ts` derives distance-follow and look-ahead poses from the same Lap,
+with a fixed field of view and no history-dependent smoothing. VehiclePresentation
+contains original Formula/GT bodywork in metres. Its memoized geometry survives
+ordinary setup/viewer edits; TelemetryGhost updates wheel spin from travelled
+distance and front steering from the existing sample in the same pose callback.
+The road, racing line and tyre bases share explicit display offsets, avoiding
+the previous enlarged mesh and floating line. Overview dots are screen-space
+locators rather than enlarged vehicle geometry.
 `track-engine/vertical-profile.ts` derives signed three-point source curvature from
 the original profile's closed chords, independently of Lap playback and resampling.
 SourceProfile memoizes it with the existing geometry profile, shares source-segment

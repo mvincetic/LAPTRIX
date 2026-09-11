@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { PerspectiveCamera, Vector3 } from "three";
-import { interpolate } from "../../packages/telemetry";
+import { chaseCameraPose } from "../../apps/web/src/chase-camera";
 import type { Lap } from "../../packages/shared/schema";
 
 async function exportProject(page: Page) {
@@ -19,18 +19,10 @@ const difference = (a: number, b: number) =>
 
 /** Build the documented chase pose, then independently rotate world north into camera space. */
 function chaseNorth(lap: Lap, time: number) {
-  const current = interpolate(lap.samples, time);
-  const ahead = interpolate(lap.samples, (time + 0.3) % lap.lapTime);
-  const dx = ahead.x - current.x,
-    dz = ahead.z - current.z;
-  const run = Math.hypot(dx, dz) || 1;
+  const pose = chaseCameraPose(lap, time);
   const camera = new PerspectiveCamera();
-  camera.position.set(
-    current.x - (dx / run) * 50,
-    current.y + 25,
-    current.z - (dz / run) * 50,
-  );
-  camera.lookAt(ahead.x, ahead.y + 2, ahead.z);
+  camera.position.set(...pose.position);
+  camera.lookAt(...pose.target);
   const north = new Vector3(0, 0, -1).applyQuaternion(
     camera.quaternion.clone().invert(),
   );

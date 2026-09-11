@@ -6,9 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The current product sequence preserves LAPTRIX Dev Track, adds the attributed
+Red Bull Ring showcase and improves playback, camera and vehicle presentation.
+[PRODUCT_PRESENTATION.md](PRODUCT_PRESENTATION.md) records each gate, actual
+visual review and the hairpin regression found by the 64-pose camera sweep.
+The four older catalog fixture failures in the first showcase CI run are recorded
+in [CI.md](CI.md), with exact source/catalog preservation restored in the tests.
+
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 259 tests pass.
+- Vitest: 263 tests pass.
 - Python numerical/API tests: 152 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes

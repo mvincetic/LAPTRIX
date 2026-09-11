@@ -8,7 +8,9 @@ const browser = await chromium.launch({
 });
 const results = [];
 const showcase = process.argv.includes("--showcase");
-const prefix = showcase ? "red-bull-ring" : "presentation-playback";
+const prefix =
+  process.env.PRESENTATION_QA_PREFIX ??
+  (showcase ? "red-bull-ring" : "presentation-playback");
 try {
   for (const [width, height] of [
     [1600, 1000],
@@ -34,6 +36,17 @@ try {
       await expect(
         page.getByRole("navigation", { name: "Track source attribution" }),
       ).toContainText("© OpenStreetMap contributors");
+    }
+    if (process.argv.includes("--gt")) {
+      await page
+        .getByRole("combobox", { name: "Car profile" })
+        .selectOption("gt-development");
+      await expect(page.getByTestId("result-vehicle")).toHaveText(
+        "GT Development 01",
+      );
+      await expect(
+        page.getByRole("button", { name: "Run Simulation", exact: true }),
+      ).toBeEnabled();
     }
     await expect(
       page.getByRole("button", { name: "Inspect corner 1", exact: true }),

@@ -114,3 +114,66 @@ and `red-bull-ring[-scene]-*.png`.
 Camera distance, the schematic enlarged vehicle, ground materials and scene
 context remain the next presentation targets. No calibration claim follows from
 successful solves or the similarity of the reconstructed elevation range.
+
+## Camera and vehicle presentation — 2026-09-11
+
+The chase camera follows a physical distance along the canonical racing line,
+with a lower position, fixed 55-degree field of view and a target weighted towards
+the car. Original metre-scale Formula/GT bodywork replaces the threefold enlarged
+boxes. Tapered surfaces, glazing, cockpit, wings, suspension, tyres and hubs improve
+silhouette and material separation; wheels rotate by `distance / wheelRadius` and
+front wheels use sampled steering. A subtle original procedural contact shade is
+visual only. Small overview dots preserve locatability. The racing line now sits
+0.08 m above the road display lift, below bodywork rather than through the car.
+
+Initial chase screenshots exposed the line/body intersection and prompted the
+road-level correction. A broader 64-pose renderer sweep then caught real clipping
+at Red Bull Ring's tight turn on the phone (30% of the Formula lap): the initial
+look-ahead target pointed too far through the turn. The new target blends 35%
+towards the ahead sample from the car. An independent stadium fixture with
+12/20/35 m hairpins fails before this correction and passes afterward. Finish
+continuity, deterministic seeking, translation and three camera proportions also
+pass. There is no history-dependent camera damping, additional playback clock,
+camera shake or animated field of view.
+
+The final complete quality gate passes lint, Ruff, strict TypeScript, **263
+TypeScript tests**, **152 Python tests (39.90 seconds)** and production build.
+Evidence: `artifacts/vehicle-camera-check-final.log`; the preceding initial gate
+also passed 262/152. The entry bundle remains 438.92 / 134.97 kB gzip; the deferred
+viewer is 972.75 / 261.13 kB. No solver or source-file change is part of this cycle.
+
+All 27 initial browser regressions pass in 3.2 minutes: framing, fullscreen,
+ghost labels, independent reference finish holding, north projection, full playback,
+source inspection, embedded vehicle/project recovery and settled rendering.
+The phone playback/idle journeys now emulate reduced motion. Idle checks still
+require zero animation callbacks, zero WebGL draws and no buffer uploads/deletions
+after pending setup or track-key edits. These runs include repairs for the four
+outdated Red Bull Ring CI fixtures, retaining exact loaded source/catalog contents.
+Evidence: `artifacts/vehicle-camera-browser.log`.
+
+`node scripts/vehicle-motion-qa.mjs` reads the installed development Fiber renderer
+without adding an application hook. All **64 final poses** pass across both
+circuits, both vehicles, desktop/phone and eight positions per lap. Independent
+interpolation of exported telemetry agrees with all four wheel rotations and
+front steering; actual group scale is one, the field of view is 55 degrees and
+every corner of the rendered body's world bounding box remains in the frustum.
+It captures each view and records draw/triangle counts without claiming a frame-rate
+guarantee. Evidence: `vehicle-motion-qa.json`, `vehicle-motion-final-qa.log` and
+`vehicle-motion-*.png`. The failed initial records and actual cropped screenshot
+remain under `vehicle-motion-initial-*`, `vehicle-motion-hairpin-before-*` and
+`vehicle-camera-hairpin-before.png`. The repaired phone hairpin and Formula/GT
+views on both sources were opened and reviewed. Curbs, surroundings and ground
+materials continue directly in the next milestone.
+
+After the hairpin correction, all seven affected camera/playback/idle browser
+journeys pass again in 1.3 minutes (`vehicle-camera-browser-final.log`). The final
+layout sweep captures 32 overview/top/chase/fullscreen states at 1600×1000,
+1280×900, 390×844 and 780×390, using Formula on Red Bull Ring and GT on Dev Track.
+Every readout and attribution strip stays contained, with no horizontal overflow
+or runtime error. The desktop overview dot, phone hairpin, both body styles and
+short fullscreen captures were opened and reviewed. Evidence:
+`vehicle-camera-rbr-formula-qa.json`, `vehicle-camera-dev-gt-qa.json`, their logs
+and corresponding scene PNGs. These are in addition to the 64 pose captures.
+All 11 production browser journeys pass on the final build in 1.1 minutes
+(`artifacts/vehicle-camera-production.log`), covering module/graphics recovery,
+the real CSV worker and complete showcase persistence/licensing exports.

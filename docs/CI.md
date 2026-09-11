@@ -210,3 +210,12 @@ The [Dev Track/playback run](https://github.com/mvincetic/LAPTRIX/actions/runs/3
 passes through `15a8c34`: all134 development journeys (68 in11.8 minutes and
 66 in9.0 minutes),257 TypeScript tests,146 Python tests (40.36 seconds), all quality
 gates and eight production journeys (58.4 seconds).
+
+The [first showcase run](https://github.com/mvincetic/LAPTRIX/actions/runs/34570230893)
+passes the quality gate (259 TypeScript, 152 Python in 40.73 seconds), 70 development
+journeys on shard 1 and all 11 production journeys (1.5 minutes). Shard 2 passes 63
+and fails four existing fixtures: source-profile comparisons omitted the catalog's
+new null attribution field, and failed-project imports expected only one installed
+track. The repair captures the loaded source and complete option values/labels
+before each operation, then verifies exact preservation. No application contract,
+source geometry or assertion deadline is relaxed.

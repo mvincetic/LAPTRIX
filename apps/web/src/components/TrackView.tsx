@@ -37,6 +37,7 @@ import { FullscreenControl } from "./FullscreenControl";
 import { ScenePlayback } from "./ScenePlayback";
 import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
+import { CHASE_FOV, ROAD_SURFACE_LIFT, chaseCameraPose } from "../chase-camera";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
   normalizeTrack,
@@ -127,6 +128,7 @@ function CameraRig({
   lap,
   clock,
   northIndicator,
+  vehicle,
 }: {
   track: Track;
   mode: CameraMode;
@@ -134,6 +136,7 @@ function CameraRig({
   lap: Lap | null;
   clock: PlaybackClock;
   northIndicator: RefObject<HTMLDivElement | null>;
+  vehicle?: Vehicle;
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const lastNorth = useRef<{
@@ -163,28 +166,20 @@ function CameraRig({
     camera.position.set(...fit.position);
     camera.lookAt(...fit.target);
     if (camera instanceof PerspectiveCamera) {
-      camera.near = fit.near;
+      camera.fov = mode === "chase" ? CHASE_FOV : CAMERA_FOV;
+      camera.near = mode === "chase" ? 0.2 : fit.near;
       camera.far = fit.far;
       camera.updateProjectionMatrix();
     }
     orbit?.target.set(...fit.target);
     orbit?.update();
     invalidate();
-  }, [camera, fit, reset, invalidate]);
+  }, [camera, fit, reset, invalidate, mode]);
   useFrame(() => {
     if (mode === "chase" && lap) {
-      const state = clock.getSnapshot(),
-        s = interpolate(lap.samples, state.time),
-        next = interpolate(lap.samples, (state.time + 0.3) % lap.lapTime);
-      const dx = next.x - s.x,
-        dz = next.z - s.z,
-        len = Math.hypot(dx, dz) || 1;
-      camera.position.set(
-        s.x - (dx / len) * 50,
-        s.y + 25,
-        s.z - (dz / len) * 50,
-      );
-      camera.lookAt(next.x, next.y + 2, next.z);
+      const pose = chaseCameraPose(lap, clock.getSnapshot().time, vehicle);
+      camera.position.set(...pose.position);
+      camera.lookAt(...pose.target);
     }
     // OrbitControls updates before this callback; chase lookAt above also updates rotation.
     const node = northIndicator.current;
@@ -320,7 +315,10 @@ export function TrackView({
     [track],
   );
   const racing = useMemo(
-    () => lap?.samples.map((s) => [s.x, s.y + 1.5, s.z] as Vec3) || [],
+    () =>
+      lap?.samples.map(
+        (s) => [s.x, s.y + ROAD_SURFACE_LIFT + 0.08, s.z] as Vec3,
+      ) || [],
     [lap],
   );
   const colors = useMemo(
@@ -413,7 +411,7 @@ export function TrackView({
               left={widths.left}
               right={widths.right}
               color="#46566a"
-              lift={0.55}
+              lift={ROAD_SURFACE_LIFT}
             />
             {layers.centerline && (
               <Line
@@ -544,6 +542,7 @@ export function TrackView({
               lap={lap}
               clock={clock}
               northIndicator={northIndicator}
+              vehicle={vehicle}
             />
             {lap && selectedCorner && mode !== "chase" && (
               <CornerCallouts
