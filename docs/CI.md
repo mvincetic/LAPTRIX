@@ -1,5 +1,17 @@
 # Continuous integration
 
+The [three-shard run](https://github.com/mvincetic/LAPTRIX/actions/runs/34616301449)
+at `d22b1f6` completes without the former job-deadline cancellation, but shard 1
+fails one phone fullscreen assertion (55 other journeys pass in 8.8 minutes).
+The native fullscreen state is active while the immediate canvas measurement still
+reads its previous 400 px height. The downloaded failure screenshot already shows
+the correctly expanded canvas. The assertion now waits for both original size
+requirements within the existing 15-second expectation budget. No application
+behavior or dimension threshold changes. All seven fullscreen cases pass locally
+in 48.5 seconds, including enter/exit rejection and browser-originated transitions;
+lint also passes. The other two Linux shards succeed. Production was skipped on
+this failed run, so its successor must verify the complete pipeline.
+
 The [annotation follow-up run](https://github.com/mvincetic/LAPTRIX/actions/runs/34613408850)
 at `4ac9bf3` passes the complete gate (300 TypeScript / 152 Python tests in 42.97
 seconds) and all 163 development journeys: 83 in 18.5 minutes and 80 in 17.9 minutes.

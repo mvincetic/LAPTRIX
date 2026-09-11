@@ -100,9 +100,12 @@ for (const width of [1600, 390]) {
       await expect(
         page.getByRole("button", { name: "Top View", exact: true }),
       ).toHaveAttribute("aria-pressed", "true");
-      const bounds = await page.locator("canvas").boundingBox();
-      expect(bounds!.width).toBeGreaterThan(width * 0.8);
-      expect(bounds!.height).toBeGreaterThan(700);
+      // Native fullscreen state precedes the canvas ResizeObserver update.
+      await expect(async () => {
+        const bounds = await page.locator("canvas").boundingBox();
+        expect(bounds!.width).toBeGreaterThan(width * 0.8);
+        expect(bounds!.height).toBeGreaterThan(700);
+      }).toPass({ timeout: 15000 });
       await exit.click();
       if (failure === "exit") {
         await expect(status).toContainText("could not close");
