@@ -50,6 +50,10 @@ TrackView observes its actual scene size for the track key's initial compact
 state, with a local explicit-choice override. Expanded state participates in the
 existing event/ghost layout keys and demand invalidation; its observer disconnects on
 cleanup and adds no clock or renderer. See TRACK_KEY.md.
+An isolated `ScenePlayback` subscribes to the same PlaybackClock through
+`useSyncExternalStore`. Its footer interpolates the current canonical Lap; clock
+notifications do not rerender TrackView or rebuild geometry. The readout has no
+timer and does not announce numerical updates as a live region.
 `track-engine/vertical-profile.ts` derives signed three-point source curvature from
 the original profile's closed chords, independently of Lap playback and resampling.
 SourceProfile memoizes it with the existing geometry profile, shares source-segment

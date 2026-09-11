@@ -13,13 +13,17 @@ the first real showcase circuit alongside it, using legally reusable source data
 with checked-in attribution, licenses, derivation steps and approximation limits.
 Do not replace the development track or imply official circuit/game assets.
 
-After completing the in-flight CSV worker cycle and its CI, proceed through these
+The CSV worker cycle is complete: CI run 34566631109 passes both jobs, all 132
+development journeys, eight production journeys and the complete quality gate.
+Proceed through these
 autonomous milestones, each with implementation, appropriate tests, actual visual
 QA, documentation, a clean commit and working-branch push:
 
 1. Establish the LAPTRIX Dev Track presentation and a desktop/phone/landscape visual
    baseline. Prioritize readable playback state, cleaner scene overlays and a
    coherent track/vehicle scale against the supplied interface reference.
+   Implemented: preserved track identity and current-lap playback readout; camera
+   motion and vehicle scale remain in the following presentation milestones.
 2. Source, attribute and bundle the Red Bull Ring showcase. Verify the complete GP
    layout, direction/start line, geometry and source limitations. Keep both tracks
    selectable and exercise activation, saved projects and reference isolation.

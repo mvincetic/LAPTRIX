@@ -8,7 +8,7 @@ The experience should resemble compact professional engineering software.
 The current technical scope is sufficient for this MVP. The next milestone
 sequence prioritizes presentation: visual polish, camera behavior, speed
 perception, track grounding, clearer playback/UI and higher-quality vehicles.
-The original circuit will remain available as LAPTRIX Dev Track; Red Bull Ring
+The original circuit remains available as LAPTRIX Dev Track; Red Bull Ring
 will be added alongside it as the first real showcase using documented reusable
 data. ROADMAP.md defines the implementation, verification and source requirements.
 
@@ -39,6 +39,10 @@ continue working, save locally, and reload to recover the viewer.
 The paused viewer stops drawing once camera motion settles and wakes for playback,
 inspection or scene changes. Scene detail and the shared playback timing remain
 unchanged. See RENDERING.md.
+The track footer shows the current lap's speed, gear, elapsed/full time, playback
+rate and ready/playing/paused/complete state, including in fullscreen. These values
+follow the same clock as the car, graphs and audio; reference data does not replace
+them. Source units and geometry details remain in track inspection.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

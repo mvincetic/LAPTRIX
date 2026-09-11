@@ -34,6 +34,7 @@ import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { FullscreenControl } from "./FullscreenControl";
+import { ScenePlayback } from "./ScenePlayback";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import {
@@ -42,7 +43,6 @@ import {
   type Vec3,
 } from "../../../../packages/track-engine";
 import {
-  formatTime,
   interpolate,
   alignedNativeReference,
   type PlaybackClock,
@@ -567,7 +567,10 @@ export function TrackView({
               : "USER-SUPPLIED TRACK · UNVERIFIED"}
           </span>
           <span className="scene-instruction">
-            <MousePointer2 size={12} /> Drag to orbit · scroll to zoom
+            <MousePointer2 size={12} />{" "}
+            {mode === "chase"
+              ? "Chase camera · playback controls below"
+              : "Drag to orbit · scroll to zoom"}
           </span>
         </div>
         <div
@@ -631,21 +634,7 @@ export function TrackView({
           </div>
         )}
       </div>
-      <div className="scene-footer">
-        <span>
-          <span className="status-dot" /> Procedural geometry
-        </span>
-        <span>
-          Metres · Y-up <b> / </b> {track.points.length} samples
-        </span>
-        <span className="tiny">
-          {lap
-            ? `${formatTime(lap.lapTime)} calculated lap`
-            : calculating
-              ? "Solving lap…"
-              : "Ready for simulation"}
-        </span>
-      </div>
+      <ScenePlayback lap={lap} clock={clock} calculating={calculating} />
     </section>
   );
 }

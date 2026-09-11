@@ -5,7 +5,7 @@ procedural 3D circuits and synchronized telemetry. The interface follows the sup
 light engineering reference while using original LAPTRIX branding and data.
 
 **This is a Development Physics Model, not a validated Formula 1 simulator.** The
-Ardennes Development Circuit and Formula Development 01 are synthetic. The circuit
+LAPTRIX Dev Track and Formula Development 01 are synthetic. The circuit
 is not Spa-Francorchamps. No commercial game geometry, audio or team assets are used.
 
 ## Start locally
@@ -52,6 +52,7 @@ the last completed result remains visible if a solve fails.
 - A source-aligned Time Delta plot for native and imported timing references.
 - Full-lap comparison JSON with input snapshots, plus flat CSV with matched timing/channels and units.
 - Orbit, top and chase cameras; configurable analysis layers.
+- Current speed, gear, elapsed time and playback state beside the track, including fullscreen.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
 - Camera-derived north direction and stable reset after orbiting.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.

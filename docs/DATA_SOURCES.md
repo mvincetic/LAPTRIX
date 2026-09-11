@@ -2,12 +2,15 @@
 
 ## Original data and assets
 
-The track was authored for LAPTRIX using `scripts/generate_track.py`. A periodic
+LAPTRIX Dev Track was authored using `scripts/generate_track.py`. A periodic
 spline through original control points is resampled into 720 points; independent
 periodic functions produce about 87 m of elevation variation. Centerline length is
 approximately 5.605 km. It is inspired by the usefulness of an elevation circuit,
 not copied from Spa, Monza or a game. The JSON is the runtime source of truth; the
 generator is a reproducible provenance record. No claim of survey accuracy is made.
+Its former display name was Ardennes Development Circuit. The September 11 rename
+retains the `ardennes-development` ID, original file, geometry, sectors and source
+fingerprint, so saved projects and references continue to identify the same track.
 
 Formula Development 01 is a synthetic parameter set authored for this model. Its
 values are illustrative, not official vehicle specifications. Terrain, trees and

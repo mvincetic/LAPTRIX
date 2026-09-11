@@ -24,6 +24,23 @@ const project = {
 };
 
 describe("portable project preparation", () => {
+  it("resolves the former development track label to the preserved catalog source", async () => {
+    const previous = {
+      ...project,
+      track: { ...project.track, name: "Ardennes Development Circuit" },
+    };
+    const fingerprint = await trackFingerprint(previous.track);
+    expect(fingerprint).toBe(
+      "sha256:a2e611b0d0a69621ff5c04d0003f15e3a92f49fb78ee623a8cda1a60f9d5f689",
+    );
+    const restored = await prepareProject(previous, catalog);
+    expect(restored.track).toBe(catalog.tracks[0]);
+    expect(restored.track.name).toBe("LAPTRIX Dev Track");
+    expect(restored.track.id).toBe("ardennes-development");
+    expect(restored.addTrack).toBe(false);
+    expect(restored.renamedTrack).toBe(false);
+    expect(await trackFingerprint(restored.track)).toBe(fingerprint);
+  });
   it("requires an explicit v3 vehicle source and retains the legacy installed-physics boundary", async () => {
     for (const version of [1, 2]) {
       await expect(

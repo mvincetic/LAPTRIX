@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Present the preserved development circuit and shared playback
+
+**Decision:** Rename only the installed synthetic circuit's display name to
+LAPTRIX Dev Track; retain its ID, data file, points, sectors and fingerprint.
+Replace scene implementation details with an isolated current-lap playback readout.
+**Reasoning:** The user considers the technical MVP sufficient and prioritizes
+presentation. Speed, gear and playback state explain the moving vehicle directly.
+**Consequence:** Existing catalog-based projects resolve to the current label;
+historical reference artifacts retain their recorded names. The footer consumes
+the existing clock and interpolation without another scheduler or scene rerenders.
+Red Bull Ring will be added alongside the development track in the next milestone.
+
 ## 2026-09-10 — Own CSV review work by the selected file
 
 **Decision:** Parse and convert in one dedicated worker per file, retaining the raw

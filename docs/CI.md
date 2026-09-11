@@ -199,3 +199,9 @@ Production coverage now additionally includes the four CSV-worker journeys:
 near-limit review/import, delayed conversion/cancellation, module failure/retry,
 and cancellation while the worker is actively occupied.
 They exercise the built worker URL in addition to the development module.
+
+The [CSV-worker run](https://github.com/mvincetic/LAPTRIX/actions/runs/34566631109)
+passes through `de1766f`: all 132 development journeys (66 in 8.7 minutes and
+66 in 11.6 minutes), 256 TypeScript tests, 146 Python tests (31.07 seconds), all
+quality gates and eight production journeys (46.6 seconds). Both jobs completed
+successfully before the product presentation implementation began.
