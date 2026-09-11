@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Observe rendered shadow updates and separate the production CI job
+
+**Decision:** Start camera-only cache measurements after the sought frame updates
+its shadow, and run production checks in a separate fourth job. **Reasoning:**
+Both Linux failure traces captured a stale zero-second render after the DOM cursor
+changed to five seconds; the next frame correctly updated the car and shadow.
+The first development shard also now takes 18 minutes, leaving insufficient room
+for setup, the full gate and the measured production suite within 25 minutes.
+**Consequence:** Test assertions, three development shards, one worker per runner,
+20-minute development budgets and 25-minute job deadlines remain intact. The full
+gate and production each run once, with all four jobs required. See CI.md.
+
 ## 2026-09-11 — Bound daylight detail to an original environment and current-car shadow
 
 **Decision:** Use an authored analytic sky/ground environment, hemisphere fill and

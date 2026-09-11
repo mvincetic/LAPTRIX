@@ -1,5 +1,29 @@
 # Continuous integration
 
+The [daylight run](https://github.com/mvincetic/LAPTRIX/actions/runs/34623193344)
+at `077c17b` passes the full gate (309 TypeScript / 152 Python tests, Python in
+40.61 seconds) and 168 of 170 development journeys. Two new shadow-resource
+assertions fail; production is skipped. Both downloaded traces show that the
+initial resource snapshot still has the zero-second car/anchor after the DOM
+slider has changed to five seconds. The next frame moves the car and shadow
+together and performs one expected shadow pass. The test now instruments before
+seeking and waits for that actual map update before measuring camera-only reuse.
+It also waits for rendered updates after showing the car and entering zero/source
+boundaries. The same cache, count and alignment assertions remain intact.
+Both corrected shadow journeys pass locally (31.0 and 29.1 seconds); typecheck
+and targeted lint also pass. The follow-up changes test synchronization and CI
+scheduling, with no application behavior change.
+
+This run also takes 18.0 minutes on the first development shard, 13.7 minutes on
+the second and 17.7 minutes on the third. Adding setup, the full gate and the
+measured 6.3-minute local production suite to the first shard would exceed the
+existing 25-minute job budget. Production now occupies its own fourth matrix job;
+the three development shards and their 20-minute limits stay intact. The full
+quality gate runs once on shard 1, production builds and tests once in its own
+job, and all four jobs must pass. No test, assertion or deadline is removed or
+relaxed. The previous complete green baseline remains the run below until this
+follow-up receives a complete Linux result.
+
 The [Dev Track asset and fullscreen follow-up run](https://github.com/mvincetic/LAPTRIX/actions/runs/34618439504)
 passes through `ce1961f` (including asset commit `cb3cb11`): 306 TypeScript tests,
 152 Python tests (40.55 seconds), all 166 development journeys (56 in 12.4 minutes,
@@ -26,13 +50,12 @@ The first job is cancelled roughly 25 minutes after starting, during its product
 step, at the configured job deadline. No complete remote production verdict is
 available; all 31 pass locally in 4.4 minutes. This run is not recorded as green.
 
-The growing suite now uses three independent development shards to leave time for
-the first job's production gate. Test/expect deadlines, the 20-minute development
-budget and the 25-minute job limit remain unchanged. File-level grouping, one
-browser worker per runner, all test cases and failure artifacts are preserved.
-Local list-only discovery verifies that the three shard lists form the exact
-complete suite with no duplicate or missing case. The full quality gate and
-production checks still run once, on shard 1. All three jobs must succeed.
+The initial expansion to three development shards retained production on shard 1.
+The daylight follow-up above separates production after measuring the larger
+scene's longer browser run. File-level grouping, one browser worker per runner,
+all test cases and failure artifacts remain intact. Local list-only discovery
+verifies that the three development lists form the complete suite without duplicate
+or missing cases.
 
 The [original GT coupe run](https://github.com/mvincetic/LAPTRIX/actions/runs/34610148711)
 passes through `a71f838`: 300 TypeScript tests, 152 Python tests (40.95 seconds),

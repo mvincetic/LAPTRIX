@@ -101,9 +101,15 @@ for (const [track, vehicle, width] of [
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
     const before = await project(page),
       cursor = page.getByRole("slider", { name: "Viewer lap position" });
-    await cursor.fill("5");
     await expect.poll(async () => (await lighting(page)).map).toBeTruthy();
-    const initial = await lighting(page, true);
+    const beforeSeek = await lighting(page, true);
+    await cursor.fill("5");
+    // The DOM cursor can lead the next demanded frame. Measure camera-only work
+    // after the seek has actually refreshed the existing shadow map.
+    await expect
+      .poll(async () => (await lighting(page)).shadowPasses)
+      .toBeGreaterThan(beforeSeek.shadowPasses);
+    const initial = await lighting(page);
     expect(initial.bytes).toBe(131072);
     expect(initial.mapSize).toEqual([1024, 1024]);
     expect(initial.autoUpdate).toBe(false);
@@ -165,10 +171,14 @@ for (const [track, vehicle, width] of [
     await expect
       .poll(async () => (await lighting(page)).cars[0].position)
       .toBeUndefined();
+    const hidden = await lighting(page);
     await current.check();
     await expect
       .poll(async () => (await lighting(page)).cars[0].casters.length)
       .toBeGreaterThan(40);
+    await expect
+      .poll(async () => (await lighting(page)).shadowPasses)
+      .toBeGreaterThan(hidden.shadowPasses);
     const final = await lighting(page);
     expect(final.map).toBe(initial.map);
     expect(final.environment).toBe(initial.environment);
@@ -177,18 +187,26 @@ for (const [track, vehicle, width] of [
     expect(solves).toBe(0);
     // A newly calculated circuit can keep the same group and zero clock time.
     await page.getByRole("tab", { name: "Track View", exact: true }).click();
+    const beforeZero = await lighting(page);
     await cursor.fill("0");
+    await expect
+      .poll(async () => (await lighting(page)).shadowPasses)
+      .toBeGreaterThan(beforeZero.shadowPasses);
     const sourceAnchor = (await lighting(page)).target;
     for (const nextTrack of [
       track === "red-bull-ring" ? "ardennes-development" : "red-bull-ring",
       track,
     ]) {
+      const previousSource = await lighting(page);
       await page
         .getByRole("combobox", { name: "Track", exact: true })
         .selectOption(nextTrack);
       await expect(
         page.getByRole("button", { name: "Run Simulation", exact: true }),
       ).toBeEnabled();
+      await expect
+        .poll(async () => (await lighting(page)).shadowPasses)
+        .toBeGreaterThan(previousSource.shadowPasses);
       await expect
         .poll(async () => {
           const next = await lighting(page);
