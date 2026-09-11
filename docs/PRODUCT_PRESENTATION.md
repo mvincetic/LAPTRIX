@@ -1,5 +1,52 @@
 # Product presentation milestones
 
+## Premium phase V8 — Original Formula contours, 2026-09-11
+
+The real close-view baseline exposed flat rectangular bodywork and a broad floor
+under the front suspension (`vehicle-shape-before-qa.json`, 12 captures). The
+original Formula now has rounded chassis, sidepod and engine-cover sections,
+a forward-tapered floor and shallow shaped wing planes. Smooth tyre shoulders
+retain the exact rolling radius/width for both vehicles. GT bodywork remains a
+separate closed coupe. No physics profile, source, parent pose or wheel pivot
+changes; native reference paint retains grey. See VEHICLE_ASSETS.md.
+
+The manifest registers authored Formula parameters alongside the guardrail.
+Validation checks ordered/bounded stations and convex cross-sections. Three
+numerical tests verify closed oriented triangle surfaces, six independent
+raycast directions, body bounds at several profile scales and exact tyre
+radius/contact/width. The tighter manifold check also passes separately after
+requiring exactly two opposite faces per edge.
+
+Twelve final close views were captured on both circuits for both vehicles
+(`formula-final-shape-qa.json`); front, rear and side images were opened against
+the baseline. Formula body mesh count stays 57, while triangles rise from 3,038
+to 5,408. GT stays at 41 body meshes and rises from 1,266 to 2,930 triangles from
+the shared tyre change. The inspected scene retains four textures. No runtime
+errors occur; the existing renderer dependency's Clock deprecation is unchanged.
+All 52 Onboard states pass across both cars/circuits at 1600, 1280 and 390 px,
+including phone fullscreen (`formula-onboard-qa.json`). The new Formula nose and
+exposed suspension remain below the forward sightline in reviewed laptop/phone
+images. The models remain simplified original art, with further GT refinement
+and the authored-asset pipeline continuing in subsequent milestones.
+
+All 64 sampled Chase poses pass exact wheel-distance/steering and projected-bound
+checks across both cars/circuits at 1600 and 390 px (`formula-motion-qa.json`).
+Matched first frames retain 70 Formula / 54 GT draws: Dev Track submits 135,094 /
+132,616 triangles and Red Bull Ring 120,830 / 118,352. These counts measure browser
+scene complexity, not hardware frame rate. The complete gate passes lint, Ruff,
+both asset packages, typecheck, 289 TypeScript / 152 Python tests (86.94 seconds)
+and build (`formula-check.log`). Entry JavaScript stays 439.43 / 135.12 kB gzip,
+viewer JavaScript is 991.27 / 266.71 kB, and CSS remains 60.74 / 12.71 kB.
+All 19 focused browser journeys pass in 3.5 minutes (`formula-browser.log`):
+Onboard sightlines, portrait Chase pixels, native cross-vehicle ghosts, custom
+profile activation/failure/cancellation, save/restore and demand rendering.
+Both settled-viewer cases retain GPU buffers through pending setup edits and
+return to zero draws/animation callbacks after playback or camera movement.
+All 30 production journeys pass in 3.7 minutes (`formula-production.log`). This
+completes 128 final close/Onboard/Chase visual states for the original Formula
+surface pass. The subsequent CI-discovered font-family/header correction is
+verified separately before the next working-branch push.
+
 ## Premium phase V7 — Track-selection clarity, 2026-09-11
 
 The native selector now groups Development Tracks, Real Circuits and Imported

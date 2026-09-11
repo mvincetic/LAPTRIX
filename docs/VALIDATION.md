@@ -6,6 +6,14 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V8 passes 289 TypeScript / 152 Python tests, both original asset
+validators and all lint/type/build gates. Nineteen focused browser journeys and
+all 30 production journeys (3.7 minutes) pass. The final 128 close/Onboard/Chase
+states retain both vehicle categories, exact wheel motion, framing and four
+scene textures. Body lofts have independently tested closed orientation and tyre
+dimensions; settled viewer checks retain buffers and zero idle drawing/RAF.
+See PRODUCT_PRESENTATION.md and VEHICLE_ASSETS.md for resource counts and limits.
+
 Premium phase V7 passes 286 TypeScript / 152 Python tests, all lint/asset/type/build
 checks, 17 distinct local integration journeys and all 30 final production journeys
 (3.8 minutes). Fifteen source-selection/playback states cover desktop, laptop,

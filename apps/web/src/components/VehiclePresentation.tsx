@@ -8,6 +8,8 @@ import {
 } from "three";
 import type { Vehicle } from "../../../../packages/shared/schema";
 import { VehicleBody, VehicleStrut } from "./VehicleBody";
+import { formulaBodyStations, vehicleTyreGeometry } from "../vehicle-geometry";
+import formulaAsset from "../../../../assets/vehicles/formula.json";
 
 export type VehicleMotion = {
   wheels: (Group | null)[];
@@ -64,6 +66,46 @@ function ContactShade({ width, length }: { width: number; length: number }) {
   );
 }
 
+function Tyre({ radius, width }: { radius: number; width: number }) {
+  const geometry = useMemo(
+    () => vehicleTyreGeometry(radius, width),
+    [radius, width],
+  );
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  return (
+    <mesh geometry={geometry} rotation={[0, 0, Math.PI / 2]}>
+      <meshStandardMaterial color="#20242b" roughness={0.92} />
+    </mesh>
+  );
+}
+
+function Wing({
+  span,
+  chord,
+  y,
+  z,
+  color = "#1e2938",
+}: {
+  span: number;
+  chord: number;
+  y: number;
+  z: number;
+  color?: string;
+}) {
+  return (
+    <VehicleBody
+      rounded
+      color={color}
+      roughness={0.4}
+      stations={[
+        [z - chord / 2, span * 0.49, y - 0.016, y + 0.016],
+        [z - chord * 0.15, span / 2, y - 0.025, y + 0.03],
+        [z + chord / 2, span * 0.44, y - 0.01, y + 0.005],
+      ]}
+    />
+  );
+}
+
 /** Original bodywork in metres. Memoization retains geometry across setup/viewer edits. */
 export const VehicleMesh = memo(function VehicleMesh({
   vehicle,
@@ -95,7 +137,18 @@ export const VehicleMesh = memo(function VehicleMesh({
   return (
     <group name="vehicle-body">
       <ContactShade width={width} length={length} />
-      <Part size={[width * 0.88, 0.07, length * 0.88]} at={[0, 0.16, -0.08]} />
+      {coupe ? (
+        <Part
+          size={[width * 0.88, 0.07, length * 0.88]}
+          at={[0, 0.16, -0.08]}
+        />
+      ) : (
+        <VehicleBody
+          color="#1e2938"
+          roughness={0.55}
+          stations={formulaBodyStations("floor", width, wheelbase)}
+        />
+      )}
       {coupe ? (
         <>
           <VehicleBody
@@ -163,37 +216,29 @@ export const VehicleMesh = memo(function VehicleMesh({
         <>
           <VehicleBody
             color={color}
-            stations={[
-              [-half - 0.4, width * 0.18, 0.22, 0.49],
-              [-wheelbase * 0.18, width * 0.25, 0.2, 0.62],
-              [wheelbase * 0.106, width * 0.16, 0.19, 0.48],
-              [half + 0.55, width * 0.065, 0.19, 0.27],
-            ]}
+            rounded
+            stations={formulaBodyStations("chassis", width, wheelbase)}
           />
           {[-1, 1].map((side) => (
-            <group key={side} position={[side * width * 0.32, 0, -0.13]}>
+            <group
+              key={side}
+              position={[side * width * formulaAsset.sidepodOffset, 0, 0]}
+            >
               <VehicleBody
                 color={color}
-                stations={[
-                  [-half + 0.12, width * 0.065, 0.2, 0.35],
-                  [-wheelbase * 0.18, width * 0.115, 0.23, 0.56],
-                  [wheelbase * 0.028, width * 0.12, 0.24, 0.57],
-                  [wheelbase * 0.139, width * 0.1, 0.26, 0.46],
-                ]}
+                rounded
+                stations={formulaBodyStations("sidepod", width, wheelbase)}
               />
               <Part
-                size={[width * 0.15, 0.11, 0.025]}
-                at={[0, 0.4, wheelbase * 0.139 + 0.01]}
+                size={[width * 0.13, 0.08, 0.012]}
+                at={[0, 0.435, wheelbase * 0.16 + 0.005]}
               />
             </group>
           ))}
           <VehicleBody
             color={color}
-            stations={[
-              [-half + 0.1, width * 0.08, 0.45, 0.57],
-              [-wheelbase * 0.208, width * 0.11, 0.5, 0.94],
-              [-wheelbase * 0.153, width * 0.1, 0.48, 0.92],
-            ]}
+            rounded
+            stations={formulaBodyStations("engineCover", width, wheelbase)}
           />
           <mesh position={[0, 0.64, -0.16]} scale={[0.3, 0.1, 0.48]}>
             <sphereGeometry args={[1, 20, 10]} />
@@ -216,22 +261,20 @@ export const VehicleMesh = memo(function VehicleMesh({
             to={[0, 0.98, 0.45]}
             radius={0.023}
           />
-          <Part
-            size={[width * 0.97, 0.055, 0.27]}
-            at={[0, 0.19, half + 0.48]}
-          />
-          <Part
-            size={[width * 0.92, 0.045, 0.16]}
-            at={[0, 0.25, half + 0.27]}
+          <Wing span={width * 0.97} chord={0.27} y={0.19} z={half + 0.48} />
+          <Wing
+            span={width * 0.92}
+            chord={0.16}
+            y={0.25}
+            z={half + 0.27}
             color={color}
           />
-          <Part
-            size={[width * 0.83, 0.055, 0.3]}
-            at={[0, 0.83, -half - 0.23]}
-          />
-          <Part
-            size={[width * 0.8, 0.04, 0.15]}
-            at={[0, 0.94, -half - 0.33]}
+          <Wing span={width * 0.83} chord={0.3} y={0.83} z={-half - 0.23} />
+          <Wing
+            span={width * 0.8}
+            chord={0.15}
+            y={0.94}
+            z={-half - 0.33}
             color={color}
           />
           <Part size={[0.065, 0.55, 0.07]} at={[0, 0.54, -half - 0.2]} />
@@ -291,10 +334,7 @@ export const VehicleMesh = memo(function VehicleMesh({
                   motion.current.wheels[index] = node;
                 }}
               >
-                <mesh rotation={[0, 0, Math.PI / 2]}>
-                  <cylinderGeometry args={[radius, radius, tyreWidth, 24]} />
-                  <meshStandardMaterial color="#20242b" roughness={0.92} />
-                </mesh>
+                <Tyre radius={radius} width={tyreWidth} />
                 <mesh
                   position={[side * (tyreWidth / 2 + 0.004), 0, 0]}
                   rotation={[0, 0, Math.PI / 2]}

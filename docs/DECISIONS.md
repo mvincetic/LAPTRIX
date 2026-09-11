@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Refine original Formula surfaces at the existing vehicle scale
+
+**Decision:** Author bounded Formula contours in the asset package and generate
+closed rounded lofts, a narrower forward floor and smooth tyre shoulders.
+**Reasoning:** Actual close views expose rectangular bodywork and a broad floor
+beneath the front suspension. **Consequence:** Physics width/wheelbase/radius,
+source position, body orientation and the shared wheel/steering clock remain
+authoritative. Formula surface normals and silhouette improve without textures
+or additional draw batches. GT retains its separate coupe body and shares only
+the tyre surface. The manifest records original authorship and validated source
+parameters; no proprietary or externally sourced car geometry is introduced.
+
 ## 2026-09-11 — Show track origin at selection without changing source identity
 
 **Decision:** Group the existing native selector into development, real and

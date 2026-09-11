@@ -51,6 +51,7 @@ the last completed result remains visible if a solve fails.
 - Quasi-steady crest/compression tyre loads, a contact-speed bound and numerical cursor readouts.
 - Recoverable rejection of unsupported optimized slopes and reversed source intervals.
 - Formula and GT development profiles with inspectable parameters, sources and assumptions.
+- Original metre-scale Formula contours and separate GT bodywork, with rounded tyres and synchronized wheel motion.
 - Cross-vehicle references with saved vehicle snapshots and source-aligned corner deltas.
 - Lap/sector times, corner events, reference comparison and local project saving.
 - Readable selected-corner callouts with leader lines to authoritative event positions.

@@ -15,6 +15,17 @@
       "provenance": "Original procedural geometry authored for LAPTRIX",
       "rights": "Original project asset; repository distribution policy applies",
       "thirdPartySources": []
+    },
+    {
+      "id": "laptrix.formula-body.v1",
+      "category": "vehicles",
+      "format": "procedural",
+      "parameters": "assets/vehicles/formula.json",
+      "implementation": "apps/web/src/vehicle-geometry.ts",
+      "origin": "Road contact beneath the wheelbase midpoint; wheel centres use profile radius and half wheelbase",
+      "provenance": "Original generic Formula body contours authored for LAPTRIX; no manufacturer or game geometry",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": []
     }
   ]
 }

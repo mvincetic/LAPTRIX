@@ -46,8 +46,8 @@ was not silently used as one. No claim is made that these estimates reproduce th
 real vehicle. Active aero, load transfer and shift interruption remain absent.
 
 The UI exposes each profile's parameters, assumptions and source anchors. The
-original schematic coupe mesh uses the profile's width/wheelbase/wheel radius;
-its shape and 3× display scale are visual context, not manufacturer CAD. Body
+original coupe mesh uses the profile's width/wheelbase/wheel radius at metre scale;
+its generic shape is visual context, not manufacturer CAD. Body
 style never branches the physics solver. Audio remains shared procedural synthesis.
 
 ## Contracts and comparison

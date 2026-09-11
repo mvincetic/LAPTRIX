@@ -29,15 +29,16 @@ assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
   manifest.assets.length,
-  1,
+  2,
   "Register a validator when adding another asset package.",
 );
 const ids = new Set();
 for (const entry of manifest.assets) {
   assert(!ids.has(entry.id), "Asset IDs must be unique.");
   ids.add(entry.id);
-  assert.equal(entry.id, "laptrix.guardrail.v1");
-  assert.equal(entry.category, "trackside");
+  assert(
+    ["laptrix.guardrail.v1", "laptrix.formula-body.v1"].includes(entry.id),
+  );
   assert.equal(entry.format, "procedural");
   for (const field of ["origin", "provenance", "rights"])
     assert(entry[field]?.length > 10);
@@ -48,6 +49,41 @@ for (const entry of manifest.assets) {
     await readFile(await ownedPath(entry.parameters), "utf8"),
   );
   assert.equal(asset.id, entry.id);
+  if (entry.id === "laptrix.formula-body.v1") {
+    assert.equal(entry.category, "vehicles");
+    bounded(asset.section.length, 8, 24);
+    // Convex counterclockwise rings allow closed, outward-facing fan caps.
+    for (let i = 0; i < asset.section.length; i++) {
+      const a = asset.section[i],
+        b = asset.section[(i + 1) % asset.section.length],
+        c = asset.section[(i + 2) % asset.section.length];
+      assert.equal(a.length, 2);
+      bounded(a[0], -1, 1);
+      bounded(a[1], 0, 1);
+      assert((b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]) > 0);
+    }
+    bounded(asset.sidepodOffset, 0.25, 0.35);
+    for (const part of ["chassis", "sidepod", "engineCover", "floor"]) {
+      bounded(asset[part].length, 4, 12);
+      let previous = -Infinity;
+      for (const row of asset[part]) {
+        assert.equal(row.length, 4);
+        const [z, width, bottom, top] = row;
+        bounded(z, -0.7, 0.7);
+        assert(z > previous, "Body stations must increase rear to front.");
+        previous = z;
+        bounded(
+          width,
+          0.02,
+          part === "sidepod" ? 0.48 - asset.sidepodOffset : 0.48,
+        );
+        bounded(bottom, 0.08, 0.6);
+        bounded(top, bottom + 0.01, 1.08);
+      }
+    }
+    continue;
+  }
+  assert.equal(entry.category, "trackside");
   bounded(asset.edgeOffset, 5, 16);
   bounded(asset.maxGroundChange, 0.05, 0.25);
   // Current placement shares the apron renderer's six-metre gates.

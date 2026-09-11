@@ -1,5 +1,12 @@
 # Rendering when the scene changes
 
+V8 Formula contours and shared rounded tyres retain 70 Formula / 54 GT first-frame
+draws and the same four scene textures. Matched Dev Track captures submit 135,094
+/ 132,616 triangles; Red Bull Ring submits 120,830 / 118,352. The increases of
+2,370 Formula / 1,664 GT triangles come from static vehicle geometry. No per-frame
+geometry builder, extra draw batch or texture is added. See VEHICLE_ASSETS.md and
+the close/motion evidence in PRODUCT_PRESENTATION.md.
+
 The V4 guardrail package adds three static batches: merged folded rails, instanced
 supports and instanced reflectors. Matched first-frame probes now submit 70 Formula
 / 54 GT draws. Dev Track submits 132,724 / 130,952 triangles; Red Bull Ring submits

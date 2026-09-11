@@ -6,6 +6,15 @@ dimensions and colours are in `trackside/guardrail.json`; `roadside-context.ts`
 constructs source-framed geometry and `Trackside.tsx` renders three static batches.
 No downloaded model, photograph, texture or circuit-specific mesh is included.
 
+The second package is original Formula bodywork in `vehicles/formula.json`:
+rounded section contours, chassis, sidepods, engine cover and a tapered floor.
+Longitudinal stations are fractions of wheelbase, half-widths are fractions of
+vehicle width, and bottom/top heights are metres. `vehicle-geometry.ts` converts
+these authored proportions into the selected profile's dimensions. The viewer
+also uses original shallow wing sections and rounded 32-segment tyre shoulders.
+The GT retains its separate body while sharing the tyre surface. See
+`docs/VEHICLE_ASSETS.md` for pivots, materials and current limits.
+
 Run `npm run validate:assets` to check manifest identity, local paths, provenance,
 dimensions and supported parameter constraints. It is part of `npm run check`.
 The geometry tests separately check support contact with real apron triangles,
@@ -28,7 +37,7 @@ does not establish third-party licensing rights.
   culling sphere/box update together before presentation. Ordinary UI edits retain
   GPU resources, and source changes dispose replaced geometry.
 
-This is the first procedural package, not a completed GLB/Blender pipeline. Future
+These are procedural packages, not a completed GLB/Blender pipeline. Future
 authored vehicle/environment assets should retain editable sources, validate
 metre scale and pivots, normalize materials, export and optimize GLB, then record
 the actual runtime resource and licence in the manifest. Add LODs only with actual

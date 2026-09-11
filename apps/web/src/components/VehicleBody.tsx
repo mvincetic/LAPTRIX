@@ -1,54 +1,24 @@
 import { useEffect, useMemo } from "react";
-import {
-  BufferGeometry,
-  Float32BufferAttribute,
-  Quaternion,
-  Vector3,
-} from "three";
+import { Quaternion, Vector3 } from "three";
 import type { Vec3 } from "../../../../packages/track-engine";
+import { vehicleBodyGeometry, type BodyStation } from "../vehicle-geometry";
 
-type Station = [z: number, halfWidth: number, bottom: number, top: number];
-
-/** Original four-sided loft, tapered in plan and height, in source metres. */
+/** Original loft, tapered in plan and height, in source metres. */
 export function VehicleBody({
   stations,
   color,
   roughness = 0.34,
+  rounded = false,
 }: {
-  stations: Station[];
+  stations: readonly BodyStation[];
   color: string;
   roughness?: number;
+  rounded?: boolean;
 }) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-    const rings = stations.map(([z, w, bottom, top]) => [
-      [-w, bottom, z],
-      [w, bottom, z],
-      [w, top, z],
-      [-w, top, z],
-    ]);
-    const triangle = (a: number[], b: number[], c: number[]) =>
-      positions.push(...a, ...b, ...c);
-    for (let i = 0; i < rings.length - 1; i++) {
-      const a = rings[i],
-        b = rings[i + 1];
-      for (let j = 0; j < 4; j++) {
-        const next = (j + 1) % 4;
-        triangle(a[j], a[next], b[j]);
-        triangle(a[next], b[next], b[j]);
-      }
-    }
-    const first = rings[0],
-      last = rings.at(-1)!;
-    triangle(first[0], first[3], first[1]);
-    triangle(first[3], first[2], first[1]);
-    triangle(last[0], last[1], last[3]);
-    triangle(last[1], last[2], last[3]);
-    const mesh = new BufferGeometry();
-    mesh.setAttribute("position", new Float32BufferAttribute(positions, 3));
-    mesh.computeVertexNormals();
-    return mesh;
-  }, [stations]);
+  const geometry = useMemo(
+    () => vehicleBodyGeometry(stations, rounded),
+    [stations, rounded],
+  );
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh geometry={geometry}>
