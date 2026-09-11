@@ -100,6 +100,18 @@ for (const track of ["ardennes-development", "red-bull-ring"])
         .getByRole("button", { name: "Inspect corner 3", exact: true })
         .click();
       await separated();
+      if (track === "red-bull-ring" && width === 320) {
+        // The selected event group plus both ghosts previously crowded out every badge.
+        await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+        await page
+          .getByRole("checkbox", { name: "Show reference ghost", exact: true })
+          .check();
+        await separated();
+        await page
+          .getByRole("tab", { name: "Track View", exact: true })
+          .click();
+        await separated();
+      }
       await cursor.fill("20");
       for (let i = 0; i < 2; i++) {
         await page

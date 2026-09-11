@@ -1,5 +1,21 @@
 # Rendering when the scene changes
 
+Orbit and Top apex annotations use one Points batch with eight-CSS-pixel dots.
+Three's built-in point material applies renderer pixel ratio without distance
+attenuation; no camera subscription or per-frame sizing code is needed. Positions
+come from the native lap's apex samples, lifted 0.15 m above the rendered road
+(source y + 0.70 m). The original 32×32 RGBA circle uses 4 KiB of texel data and
+linear filtering. Geometry is memoized by lap and disposed independently of the
+texture. An empty corner list creates no batch. Layer changes and driving cameras
+unmount the annotations; Chase/Onboard scene counts below remain unchanged.
+
+These are analysis glyphs, like the existing corner labels: depth testing/writing
+is disabled to keep the small dots readable over the track and scenery. They do
+not represent physical objects or surveyed features. The prior eight-metre spheres
+could grow to 85–90 px in close Orbit views. Composited-pixel browser checks cover
+three camera distances at desktop DPR 1 and phone DPR 2, source coordinates, buffer
+identity across zoom, layer visibility and project/playback preservation.
+
 V9 GT bodywork retains four scene textures. The current Formula still submits
 70 draws / 5,408 body triangles; the GT submits 61 draws / 4,912 body triangles.
 Matched scene totals are 135,094 Formula / 134,598 GT triangles on Dev Track and

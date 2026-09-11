@@ -1,5 +1,11 @@
 # Continuous integration
 
+The [original GT coupe run](https://github.com/mvincetic/LAPTRIX/actions/runs/34610148711)
+passes through `a71f838`: 300 TypeScript tests, 152 Python tests (40.95 seconds),
+all 161 development journeys (81 and 80, both in 17.2 minutes), all 31 production
+journeys (5.0 minutes), three original asset validators and lint/type/build gates.
+Both Linux jobs pass, including the independent current/reference brake lamps.
+
 The [telemetry readability run](https://github.com/mvincetic/LAPTRIX/actions/runs/34606306794)
 passes through `fad0434`: 296 TypeScript tests, 152 Python tests (40.81 seconds),
 all 159 development journeys (81 in 17.5 minutes, 78 in 17.2 minutes) and all

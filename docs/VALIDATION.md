@@ -6,6 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The apex/ghost-panel follow-up passes the complete final gate: 300 TypeScript /
+152 Python tests (67.07 seconds), all lint/asset/type/build checks, 17 final browser
+journeys (4.0 minutes) and 60 visual states. Pixel differences independently check
+eight-pixel dots across camera zoom and desktop/phone pixel ratios. Native sample
+anchors, geometry identity across zoom, all four cameras, layer toggles, playback,
+pending fuel and complete project exports remain intact. The final 40 overview
+states retain every sector badge after removing redundant ghost-panel copy.
+All 31 production journeys pass on the final build in 4.4 minutes, including the
+narrow ghost-panel combination. See PRODUCT_PRESENTATION.md.
+
 V9 GT geometry passes the complete local gate with 300 TypeScript / 152 Python
 tests (55.54 seconds), three original asset validators and lint/type/build checks.
 The 21 vehicle journeys pass in 4.3 minutes, including separate current/reference

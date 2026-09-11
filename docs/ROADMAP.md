@@ -29,10 +29,15 @@ The telemetry pass is green in Linux CI through `fad0434`: 159 development and
 31 production journeys. It resolves crowded ticks and tiny-window dashed SVG
 painting stalls, following the Formula and typography changes. The local gate,
 nine integration journeys and 26 graph/dashboard visual states also pass.
-The GT pass also completes all 31 production journeys. Its closer lamp captures expose
-an existing eight-metre apex sphere dominating close Orbit views. Address that
-annotation scale immediately after the GT cycle, then continue Dev Track identity
-and the authored GLB pipeline. See PRODUCT_PRESENTATION.md for the evidence.
+The GT pass is also green in Linux CI through `a71f838`: 300 TypeScript / 152 Python
+tests, 161 development and 31 production journeys. Its closer lamp captures exposed
+eight-metre apex spheres dominating close Orbit views. The immediate follow-up
+uses small screen-sized analysis dots and a less crowded ghost panel. All 40 final
+overview states retain every sector badge, and six close GT views resolve the
+original sphere defect. The final gate, 17 integration journeys, 60 visual states
+and all 31 production journeys pass. Continue directly with original start-area
+identity for LAPTRIX Dev Track and the authored GLB export/loading pipeline.
+See PRODUCT_PRESENTATION.md for the evidence.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist

@@ -31,6 +31,7 @@ import { TelemetryGhost } from "./TelemetryGhost";
 import { Landscape } from "./Landscape";
 import { RoadDetails } from "./RoadDetails";
 import { CornerCallouts } from "./CornerCallouts";
+import { ApexPoints } from "./ApexPoints";
 import { SectorLabels } from "./SectorLabels";
 import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
@@ -493,16 +494,15 @@ export function TrackView({
             {layers.racingLine && lap && (
               <Line points={racing} vertexColors={colors} lineWidth={3} />
             )}
+            {lap &&
+              lap.corners.length > 0 &&
+              layers.apex &&
+              mode !== "chase" &&
+              mode !== "onboard" && <ApexPoints lap={lap} />}
             {lap?.corners.map((c) => {
               const s = lap.samples[c.apexIndex];
               return (
                 <group key={c.id}>
-                  {layers.apex && mode !== "chase" && mode !== "onboard" && (
-                    <mesh position={[s.x, s.y + 3, s.z]}>
-                      <sphereGeometry args={[4, 12, 8]} />
-                      <meshBasicMaterial color="#26b85b" />
-                    </mesh>
-                  )}
                   {layers.corners && mode !== "chase" && mode !== "onboard" && (
                     <Html
                       center

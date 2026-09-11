@@ -1,5 +1,12 @@
 # Readable sector timing on the track
 
+The close-Orbit follow-up exposed an overfull Ghost Car panel at 320 px with a
+selected Red Bull Ring corner. Replacing its redundant implementation note with
+blue/grey dots alongside the controls restores all three sector badges in that
+state. The existing placement and omission rules remain unchanged. The production
+journey covers that combination, and the visual sweep saves failed measurements
+and a screenshot before throwing. See PRODUCT_PRESENTATION.md for before/after.
+
 Sector badges retain the current Lap's three-decimal times and connect to the
 midpoint of their own distance interval on the calculated racing line. Thin grey
 leaders show those anchors. The badges move in screen pixels to avoid corner

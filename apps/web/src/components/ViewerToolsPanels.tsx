@@ -116,21 +116,23 @@ export function ViewerToolsPanels({
         <h3>
           <Eye size={14} /> Telemetry ghosts
         </h3>
-        <label>
+        <label className="scene-identity-entry">
           <input
             type="checkbox"
             checked={ghost}
             onChange={(e) => onGhost(e.target.checked)}
           />
+          <i aria-hidden="true" />
           Show current ghost
         </label>
-        <label>
+        <label className="scene-identity-entry reference">
           <input
             type="checkbox"
             checked={referenceGhost}
             disabled={!referenceName}
             onChange={(e) => onReferenceGhost(e.target.checked)}
           />
+          <i aria-hidden="true" />
           Show reference ghost
         </label>
         <p>
@@ -141,10 +143,6 @@ export function ViewerToolsPanels({
             ? "Both start together. Current-lap playback sets the duration; a finished reference stays at the line."
             : "Playback follows the current calculated lap. Use the transport below to play or seek."}
         </p>
-        <span className="tiny muted">
-          Blue current · grey reference · vehicles use source metres; dots
-          locate them in overview.
-        </span>
       </div>
       <div
         {...tabPanelProps(prefix, 3, active === 3)}

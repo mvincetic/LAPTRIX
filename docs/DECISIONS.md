@@ -1,5 +1,20 @@
 # Decision log
 
+## 2026-09-11 — Keep apex annotations legible at every Orbit scale
+
+**Decision:** Replace world-sized apex spheres with one fixed-screen-size Points
+batch, anchored just above the native apex samples. **Reasoning:** Actual close
+GT views exposed large green spheres that overwhelmed the vehicle. Pixel checks
+reproduce 85 and 89.5 px markers at desktop/phone sizes. **Consequence:** Eight-pixel
+analysis dots retain their source x/z and use only a render-time road lift. They
+remain visible over scenery in Orbit/Top and hidden in Chase/Onboard. Three handles
+pixel ratio directly, so there is no new frame callback, DOM label, timer or
+simulation state. One original circle texture replaces the separate sphere meshes.
+The associated phone sweep exposed a Ghost Car panel that left no room for sector
+badges. Blue/grey dots now label its existing controls directly, replacing the
+redundant vehicle-scale paragraph. All three badges fit again without relaxing
+placement or changing reference/clock behavior.
+
 ## 2026-09-11 — Give the GT a continuous body and source-driven brake lamps
 
 **Decision:** Author the GT's shell, wheel-well clearances, cabin section and

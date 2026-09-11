@@ -146,15 +146,30 @@ try {
               (state === "tools" || m.count === 3)
             );
           })
-          .toBe(true);
+          .toBe(true)
+          .catch(async (error) => {
+            records.push({
+              track,
+              width,
+              height,
+              state,
+              ...(await measure()),
+              errors: [...errors],
+              failed: true,
+            });
+            await page
+              .locator(".track-panel")
+              .screenshot({
+                path: `artifacts/${prefix}-${track}-${width}-${state}-failed.png`,
+              });
+            throw error;
+          });
         const result = await measure();
         expect(result.pageWidth).toBe(width);
         expect(errors).toEqual([]);
-        await page
-          .locator(".track-panel")
-          .screenshot({
-            path: `artifacts/${prefix}-${track}-${width}-${state}.png`,
-          });
+        await page.locator(".track-panel").screenshot({
+          path: `artifacts/${prefix}-${track}-${width}-${state}.png`,
+        });
         if (width === 1600 && state === "orbit")
           await page.screenshot({
             path: `artifacts/${prefix}-${track}-dashboard.png`,

@@ -1,5 +1,49 @@
 # Product presentation milestones
 
+## Premium annotation follow-up — Close Orbit apex scale, 2026-09-11
+
+The close GT lamp views exposed eight-metre green apex spheres that dominated
+the vehicle. A composited-pixel regression reproduced 85 px on Dev Track desktop
+and 89.5 px on Red Bull Ring phone (`apex-before.log`). The replacement uses one
+static Points batch and an original circle texture, with eight-CSS-pixel size
+handled by Three rather than a camera/frame callback. The native apex x/z and lap
+remain intact; the rendered anchor is source y + 0.70 m, just above the road/line.
+Driving cameras still hide apex annotations, and the existing layer control
+retains its meaning. See RENDERING.md for depth and resource choices.
+
+The expanded pixel journeys pass at three zoom distances on desktop DPR 1 and
+phone DPR 2. They inspect every source anchor, retain geometry through camera
+zoom, toggle the actual layer, switch all four cameras and exercise play/pause.
+The complete exported project, pending fuel and paused cursor survive without
+new simulation requests. Clean close and Top screenshots were opened and reviewed;
+the green point stays small and readable without obscuring the road.
+
+The overview sweep then found a separate crowded state: selecting Red Bull Ring
+corner 3 and opening Ghost Car at 320 px omitted every sector badge. The captured
+rectangles show zero overlap and no runtime error; the panel simply consumed the
+remaining placement space (`apex-tools-probe-qa.json`, failed PNG). Its redundant
+three-line implementation note is replaced by blue/grey dots next to the existing
+checkbox labels. Reference identity and the shared-start/finish explanation remain.
+All three sector badges now fit in that exact state (`apex-tools-fixed-qa.json`,
+reviewed PNG). The production sector journey now exercises this combination.
+The QA script also preserves measurements and a screenshot before reporting a
+layout failure, making future failures reviewable without repeating the sweep.
+
+The final complete gate passes 300 TypeScript / 152 Python tests (67.07 seconds),
+lint/Ruff/three asset validators/typecheck and build (`apex-final-check.log`). Entry
+JavaScript remains 441.34 / 135.95 kB gzip and CSS 60.84 / 12.70 kB; the deferred
+viewer is 996.45 / 268.33 kB. All 40 final overview states pass at 1600/1280/390/320
+px on both circuits, with every sector badge visible, zero overlap, no overflow
+and no runtime error (`apex-final-overview-qa.json`). The six final GT close views
+also pass (`apex-gt-detail-qa.json`); the reviewed rear capture directly resolves
+the original green-sphere defect. Orbit uses five textures including the circle;
+Chase/Onboard retain four. Together with the 14 zoom/camera pixel-journey captures,
+these provide 60 final visual states. All 17 annotation/layer/reference/idle journeys
+pass in 4.0 minutes (`apex-final-browser.log`), including the newly guarded narrow
+ghost-panel state. All 31 production journeys pass in 4.4 minutes against the final
+build (`apex-production.log`). Continue directly into the Dev Track's original
+start-area identity and reusable asset export/loading work.
+
 ## Premium phase V9 — Original GT coupe surfaces, 2026-09-11
 
 The V8 close-view baseline showed a rectangular GT shell, broad floor and dark
