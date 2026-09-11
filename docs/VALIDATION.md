@@ -6,6 +6,14 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The V7 typography follow-up reproduces the Linux CI header wrap locally, corrects
+the bundled font-family name and reserves compact loading-action space. The final
+gate passes 289 TypeScript / 152 Python tests, 25 broader browser journeys and
+all 30 production journeys (3.8 minutes). Seventy-one final source/panel/dashboard
+visual states retain native-scrollbar bounds, values and controls. The header
+journey now verifies loaded bundled fonts plus fallback metrics in every state.
+See TYPOGRAPHY.md and CI.md for the failed prior run and corrected local evidence.
+
 Premium phase V8 passes 289 TypeScript / 152 Python tests, both original asset
 validators and all lint/type/build gates. Nineteen focused browser journeys and
 all 30 production journeys (3.7 minutes) pass. The final 128 close/Onboard/Chase

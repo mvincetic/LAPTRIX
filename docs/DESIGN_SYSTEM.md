@@ -16,7 +16,7 @@ TRACKSIDE.md. No branding or surveyed-infrastructure claim is implied.
 - Background: `#f3f6f9`; white panel surfaces; borders `#e0e6ee`.
 - Primary: `#0866ec`; dark text `#23344d`; muted annotations `#79869a`.
 - Improvement: `#079e71`; braking / slower deltas: `#f3424e`.
-- Inter Variable for interface text and tabular numeric readings; Barlow Condensed
+- `Inter Variable` (the exact bundled family) for interface text and tabular numeric readings; Barlow Condensed
   italic for the original wordmark. Fonts are self-hosted from Fontsource packages.
 - Restrained 4–6 px corners, thin borders, nearly invisible panel shadows.
 - Dense desktop layout: setup at left, dominant procedural scene and telemetry in
@@ -35,6 +35,9 @@ On screens up to 360 px, the simulation button shows Run / Cancel / Loading whil
 retaining its full accessible name. The wordmark keeps an intrinsic minimum width
 and single-line subtitle, with enough preferred space to keep track/car selection
 on the next row. Native page scrollbars cannot push actions over the brand.
+Compact primary actions use ten-pixel horizontal padding to retain room under
+bundled and system fallback font metrics. See TYPOGRAPHY.md for the Linux CI
+reproduction and the corrected font-family registration.
 Tabs indicate active state, layer controls are checkboxes, and playback has labelled
 controls and a range slider.
 Analysis Layers groups normal lap overlays separately from scene environment.

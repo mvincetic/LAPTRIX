@@ -25,6 +25,11 @@ identities, all engineering contracts and the single playback clock.
 | V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
 
+The V7 CI follow-up corrects the bundled font-family name and verifies Linux
+fallback header metrics. The resulting narrow dashboard review also identifies
+crowded telemetry distance ticks; resolve that readability issue before returning
+to the V9 coupe surfaces. See TYPOGRAPHY.md for the font correction's evidence.
+
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist
 coverage, broaden the solver, merge main, rewrite history or change repo settings.
