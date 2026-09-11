@@ -5,7 +5,7 @@ completion. Both widths previously executed 32 animation callbacks in a half-sec
 despite zero WebGL draws; the strengthened settled-workspace tests now require zero
 callbacks and draws. Active playback retains the same rate, delayed-frame cap and
 notification cadence. This measures browser animation work, not battery life or
-all browser/audio processing. Entry JavaScript is 428.21 kB (129.51 kB gzip); main
+all browser/audio processing. Entry JavaScript is 427.70 kB (129.27 kB gzip); main
 CSS is 55.97 kB (11.76 kB gzip) and deferred viewer JavaScript is 966.27 kB
 (259.05 kB gzip). Fullscreen recovery stays in that deferred viewer, with 1.00 kB
 viewer CSS (0.47 kB gzip). See RENDERING.md for lifecycle and resume behavior.
@@ -21,12 +21,14 @@ viewport and labels. Exact axis bounds are derived only when lap/range/axis chan
 the editor and window loop add no timer, solve or sample generation. See
 CUSTOM_WINDOWS.md.
 
-Timing CSV adds bounded local parsing and a native review dialog. Conversion is
-memoized by parsed table and column/unit selection; editing provenance or playback
-does not repeat it. File size, rows, columns and individual fields have explicit
-limits. Only first/final records are rendered, and applying a reference performs
-one source fingerprint with no simulation request. These bounds are not a device
-responsiveness guarantee for every file within the limits.
+Timing CSV parsing/conversion uses a 3.08 kB dedicated worker chunk, loaded only
+after a file is selected. The worker retains raw rows; the UI receives only
+headers/count and converted timing arrays. Editing provenance or playback does
+not repeat conversion. Replacement or closing terminates work. File size, rows,
+columns and individual fields retain explicit limits. Only first/final records
+are rendered. Apply still validates the canonical reference and fingerprints its
+source on the main thread, with no simulation request. These operations and
+message copying are not a device responsiveness guarantee. See CSV_WORKLOADS.md.
 
 Flat comparison CSV serializes the existing report only on explicit download.
 The maximum 21,999-row union has 40 columns, with empty unavailable channels;
@@ -36,7 +38,7 @@ builder but omitted from CSV text; large files still require local browser memor
 Profiling found substantial accepted-file parsing and maximum-export costs.
 Removing nested per-field pair arrays reduces the largest CSV serialization from
 105.5–111.6 ms to 42.5–53.1 ms locally, and from 957.9–981.8 ms to 328.8–334.2 ms
-under a synthetic six-times CPU slowdown. Report construction and large CSV parsing
+under a synthetic six-times CPU slowdown. Report construction and serialization
 still run synchronously and can pause the UI. See CSV_WORKLOADS.md for fixture
 scope, separate stage measurements and remaining background-processing work.
 

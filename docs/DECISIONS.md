@@ -1,5 +1,18 @@
 # Decision log
 
+## 2026-09-10 — Own CSV review work by the selected file
+
+**Decision:** Parse and convert in one dedicated worker per file, retaining the raw
+table there. Return only headers/count and timing values; terminate on replacement,
+close or successful import. Bind conversion results to their exact selection and
+reject pending requests on disposal. **Reasoning:** Accepted near-5-MB files took
+hundreds of milliseconds synchronously, including large ignored note fields.
+**Alternatives:** Lower import limits, copy the full parsed table back, or silently
+fall back to blocking UI work. **Consequence:** CSV review requires a working local
+worker module and shows a recoverable error if it fails. Canonical validation on
+Apply, existing source/reference generations and the single playback clock remain.
+Production browser tests exercise the separately built module and failure recovery.
+
 ## 2026-09-10 — Serialize aligned comparisons as a numeric CSV table
 
 **Decision:** Build the existing full-lap report on explicit activation and export

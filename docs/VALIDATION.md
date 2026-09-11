@@ -1,4 +1,4 @@
-# MVP validation — 2026-09-10
+# MVP validation — through 2026-09-11
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
@@ -8,7 +8,7 @@ and no main merge, force-push or repository-settings change was made.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 251 tests pass.
+- Vitest: 256 tests pass.
 - Python numerical/API tests: 146 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes
@@ -240,6 +240,40 @@ and no main merge, force-push or repository-settings change was made.
   artifact paths and remaining synchronous work. The prior visual layout remains.
   All four production loading/restoration journeys pass in 21.6 seconds;
   evidence is `artifacts/csv-allocation-production.log`.
+  Cancellable CSV review adds five request-lifecycle unit cases and four actual
+  worker browser journeys (132 development journeys now discovered). The pure
+  parser/conversion contract is extracted unchanged. All 40 focused CSV unit tests
+  pass; the full quality gate passes 256 TypeScript and 146 Python tests (42.17
+  seconds), lint/typecheck and production build. Final targeted lint/typecheck also
+  covers the added profile/QA scripts and occupied-worker fixture.
+  Ten initial CSV browser journeys pass together in 1.1 minutes, including
+  desktop/phone mapping, persistence, live playback, old valid/error read responses,
+  superseded hashes, 20,000 records near 5 MB and worker failure/retry.
+  The occupied-worker case separately verifies that Cancel works before a
+  deterministic 20-second worker loop completes, releases the worker, restores
+  focus and permits a fresh review at 390 × 300. All eight production worker/
+  loading/restoration journeys pass together in 1.3 minutes on the built assets.
+  Evidence is `artifacts/csv-worker-{check,browser,production}.log`.
+  All 21 surrounding comparison, worker, keyboard, reference-ordering/import and
+  idle-rendering journeys pass together in 2.3 minutes, recorded in
+  `artifacts/csv-worker-regressions.log`. Both idle checks retain zero settled
+  animation callbacks and WebGL draws.
+  Visual QA covers 24 states across 1600/1280/390 px and 780 × 390: empty, invalid,
+  pending conversion, preview, ready and imported. All modal headings/actions stay
+  in the viewport, body scrolling contains long forms, and horizontal overflow is
+  absent. Example imports retain every current timestamp/source position, complete
+  workspace except reference, pending fuel 21 and cursor 20, with zero simulation
+  requests and console/runtime errors. Desktop pending, phone ready and short-
+  landscape pending screenshots were opened and reviewed. The latter's preview
+  status lies in the scrollable body; fixed Cancel/Import actions remain visible.
+  Evidence is `artifacts/csv-worker-qa.{json,log}` and `csv-worker-*-*.png`.
+  The 18-operation dialog profile timestamps actual preview DOM insertion and
+  retains both large-file parsing and UI scheduling observations. Its first draft
+  included test polling delay; that initial data is preserved separately. Normal
+  large-file review continues rendering without observed long tasks; synthetic
+  slowdown still produces large frame gaps and four 51–61 ms long tasks.
+  CSV_WORKLOADS.md records exact fixture sizes, timers and limits without claiming
+  faster total processing or uniform CPU scaling across worker targets.
 - Vite production build: pass; approximately 428 kB initial JavaScript / 130 kB
   gzip, plus a separate 966 kB viewer / 259 kB gzip.
 - Initial runtime npm dependency audit: zero reported vulnerabilities; no package

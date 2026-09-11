@@ -1,7 +1,7 @@
 # Continuous integration
 
 The working branch runs lint, strict typecheck, numerical/API tests, production
-build, development browser journeys and production viewer journeys through
+build, development browser journeys and production viewer/CSV-worker journeys through
 `.github/workflows/ci.yml`. Browser installation uses the package-locked Playwright
 version and its Chromium build; no branded Chrome channel is configured.
 
@@ -183,3 +183,19 @@ passes through `a5cad17`: all 128 development journeys (64 in 7.8 minutes and
 64 in 11.1 minutes), 246 TypeScript tests, 146 Python tests (24.36 seconds), all
 quality gates and four production journeys (21.0 seconds). Short-menu keyboard,
 resize and contained-wheel checks pass alongside CSV and native modal workflows.
+
+The [comparison-CSV run](https://github.com/mvincetic/LAPTRIX/actions/runs/34517411762)
+passes through `a2236c6`: all 128 development journeys (64 in 11.4 minutes and
+64 in 11.0 minutes), 251 TypeScript tests, 146 Python tests (42.10 seconds), all
+quality gates and four production journeys (28.5 seconds). Native and timing-only
+CSV downloads agree with complete JSON report rows remotely.
+
+The [CSV-allocation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34518373384)
+passes through `2a3fd26`: all 128 development journeys (64 in 11.3 minutes and
+64 in 8.8 minutes), 251 TypeScript tests, 146 Python tests (42.62 seconds), all
+quality gates and four production journeys (28.9 seconds).
+
+Production coverage now additionally includes the four CSV-worker journeys:
+near-limit review/import, delayed conversion/cancellation, module failure/retry,
+and cancellation while the worker is actively occupied.
+They exercise the built worker URL in addition to the development module.

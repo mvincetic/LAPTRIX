@@ -217,12 +217,22 @@ custom-track contract. Reference files are read and validated locally as native
 Lap or timing-only Reference data; they never pass through the simulation API.
 Common comparison functions interpolate their time arrays against source progress.
 Neither imported references nor metadata drive the canonical playback clock.
-`timingCsv.ts` separates bounded CSV parsing, explicit unit conversion and canonical
-timing-reference construction. The native TimingCsvDialog owns file-read generations
-and local validation; App owns source fingerprinting and the shared reference/
-calculation generation checks. Cancel or superseding work invalidates delayed reads
-and hashes. Converted CSV data enters the existing timing schema and persistence
-path without a new source, solver call, channel set or playback clock.
+`timingCsvData.ts` contains bounded CSV parsing and explicit numeric conversion;
+`timingCsv.ts` reexports that pure contract and constructs canonical references.
+`TimingCsvReader` creates one module worker per selected file. The worker retains
+the raw table and returns only headers/count and converted timing arrays. Request
+IDs pair replies with promises; disposal terminates the worker and rejects pending
+work. Startup/message errors stay local and permit choosing a file again.
+The native TimingCsvDialog owns file generations and conversion effects. A preview
+belongs to the exact column/unit selection object, so an older result cannot enable
+Import after a selection change. Cancel, replacement, unmount and successful Apply
+release the worker. Metadata edits and playback do not repeat conversion.
+App retains source fingerprinting and shared reference/calculation generation
+checks through asynchronous Apply. Canonical schema validation remains on Apply.
+Converted CSV data enters the existing persistence path without a new source,
+solver call, channel set or playback clock. The worker uses
+[Vite's static worker constructor](https://vite.dev/guide/features#web-workers)
+and [immediate termination](https://developer.mozilla.org/en-US/docs/Web/API/Worker/terminate).
 `comparison-report.ts` consumes `prepareTimeComparison`'s source progress and
 matched reference times, then uses the existing sample interpolator for each side.
 It clones both completed inputs and omits undeclared legacy vertical channels from

@@ -1,15 +1,13 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Download, Upload, X } from "lucide-react";
 import type { Lap, Track } from "../../../../packages/shared/schema";
 import { formatTime } from "../../../../packages/telemetry";
 import { download } from "../download";
+import { TimingCsvReader } from "../TimingCsvReader";
 import {
-  parseTimingCsv,
-  prepareTimingCsv,
   type TimingCsvData,
   type TimingCsvMetadata,
   type TimingCsvSelection,
-  type TimingCsvTable,
 } from "../timingCsv";
 import "./timing-csv.css";
 
@@ -30,7 +28,11 @@ export function TimingCsvDialog({
     choose = useRef<HTMLButtonElement>(null);
   const mounted = useRef(false),
     workGeneration = useRef(0);
-  const [table, setTable] = useState<TimingCsvTable | null>(null),
+  const reader = useRef<TimingCsvReader | null>(null);
+  const [table, setTable] = useState<{
+      headers: string[];
+      recordCount: number;
+    } | null>(null),
     [fileName, setFileName] = useState("");
   const [selection, setSelection] = useState<TimingCsvSelection>({
     timeColumn: -1,
@@ -44,22 +46,60 @@ export function TimingCsvDialog({
     [source, setSource] = useState("");
   const [aligned, setAligned] = useState(false),
     [reading, setReading] = useState(false),
+    [converting, setConverting] = useState(false),
     [importing, setImporting] = useState(false),
     [error, setError] = useState("");
-  const preview = useMemo(() => {
-    if (!table || selection.timeColumn < 0 || selection.progressColumn < 0)
-      return null;
-    try {
-      return { data: prepareTimingCsv(table, selection), error: "" };
-    } catch (error) {
-      return {
-        data: null,
-        error: error instanceof Error ? error.message : "Invalid timing data.",
-      };
+  const [prepared, setPrepared] = useState<{
+    selection: TimingCsvSelection;
+    data: TimingCsvData | null;
+    error: string;
+  } | null>(null);
+  const preview = prepared?.selection === selection ? prepared : null;
+  useEffect(() => {
+    setPrepared(null);
+    const currentReader = reader.current;
+    if (
+      !table ||
+      !currentReader ||
+      selection.timeColumn < 0 ||
+      selection.progressColumn < 0
+    ) {
+      setConverting(false);
+      return;
     }
+    let active = true;
+    const generation = workGeneration.current;
+    const isCurrent = () =>
+      active &&
+      mounted.current &&
+      reader.current === currentReader &&
+      generation === workGeneration.current;
+    setConverting(true);
+    void currentReader
+      .prepare(selection)
+      .then((data) => {
+        if (isCurrent()) setPrepared({ selection, data, error: "" });
+      })
+      .catch((error) => {
+        if (isCurrent())
+          setPrepared({
+            selection,
+            data: null,
+            error:
+              error instanceof Error ? error.message : "Invalid timing data.",
+          });
+      })
+      .finally(() => {
+        if (isCurrent()) setConverting(false);
+      });
+    return () => {
+      active = false;
+    };
   }, [table, selection]);
   const close = () => {
     workGeneration.current += 1;
+    reader.current?.dispose();
+    reader.current = null;
     dialog.current?.close();
     onClose();
   };
@@ -71,22 +111,29 @@ export function TimingCsvDialog({
     return () => {
       mounted.current = false;
       workGeneration.current += 1;
+      reader.current?.dispose();
+      reader.current = null;
       element?.close();
     };
   }, []);
   const load = async (file: File) => {
     if (importing) return;
     const generation = ++workGeneration.current;
+    reader.current?.dispose();
+    reader.current = null;
     setReading(true);
     setError("");
     setTable(null);
+    setPrepared(null);
+    setConverting(false);
     setFileName(file.name);
     setAligned(false);
     try {
       if (file.size > 5_000_000) throw new Error("CSV is limited to 5 MB.");
-      const text = await file.text();
+      const currentReader = new TimingCsvReader();
+      reader.current = currentReader;
+      const parsed = await currentReader.load(file);
       if (!mounted.current || generation !== workGeneration.current) return;
-      const parsed = parseTimingCsv(text);
       setTable(parsed);
       setSelection({
         timeColumn: parsed.headers.indexOf("time_s"),
@@ -104,10 +151,13 @@ export function TimingCsvDialog({
       setOrigin("");
       setSource("");
     } catch (error) {
-      if (mounted.current && generation === workGeneration.current)
+      if (mounted.current && generation === workGeneration.current) {
+        reader.current?.dispose();
+        reader.current = null;
         setError(
           error instanceof Error ? error.message : "Could not read CSV.",
         );
+      }
     } finally {
       if (mounted.current && generation === workGeneration.current)
         setReading(false);
@@ -320,12 +370,16 @@ export function TimingCsvDialog({
                   {preview.error}
                 </p>
               ) : !preview ? (
-                <p className="muted">Choose columns to preview the lap.</p>
+                <p className="muted" role="status">
+                  {converting
+                    ? "Preparing preview…"
+                    : "Choose columns to preview the lap."}
+                </p>
               ) : (
                 <div className="timing-csv-preview">
                   <p role="status">
                     <strong>
-                      {table.rows.length.toLocaleString()} records ·{" "}
+                      {table.recordCount.toLocaleString()} records ·{" "}
                       {formatTime(preview.data!.lapTime)}
                     </strong>
                     <span> Converted to seconds and source fraction</span>
@@ -425,7 +479,9 @@ export function TimingCsvDialog({
           <button
             type="submit"
             className="primary-button"
-            disabled={!preview?.data || reading || importing || !aligned}
+            disabled={
+              !preview?.data || reading || converting || importing || !aligned
+            }
           >
             {importing ? "Importing…" : "Import timing reference"}
           </button>

@@ -5,6 +5,13 @@ user chooses a circuit, vehicle and setup, calculates a theoretical development
 lap, then inspects the racing line, speed, braking, apexes, sectors and telemetry.
 The experience should resemble compact professional engineering software.
 
+The current technical scope is sufficient for this MVP. The next milestone
+sequence prioritizes presentation: visual polish, camera behavior, speed
+perception, track grounding, clearer playback/UI and higher-quality vehicles.
+The original circuit will remain available as LAPTRIX Dev Track; Red Bull Ring
+will be added alongside it as the first real showcase using documented reusable
+data. ROADMAP.md defines the implementation, verification and source requirements.
+
 The current product is local: one original synthetic elevation circuit, Formula
 and GT development profiles and dry conditions. Users can compare a setup or vehicle against a
 reference, inspect individual corners, play a telemetry-driven ghost, scrub the
@@ -13,7 +20,8 @@ the same generic pipeline rather than adding track-specific UI logic.
 References can also come from a LAPTRIX export or explicitly aligned external
 timing JSON or reviewed CSV column mappings. CSV supports explicit milliseconds
 and percent conversion, requires source-alignment/provenance declarations and
-previews converted records before applying. Imported timing keeps its declared provenance and does not invent
+previews converted records before applying. File review runs in the background and
+can be cancelled or replaced while processing. Imported timing keeps its declared provenance and does not invent
 missing measured channels or replace the simulation's playback.
 Portable project files restore names, selected setup, custom source geometry and
 references on a fresh workspace. The app validates the bundle and recalculates

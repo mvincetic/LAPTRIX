@@ -205,11 +205,35 @@ async function gate(page: Page, phase: "read" | "hash", reject = false) {
         if (reject) throw new Error("Original CSV delayed read failure");
       };
       if (phase === "read") {
-        const original = File.prototype.text;
-        File.prototype.text = async function () {
-          const text = await original.call(this);
-          if (this.name === "older.csv") await pause();
-          return text;
+        const Original = Worker;
+        window.Worker = class extends Original {
+          constructor(url: string | URL, options?: WorkerOptions) {
+            super(url, options);
+            this.addEventListener("message", (event) => {
+              if (!String(url).includes("timingCsv.worker") || state.csvStarted)
+                return;
+              event.stopImmediatePropagation();
+              state.csvStarted = true;
+              // Preserve the old delivery callback even after worker termination.
+              // A completion already queued by a reader must not update the new file.
+              const deliver = this.onmessage;
+              state.csvRelease = () => {
+                deliver?.call(
+                  this,
+                  new MessageEvent("message", {
+                    data: reject
+                      ? {
+                          type: "error",
+                          id: event.data.id,
+                          message: "Original CSV delayed read failure",
+                        }
+                      : event.data,
+                  }),
+                );
+                state.csvReturned = true;
+              };
+            });
+          }
         };
       } else {
         const original = crypto.subtle.digest.bind(crypto.subtle);
@@ -242,7 +266,7 @@ async function release(page: Page) {
   );
 }
 for (const rejects of [false, true]) {
-  test(`newer CSV selection supersedes a delayed ${rejects ? "failed" : "valid"} file read`, async ({
+  test(`newer CSV selection supersedes a delayed ${rejects ? "failed" : "valid"} worker read response`, async ({
     page,
   }) => {
     await page.goto("/");

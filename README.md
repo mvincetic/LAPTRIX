@@ -57,7 +57,7 @@ the last completed result remains visible if a solve fails.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.
 - Custom track JSON import and full simulation JSON / SI-unit CSV export.
 - Import simulation or aligned external timing references with explicit source/units checks.
-- Review CSV timing columns, convert explicit units and retain source/provenance declarations.
+- Review CSV timing columns in cancellable background work, convert explicit units and retain source/provenance declarations.
 - Portable project import/export with name, setup, custom source and reference restoration.
 - Bounded aero comparison with numerical eligibility, progress and deliberate result application.
 - Complete study JSON exports with source inputs, candidate telemetry and solver provenance.
@@ -120,6 +120,8 @@ against its hashed assets on local preview port 5174. Simulation and telemetry
 remain usable before 3D loads; Save then reload recovers a failed module download.
 The same production gate also checks repeated graphics-context restoration while
 paused, preserving the existing scene and workspace.
+It also exercises the separately built CSV worker with a near-5-MB import,
+pending-conversion cancellation and worker module failure/retry.
 The solver study compares five sampling resolutions and all three solver modes.
 See [SOLVER_STUDY](docs/SOLVER_STUDY.md) for results and numerical limits. Select
 **Lap-time refinement** in Solver mode, then run to compare against the curvature

@@ -1,4 +1,4 @@
-/* global document */
+/* global document, window, Worker */
 import { chromium, expect } from "@playwright/test";
 import { Buffer } from "node:buffer";
 import { writeFile } from "node:fs/promises";
@@ -8,6 +8,7 @@ const browser = await chromium.launch({
   args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const findings = [];
+const prefix = process.env.CSV_QA_PREFIX ?? "timing-csv";
 async function project(page) {
   await page.getByRole("button", { name: "Additional actions" }).click();
   const pending = page.waitForEvent("download");
@@ -35,6 +36,26 @@ try {
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
+    });
+    await page.addInitScript(() => {
+      const Original = Worker;
+      let held = false;
+      window.Worker = class extends Original {
+        constructor(url, options) {
+          super(url, options);
+          this.addEventListener("message", (event) => {
+            if (
+              !String(url).includes("timingCsv.worker") ||
+              held ||
+              event.data.type !== "prepared"
+            )
+              return;
+            held = true;
+            event.stopImmediatePropagation();
+            window.releaseCsvPreview = () => this.onmessage?.call(this, event);
+          });
+        }
+      };
     });
     await page.goto("http://127.0.0.1:5173/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
@@ -81,7 +102,7 @@ try {
       expect(layout.scrollWidth).toBe(layout.clientWidth);
       expect(layout.pageWidth).toBe(width);
       await page.screenshot({
-        path: `artifacts/timing-csv-${width}-${state}.png`,
+        path: `artifacts/${prefix}-${width}-${state}.png`,
       });
       findings.push({ width, height, state, ...layout });
     }
@@ -113,6 +134,18 @@ try {
       mimeType: "text/csv",
       buffer: example,
     });
+    await expect(
+      dialog.getByText("Preparing preview…", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      dialog.getByRole("button", {
+        name: "Import timing reference",
+        exact: true,
+      }),
+    ).toBeDisabled();
+    await page.waitForFunction(() => Boolean(window.releaseCsvPreview));
+    await capture("preparing");
+    await page.evaluate(() => window.releaseCsvPreview());
     await expect(dialog.locator(".timing-csv-preview")).toBeVisible();
     await capture("preview");
     await page
@@ -152,7 +185,7 @@ try {
     expect(requests).toBe(0);
     expect(errors).toEqual([]);
     await page.screenshot({
-      path: `artifacts/timing-csv-${width}-imported.png`,
+      path: `artifacts/${prefix}-${width}-imported.png`,
       fullPage: true,
     });
     findings.push({
@@ -166,7 +199,7 @@ try {
     await page.close();
   }
   await writeFile(
-    "artifacts/timing-csv-qa.json",
+    `artifacts/${prefix}-qa.json`,
     JSON.stringify(findings, null, 2),
   );
   process.stdout.write(JSON.stringify(findings, null, 2));

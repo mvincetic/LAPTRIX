@@ -270,7 +270,9 @@ Timing CSV uses a native modal with fixed heading/actions and a scrolling body.
 Paired column/unit controls have explicit accessible names; the converted preview
 shows first/final records, units, count and duration. Reference metadata and the
 source-alignment checkbox follow the preview. The import button stays unavailable
-for invalid data or missing alignment, and native required inputs guard metadata.
+for invalid data, pending conversion or missing alignment, and native required
+inputs guard metadata. Changing columns or units replaces the previous preview
+with a concise Preparing preview status; Cancel remains usable during processing.
 Errors remain local with room for wrapped record details. Escape/Cancel return
 focus to Additional actions; all modal content fits desktop, phone and short
 landscape viewports with vertical scrolling where needed.

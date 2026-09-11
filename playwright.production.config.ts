@@ -3,7 +3,11 @@ import base from "./playwright.config";
 
 export default defineConfig({
   ...base,
-  testMatch: ["viewer-loading.spec.ts", "viewer-recovery.spec.ts"],
+  testMatch: [
+    "viewer-loading.spec.ts",
+    "viewer-recovery.spec.ts",
+    "csv-worker.spec.ts",
+  ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [
     {

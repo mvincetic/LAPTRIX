@@ -113,7 +113,13 @@ portable projects, Time Delta and comparison exports work without a new format.
 No reference ghost or unavailable telemetry channels are fabricated.
 
 Cancel or Escape closes the dialog and restores focus to Additional actions.
-Selecting another CSV supersedes an older pending read. Closing the review, a new
+Selecting another CSV terminates the previous file's background review. Parsing
+and column conversion run locally in a dedicated worker; ignored raw columns stay
+there. Changing columns or units clears the old preview and shows **Preparing
+preview…** until the new selection validates. Import stays unavailable while it
+is pending. A worker startup failure reports a local error; choose the file again
+to retry. Cancel remains available during processing.
+Closing the review, a new
 JSON reference, Set reference or a workspace calculation invalidates a pending
 CSV import. Parsing errors stay in the dialog; the completed workspace remains.
 

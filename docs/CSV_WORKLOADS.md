@@ -33,9 +33,46 @@ fields, within the existing 100,000-character bound. The first draft of the
 the final generator uses shorter notes and fits all import limits. Its initial
 log is retained, rather than counted as an accepted workload.
 
-These synchronous functions currently execute on the UI thread during import.
-The larger accepted files justify cancellable background parsing and conversion;
-changing the limit or silently dropping fields would not address that workflow.
+These synchronous functions executed on the UI thread in the baseline importer.
+The measured larger accepted files motivated the dedicated CSV review worker;
+the pure parser and conversion contract retain their existing limits and results.
+
+## Actual dialog with background review
+
+`node scripts/csv-review-profile.mjs` measures file selection through appearance of
+the actual converted preview, using a MutationObserver timestamp rather than the
+test runner's polling completion. Original fixtures are written before measurement
+and passed as file paths, avoiding a base64 upload in the measured UI handler.
+These variants use LF endings and a shorter note header, so byte counts differ
+slightly from the helper baseline. Each is accepted under the same contract.
+
+| Input / bytes | Normal preview latency | Normal maximum frame gap | 6× preview latency | 6× maximum frame gap |
+| --- | ---: | ---: | ---: | ---: |
+| 721 records / 18,181 | 58.1–85.5 ms | 22.1–25.7 ms | 590.5–879.2 ms | 172.4–281.8 ms |
+| 20,000 with notes / 4,829,736 | 485.7–562.3 ms | 39.0–60.2 ms | 791.5–1,007.1 ms | 191.1–251.5 ms |
+| 50 long fields / 4,901,897 | 597.5–701.9 ms | 25.7–53.2 ms | 687.8–1,367.3 ms | 206.2–302.2 ms |
+
+Three repetitions per input/rate preserve pending fuel 21 and cursor 20, with zero
+simulation requests and runtime errors. An instrumented UI File reader rejects
+these fixture names, verifying that review reads occur in the worker. Every review
+delivers loaded/prepared replies, and animation callbacks continue during the
+operation. Normal large-file reviews record 30–44 callbacks through the first frame
+after the preview; none records a PerformanceObserver long task. The slowed run
+records four long tasks of 51–61 ms and substantially larger frame gaps. These
+metrics differ: callback spacing includes scheduling delays, not just task duration.
+
+Latency includes worker startup, file read, parsing, conversion, message copying
+and preview rendering. It is not directly comparable with the baseline parse-only
+timer. CPU throttling is applied to the page's CDP target; a uniform multiplier
+across worker and browser scheduling is not established. No performance threshold
+or real-device guarantee follows from these local development-build observations.
+Canonical schema validation and source fingerprinting on Apply are outside this
+review measurement and remain on the main thread. The worker removes parsing from
+that thread; it does not eliminate all interface work or pauses under slowdown.
+
+Evidence is `artifacts/csv-review-profile.{json,log}`. The first probe included
+test-runner polling delay in elapsed time; its complete records are retained as
+`csv-review-profile-initial.{json,log}`, not used for the table above.
 
 ## Comparison serialization allocation change
 

@@ -3,6 +3,40 @@
 The initial sequence has been grouped into vertical slices so the dashboard always
 consumes genuine solver output. See DECISIONS.md for the ordering rationale.
 
+## Product presentation priority — 2026-09-11
+
+The current solver and engineering tools are technically sufficient for this MVP.
+Primary work now shifts to visual fidelity and product presentation. Preserve the
+existing development circuit, geometry, identity and saved-workspace compatibility;
+present its current name as **LAPTRIX Dev Track**. Add **Red Bull Ring, Austria** as
+the first real showcase circuit alongside it, using legally reusable source data
+with checked-in attribution, licenses, derivation steps and approximation limits.
+Do not replace the development track or imply official circuit/game assets.
+
+After completing the in-flight CSV worker cycle and its CI, proceed through these
+autonomous milestones, each with implementation, appropriate tests, actual visual
+QA, documentation, a clean commit and working-branch push:
+
+1. Establish the LAPTRIX Dev Track presentation and a desktop/phone/landscape visual
+   baseline. Prioritize readable playback state, cleaner scene overlays and a
+   coherent track/vehicle scale against the supplied interface reference.
+2. Source, attribute and bundle the Red Bull Ring showcase. Verify the complete GP
+   layout, direction/start line, geometry and source limitations. Keep both tracks
+   selectable and exercise activation, saved projects and reference isolation.
+3. Improve camera framing and follow behavior, speed perception and playback
+   clarity using the existing telemetry and single clock. Verify pause/seek/rate,
+   loops, camera transitions, reduced motion and responsive/fullscreen use.
+4. Improve track grounding, materials, curbs, surroundings and vehicle presentation
+   with original or appropriately licensed assets. Keep visual detail separate
+   from source geometry and approximate physics; review close and overview views.
+5. Refine spacing, density, typography and information hierarchy across the
+   dashboard, then repeat representative interaction and visual regressions.
+
+Continue directly into the next milestone after each stable cycle. Numerical fixes
+remain eligible when required for correct product behavior; new solver expansion,
+calibration studies and maximum comparison-export background work are secondary
+backlog. Do not merge main, rewrite history or alter repository settings.
+
 | Milestones | Current implementation |
 | --- | --- |
 | M0 Foundation | React/Vite + Python/FastAPI, reproducible installs, shared launcher, quality gates |
@@ -80,19 +114,21 @@ Native references now support an optional second ghost with independent visibili
 and vehicle snapshots. Both use shared elapsed time; a completed reference holds
 its finish pose. Timing-only files remain comparisons without invented positions.
 
-## Next highest-value work
+## Current cycle and secondary backlog
 
-1. Verify remote CI for comparison CSV and the allocation reduction. The bounded
-   actions menu passes all preceding 128 development journeys remotely.
-2. Move measured large-file CSV parsing/conversion into cancellable background
-   work, then address maximum comparison-report/export work on the same evidence.
-3. Revisit measured calibration and reusable 3D data when complete inputs are
-   available; add transient dynamics only with independent benchmarks and sources.
+Complete CSV-worker validation and verify its remote CI, then begin the product
+presentation sequence above. Comparison CSV and the allocation reduction pass all
+preceding 128 development journeys remotely. Maximum comparison-report generation
+still has measured synchronous cost and remains a documented secondary task.
+Measured calibration and transient dynamics await independent benchmarks and
+suitable sources; they do not lead the current MVP presentation sequence.
 
 Browser workload profiling covers accepted near-5-MB imports and maximum comparison
 grids at normal/synthetically slowed CPU. Replacing nested CSV pair arrays reduces
-serialization cost while preserving rows and units. Large parsing and report work
-remain synchronous and measurable; see CSV_WORKLOADS.md for the follow-up priority.
+serialization cost while preserving rows and units. CSV parsing and conversion
+now run in a file-owned worker; raw notes stay there, stale previews are invalidated,
+and closing/replacing the review terminates work. Report generation remains
+synchronous and measurable; see CSV_WORKLOADS.md for the follow-up priority.
 
 Time Delta now exports flat CSV rows from the same full-lap comparison report.
 Forty canonical-unit columns preserve independent times, deltas and paired channels,
@@ -276,13 +312,13 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 146 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 251 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 256 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and twenty-eight browser journeys cover the
+One hundred and thirty-two browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -294,8 +330,8 @@ ordering of delayed reference reads/hashes including asynchronous read rejection
 neutral displayed deltas with full-precision reference preservation,
 device-storage and audio-start recovery, declared/legacy load telemetry, separate
 corner event callouts through camera/layer changes, and the
-optional structured-tool contract. Four viewer loading/restoration journeys also run
-against production assets. See VALIDATION.md
+optional structured-tool contract. Four viewer loading/restoration and four CSV
+worker journeys also run against production assets. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy
