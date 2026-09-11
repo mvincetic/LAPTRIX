@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, type RefObject } from "react";
 import { Html } from "@react-three/drei";
-import { addAfterEffect, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
+import { registerAnnotationLayout } from "../annotation-layout";
 import { Matrix4, Vector3, type Group } from "three";
 import type { ScreenPoint, ScreenRect } from "../corner-callouts";
 import {
@@ -58,7 +59,7 @@ export function GhostLabels({
   // Observe final HTML positions even when corner portals remount after this component.
   useEffect(
     () =>
-      addAfterEffect(() => {
+      registerAnnotationLayout("ghosts", (upstreamChanged) => {
         if (
           labels.some(
             (label, index) =>
@@ -67,7 +68,7 @@ export function GhostLabels({
               !leaders.current[index],
           )
         )
-          return;
+          return false;
         camera.updateMatrixWorld();
         const last = previous.current;
         const scene = gl.domElement.closest(".scene");
@@ -76,6 +77,7 @@ export function GhostLabels({
           ...(scene?.querySelectorAll<HTMLElement>(obstacleSelector) ?? []),
         ].filter((node) => !node.hidden);
         const geometryChanged =
+          upstreamChanged ||
           last.labels !== labels ||
           last.layoutKey !== layoutKey ||
           last.width !== size.width ||
@@ -112,7 +114,7 @@ export function GhostLabels({
             );
           })
         )
-          return;
+          return false;
         if (geometryChanged) {
           const canvas = gl.domElement.getBoundingClientRect();
           last.obstacles = nodes.flatMap((node) => {
@@ -169,6 +171,7 @@ export function GhostLabels({
         last.height = size.height;
         last.nodes = nodes;
         last.anchors = anchors;
+        return true;
       }),
     [camera, gl, labels, layoutKey, size.width, size.height],
   );

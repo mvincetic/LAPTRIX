@@ -27,8 +27,9 @@ Leaders render below scene badges, with name boxes above the canvas. Both portal
 use canvas-relative coordinates and explicit per-anchor visibility, including
 tracks far from the world origin. Neither overlay intercepts pointer input.
 
-Layout runs at the end of the existing demand frame through Fiber's
-`addAfterEffect`, with subscription cleanup on input changes/unmount. This observes
+Layout runs last in the existing demand frame's shared `addAfterEffect` pass,
+after selected event controls and sector badges, with registration cleanup on
+input changes/unmount. Upstream layout changes refresh its obstacles. This observes
 the final HTML positions even when corner portals remount after the ghost overlay;
 equal-priority frame subscriptions alone left stale corner positions after chase.
 Static obstacle bounds are reused

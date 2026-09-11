@@ -774,6 +774,25 @@ select {
   color: white;
   border-color: var(--blue);
 }
+.sector-labels,
+.sector-labels svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.sector-labels svg {
+  overflow: hidden;
+}
+.sector-labels .sector-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.sector-labels .sector-label[hidden] {
+  /* Keep intrinsic dimensions measurable while omitted badges remain invisible. */
+  display: flex !important;
+  visibility: hidden;
+}
 .sector-label {
   min-width: 72px;
   background: #fffffff2;
@@ -2192,7 +2211,7 @@ select {
     font-size: 12px;
   }
   .sector-label span {
-    font-size: 6px;
+    font-size: 8px;
   }
   .scene-bottom {
     left: 11px;

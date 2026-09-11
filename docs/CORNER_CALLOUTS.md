@@ -24,7 +24,9 @@ the same source sample. Labels can be grouped away from the corner when a compac
 viewport leaves little nearby space; the leader dots identify their actual points.
 
 The layout considers visible legends, viewer tools, compass, captions/camera
-controls, sector labels, corner numbers and the start marker. This bounded placement
+controls, corner numbers and the start marker. The interactive event group is
+placed first; sector badges and ghost names then avoid its final rectangles.
+This bounded placement
 heuristic does not guarantee avoidance of every other item in an arbitrarily crowded
 view or prevent every leader-line crossing. It always preserves the event anchors.
 Offscreen/non-finite projected events are omitted instead of moved to a false road
@@ -32,7 +34,9 @@ position. If the canvas cannot fit readable controls, the scene group is omitted
 the numerical analysis controls remain available. Chase retains its existing
 suppression of selected-corner scene labels.
 
-`CornerCallouts` projects the selected samples in the existing Three.js frame loop.
+`CornerCallouts` projects the selected samples in the shared annotation pass after
+the existing Three.js frame's HTML projections. It observes portal-node identity
+so late mounts refresh its cached obstacles; see SECTOR_LABELS.md.
 It writes only overlay transforms and SVG line/dot coordinates after camera,
 projection, viewport, selected data or relevant viewer-layer/tab changes. Stable
 frames reuse the placement; no second clock or React update at playback frequency

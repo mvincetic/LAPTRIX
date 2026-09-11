@@ -244,3 +244,9 @@ transport cases pass on both development and built assets.
 The portrait continuation adds two car-pixel/fullscreen journeys on both servers,
 covering Formula and GT at 390/320 px with retained footer controls and paused
 telemetry. The suite now discovers 142 development and 16 production journeys.
+
+The [portrait-viewer run](https://github.com/mvincetic/LAPTRIX/actions/runs/34578910505)
+passes through `828292f`: all **142 development journeys** (72 in 13.7 minutes and
+70 in 10.5 minutes), 268 TypeScript tests, 152 Python tests (40.66 seconds), all
+quality gates and 16 production journeys (2.2 minutes). Portrait car clearance,
+compact footer containment and unchanged shared telemetry pass remotely.

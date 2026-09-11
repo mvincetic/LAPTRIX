@@ -315,3 +315,9 @@ At widths up to 360 px the footer uses three rows: play/loop with state, numeric
 readouts, then the lap-position slider. This keeps elapsed time and the slider
 inside the viewer without reducing the existing text size. Interval notices add
 a fourth row when active.
+
+Sector times use measured white badges with thin grey leaders to their interval
+midpoints. Eight-pixel headings stay readable on narrow maps. Corner/event controls
+receive placement priority; timing badges and then ghost names find free nearby
+space. Every leader retains its own physical anchor. Crowded or offscreen badges
+can be omitted while Lap Analysis retains the same values.

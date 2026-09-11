@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Order movable annotations around interactive controls
+
+**Decision:** Place the selected event group first, sector timing badges second
+and ghost names last in one cleaned-up after-frame pass. Connect each timing badge
+to its real interval midpoint and measure its text box before placement.
+**Reasoning:** Fixed world offsets allowed corner circles to cover time digits.
+Giving badges priority also trapped the larger event group on a compact Dev Track
+view. **Consequence:** Interactive controls retain room and individual labels adapt
+around them; a changed upstream layout refreshes downstream caches immediately.
+No source interval, value, sample, clock or project changes. Crowded/offscreen
+badges can be omitted while their numerical analysis remains available.
+
 ## 2026-09-11 — Preserve car framing in portrait fullscreen
 
 **Decision:** For canvas aspect ratios below 0.9, retreat the chase camera from

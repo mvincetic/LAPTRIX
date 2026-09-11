@@ -31,6 +31,7 @@ import { TelemetryGhost } from "./TelemetryGhost";
 import { Landscape } from "./Landscape";
 import { RoadDetails } from "./RoadDetails";
 import { CornerCallouts } from "./CornerCallouts";
+import { SectorLabels } from "./SectorLabels";
 import { GhostLabels, type GhostLabelSpec } from "./GhostLabels";
 import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
@@ -48,7 +49,6 @@ import {
   type Vec3,
 } from "../../../../packages/track-engine";
 import {
-  interpolate,
   alignedNativeReference,
   type PlaybackClock,
 } from "../../../../packages/telemetry";
@@ -502,29 +502,12 @@ export function TrackView({
                 </group>
               );
             })}
-            {lap &&
-              layers.sectors &&
-              mode !== "chase" &&
-              lap.sectors.map((s) => {
-                const sample = interpolate(
-                  lap.samples,
-                  (s.startDistance + s.endDistance) / 2,
-                  "distance",
-                );
-                return (
-                  <Html
-                    key={s.id}
-                    position={[sample.x, sample.y + 30, sample.z - 75]}
-                    center
-                    zIndexRange={[9, 0]}
-                  >
-                    <div className="sector-label">
-                      <span>SECTOR {s.id}</span>
-                      <strong>{s.time.toFixed(3)}</strong>
-                    </div>
-                  </Html>
-                );
-              })}
+            {lap && layers.sectors && mode !== "chase" && (
+              <SectorLabels
+                lap={lap}
+                layoutKey={`${tab}:${layers.corners}:${legendOpen}`}
+              />
+            )}
             <Html
               position={[
                 track.points[0].x,

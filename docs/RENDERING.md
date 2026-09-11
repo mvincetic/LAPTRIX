@@ -80,7 +80,7 @@ graphics-device failure.
 ## Frame ordering and HTML labels
 
 OrbitControls updates at priority -1. Telemetry ghosts and CameraRig update their
-poses at -0.5, before HTML projection and selected-corner layout at priority 0.
+poses at -0.5, before HTML projection at priority 0.
 Negative priorities order updates without taking over Fiber's automatic rendering.
 This matters for a paused seek: the next rendered frame must position labels from
 the new camera and ghost poses, rather than depend on another continuous frame.
@@ -89,13 +89,17 @@ Corner callouts explicitly invalidate when their HTML root attaches or their eve
 layout or viewport inputs change. Their DOM content is mounted through a separate
 HTML portal, so it can become ready after the Fiber tree's initial commit. Existing
 placement caching and native exact-seek buttons remain intact.
-Ghost names likewise invalidate when their portals attach. Their `addAfterEffect`
-subscription runs after all pose/HTML updates and is removed on input changes or
-unmount. This keeps remounted corner portals from updating after name placement.
+Ghost names and sector badges likewise invalidate when their portals attach.
+One shared `addAfterEffect` subscription places event controls first, sector
+badges next and ghost names last, after all pose/HTML updates. Upstream layout
+changes refresh downstream obstacles in the same pass; subscription cleanup
+releases each registration and removes the shared callback after the last unmount.
+This keeps remounted portals from updating after dependent label placement.
 The layout reuses static obstacle bounds during playback
 and notices late visible portal nodes before returning from its cache. The two
 settled-viewer journeys now enable both ghost names throughout zero-draw, seek,
-playback, orbit/reset and non-looping-finish checks. See GHOST_LABELS.md.
+playback, orbit/reset and non-looping-finish checks. See GHOST_LABELS.md and
+SECTOR_LABELS.md.
 
 ## Evidence and limits
 

@@ -289,8 +289,12 @@ pose updates. A pure bounded layout moves name rectangles around static scene
 obstacles while keeping their anchors exact. Separate HTML portals put leaders
 below badges and names above the canvas. Camera/result/layout/visible-node changes
 refresh obstacle bounds; vehicle movement reuses them. A cleaned-up Fiber
-`addAfterEffect` subscription observes final HTML positions even after corner
-portals remount. Root attachment invalidates the demand renderer, with no second
+`addAfterEffect` subscription orders event controls, sector badges and ghost names
+after final HTML positions, even when portals remount in a different order.
+Upstream placement changes invalidate downstream obstacle caches in the same pass.
+`SectorLabels` connects measured timing rectangles to their canonical interval
+midpoints and omits obstructed/offscreen map badges while analysis retains the times.
+Root attachment invalidates the demand renderer, with no second
 scheduler. See GHOST_LABELS.md.
 There is no account system or database.
 `gpx.ts` reads a bounded geometry subset through native `DOMParser`; `geographic.ts`

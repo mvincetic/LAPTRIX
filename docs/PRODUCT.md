@@ -66,6 +66,10 @@ visible. More readable result metadata and table text preserve the engineering
 context while the surrounding panels retain their compact layout.
 At 320/360 px the viewer footer stacks controls, values and scrubbing into three
 rows, keeping elapsed time and the full slider visible in normal and fullscreen views.
+Sector timing badges now avoid corner circles and controls, with leaders back to
+their interval midpoints. Selected event controls, timing badges and ghost names
+have a consistent placement order. Times remain available in Lap Analysis when a
+crowded or offscreen map position cannot fit its badge. See SECTOR_LABELS.md.
 If the browser restores a lost graphics context, the paused circuit redraws
 automatically while retaining the workspace and playback position.
 Overview cameras now fit accepted source extents at responsive canvas proportions,

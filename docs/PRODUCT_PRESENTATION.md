@@ -332,3 +332,55 @@ fullscreen capture were opened and reviewed. These join the eight compact states
 for 24 final layout captures (`portrait-viewer-final-qa.json`,
 `portrait-viewer-layout-qa.log` and matching PNGs). The working branch retains the
 same source geometry, solver and project contracts throughout this continuation.
+
+## Readable sector annotations — 2026-09-11
+
+Review of the compact Red Bull Ring overview found corner circles covering digits
+in sector times (`portrait-compact-final-scene-320-overview.png`). Sector badges
+now find free screen space and connect to their own canonical interval midpoints.
+Their narrow headings increase from 6 to 8 px. A single ordered after-frame pass
+places the interactive event group first, timing badges next and ghost names last.
+Each changed upstream layout refreshes downstream placement immediately, including
+after portal remounts. This keeps source intervals, times, vehicle anchors, clock
+and complete project data unchanged; see SECTOR_LABELS.md.
+
+The first browser checks found that the global hidden rule prevented badge
+measurement. A scoped invisible-but-measurable rule fixes initial placement.
+A selected Dev Track corner at 320 px then exposed the need to reserve room for
+the event group before placing individual timing badges. The final ordering fixes
+that overlap and retains native event controls. Four pure geometry tests pass for
+independent anchors, differently sized/coincident badges, corner/key/caption
+obstacles, viewport bounds, deterministic unchanged inputs and omission limits.
+The final complete gate passes lint, Ruff, strict typecheck, **272 TypeScript
+tests**, **152 Python tests (44.34 seconds)** and build
+(`artifacts/sector-labels-check-final.log`). Entry JavaScript is unchanged at
+438.95 / 134.98 kB gzip; deferred viewer is 981.58 / 263.66 kB and CSS is
+58.76 / 12.31 kB. The preceding portrait commit passes its complete remote CI
+with 142 development and 16 production journeys; see CI.md.
+
+All **10 annotation/rendering browser journeys pass in 1.8 minutes**
+(`artifacts/sector-labels-browser-release.log`). The four new sector journeys
+exercise both circuits at desktop and 320 px, while existing event, ghost-name and
+zero-idle-frame/draw/buffer checks protect their integration. They preserve exact
+displayed times, full exported projects, pending fuel and the shared paused cursor
+with no new simulation requests.
+
+The visual sweep passes **40 states** across both circuits and 1600, 1280, 390 and
+320 px: orbit, top, selected corner, open ghost tools and return from chase, with
+GT/current and Formula/reference enabled. Every visible badge remains contained
+and separate from other labels and controls, with no page overflow or runtime
+error. All three badges remain visible in 39 states. The 320 px Dev Track tools
+panel leaves room for two; Sector 3 is omitted there and restored on closing the
+panel, while Lap Analysis retains its value. The Red Bull Ring compact overview,
+Dev Track selected corner and desktop tools screenshots were opened and reviewed.
+Evidence is `artifacts/sector-labels-qa.json`, `sector-labels-qa.log` and matching
+`sector-labels-*.png` files. This documents the crowded-view fallback explicitly.
+
+All **20 production journeys pass in 1.8 minutes** on the final build
+(`artifacts/sector-labels-production.log`), including all four new annotation
+cases, actual car-pixel checks, fullscreen transport, source persistence/licensed
+exports and graphics/module recovery. No source geometry, numerical model or
+project-format change is included in this presentation milestone.
+The final full Red Bull Ring dashboard capture was also opened and reviewed
+(`sector-labels-showcase-red-bull-ring-dashboard.png`), with five focused desktop
+annotation states passing under the `sector-labels-showcase` artifact prefix.

@@ -56,6 +56,11 @@ QA, documentation, a clean commit and working-branch push:
    existing clock/fullscreen/idle regressions. Compact playback rows retain every
    control and value at 320/360 px. The reproducible continuous-lap
    sweep records every rendered body projection; see CAMERA_FRAMING.md.
+7. Keep overview annotations readable after the larger scene and vehicle changes.
+   Implemented: sector badges avoid corner circles and controls, with leaders to
+   their actual interval midpoints. One ordered layout pass gives selected event
+   controls space before timing badges and ghost names. Narrow headings are more
+   readable. See SECTOR_LABELS.md for placement, fallback and verification.
 
 Continue directly into the next milestone after each stable cycle. Numerical fixes
 remain eligible when required for correct product behavior; new solver expansion,
@@ -337,13 +342,13 @@ Seven fullscreen journeys join the existing rendering regressions. See FULLSCREE
 
 The local numerical/API suite contains 152 passing tests, including coupled quadratic
 oracles, grid convergence, refinement accounting, start/finish rotation and setup
-extremes, source aliasing and analytical work/grip/contact benchmarks. The 268 TypeScript tests cover
+extremes, source aliasing and analytical work/grip/contact benchmarks. The 272 TypeScript tests cover
 geometry, source contacts, alignment, project/reference validation, comparison
 eligibility, native channel plots/scales, sector viewport mapping, vehicle contracts,
 ghost poses, local geographic conversion, source elevation/grade/curvature, camera projection,
 north direction, verified signed-zero migration, display precision, optional load
 contracts, corner-callout placement, load graph availability/scales and clock/data invariants.
-One hundred and forty-two browser journeys cover the
+One hundred and forty-six browser journeys cover the
 core workflow, refinement, resampling, cross-vehicle reference restore, imports,
 audio, aero comparison application/failure/cancellation, viewer downloads, geometry
 reports, failed/superseded track activation, calculation cancellation, keyboard actions/tabs,
@@ -357,7 +362,8 @@ device-storage and audio-start recovery, declared/legacy load telemetry, separat
 corner event callouts through camera/layer changes, and the
 optional structured-tool contract. Four viewer loading/restoration and four CSV
 worker journeys also run against production assets, alongside three showcase
-and three viewer-transport journeys plus two portrait-car pixel checks. See VALIDATION.md
+and three viewer-transport journeys plus two portrait-car pixel checks and four
+sector-annotation journeys. See VALIDATION.md
 for the final record. The first remote CI run passed on the working branch.
 
 The scoped MVP and selected MVP+ extensions are implemented. Numerical accuracy

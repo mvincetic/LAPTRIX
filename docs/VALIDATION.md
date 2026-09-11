@@ -29,10 +29,19 @@ runtime error; eight normal/fullscreen laps total 9,489 observed frames. The fin
 layout sweep covers 24 states across six viewport sizes, with contained controls,
 readouts and credits, including sector loops. Camera, compact and desktop/short
 screenshots were opened and reviewed. Source geometry and simulation are unchanged.
+The next annotation milestone passes 272 TypeScript and 152 Python tests, the
+complete lint/type/build gate and 10 relevant browser journeys. Four new cases
+protect readable sector times alongside corner/event/ghost annotations on both
+tracks at 1600/320 px. Forty visual states have contained, non-overlapping visible
+badges and no runtime error or page overflow. One crowded tools view omits a map
+badge, restored on closing tools; its analysis value remains available. See
+SECTOR_LABELS.md and PRODUCT_PRESENTATION.md for the evidence and placement limits.
+All 20 production journeys pass on the final annotation build, including the four
+new cases. The full development suite now discovers 146 journeys.
 
 - ESLint and Ruff: pass.
 - TypeScript strict typecheck: pass.
-- Vitest: 268 tests pass.
+- Vitest: 272 tests pass.
 - Python numerical/API tests: 152 tests pass.
 - Playwright: the preceding vertical-load milestone passes all 82 development
   journeys (13.4 minutes). The corner-callout update adds two journeys and passes

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Html } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { Matrix4, Vector3 } from "three";
 import type { Lap } from "../../../../packages/shared/schema";
 import type { PlaybackClock } from "../../../../packages/telemetry";
 import { layoutEventCallouts, type ScreenRect } from "../corner-callouts";
+import { registerAnnotationLayout } from "../annotation-layout";
 import "./corner-callouts.css";
 
 const canvasOrigin = (): [number, number] => [0, 0];
@@ -58,94 +59,107 @@ export function CornerCallouts({
     height: 0,
     events: null as typeof events | null,
     layoutKey: "",
+    nodes: [] as HTMLElement[],
   });
   useEffect(() => {
     invalidate();
   }, [events, layoutKey, size.width, size.height, invalidate]);
 
-  useFrame(() => {
-    if (
-      !root.current ||
-      events.some(
-        (_, index) => !buttons.current[index] || !leaders.current[index],
-      )
-    )
-      return;
-    camera.updateMatrixWorld();
-    const last = previous.current;
-    if (
-      last.events === events &&
-      last.layoutKey === layoutKey &&
-      last.width === size.width &&
-      last.height === size.height &&
-      last.matrix.equals(camera.matrixWorld) &&
-      last.projection.equals(camera.projectionMatrix)
-    )
-      return;
-    const canvas = gl.domElement.getBoundingClientRect();
-    const scene = gl.domElement.closest(".scene");
-    const obstacles: ScreenRect[] = [];
-    for (const node of scene?.querySelectorAll(
-      ".legend, .viewer-popover, .scene-top-left, .compass, .scene-bottom, .sector-label, .corner-marker, .start-marker",
-    ) ?? []) {
-      const box = node.getBoundingClientRect();
-      if (
-        box.width &&
-        box.height &&
-        box.right > canvas.left &&
-        box.left < canvas.right &&
-        box.bottom > canvas.top &&
-        box.top < canvas.bottom
-      ) {
-        obstacles.push({
-          x: box.x - canvas.x - 3,
-          y: box.y - canvas.y - 3,
-          width: box.width + 6,
-          height: box.height + 6,
+  useEffect(
+    () =>
+      registerAnnotationLayout("events", (upstreamChanged) => {
+        if (
+          !root.current ||
+          events.some(
+            (_, index) => !buttons.current[index] || !leaders.current[index],
+          )
+        )
+          return false;
+        camera.updateMatrixWorld();
+        const last = previous.current;
+        const scene = gl.domElement.closest(".scene");
+        const nodes = [
+          ...(scene?.querySelectorAll<HTMLElement>(
+            ".legend, .viewer-popover, .scene-top-left, .compass, .scene-bottom, .corner-marker, .start-marker",
+          ) ?? []),
+        ].filter((node) => !node.hidden);
+        if (
+          !upstreamChanged &&
+          last.events === events &&
+          last.layoutKey === layoutKey &&
+          last.width === size.width &&
+          last.height === size.height &&
+          last.matrix.equals(camera.matrixWorld) &&
+          last.projection.equals(camera.projectionMatrix) &&
+          nodes.length === last.nodes.length &&
+          nodes.every((node, i) => node === last.nodes[i])
+        )
+          return false;
+        const canvas = gl.domElement.getBoundingClientRect();
+        const obstacles: ScreenRect[] = [];
+        for (const node of nodes) {
+          const box = node.getBoundingClientRect();
+          if (
+            box.width &&
+            box.height &&
+            box.right > canvas.left &&
+            box.left < canvas.right &&
+            box.bottom > canvas.top &&
+            box.top < canvas.bottom
+          ) {
+            obstacles.push({
+              x: box.x - canvas.x - 3,
+              y: box.y - canvas.y - 3,
+              width: box.width + 6,
+              height: box.height + 6,
+            });
+          }
+        }
+        const projected = events
+          .map((event, id) => {
+            const point = event.position.clone().project(camera);
+            return {
+              id,
+              x: ((point.x + 1) * size.width) / 2,
+              y: ((1 - point.y) * size.height) / 2,
+              depth: point.z,
+            };
+          })
+          .filter((point) => point.depth >= -1 && point.depth <= 1);
+        const placement = layoutEventCallouts(
+          projected,
+          size.width,
+          size.height,
+          obstacles,
+        );
+        events.forEach((_, id) => {
+          const button = buttons.current[id]!,
+            leader = leaders.current[id]!;
+          const point = placement.find((point) => point.id === id);
+          button.hidden = !point;
+          leader.style.display = point ? "" : "none";
+          if (!point) return;
+          button.style.transform = `translate(${point.labelX}px, ${point.labelY}px)`;
+          const line = leader.querySelector("line")!,
+            dot = leader.querySelector("circle")!;
+          line.setAttribute("x1", String(point.x));
+          line.setAttribute("y1", String(point.y));
+          line.setAttribute("x2", String(point.leaderX));
+          line.setAttribute("y2", String(point.leaderY));
+          dot.setAttribute("cx", String(point.x));
+          dot.setAttribute("cy", String(point.y));
         });
-      }
-    }
-    const projected = events
-      .map((event, id) => {
-        const point = event.position.clone().project(camera);
-        return {
-          id,
-          x: ((point.x + 1) * size.width) / 2,
-          y: ((1 - point.y) * size.height) / 2,
-          depth: point.z,
-        };
-      })
-      .filter((point) => point.depth >= -1 && point.depth <= 1);
-    const placement = layoutEventCallouts(
-      projected,
-      size.width,
-      size.height,
-      obstacles,
-    );
-    events.forEach((_, id) => {
-      const button = buttons.current[id]!,
-        leader = leaders.current[id]!;
-      const point = placement.find((point) => point.id === id);
-      button.hidden = !point;
-      leader.style.display = point ? "" : "none";
-      if (!point) return;
-      button.style.transform = `translate(${point.labelX}px, ${point.labelY}px)`;
-      const line = leader.querySelector("line")!,
-        dot = leader.querySelector("circle")!;
-      line.setAttribute("x1", String(point.x));
-      line.setAttribute("y1", String(point.y));
-      line.setAttribute("x2", String(point.leaderX));
-      line.setAttribute("y2", String(point.leaderY));
-      dot.setAttribute("cx", String(point.x));
-      dot.setAttribute("cy", String(point.y));
-    });
-    last.matrix.copy(camera.matrixWorld);
-    last.projection.copy(camera.projectionMatrix);
-    last.events = events;
-    last.layoutKey = layoutKey;
-    last.width = size.width;
-    last.height = size.height;
-  });
+        last.matrix.copy(camera.matrixWorld);
+        last.projection.copy(camera.projectionMatrix);
+        last.events = events;
+        last.layoutKey = layoutKey;
+        last.width = size.width;
+        last.height = size.height;
+        last.nodes = nodes;
+        return true;
+      }),
+    [camera, gl, events, layoutKey, size.width, size.height],
+  );
 
   if (!events.length) return null;
   return (
