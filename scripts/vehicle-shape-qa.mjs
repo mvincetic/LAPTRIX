@@ -1,6 +1,7 @@
 /* global document */
 import { chromium, expect } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
+import { Buffer } from "node:buffer";
 
 // Inspect the real paused vehicle on its road. Close camera poses are QA-only;
 // the application still exposes its existing four camera choices.
@@ -41,55 +42,82 @@ try {
         page.getByRole("button", { name: "Inspect corner 1", exact: true }),
       ).toBeVisible();
       await page.getByRole("button", { name: "3D View", exact: true }).click();
-      await page.getByRole("slider", { name: "Viewer lap position" }).fill("0");
+      const cursor = page.getByRole("slider", { name: "Viewer lap position" });
+      await cursor.fill("0");
+      if (process.env.QA_BRAKE) {
+        expect(["peak", "coast"]).toContain(process.env.QA_BRAKE);
+        await page.getByRole("button", { name: "Additional actions" }).click();
+        const pending = page.waitForEvent("download");
+        await page
+          .getByRole("button", { name: "Export project", exact: true })
+          .click();
+        const chunks = [];
+        for await (const chunk of await (await pending).createReadStream())
+          chunks.push(chunk);
+        const { lap } = JSON.parse(Buffer.concat(chunks).toString());
+        const sample =
+          process.env.QA_BRAKE === "peak"
+            ? lap.samples.reduce((best, point) =>
+                point.brake > best.brake ? point : best,
+              )
+            : lap.samples.find((point) => point.time > 3 && point.brake === 0);
+        expect(sample).toBeDefined();
+        await cursor.fill(String(Number(sample.time.toFixed(2))));
+      }
+      const time = Number(await cursor.getAttribute("value"));
       await page.locator(".scene-footer").scrollIntoViewIfNeeded();
       for (const [view, offset] of [
         ["front", [6, 3.8, 7]],
         ["rear", [-6, 3.2, -7]],
         ["side", [9, 2, 0]],
       ]) {
-        const metrics = await page.evaluate(async (offset) => {
-          const { _roots } =
-            await import("/node_modules/.vite/deps/@react-three_fiber.js");
-          const { Vector3, Box3 } =
-            await import("/node_modules/.vite/deps/three.js");
-          const { scene, camera, controls, gl, invalidate } = _roots
-            .get(document.querySelector(".scene canvas"))
-            .store.getState();
-          const car = scene.getObjectByName("current-ghost"),
-            body = car.getObjectByName("vehicle-body");
-          car.updateWorldMatrix(true, true);
-          controls.enableDamping = false;
-          controls.minDistance = 0.1;
-          controls.target.copy(car.localToWorld(new Vector3(0, 0.5, 0)));
-          camera.position.copy(car.localToWorld(new Vector3(...offset)));
-          camera.fov = 40;
-          camera.near = 0.08;
-          camera.updateProjectionMatrix();
-          camera.lookAt(controls.target);
-          controls.update();
-          invalidate();
-          const bounds = new Box3().setFromObject(body);
-          let triangles = 0,
-            meshes = 0;
-          const geometryIds = [];
-          body.traverse((node) => {
-            if (!node.isMesh) return;
-            meshes++;
-            triangles +=
-              (node.geometry.index?.count ??
-                node.geometry.attributes.position.count) / 3;
-            geometryIds.push(node.geometry.uuid);
-          });
-          return {
-            bounds: [bounds.min.toArray(), bounds.max.toArray()],
-            meshes,
-            triangles,
-            geometryIds,
-            textures: gl.info.memory.textures,
-            scale: car.scale.toArray(),
-          };
-        }, offset);
+        const metrics = await page.evaluate(
+          async (offset) => {
+            const { _roots } =
+              await import("/node_modules/.vite/deps/@react-three_fiber.js");
+            const { Vector3, Box3 } =
+              await import("/node_modules/.vite/deps/three.js");
+            const { scene, camera, controls, gl, invalidate } = _roots
+              .get(document.querySelector(".scene canvas"))
+              .store.getState();
+            const car = scene.getObjectByName("current-ghost"),
+              body = car.getObjectByName("vehicle-body");
+            car.updateWorldMatrix(true, true);
+            controls.enableDamping = false;
+            controls.minDistance = 0.1;
+            controls.target.copy(car.localToWorld(new Vector3(0, 0.5, 0)));
+            camera.position.copy(car.localToWorld(new Vector3(...offset)));
+            camera.fov = 40;
+            camera.near = 0.08;
+            camera.updateProjectionMatrix();
+            camera.lookAt(controls.target);
+            controls.update();
+            invalidate();
+            const bounds = new Box3().setFromObject(body);
+            let triangles = 0,
+              meshes = 0;
+            const geometryIds = [];
+            body.traverse((node) => {
+              if (!node.isMesh) return;
+              meshes++;
+              triangles +=
+                (node.geometry.index?.count ??
+                  node.geometry.attributes.position.count) / 3;
+              geometryIds.push(node.geometry.uuid);
+            });
+            return {
+              bounds: [bounds.min.toArray(), bounds.max.toArray()],
+              meshes,
+              triangles,
+              geometryIds,
+              textures: gl.info.memory.textures,
+              scale: car.scale.toArray(),
+            };
+          },
+          offset.map(
+            (value) => value * (process.env.QA_DETAIL === "1" ? 0.7 : 1),
+          ),
+        );
         // Allow the demand frame and HTML projection to settle before the capture.
         await page.waitForTimeout(250);
         await page.locator(".track-panel").screenshot({
@@ -101,6 +129,8 @@ try {
           track,
           vehicle,
           view,
+          time,
+          detail: process.env.QA_DETAIL === "1",
           ...metrics,
           errors: [...errors],
           warnings: [...warnings],

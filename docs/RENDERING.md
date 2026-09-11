@@ -1,5 +1,16 @@
 # Rendering when the scene changes
 
+V9 GT bodywork retains four scene textures. The current Formula still submits
+70 draws / 5,408 body triangles; the GT submits 61 draws / 4,912 body triangles.
+Matched scene totals are 135,094 Formula / 134,598 GT triangles on Dev Track and
+120,830 / 120,334 on Red Bull Ring. Relative to V8, the GT adds seven mesh draws
+and 1,982 triangles for the shell, fitted glazing and separate details. The body,
+cabin and glass have independently memoized/disposed geometries. Brake demand
+updates two existing material properties in the same vehicle frame; it adds no
+timer, image texture or geometry builder. All 64 sampled camera/motion states
+retain exact wheel/steering values and framing. These are scene resource counts,
+not hardware frame-rate claims. See VEHICLE_ASSETS.md and PRODUCT_PRESENTATION.md.
+
 V8 Formula contours and shared rounded tyres retain 70 Formula / 54 GT first-frame
 draws and the same four scene textures. Matched Dev Track captures submit 135,094
 / 132,616 triangles; Red Bull Ring submits 120,830 / 118,352. The increases of

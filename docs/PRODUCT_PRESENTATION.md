@@ -1,5 +1,73 @@
 # Product presentation milestones
 
+## Premium phase V9 — Original GT coupe surfaces, 2026-09-11
+
+The V8 close-view baseline showed a rectangular GT shell, broad floor and dark
+box-shaped cabin. The new original package adds rounded body stations, wheel wells,
+a narrower central floor, separate splitters and a shaped rear wing. A continuous
+painted cabin now forms the roof and pillars around six fitted glass panels.
+Two rear lamps brighten with their own lap's authoritative brake demand.
+Physics dimensions, parent road pose, wheel pivots, steering and the clock remain
+unchanged. All three original packages have manifest/parameter validation.
+
+The first six real close views (`gt-first-qa.json`) exposed detached-looking cabin
+trim. Replacing trim with fitted glazing improved the actual front/side/rear views
+(`gt-glass-qa.json`). The glass-join regression then reproduced 16 disconnected
+facets where six continuous windows were intended (`gt-geometry-first.log`).
+Shared offsets fix the joins; all seven Formula/GT geometry cases now pass
+(`gt-geometry-final.log`). Four new GT cases cover closed oriented surfaces,
+external-facing caps/sides, profile bounds, 1,536 tyre-clearance probes and six
+connected windows. The original Formula helper is shared unchanged by these tests.
+
+A live-preview hot reload retained the earlier motion-ref shape while the new
+brake lamps mounted, causing repeated frame errors and an unresponsive Vite
+process. The transition now tolerates the earlier object, and restarting the
+local launcher restores normal requests. Fresh close-view sessions have no
+runtime errors. Development output is redirected to `artifacts/dev-gt.log`.
+The two brake journeys verify separate current/reference demand, seeking,
+camera changes and retained material/geometry identities (`gt-brakes-final.log`,
+27.7 seconds). Their fixture explicitly pins a GT reference before changing the
+current setup, respecting the existing cross-vehicle reference behavior; slider
+input follows the real 0.01-second control step. Live play/pause coverage has been
+added for the final broader run.
+
+All twelve final Formula/GT close views pass on both circuits
+(`gt-final-shape-qa.json`). Reviewed images show continuous cabin/glass joins,
+rounded wheel arches and preserved category identity. Formula remains 57 body
+meshes / 5,408 triangles; GT changes from 41 / 2,930 to 48 / 4,912. Both retain
+four scene textures. The complete gate passes 300 TypeScript / 152 Python tests
+(55.54 seconds), all lint/type/asset checks and build (`gt-check.log`). Entry
+JavaScript stays 441.34 / 135.95 kB gzip, viewer JavaScript is 995.72 / 268.18 kB,
+and CSS remains 60.84 / 12.70 kB.
+
+All 52 Onboard states pass at 1600/1280/390 px, including phone fullscreen
+(`gt-onboard-qa.json`); reviewed laptop and fullscreen GT views retain the forward
+road sightline above the body. All 64 sampled Chase states pass both vehicles,
+circuits and desktop/phone widths (`gt-motion-qa.json`), preserving source pose,
+distance/radius wheel spin, front steering and projected bounds. Matched scene
+draws remain 70 for Formula and rise from 54 to 61 for GT. Dev Track submits
+135,094 / 134,598 triangles; Red Bull Ring 120,830 / 120,334. These are resource
+counts rather than hardware frame-rate claims.
+
+Twelve closer coast/peak-brake captures on both circuits pass
+(`gt-lamps-coast-qa.json`, `gt-lamps-peak-qa.json`). Actual rear images show subdued
+running lamps and a clear increase during braking. `vehicle-shape-qa.mjs` now
+supports `QA_DETAIL=1` and `QA_BRAKE=coast|peak`, selecting real lap samples through
+the normal viewer slider. No application camera or telemetry hook is added.
+This completes 140 final close/Onboard/Chase/lamp-detail visual states. The 21-case
+vehicle browser suite passes in 4.3 minutes, including live play/pause lamp synchronization,
+cross-vehicle reference ghosts, custom profile failures/cancellation/save/restore,
+portrait body pixels and zero settled drawing/RAF (`gt-browser.log`). Final lint
+and typecheck also pass after adding live playback coverage. The 31 production
+journeys pass in 4.3 minutes (`gt-production.log`). This completes the GT slice;
+continue directly into the close-Orbit apex annotation follow-up.
+
+The closer peak-brake Orbit capture also makes an existing annotation problem
+clear: each apex marker is an eight-metre sphere and can dominate a close view.
+Driving views already hide these markers. Queue a separate immediate follow-up
+to keep the analysis point readable at close Orbit scales without changing its
+source position or lap. Then continue the Dev Track/asset-pipeline work.
+
 ## Premium phase V5 follow-up — Telemetry tick readability, 2026-09-11
 
 The font review exposed a 2.59 px overlap between adjacent distance labels in the

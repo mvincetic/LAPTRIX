@@ -62,3 +62,52 @@ export function VehicleStrut({
     </mesh>
   );
 }
+export function VehiclePart({
+  size,
+  at,
+  color = "#1e2938",
+  roughness = 0.45,
+}: {
+  size: [number, number, number];
+  at: [number, number, number];
+  color?: string;
+  roughness?: number;
+}) {
+  return (
+    <mesh position={at}>
+      <boxGeometry args={size} />
+      <meshStandardMaterial
+        color={color}
+        metalness={0.2}
+        roughness={roughness}
+      />
+    </mesh>
+  );
+}
+
+export function VehicleWing({
+  span,
+  chord,
+  y,
+  z,
+  color = "#1e2938",
+}: {
+  span: number;
+  chord: number;
+  y: number;
+  z: number;
+  color?: string;
+}) {
+  return (
+    <VehicleBody
+      rounded
+      color={color}
+      roughness={0.4}
+      stations={[
+        [z - chord / 2, span * 0.49, y - 0.016, y + 0.016],
+        [z - chord * 0.15, span / 2, y - 0.025, y + 0.03],
+        [z + chord / 2, span * 0.44, y - 0.01, y + 0.005],
+      ]}
+    />
+  );
+}

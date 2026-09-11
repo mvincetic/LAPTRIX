@@ -6,6 +6,16 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+V9 GT geometry passes the complete local gate with 300 TypeScript / 152 Python
+tests (55.54 seconds), three original asset validators and lint/type/build checks.
+The 21 vehicle journeys pass in 4.3 minutes, including separate current/reference
+brake demand, seek/camera/play/pause behavior, preserved material identities,
+profile activation/failure/cancellation, native reference ghosts and idle drawing.
+All 140 close/Onboard/Chase/lamp-detail states pass on both circuits, with four
+textures and exact wheel/steering motion. Independent geometry checks cover
+closed surfaces, outside-facing rays, 1,536 tyre-envelope probes and joined glass.
+All 31 final production journeys pass in 4.3 minutes. See PRODUCT_PRESENTATION.md.
+
 The telemetry follow-up passes 296 TypeScript / 152 Python tests, all lint/asset/
 type/build gates, nine final graph/reference/window/idle journeys (2.8 minutes)
 and all 31 production journeys (4.3 minutes). Twenty-six actual graph/dashboard

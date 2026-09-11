@@ -1,43 +1,17 @@
 import { memo, useEffect, useMemo, type RefObject } from "react";
-import {
-  CatmullRomCurve3,
-  DataTexture,
-  RGBAFormat,
-  Vector3,
-  type Group,
-} from "three";
+import { CatmullRomCurve3, DataTexture, RGBAFormat, Vector3 } from "three";
 import type { Vehicle } from "../../../../packages/shared/schema";
-import { VehicleBody, VehicleStrut } from "./VehicleBody";
+import {
+  VehicleBody,
+  VehicleStrut,
+  VehiclePart as Part,
+  VehicleWing as Wing,
+} from "./VehicleBody";
+import { GTCoupeBody } from "./GTCoupeBody";
+import type { VehicleMotion } from "../vehicle-motion";
 import { formulaBodyStations, vehicleTyreGeometry } from "../vehicle-geometry";
 import formulaAsset from "../../../../assets/vehicles/formula.json";
-
-export type VehicleMotion = {
-  wheels: (Group | null)[];
-  front: (Group | null)[];
-};
-
-function Part({
-  size,
-  at,
-  color = "#1e2938",
-  roughness = 0.45,
-}: {
-  size: [number, number, number];
-  at: [number, number, number];
-  color?: string;
-  roughness?: number;
-}) {
-  return (
-    <mesh position={at}>
-      <boxGeometry args={size} />
-      <meshStandardMaterial
-        color={color}
-        metalness={0.2}
-        roughness={roughness}
-      />
-    </mesh>
-  );
-}
+import { gtDimensions } from "../gt-geometry";
 
 function ContactShade({ width, length }: { width: number; length: number }) {
   const texture = useMemo(() => {
@@ -79,33 +53,6 @@ function Tyre({ radius, width }: { radius: number; width: number }) {
   );
 }
 
-function Wing({
-  span,
-  chord,
-  y,
-  z,
-  color = "#1e2938",
-}: {
-  span: number;
-  chord: number;
-  y: number;
-  z: number;
-  color?: string;
-}) {
-  return (
-    <VehicleBody
-      rounded
-      color={color}
-      roughness={0.4}
-      stations={[
-        [z - chord / 2, span * 0.49, y - 0.016, y + 0.016],
-        [z - chord * 0.15, span / 2, y - 0.025, y + 0.03],
-        [z + chord / 2, span * 0.44, y - 0.01, y + 0.005],
-      ]}
-    />
-  );
-}
-
 /** Original bodywork in metres. Memoization retains geometry across setup/viewer edits. */
 export const VehicleMesh = memo(function VehicleMesh({
   vehicle,
@@ -120,7 +67,9 @@ export const VehicleMesh = memo(function VehicleMesh({
     wheelbase = vehicle?.wheelbase ?? 3.6;
   const radius = vehicle?.wheelRadius ?? 0.34,
     coupe = vehicle?.bodyStyle === "coupe";
-  const length = wheelbase + (coupe ? 1.7 : 1.4),
+  const length = coupe
+      ? gtDimensions(width, wheelbase, radius).length
+      : wheelbase + 1.4,
     half = wheelbase / 2;
   const tyreWidth = Math.min(width * 0.19, radius * 1.2);
   const halo = useMemo(
@@ -137,12 +86,7 @@ export const VehicleMesh = memo(function VehicleMesh({
   return (
     <group name="vehicle-body">
       <ContactShade width={width} length={length} />
-      {coupe ? (
-        <Part
-          size={[width * 0.88, 0.07, length * 0.88]}
-          at={[0, 0.16, -0.08]}
-        />
-      ) : (
+      {!coupe && (
         <VehicleBody
           color="#1e2938"
           roughness={0.55}
@@ -150,68 +94,13 @@ export const VehicleMesh = memo(function VehicleMesh({
         />
       )}
       {coupe ? (
-        <>
-          <VehicleBody
-            color={color}
-            stations={[
-              [-length / 2, width * 0.41, 0.23, 0.59],
-              [-length * 0.3, width * 0.48, 0.21, 0.78],
-              [length * 0.23, width * 0.48, 0.22, 0.72],
-              [length / 2, width * 0.41, 0.25, 0.53],
-            ]}
-          />
-          <VehicleBody
-            color="#1e3045"
-            roughness={0.22}
-            stations={[
-              [-length * 0.32, width * 0.31, 0.65, 0.72],
-              [-length * 0.14, width * 0.34, 0.67, 1.25],
-              [length * 0.1, width * 0.33, 0.67, 1.25],
-              [length * 0.28, width * 0.28, 0.65, 0.72],
-            ]}
-          />
-          <Part
-            size={[width * 0.67, 0.035, length * 0.23]}
-            at={[0, 1.27, -length * 0.02]}
-            color={color}
-          />
-          <Part
-            size={[width * 0.92, 0.045, 0.29]}
-            at={[0, 1.19, -length * 0.41]}
-          />
-          {[-1, 1].map((side) => (
-            <group key={side}>
-              <Part
-                size={[0.045, 0.53, 0.09]}
-                at={[side * width * 0.27, 0.94, -length * 0.41]}
-              />
-              <Part
-                size={[width * 0.21, 0.1, 0.045]}
-                at={[side * width * 0.29, 0.5, length / 2]}
-                color="#f2f7fc"
-              />
-              <Part
-                size={[width * 0.25, 0.08, 0.04]}
-                at={[side * width * 0.28, 0.53, -length / 2 - 0.01]}
-                color="#e93044"
-              />
-              <Part
-                size={[0.11, 0.08, 0.2]}
-                at={[side * (width / 2 - 0.06), 0.85, length * 0.19]}
-                color={color}
-              />
-              <Part
-                size={[0.035, 0.035, 0.19]}
-                at={[side * width * 0.478, 0.74, -length * 0.05]}
-                color="#14212e"
-              />
-            </group>
-          ))}
-          <Part
-            size={[width * 0.48, 0.14, 0.04]}
-            at={[0, 0.35, length / 2 + 0.01]}
-          />
-        </>
+        <GTCoupeBody
+          width={width}
+          wheelbase={wheelbase}
+          radius={radius}
+          color={color}
+          motion={motion}
+        />
       ) : (
         <>
           <VehicleBody

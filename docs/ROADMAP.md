@@ -18,20 +18,21 @@ identities, all engineering contracts and the single playback clock.
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
 | V7 Showcase selection | Implemented: native source groups and compact provenance descriptions retain identity and import/restore behavior. Fifteen visual states and 30 production journeys pass; narrow/tablet headers remain aligned through loading and cancellation. The licensed Red Bull Ring data package is complete. |
 | V8 Formula presentation | Implemented: original rounded body contours, sidepod/engine-cover silhouettes, tapered floor, shallow wings and tyre shoulders. Closed-surface/dimension tests, 128 final visual states and all 30 production journeys pass. |
-| V9 GT presentation | Next vehicle slice: refine coupe proportions, wheel arches, cabin/roof surfaces and telemetry-driven brake lights. Preserve the physical profile, road frame and shared clock. |
-| V10 Asset pipeline | Started in V4: actual original guardrail parameters, manifest, conventions and quality-gate validation. Authored vehicle assets, GLB export/optimization and broader validation remain. Use Blender only if locally useful. |
+| V9 GT presentation | Implemented: original rounded shell with wheel wells, continuous painted cabin, fitted glazing and telemetry-driven brake lamps. The full gate, 21 browser journeys, 140 visual states and all 31 production journeys pass. The physical profile, road frame and shared clock remain authoritative. |
+| V10 Asset pipeline | Three original procedural packages now cover guardrails, Formula and GT bodywork, with authored parameters, conventions and validation. GLB export/optimization and runtime loading remain. Use Blender only if locally useful. |
 | V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |
 | V12 Visual QA | Repeat actual desktop/laptop/narrow/fullscreen and playback inspection across both cars and circuits; keep reproducible critical captures. |
 | V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
 
-The V7 font correction and V8 Formula changes pass Linux CI through `2c001a9`:
-158 development and 30 production journeys. The following telemetry pass resolves
-crowded distance ticks and tiny-window dashed SVG painting stalls. Its measured
-tick row, bounded paint geometry and complete workspace retention pass the full
-local gate, nine integration journeys, 26 graph/dashboard visual states and all
-31 production journeys. Continue directly with V9 coupe surfaces
-and telemetry-driven brake lamps. See PRODUCT_PRESENTATION.md for the evidence.
+The telemetry pass is green in Linux CI through `fad0434`: 159 development and
+31 production journeys. It resolves crowded ticks and tiny-window dashed SVG
+painting stalls, following the Formula and typography changes. The local gate,
+nine integration journeys and 26 graph/dashboard visual states also pass.
+The GT pass also completes all 31 production journeys. Its closer lamp captures expose
+an existing eight-metre apex sphere dominating close Orbit views. Address that
+annotation scale immediately after the GT cycle, then continue Dev Track identity
+and the authored GLB pipeline. See PRODUCT_PRESENTATION.md for the evidence.
 
 Reassess after every stable implementation/test/visual-QA/documentation/commit/push
 cycle and continue directly. Do not add low-quality camera modes for checklist

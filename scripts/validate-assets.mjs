@@ -29,7 +29,7 @@ assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
   manifest.assets.length,
-  2,
+  3,
   "Register a validator when adding another asset package.",
 );
 const ids = new Set();
@@ -37,7 +37,11 @@ for (const entry of manifest.assets) {
   assert(!ids.has(entry.id), "Asset IDs must be unique.");
   ids.add(entry.id);
   assert(
-    ["laptrix.guardrail.v1", "laptrix.formula-body.v1"].includes(entry.id),
+    [
+      "laptrix.guardrail.v1",
+      "laptrix.formula-body.v1",
+      "laptrix.gt-body.v1",
+    ].includes(entry.id),
   );
   assert.equal(entry.format, "procedural");
   for (const field of ["origin", "provenance", "rights"])
@@ -49,6 +53,66 @@ for (const entry of manifest.assets) {
     await readFile(await ownedPath(entry.parameters), "utf8"),
   );
   assert.equal(asset.id, entry.id);
+  if (entry.id === "laptrix.gt-body.v1") {
+    assert.equal(entry.category, "vehicles");
+    bounded(asset.overhang, 1.4, 2.2);
+    bounded(asset.wheelClearance, 0.04, 0.09);
+    bounded(asset.coreClearance, 0.025, 0.08);
+    bounded(asset.archSteps, 12, 32);
+    assert(Number.isInteger(asset.archSteps));
+    bounded(asset.windowInset, 0.02, 0.08);
+    bounded(asset.windowLift, 0.002, 0.006);
+    for (const part of ["body", "cabin"]) {
+      bounded(asset[part].length, 4, 12);
+      let previous = -Infinity;
+      for (const row of asset[part]) {
+        assert.equal(row.length, part === "body" ? 5 : 4);
+        const [z, width, bottom, top] = row;
+        bounded(z, part === "body" ? -0.5 : -0.4, part === "body" ? 0.5 : 0.3);
+        assert(z > previous, "GT stations must increase rear to front.");
+        previous = z;
+        bounded(width, 0.2, part === "body" ? 0.5 : 0.42);
+        bounded(
+          bottom,
+          part === "body" ? 0.12 : 0.6,
+          part === "body" ? 0.35 : 0.9,
+        );
+        bounded(top, bottom + 0.02, part === "body" ? 1.1 : 1.35);
+        if (part === "body") bounded(row[4], top, 1.15);
+      }
+    }
+    assert.equal(asset.body[0][0], -0.5);
+    assert.equal(asset.body.at(-1)[0], 0.5);
+    assert.equal(asset.cabinSection.length, 8);
+    for (let i = 0; i < asset.cabinSection.length; i++) {
+      const a = asset.cabinSection[i],
+        b = asset.cabinSection[(i + 1) % 8],
+        c = asset.cabinSection[(i + 2) % 8];
+      assert.equal(a.length, 2);
+      bounded(a[0], -1, 1);
+      bounded(a[1], 0, 1);
+      assert((b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]) > 0);
+    }
+    assert.equal(asset.windows.length, 6);
+    for (const row of asset.windows) {
+      assert.equal(row.length, 3);
+      const [edge, from, to] = row;
+      assert([2, 4, 6].includes(edge));
+      bounded(from, asset.cabin[0][0], asset.cabin.at(-1)[0] - 0.01);
+      bounded(to, from + 0.01, asset.cabin.at(-1)[0]);
+    }
+    for (const edge of [2, 4, 6]) {
+      const windows = asset.windows
+        .filter((row) => row[0] === edge)
+        .sort((a, b) => a[1] - b[1]);
+      assert.equal(windows.length, 2);
+      assert(
+        windows[1][1] - windows[0][2] >= 0.01,
+        "Retain paint between GT windows.",
+      );
+    }
+    continue;
+  }
   if (entry.id === "laptrix.formula-body.v1") {
     assert.equal(entry.category, "vehicles");
     bounded(asset.section.length, 8, 24);

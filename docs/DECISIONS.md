@@ -1,5 +1,19 @@
 # Decision log
 
+## 2026-09-11 — Give the GT a continuous body and source-driven brake lamps
+
+**Decision:** Author the GT's shell, wheel-well clearances, cabin section and
+window intervals in a separate original asset package. Fit glass to the cabin
+skin and drive rear-lamp intensity alongside the existing wheel/steering frame.
+**Reasoning:** Close views exposed a rectangular body, broad plate through the
+wheel envelope and detached-looking cabin trim. **Consequence:** A continuous
+painted cabin supplies the roof and pillars, while shared glass offsets retain
+six unbroken windows. The original profile width/wheelbase/radius, source road
+frame and PlaybackClock remain authoritative. Each ghost consumes its own lap's
+brake demand. No manufacturer/game geometry, image texture, transparency sorting
+or separate animation loop is introduced. Original data and runtime geometry are
+validated; GLB export remains a subsequent asset-pipeline slice.
+
 ## 2026-09-11 — Fit telemetry labels and bound dashed reference painting
 
 **Decision:** Measure axis labels at their original positions, hide colliding

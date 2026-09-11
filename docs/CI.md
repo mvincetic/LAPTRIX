@@ -1,5 +1,11 @@
 # Continuous integration
 
+The [telemetry readability run](https://github.com/mvincetic/LAPTRIX/actions/runs/34606306794)
+passes through `fad0434`: 296 TypeScript tests, 152 Python tests (40.81 seconds),
+all 159 development journeys (81 in 17.5 minutes, 78 in 17.2 minutes) and all
+31 production journeys (5.0 minutes). Both jobs pass, including tiny-window
+reference painting and the native-scrollbar bundled/fallback header checks.
+
 The [Formula and typography run](https://github.com/mvincetic/LAPTRIX/actions/runs/34602624202)
 passes through `2c001a9` (including `8cc0142`): all lint/asset/type/build gates,
 289 TypeScript tests, 152 Python tests (32.01 seconds), 158 development journeys

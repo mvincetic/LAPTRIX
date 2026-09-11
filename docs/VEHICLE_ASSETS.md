@@ -18,10 +18,42 @@ The floor narrows ahead of the sidepods to reveal the front suspension.
 Original shallow lofts also shape both front and rear wing planes.
 
 Formula remains an open cockpit with a helmet, visor, halo, suspension members,
-separate wings and mirrors. The GT retains its distinct closed coupe body, roof,
-glass, lamps and rear wing. Its larger body presentation is the next refinement.
+separate wings and mirrors. The GT uses the separately authored coupe package below.
 The original model's readable category silhouette is the target of this pass;
 these assets remain simplified and are not high-detail production car art.
+
+## GT bodywork
+
+`assets/vehicles/gt.json`, registered as `laptrix.gt-body.v1`, owns the coupe's
+body stations, wheel-well clearances, cabin section and window intervals. Body
+stations use fractions of the existing wheelbase-plus-1.7 m visual length and
+vehicle width. Floors and cabin heights remain metres. The original rounded
+shell narrows at the nose and tail and raises its outer lower edge around each
+physical wheel centre. A narrower central floor and separate end splitters avoid
+the former wide plate through the tyre envelopes. Curved deck surfaces stay above
+the wheel-well ceiling for the tested custom radii. No physics dimensions change.
+
+The continuous painted cabin forms the roof and pillars. Six inset glass panels
+follow the same skin, with shared offsets at adjoining facets to prevent cracks.
+Glass adds no transparency sorting or image textures. The geometry builder caps
+concave body sections with triangulated faces and keeps cap normals independent
+from smooth side normals. Shared original loft/strut/wing primitives supply
+mirrors and restrained aero details; the GT does not borrow a manufacturer model.
+
+Both rear lamps brighten from 0.12 to 1.72 emissive intensity with the normalized
+brake demand of their own rendered lap. This happens in the existing vehicle
+frame callback alongside wheel spin and steering, using the same PlaybackClock.
+Seeking sets lamp intensity immediately; no timer or afterglow is introduced.
+Each replaced geometry has independent disposal cleanup, and light references
+are cleared when their materials unmount. Live development also tolerates an
+older hot-reloaded motion object while the new lamp references mount.
+
+Four GT numerical cases check closed surfaces and bounds at three profile sizes,
+six external ray directions, 1,536 tyre-envelope rays, central floor retention
+and exactly six connected glass panels. All 140 final close/Onboard/Chase/lamp-detail
+states pass on both circuits, alongside 21 vehicle journeys and all 31 production
+journeys. The complete quality gate passes 300 TypeScript / 152 Python tests;
+see PRODUCT_PRESENTATION.md for resource counts and the final evidence.
 
 ## Scale, pivots and motion
 
@@ -42,14 +74,15 @@ clock, suspension simulation or independent animation timeline.
 Current body paint retains LAPTRIX blue; native reference bodywork retains grey.
 Opaque standard materials separate paint, dark floor/wing elements, rubber,
 glass and metal. The existing small generated contact-shade texture is retained.
-The new contours and tyres introduce no image textures or extra draw batches.
+The Formula contours and tyres introduce no image textures or extra draw batches.
 Each tyre uses 32 circumferential segments and eight section spans, 512 triangles.
 Memoized vehicles retain geometry during normal parent/UI edits; replaced custom
 geometries dispose their GPU resources on cleanup. See PRODUCT_PRESENTATION.md
 for actual before/after browser geometry counts and visual evidence.
 
-`npm run validate:assets` verifies manifest ownership, convex section winding,
-bounded/ordered stations, sidepod width, heights and local paths. Numerical tests
+`npm run validate:assets` verifies all three packages, manifest ownership, convex
+section winding, bounded/ordered stations, GT window intervals, sidepod width,
+heights and local paths. Numerical tests
 check watertight oriented surfaces, raycast-facing caps, bounds and exact tyre
 dimensions at several profile scales. Actual close, Chase and Onboard browser
 captures check both vehicles on both bundled tracks. No Blender or GLB export

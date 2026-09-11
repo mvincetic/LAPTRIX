@@ -12,8 +12,16 @@ Longitudinal stations are fractions of wheelbase, half-widths are fractions of
 vehicle width, and bottom/top heights are metres. `vehicle-geometry.ts` converts
 these authored proportions into the selected profile's dimensions. The viewer
 also uses original shallow wing sections and rounded 32-segment tyre shoulders.
-The GT retains its separate body while sharing the tyre surface. See
-`docs/VEHICLE_ASSETS.md` for pivots, materials and current limits.
+The GT shares the tyre surface while using a separate authored coupe package.
+
+The third package, `vehicles/gt.json`, defines a rounded GT shell, wheel wells,
+continuous painted cabin and six fitted glass panels. `gt-geometry.ts` preserves
+the physical wheel centres/radius and retains a central floor between the wells.
+Body/cabin longitudinal coordinates use the visual length (wheelbase + 1.7 m),
+half-widths use profile width, and heights/clearances remain metres. Window faces
+have continuous shared joins. Two rear lamps consume the same lap's normalized
+brake demand in the existing vehicle frame callback. See `docs/VEHICLE_ASSETS.md`
+for pivots, material conventions, tests and current limits.
 
 Run `npm run validate:assets` to check manifest identity, local paths, provenance,
 dimensions and supported parameter constraints. It is part of `npm run check`.

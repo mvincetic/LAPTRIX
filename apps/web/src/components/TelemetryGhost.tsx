@@ -4,7 +4,8 @@ import { Html } from "@react-three/drei";
 import type { Group } from "three";
 import type { Lap, Vehicle } from "../../../../packages/shared/schema";
 import { ghostPose, type PlaybackClock } from "../../../../packages/telemetry";
-import { VehicleMesh, type VehicleMotion } from "./VehiclePresentation";
+import { VehicleMesh } from "./VehiclePresentation";
+import { brakeLightIntensity, type VehicleMotion } from "../vehicle-motion";
 import { VEHICLE_SURFACE_LIFT } from "../chase-camera";
 
 export function TelemetryGhost({
@@ -23,7 +24,11 @@ export function TelemetryGhost({
   groupRef: RefObject<Group | null>;
 }) {
   const color = reference ? "#78879c" : "#0866ec";
-  const motion = useRef<VehicleMotion>({ wheels: [], front: [] });
+  const motion = useRef<VehicleMotion>({
+    wheels: [],
+    front: [],
+    brakeLights: [],
+  });
   useFrame(() => {
     if (!groupRef.current) return;
     const pose = ghostPose(lap, clock.getSnapshot().time);
@@ -39,6 +44,8 @@ export function TelemetryGhost({
           pose.sample.distance / (vehicle?.wheelRadius ?? 0.34);
     for (const front of motion.current.front)
       if (front) front.rotation.y = pose.sample.steering;
+    for (const lamp of motion.current.brakeLights ?? [])
+      if (lamp) lamp.emissiveIntensity = brakeLightIntensity(pose.sample.brake);
   }, -0.5);
   return (
     <group

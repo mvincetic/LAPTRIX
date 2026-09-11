@@ -26,6 +26,17 @@
       "provenance": "Original generic Formula body contours authored for LAPTRIX; no manufacturer or game geometry",
       "rights": "Original project asset; repository distribution policy applies",
       "thirdPartySources": []
+    },
+    {
+      "id": "laptrix.gt-body.v1",
+      "category": "vehicles",
+      "format": "procedural",
+      "parameters": "assets/vehicles/gt.json",
+      "implementation": "apps/web/src/gt-geometry.ts",
+      "origin": "Road contact beneath the wheelbase midpoint; wells follow profile wheel centres and radius",
+      "provenance": "Original generic GT coupe body and glazing authored for LAPTRIX; no manufacturer or game geometry",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": []
     }
   ]
 }
