@@ -13,6 +13,7 @@ export default defineConfig({
     "sector-labels.spec.ts",
     "playback-entry.spec.ts",
     "onboard-camera.spec.ts",
+    "viewer-layers.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

@@ -14,9 +14,9 @@ identities, all engineering contracts and the single playback clock.
 | V2 Cameras and speed | Implemented: vehicle-mounted Formula/GT onboard views with deterministic seeking, fixed field of view and stable horizon. Grounded scale cues continue in V4. |
 | V3 Track grounding | Implemented ahead of V2: closer terrain with conservative clearance, separate outside shoulders and render-only cross-sections that prevent coarse pavement from covering the canonical line. |
 | V4 Surface and environment | Implemented: source-framed guardrails, supports and reflectors follow shoulder crests and exclude nearby roads. Final terrain/motion/production checks pass on both circuits/imports. |
-| V5 UI clarity | Next: group normal lap overlays and environment controls, put source inspection behind a disclosure, and retain readable camera/playback controls on compact screens. Continue the Track → Car → Conditions → Run → Play → Analyze audit. |
+| V5 UI clarity | Implemented: grouped lap overlays/environment, collapsed source inspection and bounded scrolling panels retain camera/playback access. All 48 visual states and 29 production journeys pass. Continue the workflow audit through showcase selection next. |
 | V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
-| V7 Showcase selection | Existing licensed Red Bull Ring package is complete. Distinguish Development Tracks / Real Circuits and make provenance visible when selecting. |
+| V7 Showcase selection | Next: distinguish Development Tracks / Real Circuits / Imported Tracks in the existing selector, with visible approximation and import status. The licensed Red Bull Ring data package is complete. |
 | V8 Formula presentation | Refine original category-correct bodywork and road contact after camera/environment review. |
 | V9 GT presentation | Refine separate coupe proportions and telemetry-driven brake-light/vehicle presentation. |
 | V10 Asset pipeline | Started in V4: actual original guardrail parameters, manifest, conventions and quality-gate validation. Authored vehicle assets, GLB export/optimization and broader validation remain. Use Blender only if locally useful. |

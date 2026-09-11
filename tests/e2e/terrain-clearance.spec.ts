@@ -12,13 +12,11 @@ for (const width of [1600, 390]) {
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
     const source = slopedTerrainTrack();
-    await page
-      .getByLabel("Import track file", { exact: true })
-      .setInputFiles({
-        name: "original-sloped-circle.json",
-        mimeType: "application/json",
-        buffer: Buffer.from(JSON.stringify(source)),
-      });
+    await page.getByLabel("Import track file", { exact: true }).setInputFiles({
+      name: "original-sloped-circle.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(source)),
+    });
     await expect(
       page.getByRole("combobox", { name: "Track", exact: true }),
     ).toHaveValue(source.id);
@@ -48,7 +46,7 @@ for (const width of [1600, 390]) {
     for (const mode of ["Top View", "3D View"]) {
       await page.getByRole("button", { name: mode, exact: true }).click();
       const terrain = page.getByRole("checkbox", {
-        name: "Terrain & trees",
+        name: "Environment",
         exact: true,
       });
       await terrain.uncheck();

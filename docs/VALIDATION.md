@@ -6,6 +6,13 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V5 passes the full gate with 286 TypeScript / 152 Python tests,
+22 distinct local browser journeys and 48 visual states. Three new desktop,
+phone and short-fullscreen journeys reproduce the prior panel/camera overlap,
+then verify scrolled keyboard access, retained layers and complete project/clock
+preservation. All 29 final production journeys pass in 3.5 minutes. See
+PRODUCT_PRESENTATION.md for evidence and the native-scrollbar review.
+
 Premium phase V4 passes the complete gate with 286 TypeScript and 152 Python
 tests, including asset validation. Six final integration journeys retain scenery
 bounds, road visibility and zero settled rendering. All 45 terrain visual states

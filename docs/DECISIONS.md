@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-11 — Bound viewer tools and separate source inspection
+
+**Decision:** Group lap overlays and environment controls, with original source
+geometry controls behind a native disclosure. Bound every viewer tool panel above
+camera actions and allow internal scrolling. **Reasoning:** The previous flat
+panel covered camera buttons on phones and reached across playback in short
+fullscreen. **Consequence:** Existing layer state, camera choices, source data and
+the shared clock are retained. The same sizing rule also protects Ghost Car and
+Camera panels. Source inspection remains keyboard-accessible on compact layouts.
+
 ## 2026-09-11 — Build original reference objects from source geometry
 
 **Decision:** Place generic guardrails on the existing apron using original asset

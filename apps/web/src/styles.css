@@ -1099,18 +1099,24 @@ select {
 }
 .viewer-popover {
   overflow-wrap: anywhere;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #b7c3d1 transparent;
+  scrollbar-gutter: stable;
+  max-height: calc(100% - 82px);
   position: absolute;
   right: 55px;
   top: 16px;
-  background: #fffffff5;
+  background: #fff;
   z-index: 13;
   border: 1px solid var(--line);
   border-radius: 5px;
-  padding: 13px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 201px;
+  gap: 8px;
+  width: 224px;
   box-shadow: 0 3px 15px #12243b0b;
 }
 .viewer-popover h3 {
@@ -1120,8 +1126,11 @@ select {
   gap: 6px;
   margin-bottom: 4px;
 }
+.viewer-popover > * {
+  flex-shrink: 0;
+}
 .viewer-popover label {
-  font-size: 10px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1133,6 +1142,33 @@ select {
   font-size: 10px;
   line-height: 1.6;
   color: #748398;
+}
+.viewer-layer-group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.viewer-layer-group legend {
+  padding: 0 0 6px;
+  font-size: 11px;
+  font-weight: 650;
+}
+.viewer-layer-group label,
+.viewer-source-layers label {
+  min-height: 22px;
+}
+.viewer-source-layers {
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+}
+.viewer-source-layers summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 550;
+}
+.viewer-source-layers[open] summary {
+  margin-bottom: 6px;
 }
 .option-button {
   padding: 8px;
@@ -2519,6 +2555,7 @@ select {
   .viewer-popover {
     right: 10px;
     top: 53px;
+    max-height: calc(100% - 132px);
   }
   .loading-scene {
     padding: 20px;

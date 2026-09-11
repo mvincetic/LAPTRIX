@@ -25,6 +25,14 @@ TRACKSIDE.md. No branding or surveyed-infrastructure claim is implied.
 
 Native controls are labelled and keyboard-operable. Tabs indicate active state,
 layer controls are checkboxes, playback has labelled controls and a range slider.
+Analysis Layers groups normal lap overlays separately from scene environment.
+Source centerline and road edges live behind a native Source inspection disclosure.
+The Environment label covers terrain, trees and barriers, with a concise schematic
+scenery note. Driving cameras explain why overview markers are absent without
+changing their selected layer states. Tool panels use opaque white surfaces and
+readable 11 px labels; their height is bounded inside the scene with native scrolling
+so camera and fullscreen controls remain reachable. Keyboard focus scrolls source
+controls into view, and switching tabs/cameras preserves the layer choices.
 The viewer transport has a compact identity row with blue Current and grey
 Reference swatches, vehicle names and Follow/Restart/rate actions. Names wrap as
 groups and truncate long profile titles without widening the panel; their full

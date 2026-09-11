@@ -1,5 +1,46 @@
 # Product presentation milestones
 
+## Premium phase V5 — Viewer layer clarity, 2026-09-11
+
+Analysis Layers now groups lap overlays separately from the scene environment.
+Original centerline and road-edge controls sit behind Source inspection. The
+Environment checkbox accurately names terrain, trees and barriers; driving views
+explain where overview markers appear. All existing layer defaults and states
+remain independent, with no project, source, solver or playback-clock change.
+
+The previous panel overlapped camera actions by 2,613 square CSS pixels at 320 px
+and 6,030 in 780×390 fullscreen (`layer-clearance-before.log`, before PNGs reviewed).
+All viewer tool panels now stay above those actions, with internal native
+scrolling, stable scroll gutters, opaque surfaces and 11 px control labels.
+The initial three clearance regressions pass after the fix. The expanded journeys
+also verify keyboard access to scrolled source controls, retained selections,
+complete exported project/Canvas/pending setup/cursor preservation and working
+playback without additional solves. They cover both bundled sources and run in
+the production suite as well as development.
+
+Seven focused integration journeys pass in 59.0 seconds, including existing
+keyboard tabs and terrain visibility (`layers-browser.log`). The first visual
+sweep passes all 36 states across both circuits at 1600, 1280 and 390 px: normal
+overlays, expanded source inspection, Chase, Onboard, Ghost Car and Camera panels.
+All panels remain inside the scene and clear of camera actions, with no horizontal
+overflow, runtime errors or cursor movement (`layers-final-qa.json`). Desktop,
+laptop, phone and short-fullscreen captures were opened and reviewed.
+
+The full quality gate passes lint, Ruff, asset validation, typecheck, all **286
+TypeScript / 152 Python tests (92.33 seconds)** and build (`layers-check.log`).
+Entry JavaScript remains 438.62 / 134.83 kB gzip; viewer JavaScript is 990.03 /
+266.18 kB and CSS is 60.36 / 12.60 kB. Scene geometry and texture counts are unchanged.
+All 15 broader annotation, dashboard, key and idle-rendering journeys pass in
+3.2 minutes (`layers-integration.log`), giving **22 distinct local integration
+journeys** across this milestone.
+Twelve additional 780×390 fullscreen states pass on both tracks with native
+scrollbars visible (`layers-native-qa.json`); the Dev Track capture was reviewed.
+The visual script excludes Chromium's default headless `--hide-scrollbars` flag
+so overflow affordances can be assessed, and supports `QA_WIDTH` filtering.
+All **29 final production journeys pass in 3.5 minutes** (`layers-production.log`),
+including the three new keyboard/fullscreen/retention journeys. The development
+suite now contains 157 cases. Continue directly into V7 track-selection clarity.
+
 ## Premium phase V4 — Trackside scale, 2026-09-11
 
 Original guardrails, regularly spaced supports and reflectors provide nearby

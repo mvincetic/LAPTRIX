@@ -142,8 +142,9 @@ test("layers, camera modes, exports, telemetry tabs and responsive layout", asyn
   await page.goto("/");
   await expect(page.getByTestId("lap-time")).toBeVisible();
   await page.getByRole("tab", { name: "Analysis Layers", exact: true }).click();
+  await page.locator(".viewer-source-layers > summary").click();
   await page
-    .getByRole("checkbox", { name: "Centerline debug", exact: true })
+    .getByRole("checkbox", { name: "Source centerline", exact: true })
     .check();
   await page
     .getByRole("checkbox", { name: "Racing line", exact: true })

@@ -42,9 +42,9 @@ disposed. Instance matrices and their culling sphere/box update together in a
 layout effect, followed by demand invalidation. Paused playback introduces no
 additional animation or clock.
 
-The existing Terrain & trees checkbox also controls this schematic environment.
-The Analysis Layers explanation identifies barriers as scene detail. The later
-layer-clarity milestone will consolidate environment naming and technical layers.
+The Environment checkbox in Analysis Layers controls terrain, trees and this
+schematic infrastructure together. Source inspection is a separate disclosure;
+the existing source geometry and independent layer states remain unchanged.
 
 The first actual procedural asset is registered in `assets/manifest.json`.
 `npm run validate:assets`, included in the full quality gate, checks its identity,

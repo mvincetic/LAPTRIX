@@ -312,14 +312,14 @@ try {
           .getByRole("tab", { name: "Analysis Layers", exact: true })
           .click();
         await page
-          .getByRole("checkbox", { name: "Terrain & trees", exact: true })
+          .getByRole("checkbox", { name: "Environment", exact: true })
           .uncheck();
         const without = await capture(mode, false);
         await page
           .getByRole("tab", { name: "Analysis Layers", exact: true })
           .click();
         await page
-          .getByRole("checkbox", { name: "Terrain & trees", exact: true })
+          .getByRole("checkbox", { name: "Environment", exact: true })
           .check();
         await capture(mode, true);
         expect(without).toBeGreaterThan(100);

@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Eye, Layers } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye } from "lucide-react";
 import type { CameraMode, ViewLayers } from "./TrackView";
 import { tabPanelProps } from "./tabs";
 
@@ -35,6 +35,16 @@ export function ViewerToolsPanels({
   legendOpen: boolean;
   onLegendChange: (value: boolean) => void;
 }) {
+  const layer = (key: keyof ViewLayers, label: string) => (
+    <label>
+      <input
+        type="checkbox"
+        checked={layers[key]}
+        onChange={(e) => onLayers({ ...layers, [key]: e.target.checked })}
+      />
+      {label}
+    </label>
+  );
   return (
     <>
       <div
@@ -76,36 +86,28 @@ export function ViewerToolsPanels({
         {...tabPanelProps(prefix, 1, active === 1)}
         className="viewer-popover"
       >
-        <h3>
-          <Layers size={14} /> Analysis layers
-        </h3>
-        {Object.entries(layers).map(([key, value]) => (
-          <label key={key}>
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={() => onLayers({ ...layers, [key]: !value })}
-            />
-            {
-              (
-                {
-                  racingLine: "Racing line",
-                  braking: "Braking zones",
-                  apex: "Apex points",
-                  corners: "Corner numbers",
-                  sectors: "Sector labels",
-                  centerline: "Centerline debug",
-                  boundaries: "Track boundaries",
-                  terrain: "Terrain & trees",
-                } as Record<string, string>
-              )[key]
-            }
-          </label>
-        ))}
-        <p>
-          Road paint, curbs, terrain, trees and barriers are schematic scene
-          detail.
-        </p>
+        <fieldset className="viewer-layer-group">
+          <legend>Lap overlays</legend>
+          {layer("racingLine", "Racing line")}
+          {layer("braking", "Braking zones")}
+          {layer("apex", "Apex points")}
+          {layer("corners", "Corner numbers")}
+          {layer("sectors", "Sector labels")}
+          {(mode === "chase" || mode === "onboard") && (
+            <p>Markers and labels appear in 3D and Top views.</p>
+          )}
+        </fieldset>
+        <fieldset className="viewer-layer-group">
+          <legend>Scene</legend>
+          {layer("terrain", "Environment")}
+          <p>Terrain, trees and barriers are schematic scenery.</p>
+        </fieldset>
+        <details className="viewer-source-layers">
+          <summary>Source inspection</summary>
+          {layer("centerline", "Source centerline")}
+          {layer("boundaries", "Source road edges")}
+          <p>Original geometry and road widths.</p>
+        </details>
       </div>
       <div
         {...tabPanelProps(prefix, 2, active === 2)}
