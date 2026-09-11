@@ -1,5 +1,10 @@
 # Product
 
+The premium product phase builds on the stable technical MVP. First playback
+must reveal a useful vehicle view, the road must read as part of its landscape,
+and all camera, vehicle and UI polish retains source identity and the canonical
+clock. ROADMAP.md orders the next product-quality milestones by observed defects.
+
 LAPTRIX is a browser-based racing engineering and lap-optimization workspace. A
 user chooses a circuit, vehicle and setup, calculates a theoretical development
 lap, then inspects the racing line, speed, braking, apexes, sectors and telemetry.

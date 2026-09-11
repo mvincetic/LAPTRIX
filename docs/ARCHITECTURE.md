@@ -1,5 +1,11 @@
 # Architecture
 
+Playback entry observes transitions of the existing clock to select the initial
+follow camera. Explicit camera/reset choices suppress automatic changes. The
+isolated ScenePlayback subscriber displays current/reference vehicle identity and
+owns viewer restart, rate and seek controls. Follow only changes view/visibility;
+none of these actions adds a clock, simulation request or persisted project field.
+
 The project is a small source monorepo with one npm dependency graph and a pinned
 Python environment. It deliberately avoids a workspace orchestrator: there are two
 processes and four small shared packages, with no independent package releases.

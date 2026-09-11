@@ -1,5 +1,45 @@
 # Product presentation milestones
 
+## Premium phase V1 — Playback entry, 2026-09-11
+
+The expanded product brief starts a new sequence in ROADMAP.md. The initial
+paused overview remains useful for engineering. First Play from either transport
+now follows the current car automatically, while later explicit camera/reset
+choices persist. Follow current car reveals and frames it without seeking or
+starting playback. The viewer transport identifies the current/reference vehicles
+and offers restart and rate alongside existing synchronized controls.
+
+The complete quality gate passes lint, Ruff, typecheck, 272 TypeScript and
+152 Python tests (41.10 seconds), then builds successfully. A final build includes
+the distinct Viewer playback rate label; it avoids ambiguous matching with the
+existing graph selector. Final entry JavaScript is 438.96 / 134.99 kB gzip,
+deferred viewer 983.55 / 264.13 kB and CSS 59.66 / 12.45 kB.
+Thirteen distinct nearby browser journeys pass: entry/explicit-mode behavior,
+ghost identity, portrait car pixels, viewer transport/fullscreen, telemetry
+readouts and zero settled draw/RAF behavior. The initial selector ambiguity
+failed two readout cases; both and the new entry cases pass after correction.
+All 22 production journeys pass in 2.0 minutes on the final build.
+
+Actual first-Play and subsequent Top/Chase/fullscreen captures pass 24 states:
+GT at Red Bull Ring at 1600, 1280, 390 and 780 px, and Formula at Dev Track at
+320/360 px. Controls, vehicle identities, readouts and source credits stay inside
+their panel with no page overflow or runtime errors. Desktop entry, laptop Top,
+phone fullscreen and compact Formula entry PNGs were opened and reviewed. The
+car is centered immediately. Eight additional 320/360 px Red Bull Ring states
+with both GT/current and Formula/reference pass; the compact fullscreen image was
+opened and reviewed. Both identities remain readable as groups and each car keeps
+its own blue/grey label. These bring the layout review to 32 states, recorded in
+`playback-entry-reference-qa.json` and matching PNGs.
+The visible raised-road appearance identifies V3
+grounding as the next dependency before tuning lower onboard cameras.
+
+Evidence under ignored `artifacts/`: `playback-entry-check.log`,
+`playback-entry-build-final.log`, `playback-entry-browser.log`,
+`playback-entry-browser-final.log`, `playback-entry-production.log`,
+`playback-entry-showcase-qa.json`, `playback-entry-dev-compact-qa.json` and matching
+PNGs. `presentation-playback-qa.mjs --entry` reproduces the first-Play capture;
+`--reference` also displays the reference vehicle and its identity.
+
 The September 11 user direction makes visual/product presentation the primary
 sequence. The current solver is sufficient for the MVP. ROADMAP.md preserves
 the sequence through source attribution, camera/speed, grounding/vehicles and UI.

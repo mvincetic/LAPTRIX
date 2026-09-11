@@ -61,6 +61,7 @@ the last completed result remains visible if a solve fails.
 - A lower distance-follow camera and original metre-scale Formula/GT bodywork with telemetry-driven wheels.
 - Current speed, gear, elapsed time and playback state beside the track, including fullscreen.
 - Play, pause, loop and scrub directly inside the viewer; graph and fullscreen controls share one clock.
+- First Play follows the current car; explicit camera choices persist, with vehicle identity, follow, restart and rate inside the viewer.
 - Source-scaled camera framing and clipping, including large imports at phone widths.
 - Camera-derived north direction and stable reset after orbiting.
 - Original telemetry-driven engine/gearbox audio, explicitly enabled by the user.

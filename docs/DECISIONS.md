@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-11 — Find the vehicle when playback begins
+
+**Decision:** Start the untouched overview in Chase on the first Play from either
+transport, revealing the current car. Keep explicit camera/reset choices on later
+play transitions. Add current/reference identities, Follow current car, Restart
+and rate selection to the existing viewer transport. **Reasoning:** A small dot
+in a whole-circuit view did not communicate that Play was moving a real vehicle.
+Fullscreen lacked convenient restart and rate actions. **Consequence:** The new
+controls use the existing clock, do not solve or modify project data, and remain
+available in compact/fullscreen views. Follow restores a hidden current car without
+seeking. Scene React state changes only on a qualifying play transition.
+
 ## 2026-09-11 — Order movable annotations around interactive controls
 
 **Decision:** Place the selected event group first, sector timing badges second

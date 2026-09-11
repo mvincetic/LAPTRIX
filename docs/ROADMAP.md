@@ -1,5 +1,34 @@
 # Roadmap
 
+## Premium product phase — 2026-09-11
+
+The technical MVP is sufficient. The next sequence improves the actual experience
+of choosing a circuit, calculating a lap, watching its vehicle and interpreting
+the result. The seven presentation milestones below are the starting baseline,
+not the end of the product-quality phase. Retain both source tracks, their
+identities, all engineering contracts and the single playback clock.
+
+| Milestone | Product outcome and current state |
+| --- | --- |
+| V1 Playback clarity | Implemented: first Play finds the current car; explicit camera choices persist. Vehicle identities, follow, restart and rate stay with the viewer transport. |
+| V2 Cameras and speed | After grounding: a usable onboard view, grounded forward motion and clear camera selection. Keep deterministic seeking, horizon and clipping checks. |
+| V3 Track grounding | Next: remove the blanket raised-road appearance identified in first-Play QA, retaining conservative source-road clearance and low-camera visibility. |
+| V4 Surface and environment | Add measured procedural reference objects where they improve scale and speed, using generic track geometry. |
+| V5 UI clarity | Refine the primary Track → Car → Conditions → Run → Play → Analyze workflow and separate technical/debug layers. |
+| V6 Dev Track presentation | Keep the fictional engineering track intentional, with restrained original trackside identity after grounding is stable. |
+| V7 Showcase selection | Existing licensed Red Bull Ring package is complete. Distinguish Development Tracks / Real Circuits and make provenance visible when selecting. |
+| V8 Formula presentation | Refine original category-correct bodywork and road contact after camera/environment review. |
+| V9 GT presentation | Refine separate coupe proportions and telemetry-driven brake-light/vehicle presentation. |
+| V10 Asset pipeline | Establish real scale/origin/material conventions, a manifest and reproducible export/validation for original reusable assets. Use Blender only if locally useful. |
+| V11 Lighting and materials | Polish one dry-day environment; prioritize vehicle shape, elevation and surface depth with bounded texture weight. |
+| V12 Visual QA | Repeat actual desktop/laptop/narrow/fullscreen and playback inspection across both cars and circuits; keep reproducible critical captures. |
+| V13 Performance | Verify scene resource counts, idle work, geometry reuse and responsive engineering interactions after richer visuals. |
+| V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
+
+Reassess after every stable implementation/test/visual-QA/documentation/commit/push
+cycle and continue directly. Do not add low-quality camera modes for checklist
+coverage, broaden the solver, merge main, rewrite history or change repo settings.
+
 The initial sequence has been grouped into vertical slices so the dashboard always
 consumes genuine solver output. See DECISIONS.md for the ordering rationale.
 

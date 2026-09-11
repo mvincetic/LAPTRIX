@@ -69,6 +69,34 @@ try {
         .click();
       await expect(page.locator(".scene-loop-summary")).toBeVisible();
     }
+    if (process.argv.includes("--reference")) {
+      await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+      await page
+        .getByRole("checkbox", { name: "Show reference ghost" })
+        .check();
+      await page.getByRole("tab", { name: "Track View", exact: true }).click();
+    }
+    if (process.argv.includes("--entry")) {
+      await page.getByRole("slider", { name: "Viewer lap position" }).fill("0");
+      await page
+        .getByRole("button", { name: "Play viewer lap", exact: true })
+        .click();
+      await expect(
+        page.getByRole("button", { name: "Chase", exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+      await expect
+        .poll(async () =>
+          Number(
+            await page
+              .getByRole("slider", { name: "Viewer lap position" })
+              .getAttribute("value"),
+          ),
+        )
+        .toBeGreaterThan(0.3);
+      await page
+        .getByRole("button", { name: "Pause viewer lap", exact: true })
+        .click();
+    }
     for (const [state, label] of [
       ["overview", null],
       ["top", "Top View"],
@@ -108,7 +136,7 @@ try {
         const bounds = footer.getBoundingClientRect();
         const elements = [
           ...footer.querySelectorAll(
-            "dt, dd, .scene-playback-state, .scene-transport-actions button, .scene-scrub, .scene-loop-summary",
+            "dt, dd, .scene-playback-state, button, select, .scene-identity, .scene-scrub, .scene-loop-summary",
           ),
         ];
         return {

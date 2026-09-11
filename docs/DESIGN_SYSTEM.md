@@ -20,12 +20,17 @@ surrounding ground and trees are not presented as surveyed scenery. See TERRAIN.
 
 Native controls are labelled and keyboard-operable. Tabs indicate active state,
 layer controls are checkboxes, playback has labelled controls and a range slider.
+The viewer transport has a compact identity row with blue Current and grey
+Reference swatches, vehicle names and Follow/Restart/rate actions. Names wrap as
+groups and truncate long profile titles without widening the panel; their full
+names remain available in titles and accessible text. The primary Play/Pause,
+time, gear and speed row remains distinct from these secondary actions.
 Numerical deltas include signed values; color is not the only distinction. Context
 such as SI units, pending setup changes and approximate physics is visible where
 it affects interpretation. No decorative animation is added; reduced motion is
 honored for the loading spinner.
 Paused scenes render when their content or camera changes and rest after settling.
-The 50 px scene footer prioritizes current speed, gear and elapsed/full lap time,
+The scene footer prioritizes current speed, gear and elapsed/full lap time,
 with a text playback state and rate. Tabular numerals stay readable at phone widths;
 the strip remains present in fullscreen. Chase instructions describe fixed follow
 behavior, while orbit/top retain their interaction guidance.
@@ -82,8 +87,8 @@ track progress, so choosing a different grid does not discard a valid reference.
 Vehicle details use an expandable section in the existing settings column. It
 shows base/run mass, power, aero, grip, braking and drivetrain values followed by
 assumptions and source links. The lap result and reference footer identify their
-own vehicle, including during a failed change. Original formula/coupe meshes share
-the same telemetry position and grade; both remain visibly schematic at 3× scale.
+own vehicle, including during a failed change. Original Formula/GT meshes use
+source dimensions in metres and share the same telemetry position and grade.
 
 Reference import/export lives in Additional actions. The comparison footer exposes
 imported source, declared origin and timing resolution, using wrapped text. Invalid

@@ -6,6 +6,12 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Premium phase V1 passes 272 TypeScript and 152 Python tests, lint/type/build gates,
+13 relevant browser journeys and all 22 production journeys. First-Play visual QA
+includes actual vehicle framing and compact/fullscreen control containment.
+The development suite now contains 148 journeys; the pushed full-CI result is
+tracked independently. See PRODUCT_PRESENTATION.md for evidence and corrections.
+
 The current product sequence preserves LAPTRIX Dev Track, adds the attributed
 Red Bull Ring showcase and improves playback, camera and vehicle presentation.
 [PRODUCT_PRESENTATION.md](PRODUCT_PRESENTATION.md) records each gate, actual

@@ -1,5 +1,11 @@
 # Continuous integration
 
+The completed [sector annotation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34581701470)
+passes through `c32f9af`: 272 TypeScript tests, 152 Python tests (40.88 seconds),
+all 146 development journeys (74/72 across both shards) and 20 production journeys
+(2.7 minutes), plus lint/type/build checks. This is the stable baseline for the
+new premium product phase in ROADMAP.md.
+
 The working branch runs lint, strict typecheck, numerical/API tests, production
 build, development browser journeys and production viewer/CSV-worker journeys through
 `.github/workflows/ci.yml`. Browser installation uses the package-locked Playwright

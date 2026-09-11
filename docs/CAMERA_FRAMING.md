@@ -1,5 +1,21 @@
 # Source-scaled camera framing
 
+## Playback entry
+
+The initial paused workspace retains the whole-circuit engineering overview.
+Starting playback from either transport automatically selects Chase until the
+user explicitly selects a camera or uses Reset. Explicit modes survive subsequent
+Play/Pause operations. The viewer observes only clock play transitions; it does
+not subscribe the scene's React tree to every telemetry tick. A viewer which
+finishes loading during playback follows the same rule.
+
+**Follow current car** reveals the current vehicle and selects Chase immediately,
+without seeking or starting playback. It recovers a hidden car or a distant
+overview. Current/reference names and blue/grey swatches remain in the transport,
+including fullscreen. These are view preferences, not saved project or lap data.
+
+## Overview fit
+
 Orbit and top views fit the original road geometry to the current canvas aspect
 ratio. **Reset camera**, changing the overview mode and resizing the canvas use the
 same calculation. They do not recalculate a lap, seek playback or change project

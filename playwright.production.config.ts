@@ -11,6 +11,7 @@ export default defineConfig({
     "viewer-controls.spec.ts",
     "portrait-chase.spec.ts",
     "sector-labels.spec.ts",
+    "playback-entry.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

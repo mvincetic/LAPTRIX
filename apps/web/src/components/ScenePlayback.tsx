@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { Pause, Play, Repeat2 } from "lucide-react";
+import { Crosshair, Pause, Play, Repeat2, SkipBack } from "lucide-react";
 import type { Lap } from "../../../../packages/shared/schema";
 import {
   formatTime,
@@ -12,10 +12,18 @@ export function ScenePlayback({
   lap,
   clock,
   calculating,
+  vehicleName,
+  referenceName,
+  currentVisible,
+  onFollow,
 }: {
   lap: Lap | null;
   clock: PlaybackClock;
   calculating: boolean;
+  vehicleName?: string;
+  referenceName?: string;
+  currentVisible: boolean;
+  onFollow: () => void;
 }) {
   const playback = useSyncExternalStore(clock.subscribe, clock.getSnapshot);
   const sample = lap ? interpolate(lap.samples, playback.time) : null;
@@ -37,6 +45,56 @@ export function ScenePlayback({
       aria-label="Current lap playback"
       aria-live="off"
     >
+      <div className="scene-identity">
+        <div className="scene-identity-names" aria-label="Vehicles in playback">
+          <span className="scene-identity-entry" title={vehicleName}>
+            <i aria-hidden="true" />
+            <span>Current{!currentVisible ? " · hidden" : ""}</span>
+            <strong>{vehicleName ?? "No calculated lap"}</strong>
+          </span>
+          {referenceName && (
+            <span
+              className="scene-identity-entry reference"
+              title={referenceName}
+            >
+              <i aria-hidden="true" />
+              <span>Reference</span>
+              <strong>{referenceName}</strong>
+            </span>
+          )}
+        </div>
+        <div className="scene-identity-actions">
+          <button
+            className="icon-button"
+            disabled={!lap}
+            onClick={onFollow}
+            aria-label="Follow current car"
+            title="Show and follow current car"
+          >
+            <Crosshair size={15} />
+          </button>
+          <button
+            className="icon-button"
+            disabled={!lap}
+            onClick={() => clock.seek(0)}
+            aria-label="Restart viewer lap"
+            title="Restart lap"
+          >
+            <SkipBack size={14} />
+          </button>
+          <select
+            aria-label="Viewer playback rate"
+            value={playback.rate}
+            onChange={(event) => clock.rate(Number(event.target.value))}
+          >
+            {[0.25, 0.5, 1, 2, 4].map((rate) => (
+              <option key={rate} value={rate}>
+                {rate}×
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div className="scene-transport-actions">
         <button
           className="scene-play-button"

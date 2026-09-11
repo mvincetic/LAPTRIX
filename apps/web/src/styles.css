@@ -906,6 +906,69 @@ select {
   align-items: center;
   gap: 6px;
 }
+.scene-identity {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid #e7edf3;
+}
+.scene-footer {
+  row-gap: 8px;
+}
+.scene-identity-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  min-width: 0;
+}
+.scene-identity-entry {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 10px;
+}
+.scene-identity-entry i {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.scene-identity-entry.reference i {
+  background: #78879c;
+}
+.scene-identity-entry > span {
+  color: #64758b;
+  white-space: nowrap;
+}
+.scene-identity-entry strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 550;
+}
+.scene-identity-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.scene-identity-actions button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+.scene-identity-actions select {
+  width: 58px;
+  height: 26px;
+  padding: 2px 4px;
+  font-size: 10px;
+}
 .scene-transport-actions button {
   width: 32px;
   height: 32px;
@@ -2233,7 +2296,7 @@ select {
   }
   .scene-scrub {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 3;
   }
   .scene-transport-actions {
     gap: 4px;
@@ -2484,7 +2547,7 @@ select {
     justify-content: space-between;
   }
   .scene-scrub {
-    grid-row: 3;
+    grid-row: 4;
   }
 }
 @media (prefers-reduced-motion: reduce) {

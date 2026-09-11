@@ -286,6 +286,26 @@ export function TrackView({
     [compactScene, setCompactScene] = useState(false),
     [legendChoice, setLegendChoice] = useState<boolean | null>(null);
   const legendOpen = legendChoice ?? !compactScene;
+  const cameraChosen = useRef(false);
+  // Observe only play transitions; the scene must not rerender at clock cadence.
+  useEffect(() => {
+    let wasPlaying = false;
+    const update = () => {
+      const playing = clock.getSnapshot().playing;
+      if (playing && !wasPlaying && !cameraChosen.current) {
+        setMode("chase");
+        setGhost(true);
+      }
+      wasPlaying = playing;
+    };
+    update();
+    return clock.subscribe(update);
+  }, [clock]);
+  const chooseCamera = (next: CameraMode) => {
+    cameraChosen.current = true;
+    setMode(next);
+    if (next === "chase") setGhost(true);
+  };
   const scene = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const element = scene.current;
@@ -398,7 +418,7 @@ export function TrackView({
                 : "Reference positions must match this source track."
           }
           mode={mode}
-          onMode={setMode}
+          onMode={chooseCamera}
           legendOpen={legendOpen}
           onLegendChange={setLegendChoice}
         />
@@ -611,7 +631,7 @@ export function TrackView({
               {(["orbit", "top", "chase"] as CameraMode[]).map((m) => (
                 <button
                   key={m}
-                  onClick={() => setMode(m)}
+                  onClick={() => chooseCamera(m)}
                   className={mode === m ? "active" : ""}
                   aria-pressed={mode === m}
                 >
@@ -626,7 +646,10 @@ export function TrackView({
             <button
               className="icon-button"
               aria-label="Reset camera"
-              onClick={() => setReset((x) => x + 1)}
+              onClick={() => {
+                cameraChosen.current = true;
+                setReset((x) => x + 1);
+              }}
             >
               <RotateCcw size={15} />
             </button>
@@ -641,7 +664,19 @@ export function TrackView({
           </div>
         )}
       </div>
-      <ScenePlayback lap={lap} clock={clock} calculating={calculating} />
+      <ScenePlayback
+        lap={lap}
+        clock={clock}
+        calculating={calculating}
+        vehicleName={vehicle?.name ?? lap?.vehicleId}
+        referenceName={
+          referenceVisible
+            ? (referenceVehicle?.name ?? referenceLap?.vehicleId)
+            : undefined
+        }
+        currentVisible={ghost}
+        onFollow={() => chooseCamera("chase")}
+      />
       <TrackAttribution track={track} />
     </section>
   );
