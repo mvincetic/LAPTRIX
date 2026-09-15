@@ -6,6 +6,12 @@ premium bundled content. `blender/shared/basis-gauge.blend` and its exported GLB
 prove the editable-source, metre/axis/pivot and export contract; the gauge stays
 outside the browser bundle. See `docs/BLENDER_PIPELINE.md` for the automated flow.
 
+`blender/vehicles/gt.blend` is the first original Blender vehicle, exported to
+`runtime/vehicles/gt.glb`: 1,322,736 bytes, 41,630 triangles, 29 material batches
+and no textures. It uses the existing GT profile's physical wheel rig. The browser
+loads it lazily with independent native-lap materials and procedural fallback.
+See `docs/VEHICLE_ASSETS.md` for editable source, provenance and lifecycle details.
+
 The guardrail
 package is an original corrugated guardrail, supports and reflectors. Its metre
 dimensions and colours are in `trackside/guardrail.json`; `roadside-context.ts`

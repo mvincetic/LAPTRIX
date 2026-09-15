@@ -1,5 +1,48 @@
 # Product presentation milestones
 
+## Blender B2a — Original GT integration, 2026-09-15
+
+The first Blender GT is integrated on its existing profile. It has an original
+continuous shell, open wheel arches, fitted glazing, painted panels and stripes,
+hood extraction, lighting, split-spoke wheels, separate brake hardware, diffuser
+and rear aerofoil. Browser review caught glazing/body intersections and buried
+lamps; fitted surface sampling and corrected placement resolve those defects.
+Thin-part bevels now stay below half the part thickness, eliminating collapsed
+triangles. The editable source imports no React or manufacturer geometry.
+
+The 2,709,779-byte source exports a byte-reproducible 1,322,736-byte GLB with
+41,630 triangles, 29 material batches, ten materials and no textures. The prior
+procedural GT has 4,912 triangles and 48 meshes including its contact shade.
+The authored rig retains the 2.457 m wheelbase and 0.36 m radius. Each lap owns its
+materials, steering and spin nodes; reference transparency and brake demand stay
+independent. Bounded lazy loading, failed-request eviction, procedural fallback
+and cached geometry support optional delivery without changing the simulation.
+
+The complete local gate passes 324 TypeScript / 158 Python tests (39.50 seconds),
+eight asset packages, lint/Ruff/typecheck, build and both Blender export checks.
+Four existing brake/reference browser journeys and two new delayed/failed-load
+journeys pass. The new tests intercept only the binary fetch, preserving Vite's
+separate JavaScript import wrapper. Five unit cases check physical eligibility,
+the real rig, material ownership, corrupted input and failed-cache retry.
+
+All 37 existing production journeys pass in 8.5 minutes. The added production
+delivery journey also passes (12.7 seconds for the focused run): the built GLB
+visibly replaces the procedural fallback without moving the paused cursor,
+changing the exported project or requesting a solve. Camera changes reuse the
+same download. It joins the production suite, bringing that suite to 38 cases.
+
+Actual visual QA passes 64 camera/vehicle poses, 13 GT Onboard scenes and six
+continuous sequences: 280 frames, 138–209 m traveled and zero anchor drift. Desktop,
+phone, close front/rear/side, Chase and Onboard images were inspected. GT camera
+captures submit 42–75 draws and 300,034–356,998 triangles including environment
+and occasional shadow refreshes; counts vary with context and cached shadows.
+Geometry/material identities stay stable through seeking. Evidence uses ignored
+`blender-gt-*` logs/JSON/screenshots.
+
+B2 continues with the Red Bull Ring start/finish–T1 scene and camera tuning. The
+current wide Chase view makes the GT too small, and the sparse environment still
+limits speed perception. This vehicle integration is not the final quality checkpoint.
+
 ## Blender B1 — Editable source and export contract, 2026-09-15
 
 The existing official Blender 5.2.1 LTS installation runs headlessly. A repository
@@ -22,7 +65,8 @@ production build. Blender re-export and four source rejection probes also pass.
 Evidence uses `blender-toolchain-final-*`; a shear regression retains its failing
 and corrected runs as `blender-rig-matrix-{before,after}.log`. The distribution
 contains no gauge GLB or `.blend`. A separate Linux CI job verifies the pinned
-official Blender archive and export contract after the working-branch push.
+official Blender archive and export contract after the working-branch push. All
+seven jobs at `430682b` pass, including byte-identical Windows/Linux GLB output.
 The next milestone is the original GT and source-aligned Red Bull Ring slice;
 this tooling foundation is not claimed as a visible product-quality upgrade.
 

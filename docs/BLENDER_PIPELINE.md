@@ -37,6 +37,11 @@ that runtime.
 - `artifacts/blender/`: temporary exports, validation reports and the local
   executable record. These do not enter Git or the browser distribution.
 
+The integrated `laptrix.blender-gt.v1` source lives in `blender/vehicles/gt.blend`;
+its runtime GLB is in `runtime/vehicles/gt.glb`. It retains the profile's physical
+wheel rig and loads through `premium-vehicle.ts`. See VEHICLE_ASSETS.md for model
+budgets, original provenance, instance ownership and the fallback lifecycle.
+
 The initial `laptrix.blender-basis.v1` gauge retains an editable 580,754-byte
 `.blend` and a 5,608-byte GLB: 36 triangles, three material primitives and no
 textures. Three unequal axis bars and named endpoint pivots make swapped axes,

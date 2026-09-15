@@ -102,6 +102,25 @@
       "provenance": "Original generic GT coupe body and glazing authored for LAPTRIX; no manufacturer or game geometry",
       "rights": "Original project asset; repository distribution policy applies",
       "thirdPartySources": []
+    },
+    {
+      "id": "laptrix.blender-gt.v1",
+      "category": "vehicles",
+      "format": "blender-glb",
+      "parameters": "assets/blender/vehicles/gt.json",
+      "implementation": "scripts/blender/author_gt.py",
+      "sourceFile": "assets/blender/vehicles/gt.blend",
+      "runtimeFile": "assets/runtime/vehicles/gt.glb",
+      "origin": "Contact plane beneath wheelbase midpoint; physical GT profile wheel centres; GLB +Y up, +Z forward",
+      "provenance": "Original LAPTRIX Blender-authored sculpted GT shell, fitted cabin, aero, lighting and wheels; no manufacturer or existing React geometry",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": [],
+      "maxBytes": 2500000,
+      "maxTriangles": 60000,
+      "sourceSha256": "4e27acada04126d966c3d13cbda7a7f4fd021d4c1c79c04604ef10d4c04d587f",
+      "sha256": "fb0fc851dd8bc3918661e7f1c2e9a23649600f2f696b39fd70cc02045f567318",
+      "semanticSha256": "dbd91c62dd15202f45b962ab8722682becbfca5b7e48bde6b24acad8b1ebaecd",
+      "materialBatches": 29
     }
   ]
 }

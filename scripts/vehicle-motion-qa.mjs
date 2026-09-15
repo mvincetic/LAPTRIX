@@ -87,7 +87,12 @@ try {
                   .store.getState();
                 const car = scene.getObjectByName("current-ghost");
                 const body = car.getObjectByName("vehicle-body");
-                const wheels = body.children.slice(-4);
+                const premium = body.getObjectByName("GT_ROOT");
+                const wheels = premium
+                  ? ["FR", "FL", "RR", "RL"].map((label) =>
+                      premium.getObjectByName(`WHEEL_${label}`),
+                    )
+                  : body.children.slice(-4);
                 const bounds = new Box3().setFromObject(body);
                 const projection = [];
                 for (const x of [bounds.min.x, bounds.max.x])
@@ -104,7 +109,12 @@ try {
                   wheels: wheels.map((wheel) => ({
                     axle: wheel.position.z,
                     steering: wheel.rotation.y,
-                    spin: wheel.children[0].rotation.x,
+                    spin: (premium
+                      ? wheel.getObjectByName(
+                          wheel.name.replace("WHEEL_", "SPIN_"),
+                        )
+                      : wheel.children[0]
+                    ).rotation.x,
                   })),
                   projection,
                   calls: gl.info.render.calls,

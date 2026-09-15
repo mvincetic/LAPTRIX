@@ -1,0 +1,39 @@
+{
+  "id": "laptrix.blender-gt.v1",
+  "rootNode": "GT_ROOT",
+  "exportCollection": "EXPORT",
+  "sourceFile": "assets/blender/vehicles/gt.blend",
+  "runtimeFile": "assets/runtime/vehicles/gt.glb",
+  "maxBytes": 2500000,
+  "maxTriangles": 60000,
+  "maxMeshes": 48,
+  "maxMaterials": 10,
+  "maxTextures": 0,
+  "maxTextureSize": 1024,
+  "bounds": {
+    "min": [-1.027, -0.0005, -2.242],
+    "max": [1.027, 1.3895, 2.165],
+    "tolerance": 0.001
+  },
+  "requiredNodes": {
+    "GT_ROOT": [0, 0, 0],
+    "WHEEL_FL": [0.7695, 0.36, 1.2285],
+    "WHEEL_FR": [-0.7695, 0.36, 1.2285],
+    "WHEEL_RL": [0.7695, 0.36, -1.2285],
+    "WHEEL_RR": [-0.7695, 0.36, -1.2285],
+    "SPIN_FL": [0.7695, 0.36, 1.2285],
+    "SPIN_FR": [-0.7695, 0.36, 1.2285],
+    "SPIN_RL": [0.7695, 0.36, -1.2285],
+    "SPIN_RR": [-0.7695, 0.36, -1.2285],
+    "BRAKE_LIGHT_L": [0, 0, 0],
+    "BRAKE_LIGHT_R": [0, 0, 0]
+  },
+  "vehicle": {
+    "id": "gt-development",
+    "bodyStyle": "coupe",
+    "width": 1.9,
+    "wheelbase": 2.457,
+    "wheelRadius": 0.36
+  },
+  "purpose": "Original LAPTRIX GT bodywork and telemetry rig. Visual reconstruction, no manufacturer geometry."
+}

@@ -6,6 +6,48 @@ modify the selected physics profile or claim to reproduce a particular real car.
 The original project assets add no repository licence grant; the repository's
 distribution policy applies. Track-data licences remain separate and unchanged.
 
+## Blender GT — first integrated asset
+
+`assets/blender/vehicles/gt.blend` is the editable original GT source. It uses
+continuous body/cabin control surfaces, boolean wheel openings, fitted glazing,
+panel seams, hood extraction, LED signatures, rear lamps, split-spoke rims,
+stationary brake discs/calipers, diffuser and an aerofoil rear wing. Blue paint,
+ice stripes and dark aero parts are original LAPTRIX art. Neither the old React
+geometry nor any manufacturer model is imported. `scripts/blender/author_gt.py`
+is an explicit rebuild recipe; ordinary `blender:export` retains edits to the
+actual `.blend`. Mesh islands remain editable after material/rig consolidation.
+
+The source is 2,709,779 bytes. Its GLB is **1,322,736 bytes, 41,630 triangles,
+29 material batches and ten materials**, with no image textures. Budgets are
+2.5 MB, 60,000 triangles and 48 batches. Dimensions include mirrors and aero:
+2.054 m wide, 4.407 m long and 1.390 m high. Physical wheel centers remain at
+X ±0.7695 m, Y 0.36 m and Z ±1.2285 m, matching the existing profile's 1.9 m
+width, 2.457 m wheelbase and 0.36 m radius. No physics values change.
+
+The bundled GT presentation loads lazily for the matching profile ID/body style
+and exact physical dimensions. Custom geometry uses the existing adaptable car.
+`premium-vehicle.ts` bounds downloads, rejects external dependencies/timelines,
+validates the imported geometry/rig, caches one template and evicts failed requests.
+Each native lap clones its hierarchy and materials while sharing immutable
+geometry. Unmounting disposes instance materials; the bounded template survives
+viewer remounts and graphics restoration. Failed/late loads retain the complete
+procedural GT. Restoring the vehicle retries a failed download.
+
+The existing `TelemetryGhost` still owns world pose, wheel distance/radius,
+steering and brake demand on the shared clock. `WHEEL_*` carriers and `SPIN_*`
+nodes consume those same values. glTF empties are Object3D nodes, which the motion
+contract accepts alongside procedural groups. Exported lamp emission uses unity
+strength so the existing 0.12–1.72 running/braking intensity remains authoritative.
+Current meshes cast/receive shadows; late loading refreshes the cached sun shadow.
+Reference meshes retain 28% opacity, no depth writes/shadows and independent lamps.
+
+This is the first integrated authored GT, not the final quality checkpoint.
+The Red Bull Ring environment and camera retuning remain active in B2. Close
+views now show richer silhouette, fitted glass and wheel detail; the current
+Chase camera still leaves the GT small on a wide canvas. The surroundings,
+material depth and overall speed perception need assessment with the new slice.
+The Formula model below remains procedural until B3.
+
 ## Formula bodywork
 
 `assets/vehicles/formula.json` is the authored source for the chassis, sidepods,

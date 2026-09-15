@@ -1,8 +1,8 @@
-import type { Group, MeshStandardMaterial } from "three";
+import type { Object3D, MeshStandardMaterial } from "three";
 
 export type VehicleMotion = {
-  wheels: (Group | null)[];
-  front: (Group | null)[];
+  wheels: (Object3D | null)[];
+  front: (Object3D | null)[];
   brakeLights: (MeshStandardMaterial | null)[];
 };
 

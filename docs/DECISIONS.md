@@ -1,5 +1,22 @@
 # Decision log
 
+## 2026-09-15 — Integrate an original Blender GT on the native telemetry rig
+
+The first authored vehicle uses editable Blender mesh surfaces and a fixed native
+GT rig. Matching profile identity and physical dimensions select its bounded lazy
+GLB; custom geometry or unavailable content retains the existing procedural car.
+Immutable template geometry is shared, while each lap owns mutable materials and
+wheel/brake nodes. The same TelemetryGhost/PlaybackClock owns every pose update.
+glTF empty nodes are accepted as Object3D, and lamp emission uses unity exported
+strength before the existing brake-intensity scalar is applied. Async replacement
+refreshes the paused sun shadow and preserves the current/reference distinction.
+
+The model is original LAPTRIX art, with no manufacturer or old React geometry.
+Material/rig batching yields 29 draws for 41,630 triangles, within a 2.5 MB/60,000
+triangle budget. The editable source and exported GLB stay separate; routine
+export preserves art edits. Actual browser checks precede environment/camera
+acceptance, which remains the next part of the GT vertical slice.
+
 ## 2026-09-15 — Make editable Blender art the premium presentation source
 
 **Decision:** Pin the installed official Blender 5.2.1 LTS and establish a source

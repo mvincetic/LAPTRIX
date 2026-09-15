@@ -1,5 +1,13 @@
 # Architecture
 
+The first Blender GT integrates as a visual child of the existing TelemetryGhost.
+`premium-vehicle.ts` validates a bounded local GLB and caches its immutable source
+geometry. Each current/reference instance owns cloned materials and named motion
+nodes; unmounting releases those materials. Late loading swaps the fallback visual
+and refreshes the cached shadow, while the same clock and parent keep driving pose,
+steering, rolling and brake demand. Unsupported dimensions and failed loads retain
+the procedural vehicle. See VEHICLE_ASSETS.md and BLENDER_PIPELINE.md.
+
 Premium bundled art now has a repository-local Blender authoring boundary.
 `assets/blender/` retains editable sources and per-asset contracts; headless Blender
 5.2.1 validates the selected hierarchy and exports a temporary GLB. An independent

@@ -6,7 +6,14 @@ GLB equivalence and exercises rejection of invalid units, pivots and shaders.
 The five development shards and separate production job retain their existing
 worker counts and deadlines. The ordinary full gate also validates committed
 Blender assets without needing the Blender executable. All seven jobs are required
-for the toolchain milestone; its new Linux export path awaits the first branch run.
+for the toolchain milestone.
+
+The [Blender toolchain run](https://github.com/mvincetic/LAPTRIX/actions/runs/34987149856)
+at `430682b` succeeds in all seven jobs: 319 TypeScript / 158 Python tests,
+175 development journeys and 37 production journeys. The official Linux Blender
+5.2.1 LTS build re-exports the editable basis gauge byte-for-byte identically to
+Windows and passes all four source rejection probes. The Python gate takes 29.81
+seconds. This is a validated toolchain foundation; it does not claim premium art.
 
 The [Blender baseline stabilization run](https://github.com/mvincetic/LAPTRIX/actions/runs/34981025546)
 at `3c12dea` succeeds in all six jobs. It passes 313 TypeScript / 152 Python tests

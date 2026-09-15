@@ -6,14 +6,23 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The first Blender GT integration passes the complete local gate with 324
+TypeScript / 158 Python tests (39.50 seconds), eight asset packages and exact
+Blender re-export. Five GT unit cases cover native dimensions, the delivered rig,
+independent materials, invalid payloads and cache retry. Actual QA passes 64
+vehicle/camera poses, 13 GT Onboard states and six continuous sequences (280
+frames, zero anchor drift). All 37 existing production cases pass in 8.5 minutes;
+the new visible GT-delivery case passes separately in 12.7 seconds, making 38
+production cases. See PRODUCT_PRESENTATION.md and VEHICLE_ASSETS.md for limits.
+
 The Blender toolchain passes the complete local gate with 319 TypeScript /
 158 Python tests (39.73 seconds), seven asset packages, lint/type/build checks
 and the original pylon's byte-reproducible export. Its internal Blender gauge
 also re-exports byte-for-byte identically and reimports through Three.js with
 independent metre/axis/pivot expectations. Four in-Blender rejection probes pass,
 and the independent reader rejects corrupted buffers, animation and sheared
-frames. See BLENDER_PIPELINE.md. The added Linux source/export job awaits its
-first branch run; the preceding baseline is remotely green as recorded below.
+frames. All seven Linux jobs at `430682b` subsequently pass, including the
+byte-identical Blender re-export. See BLENDER_PIPELINE.md and CI.md.
 
 Blender B0 stabilization passes the complete local gate with 313 TypeScript /
 152 Python tests (40.46 seconds), six asset packages, reproducible GLB export and

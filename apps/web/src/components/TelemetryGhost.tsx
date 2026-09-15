@@ -7,6 +7,8 @@ import { ghostPose, type PlaybackClock } from "../../../../packages/telemetry";
 import { VehicleMesh } from "./VehiclePresentation";
 import { brakeLightIntensity, type VehicleMotion } from "../vehicle-motion";
 import { VEHICLE_SURFACE_LIFT } from "../chase-camera";
+import { PremiumVehicle } from "./PremiumVehicle";
+import { supportsPremiumGT } from "../premium-vehicle";
 
 export function TelemetryGhost({
   lap,
@@ -63,17 +65,26 @@ export function TelemetryGhost({
     for (const lamp of motion.current.brakeLights ?? [])
       if (lamp) lamp.emissiveIntensity = brakeLightIntensity(pose.sample.brake);
   }, -0.5);
+  const fallback = (
+    <VehicleMesh
+      vehicle={vehicle}
+      color={color}
+      motion={motion}
+      contactShade={!reference}
+    />
+  );
   return (
     <group
       ref={groupRef}
       name={reference ? "reference-ghost" : "current-ghost"}
     >
-      <VehicleMesh
-        vehicle={vehicle}
-        color={color}
-        motion={motion}
-        contactShade={!reference}
-      />
+      {supportsPremiumGT(vehicle) ? (
+        <PremiumVehicle motion={motion} reference={reference}>
+          {fallback}
+        </PremiumVehicle>
+      ) : (
+        fallback
+      )}
       {marker && (
         <Html
           center

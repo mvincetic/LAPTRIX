@@ -4,8 +4,10 @@ Blender 5.2.1 LTS is the primary authoring tool for premium bundled vehicles and
 environment art. `BLENDER_PIPELINE.md` documents the implemented editable `.blend`
 → source validation → GLB → manifest process, automated runtime placement and
 separate Linux export check. The registered internal basis gauge proves axes,
-metres and named pivots through actual Three.js import; the original GT and
-Red Bull Ring environment slice is the next content milestone.
+metres and named pivots through actual Three.js import. The first original GT is
+integrated with a named native telemetry rig, independent instance materials,
+bounded caching and procedural fallback. The source-aligned Red Bull Ring scene
+and camera acceptance continue next. See VEHICLE_ASSETS.md for the GT contract.
 
 Existing procedural assets provide adaptable presentation and fallback during
 that rollout. Every representation consumes the authoritative source/telemetry

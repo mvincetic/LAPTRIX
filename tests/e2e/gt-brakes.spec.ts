@@ -37,7 +37,9 @@ async function lamps(page: Page) {
     return ["current-ghost", "reference-ghost"].map((name) => {
       const car = scene.getObjectByName(name)!;
       return [0, 1].map((index) => {
-        const mesh = car.getObjectByName(`gt-brake-lamp-${index}`) as Mesh;
+        const mesh = (car.getObjectByName(
+          `BRAKE_LIGHT_${index === 0 ? "L" : "R"}`,
+        ) ?? car.getObjectByName(`gt-brake-lamp-${index}`)) as Mesh;
         const material = mesh.material as MeshStandardMaterial;
         return {
           intensity: material.emissiveIntensity,

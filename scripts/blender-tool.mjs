@@ -166,7 +166,10 @@ if (mode === "inspect") {
     );
     await mkdir(dirname(runtime), { recursive: true });
     // The final parent must also be owned if an artist added a symlink in the tree.
-    await ownedAssetPath(root, relative(root, dirname(runtime)));
+    await ownedAssetPath(
+      root,
+      relative(root, dirname(runtime)).replaceAll("\\", "/"),
+    );
     const temporary = `${runtime}.${process.pid}.tmp`;
     await writeFile(temporary, bytes);
     await rename(temporary, runtime);
