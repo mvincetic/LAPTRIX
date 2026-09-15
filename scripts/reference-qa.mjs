@@ -72,8 +72,12 @@ async function snapshot(page) {
 }
 
 try {
-  for (const track of ["ardennes-development", "red-bull-ring"])
-    for (const vehicle of ["formula-development", "gt-development"]) {
+  for (const track of ["ardennes-development", "red-bull-ring"].filter(
+    (id) => !process.env.QA_TRACK || id === process.env.QA_TRACK,
+  ))
+    for (const vehicle of ["formula-development", "gt-development"].filter(
+      (id) => !process.env.QA_VEHICLE || id === process.env.QA_VEHICLE,
+    )) {
       const page = await browser.newPage({
           viewport: { width: 1600, height: 1000 },
         }),
@@ -104,6 +108,17 @@ try {
         .getByRole("checkbox", { name: "Show reference ghost", exact: true })
         .check();
       await page.getByRole("tab", { name: "Track View", exact: true }).click();
+      if (vehicle === "gt-development")
+        await page.waitForFunction(async () => {
+          const { _roots } =
+            await import("/node_modules/.vite/deps/@react-three_fiber.js");
+          const scene = _roots
+            .get(document.querySelector(".scene canvas"))
+            .store.getState().scene;
+          return ["current-ghost", "reference-ghost"].every(
+            (name) => !!scene.getObjectByName(name)?.getObjectByName("GT_ROOT"),
+          );
+        });
       for (const phase of ["overlap", "separated"]) {
         if (phase === "separated") {
           await page.getByRole("slider", { name: "Fuel load" }).fill("45");
@@ -141,28 +156,30 @@ try {
           )
           .toBe(true);
         const initial = await snapshot(page);
+        const currentMaterials = new Set(
+          initial.cars[0].meshes.map((mesh) => mesh.material),
+        );
         expect(
-          new Set(
-            initial.cars.flatMap((car) =>
-              car.meshes.map((mesh) => mesh.material),
-            ),
-          ).size,
-        ).toBe(initial.cars.reduce((sum, car) => sum + car.meshes.length, 0));
-        for (const width of [1600, 1280, 390]) {
+          initial.cars[1].meshes.every(
+            (mesh) => !currentMaterials.has(mesh.material),
+          ),
+        ).toBe(true);
+        for (const width of [1600, 1280, 390].filter(
+          (width) =>
+            !process.env.QA_WIDTH || width === Number(process.env.QA_WIDTH),
+        )) {
           await page.setViewportSize({ width, height: 1000 });
           for (const camera of ["Chase", "Onboard", "Top View", "3D View"]) {
             await page
               .getByRole("button", { name: camera, exact: true })
               .click();
-            await page
-              .locator(".track-panel")
-              .screenshot({
-                path: `artifacts/${prefix}-${track}-${vehicle}-${width}-${phase}-${camera.replaceAll(" ", "-")}.png`,
-              });
+            await page.locator(".track-panel").screenshot({
+              path: `artifacts/${prefix}-${track}-${vehicle}-${width}-${phase}-${camera.replaceAll(" ", "-")}.png`,
+            });
             const state = await snapshot(page);
             expect(state.cars).toEqual(initial.cars);
             for (const [i, car] of state.cars.entries()) {
-              expect(car.shade).toBe(i === 0);
+              expect(car.shade).toBe(i === 0 && vehicle !== "gt-development");
               for (const mesh of car.meshes) {
                 expect(mesh.opacity).toBe(i === 0 ? 1 : 0.28);
                 expect(mesh.transparent).toBe(i === 1);

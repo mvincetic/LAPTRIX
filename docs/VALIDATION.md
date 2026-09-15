@@ -25,15 +25,27 @@ The unchanged broad visual sweeps also pass all 48 foliage states and all 45
 terrain states across native and imported sources, including retained workspace,
 line visibility and pavement clearance. Evidence is `blender-rbr-foliage-qa.json`
 and `blender-rbr-terrain-qa.json` with their logs and actual compositor captures.
+The terrain sweep retains all 9,618 visible-line probes with zero occlusions.
+Roof clearance retains 473 Red Bull Ring trees and all 383 Dev Track trees.
 
 A separate native-GPU motion run reports the actual ANGLE / NVIDIA GeForce RTX
-3060 Ti / D3D11 renderer at pixel ratio 1 and a 1600 × 1000 browser viewport.
+3060 Ti / D3D11 renderer at pixel ratio 1 and a 1600 × 900 browser viewport.
 It records 180 frames over 2.978 wall seconds, 2.983 playback seconds, 185.236 m
 travel and zero fixed-anchor drift, with peaks of 69 draws and 423,336 submitted
 triangles. This short start-straight sample is approximately 60 presented frames
 per second; it is not a full-lap performance guarantee. The six software-rendered
 sequences remain separate evidence. See `blender-rbr-native-qa.json` and
 RBR_BLENDER_SCENE.md for reconstruction limits.
+An expanded native-GPU run passes all six start-straight combinations: both
+vehicles on both tracks at desktop width, plus both Red Bull Ring vehicles at
+390 px. It records 1,072 frames, approximately 60 frames/second and zero anchor
+drift throughout; all six runs identify the same RTX 3060 Ti. See
+`blender-rbr-native-all-qa.json`. The matched-reference sweep passes 48 GT states
+across both sources, three widths, four cameras and native overlap/separation.
+The QA script permits material reuse within a lap but proves that current and
+reference instances share no mutable material. It also recognizes the authored
+GT's real sun shadow instead of requiring the procedural contact-shade mesh.
+See `blender-rbr-reference-qa.json` and `visual-checkpoint/after-gt-manifest.json`.
 
 The first Blender GT integration passes the complete local gate with 324
 TypeScript / 158 Python tests (39.50 seconds), eight asset packages and exact

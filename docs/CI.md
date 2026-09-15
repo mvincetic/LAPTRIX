@@ -1,5 +1,21 @@
 # Continuous integration
 
+The first [circuit-slice run](https://github.com/mvincetic/LAPTRIX/actions/runs/35001062714)
+at `df0a8ba` identifies two failures in the older Dev Track asset test on shard 5.
+Its all-GLB download counter includes the newly introduced Red Bull Ring package
+when the journey visits that circuit, producing 2 versus 1 and 3 versus 2.
+Both failures reproduce locally without application changes. The correction
+scopes download/failure interception to `dev-start-pylon`, retaining the original
+one-download cache and two-attempt recovery assertions. The production equivalent
+also identifies that asset's response explicitly. Asset counts, geometry identity,
+workspace preservation, source switching and visual recovery checks remain intact.
+No application behavior or timeout changes are required for this correction.
+The corrected local gate passes 330 TypeScript / 162 Python tests (40.60 seconds),
+all lint/type/asset checks and build. All three targeted development cases pass in
+50.3 seconds and the production recovery case passes in 6.6 seconds. Logs are
+`blender-rbr-qa-fix-check.log`, `blender-rbr-trackside-red.log`,
+`blender-rbr-trackside-green.log` and `blender-rbr-trackside-production.log`.
+
 The [first GT run](https://github.com/mvincetic/LAPTRIX/actions/runs/34992167406)
 at `ed37a21` finishes red with one daylight assertion failure. The old assertion
 expects more than 40 separate shadow-casting car meshes; the loaded Blender GT

@@ -33,7 +33,7 @@ including lazy scenery recovery, cached remount, paused shadow refresh, GPX
 restoration, native brakes and portrait Chase containment.
 
 The separate native-GPU run identifies an NVIDIA GeForce RTX 3060 Ti through
-ANGLE/D3D11. At 1600 × 1000 and pixel ratio 1 it records 180 frames over 2.978 wall
+ANGLE/D3D11. At 1600 × 900 and pixel ratio 1 it records 180 frames over 2.978 wall
 seconds, 185.236 m traveled and zero anchor drift. Peak submissions are 69 draws
 and 423,336 triangles. This is a short start-straight measurement, not a full-lap
 guarantee. Facility surfaces and surrounding vegetation remain simplified; the

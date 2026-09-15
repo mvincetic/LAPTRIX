@@ -15,12 +15,14 @@ test("the built trackside asset recovers visibly without changing the engineerin
   page.on("response", (response) => {
     if (
       response.request().resourceType() === "fetch" &&
-      new URL(response.url()).pathname.endsWith(".glb") &&
+      /\/dev-start-pylon(?:-[\w-]+)?\.glb$/.test(
+        new URL(response.url()).pathname,
+      ) &&
       response.ok()
     )
       ready = true;
   });
-  await page.route("**/*.glb*", (route) => {
+  await page.route("**/dev-start-pylon*.glb*", (route) => {
     if (route.request().resourceType() === "fetch" && ++downloads === 1)
       return route.fulfill({ status: 503, body: "Unavailable" });
     return route.continue();

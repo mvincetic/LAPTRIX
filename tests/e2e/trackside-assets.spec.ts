@@ -62,7 +62,8 @@ for (const [width, failFirst] of [
     page.on("console", (message) => {
       if (message.type() === "warning") warnings.push(message.text());
     });
-    await page.route("**/*.glb*", async (route) => {
+    // Count this asset's cache/retry traffic; circuit and vehicle packages are independent.
+    await page.route("**/dev-start-pylon*.glb*", async (route) => {
       if (route.request().resourceType() === "fetch") {
         downloads++;
         if (failFirst && downloads === 1)
