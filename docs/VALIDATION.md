@@ -6,6 +6,14 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The `c698a90` remote run passes quality, Blender, production and four development
+shards; its remaining foliage failure is reproduced after waiting for the actual
+loaded circuit. The corrected test explicitly requires 473 Red Bull Ring trees
+and 383 Dev Track trees while retaining matrices, bounds and resource assertions.
+Both widths pass three repetitions each (six cases, 1.5 minutes). ESLint and
+strict typecheck pass; the application remains unchanged in this fixture commit.
+See CI.md for the failed-run evidence and correction scope.
+
 The source-aligned Blender circuit slice passes the full local gate with 330
 TypeScript / 162 Python tests (40.63 seconds), nine assets, lint/type/build checks
 and three byte-identical Blender exports. The road/vegetation tests use exact

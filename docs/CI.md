@@ -1,5 +1,22 @@
 # Continuous integration
 
+The [asset-specific correction run](https://github.com/mvincetic/LAPTRIX/actions/runs/35003000492)
+at `c698a90` finishes with six successful jobs, including production, Blender,
+the full quality gate and both corrected pylon journeys. Shard 2 exposes one
+remaining stale foliage expectation: 474 trees after visiting Red Bull Ring.
+The loaded grandstand excludes one intersecting crown, so the intended count is
+473. The unchanged local test passes twice because it can observe the transient
+generic forest before the optional GLB mounts. Adding only scenery readiness
+reproduces the 474-versus-473 failure locally. This is a test race masking an
+outdated expectation, not an unrelated runner failure. The correction waits for
+the actual scenery root, asserts 473/383 on the two sources, and preserves all
+matrix, bounds, texture, shadow and resource checks without increasing deadlines.
+Both corrected journeys pass three consecutive repetitions each (six cases in
+1.5 minutes), with ESLint and strict typecheck also passing. Evidence is
+`artifacts/blender-rbr-foliage-settled-red.log` and
+`artifacts/blender-rbr-foliage-green.log`. No application file is included in this
+test correction; the full 330-TypeScript/162-Python gate is green at `c698a90`.
+
 The first [circuit-slice run](https://github.com/mvincetic/LAPTRIX/actions/runs/35001062714)
 at `df0a8ba` identifies two failures in the older Dev Track asset test on shard 5.
 Its all-GLB download counter includes the newly introduced Red Bull Ring package

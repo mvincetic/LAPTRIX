@@ -32,6 +32,7 @@ async function trees(page: Page) {
       }
     return {
       count: crowns.count,
+      sceneryReady: !!scene.getObjectByName("RBR_SLICE_ROOT"),
       geometry: crowns.geometry.uuid,
       trunk: trunks.geometry.uuid,
       texture: map?.uuid,
@@ -49,6 +50,12 @@ async function trees(page: Page) {
       castShadow: crowns.castShadow || trunks.castShadow,
     };
   });
+}
+
+async function settledScenery(page: Page, track: string) {
+  await expect
+    .poll(async () => (await trees(page))?.sceneryReady)
+    .toBe(track === "red-bull-ring");
 }
 
 for (const [track, width] of [
@@ -78,8 +85,9 @@ for (const [track, width] of [
       page.getByRole("button", { name: "Run Simulation", exact: true }),
     ).toBeEnabled();
     await expect.poll(async () => (await trees(page))?.texture).toBeTruthy();
+    await settledScenery(page, track);
     const before = (await trees(page))!;
-    expect(before.count).toBeGreaterThan(300);
+    expect(before.count).toBe(track === "red-bull-ring" ? 473 : 383);
     expect(before.triangles).toBeLessThanOrEqual(384);
     expect(before.size).toEqual([512, 512]);
     expect(before.overflow).toBeLessThan(0.001);
@@ -158,11 +166,10 @@ for (const [track, width] of [
       await expect(
         page.getByRole("button", { name: "Run Simulation", exact: true }),
       ).toBeEnabled();
+      await settledScenery(page, id);
       await expect
         .poll(async () => (await trees(page))?.count)
-        .toBe(
-          id === track ? before.count : track === "red-bull-ring" ? 383 : 474,
-        );
+        .toBe(id === "red-bull-ring" ? 473 : 383);
       const after = (await trees(page))!;
       expect(after.texture).toBe(before.texture);
       expect(after.overflow).toBeLessThan(0.001);

@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-15 — Continue candidate review during isolated fixture correction
+
+The GT/circuit application passes its local quality, production and visual gates.
+Remote failures identify two older fixtures: an all-GLB pylon counter, then a
+foliage count sampled before optional scenery mounts. Both are reproduced and
+corrected without changing application contracts or deadlines. Formula source
+preparation and local browser candidate review can continue while those isolated
+test corrections run remotely. This avoids repeated idle CI cycles; it does not
+declare the previous run green or waive the full validation/remote success gate
+for stable promotion. The user's baseline-before-Blender requirement was already
+satisfied at B0. Broader content remains gated by the combined visual checkpoint.
+
 ## 2026-09-15 — Align authored scenery to the actual rendered source frame
 
 The Red Bull Ring Blender slice consumes a reproducible export of the existing
