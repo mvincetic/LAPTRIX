@@ -3,6 +3,9 @@ import { normalizeTrack, type Vec3 } from "./index";
 
 // Keep a float32 reserve below source roads without raising every road on a berm.
 export const TERRAIN_CLEARANCE = 0.35;
+// A small source can accept far more candidates than a full circuit. Bound the
+// visible foliage cost independently of source size and keep the full area sampled.
+export const MAX_CONTEXT_TREES = 512;
 const columns = 110;
 const rows = 80;
 
@@ -179,6 +182,14 @@ export function createTerrainSurface(track: Track): TerrainSurface {
     const ground = sample(x, z);
     if (ground.plantable && ground.distance < 240 && random() > 0.25)
       surface.trees.push([x, terrainHeightAt(surface, x, z)! + 6, z]);
+  }
+  if (surface.trees.length > MAX_CONTEXT_TREES) {
+    const candidates = surface.trees;
+    surface.trees = Array.from(
+      { length: MAX_CONTEXT_TREES },
+      (_, i) =>
+        candidates[Math.floor((i * candidates.length) / MAX_CONTEXT_TREES)],
+    );
   }
   return surface;
 }

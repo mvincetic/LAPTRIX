@@ -1,10 +1,22 @@
-# MVP validation — through 2026-09-11
+# MVP validation — through 2026-09-15
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
 and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
+
+Blender B0 stabilization passes the complete local gate with 313 TypeScript /
+152 Python tests (40.46 seconds), six asset packages, reproducible GLB export and
+lint/type/build checks. The unchanged failing desktop GPX case reproduces one
+timeout in three baseline attempts, then passes all three attempts after bounding
+contextual foliage. All 13 targeted development journeys pass in 4.0 minutes.
+Both additional terrain-clearance journeys pass in 58.0 seconds, and all 37
+production journeys pass in 8.3 minutes. Four GPX review/import viewport checks
+retain 512 rendered trees, source assumptions and readable desktop/phone scenes
+without page overflow or browser errors. The desktop and phone screenshots were
+inspected. Remote verification is still required; see CI.md for its status and
+the precise failure classification and local trace measurements.
 
 The reference-presentation pass clears the complete local gate with 311 TypeScript
 / 152 Python tests (46.67 seconds), six asset packages, reproducible GLB export and
@@ -13,8 +25,9 @@ circuits and vehicle categories at desktop, laptop and phone widths. All 20 fina
 interaction journeys pass in 7.3 minutes, including compositor paint retention,
 independent reference playback, GT lamps, label placement, graphics restoration
 with both cars visible and zero settled rendering. See REFERENCE_PRESENTATION.md.
-At commit time, both new production reference checks and both graphics-restoration
-checks have passed; the broader 37-case production run is still in progress.
+The broader local 37-case production run subsequently passes in 9.6 minutes.
+Remote CI passes 37 production and 174/175 development cases; the GPX timeout
+is addressed by the B0 stabilization above and does not count as a green run.
 
 The original vegetation pass clears the complete final local gate with 311
 TypeScript / 152 Python tests (44.15 seconds), six asset packages, reproducible

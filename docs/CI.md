@@ -1,5 +1,34 @@
 # Continuous integration
 
+The [reference-presentation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34633176853)
+at `8474e6d` finishes with 174 of 175 development journeys passing and all 37
+production journeys passing. Development shard 2 times out in the 1600 px GPX
+review/restore journey at its unchanged 60-second deadline. The downloaded trace
+shows successful GPX activation, declared-geometry checks and project restoration;
+a 27.16-second reload consumes much of the budget before the final fresh-workspace
+lap wait. Its API/network requests do not explain that delay. This run is red.
+
+On 2026-09-15, three unchanged local repeats reproduce one timeout and two passes
+(41.0 and 43.5 seconds). The imported fixture accepts 2,172 contextual trees,
+submitting 816,672 foliage triangles, compared with 383/474 trees on the bundled
+circuits. Deterministically retaining at most 512 accepted sites bounds that work
+to 192,512 triangles while preserving source geometry and the bundled placements.
+The same three repeats then pass in 41.1, 26.4 and 27.0 seconds. Reloads fall from
+15.35/12.21/14.87 seconds to 7.06/6.68/6.48 seconds in the local traces. The evidence
+points to scene resource cost accumulating inside a long integration test; it is
+not a failed source-data assertion. No deadline, viewport, assertion or test
+sequence is relaxed. Remote verification of the stabilization is still required.
+
+The full local gate passes 313 TypeScript / 152 Python tests (40.46 seconds),
+all lint/type/asset/reproducibility/build checks, 13 targeted browser journeys
+(4.0 minutes), two terrain-clearance journeys (58.0 seconds) and all 37 production
+journeys (8.3 minutes). Four GPX viewport reviews verify the actual 512-tree cap,
+with no browser errors or overflow; desktop/phone screenshots were inspected.
+
+Ignored evidence is retained under `artifacts/blender-baseline-ci/`,
+`artifacts/blender-baseline-local/` and `artifacts/blender-bounded-local/`, with
+`gpx-trace-comparison.json`, `gpx-terrain-budget.log` and the corresponding test logs.
+
 The reference-presentation cycle uses five development shards plus the separate
 production job. On the last green run, four development shards left only about
 12 seconds before one shard's 20-minute limit. A list-only study using those

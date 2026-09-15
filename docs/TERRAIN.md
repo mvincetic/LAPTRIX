@@ -8,7 +8,8 @@ display lifts and surface tessellation are documented below.
 The pure terrain builder samples the nearest projected point on every closed
 source segment and interpolates that segment's elevation. It retains a 110×80
 cell grid, a 0.35 m clearance below source elevation, distance falloff, muted palette and
-4,200 seeded tree candidates. This removes the former lookup's height steps from
+4,200 seeded tree candidates, retaining at most 512 distributed accepted sites.
+This removes the former lookup's height steps from
 using only every third source vertex. Nearest-segment boundaries and coarse grid
 triangles can still produce synthetic ridges; no smoothing of track data occurs.
 
@@ -23,9 +24,16 @@ conservative excavation can leave ground well below a road and is not a bridge,
 earthworks design or guarantee against distant scenery obscuring a low camera.
 
 Tree candidates stay outside each source segment's maximum endpoint half-width
-plus 30 m. Their existing cone meshes use the final terrain triangles for base
-placement. Terrain generation is memoized by track in the deferred Landscape
+plus 30 m. Their original textured crowns/trunks use the final terrain triangles
+for base placement. Terrain generation is memoized by track in the deferred Landscape
 component; disposal and instanced trees use the existing rendering lifecycle.
+
+The accepted-site cap prevents a compact imported circuit from receiving thousands
+of overlapping detailed trees. It selects evenly through the existing deterministic
+candidate order, retaining distributed coverage across the landscape.
+Terrain positions, source road data and site ground anchors
+are unchanged. The bundled Dev Track (383 sites) and Red Bull Ring (474 sites)
+remain below the cap and retain all their existing placements.
 
 Instance matrices are installed in a layout effect before presentation. Both tree
 batches recompute their cached bounding sphere and box after source changes, then

@@ -1,5 +1,28 @@
 # Roadmap
 
+## Blender presentation phase — 2026-09-15
+
+The user has resumed autonomous work with a higher visual quality bar. Blender
+becomes the primary authoring tool for premium bundled vehicles and environments.
+The procedural viewer remains the fallback and generic imported-source renderer.
+This sequence supersedes the V17 procedural-material follow-up and the previous
+pause. Simulation/source geometry, both track identities, persistence and the
+single PlaybackClock remain authoritative. Never merge main or rewrite history.
+
+| Milestone | Acceptance and state |
+| --- | --- |
+| B0 Baseline stabilization | Local verification complete: the `8474e6d` GPX timeout reproduced; a 512-tree contextual cap resolves all three unchanged repeats. Full gate (313 TypeScript / 152 Python), 15 targeted browser cases, all 37 production cases and four GPX viewport reviews pass. Push and verify remote CI before Blender authoring; continue native visual/motion QA during that run. |
+| B1 Blender toolchain and contracts | Discover/install an official stable Blender release. Establish editable sources, explicit coordinate/pivot/material/node conventions, headless validation/export and automatic repository-relative runtime placement. |
+| B2 Red Bull Ring GT vertical slice | Build an original, materially richer GT and source-aligned start/finish–T1 environment in Blender. Integrate lazy GLBs, telemetry wheel/steering/brake nodes, current/reference styling, caching, disposal and procedural fallback. Judge actual browser Chase/Onboard/overview and motion. |
+| B3 Generic Formula 2026 | After the GT slice is stable, author a distinct original LAPTRIX Formula 2026 vehicle informed by public FIA direction. Retain editable source, web-compatible materials, telemetry rig and fallback. No team geometry, logos or proprietary models. |
+| B4 Formal visual checkpoint | Capture before/after GT and Formula views, environment/vehicle detail, motion and resource budgets. Stop adding content while assessing whether the first integrated results meet the quality bar. |
+| B5 Complete validation | Run the complete quality, Blender-asset, export, browser and production gates; re-run GPX, imports, persistence, references, custom vehicles and narrow views. Commit/push and verify remote CI. |
+| B6 Broader rollout | Only after a convincing checkpoint: extend Red Bull Ring, Formula presentation, Dev Track, shared assets, terrain/materials, useful broadcast/trackside cameras, UI and telemetry audio. Iterate on the slice first if its visual quality is weak. |
+
+Proceed through implementation, actual browser/motion QA, tests, documentation,
+clean commits, working-branch pushes and remote CI verification. Continue after
+each stable milestone; stop only for a genuine blocker requiring user input.
+
 ## Premium product phase — 2026-09-11
 
 The technical MVP is sufficient. The next sequence improves the actual experience

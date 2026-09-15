@@ -8,6 +8,8 @@ import {
   type TerrainSurface,
 } from "../../packages/track-engine/terrain";
 import { slopedTerrainTrack } from "../fixtures/terrain";
+import development from "../../data/tracks/ardennes-development.json" with { type: "json" };
+import showcase from "../../data/tracks/red-bull-ring.json" with { type: "json" };
 
 describe("synthetic terrain clearance", () => {
   it("interpolates the nearest closed source segment rather than skipping vertices", () => {
@@ -160,11 +162,47 @@ describe("synthetic terrain clearance", () => {
       ),
     ).toBe(true);
     expect(first.trees.length).toBeGreaterThan(0);
-    expect(first.trees.length).toBeLessThanOrEqual(4200);
+    expect(first.trees.length).toBeLessThanOrEqual(512);
     const sample = sourceGroundSampler(track);
     for (const [x, y, z] of first.trees) {
       expect(y).toBe(terrainHeightAt(first, x, z)! + 6);
       expect(sample(x, z).plantable).toBe(true);
     }
+  });
+
+  it("bounds dense compact-source foliage while retaining distributed grounded sites", () => {
+    const track = slopedTerrainTrack(80);
+    track.points = track.points.map((point, i) => ({
+      ...point,
+      x: 160 * Math.cos((i * Math.PI * 2) / 80),
+      y: 30 + 2 * Math.sin((i * Math.PI * 4) / 80),
+      z: 100 * Math.sin((i * Math.PI * 2) / 80),
+      widthLeft: 7,
+      widthRight: 8,
+    }));
+    expect(trackSchema.safeParse(track).success).toBe(true);
+    const original = JSON.stringify(track);
+    const surface = createTerrainSurface(track);
+    expect(surface.trees).toHaveLength(512);
+    expect(createTerrainSurface(track).trees).toEqual(surface.trees);
+    const sample = sourceGroundSampler(track);
+    const quadrants = [0, 0, 0, 0];
+    for (const [x, y, z] of surface.trees) {
+      expect([x, y, z].every(Number.isFinite)).toBe(true);
+      expect(y).toBe(terrainHeightAt(surface, x, z)! + 6);
+      expect(sample(x, z).plantable).toBe(true);
+      quadrants[(x >= 0 ? 1 : 0) + (z >= 0 ? 2 : 0)]++;
+    }
+    expect(quadrants.every((count) => count > 40)).toBe(true);
+    expect(JSON.stringify(track)).toBe(original);
+  });
+
+  it("retains the established bundled circuit foliage populations", () => {
+    expect(
+      createTerrainSurface(trackSchema.parse(development)).trees,
+    ).toHaveLength(383);
+    expect(
+      createTerrainSurface(trackSchema.parse(showcase)).trees,
+    ).toHaveLength(474);
   });
 });

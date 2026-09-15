@@ -1,5 +1,34 @@
 # Product presentation milestones
 
+## Blender B0 — Bound imported-scene cost, 2026-09-15
+
+The new brief begins with baseline stabilization before Blender authoring. A
+compact GPX layout accepted 2,172 contextual trees after the foliage upgrade.
+It now retains a deterministic selection of at most 512 grounded sites across
+the full candidate area, reducing tree triangles from 816,672 to 192,512. Both
+bundled layouts retain every existing tree. This is a resource correction, not
+the premium visual upgrade; the Blender GT/environment slice remains next.
+
+The unchanged desktop GPX journey reproduces one timeout in three baseline
+repeats and passes all three bounded-scene repeats. The complete local gate
+passes 313 TypeScript / 152 Python tests (40.46 seconds), asset validation and
+reproducible export, lint/typecheck and build. All 13 targeted browser journeys
+pass in 4.0 minutes, including desktop/phone GPX persistence, cancellation,
+foliage recovery, graphics restoration and idle rendering. Both additional terrain
+clearance journeys pass in 58.0 seconds; all 37 production journeys pass in 8.3
+minutes. Four GPX review/import captures at 1600/1280/390/780 px retain exactly 512
+trees and 192,512 tree triangles, with no overflow or browser errors. The settled
+scene submits 71 draws / 231,600 triangles and retains 11 textures. Desktop and
+phone scene images were opened and reviewed: the road/line and contextual coverage
+remain clear. Evidence uses the `blender-baseline-*` artifact prefix. Broader
+native-scene QA continues during remote verification; see CI.md for CI status.
+
+Six matching pre-Blender Red Bull Ring GT/Formula overview/Chase/Onboard images
+are retained in ignored `artifacts/visual-checkpoint/`, with original filenames,
+the `8474e6d` source commit and camera/time metadata in `before-manifest.json`.
+The baseline still has sparse track facilities, faceted terrain and simplified
+vehicle surfaces. The next milestone must improve those visible limitations.
+
 ## Premium V16 — Current/reference clarity, 2026-09-11
 
 The opaque reference could replace the current car's blue paint at coincident
@@ -24,17 +53,18 @@ GT lamps, labels, playback entry, onboard framing, shadow caching, complete-imag
 graphics restoration with both cars visible, and zero settled rendering.
 See REFERENCE_PRESENTATION.md for the treatment and its transparency limits.
 
-At the user's request to commit promptly, the broader 37-case production run is
-still finishing. Both new reference-paint checks and both complete-image graphics
-restoration checks have passed in that run. Its full result is not yet claimed;
-the local log is `artifacts/reference-production.log` and the working-branch push
-also runs the complete Linux workflow.
+The broader 37-case production run subsequently passes in 9.6 minutes
+(`artifacts/reference-production.log`). The working-branch Linux run passes all
+37 production cases and 174 of 175 development cases; the GPX timeout is
+investigated in B0 above. The previous milestone therefore did not finish green
+on remote CI. See CI.md for the exact run and stabilization evidence.
 
 The preceding vegetation commit `fafc0eb` is green on Linux with 173 development
 and 35 production journeys. A measured timing study now supports five development
 shards plus separate production. Discovery verifies all 175 development cases
 without duplicates or omissions; assertions, workers and deadlines are unchanged.
-The latest user request closes this cycle and pauses before ground-material work.
+The 2026-09-11 request closed this cycle. The 2026-09-15 Blender brief resumes
+autonomous work and supersedes that pause and the procedural-material follow-up.
 
 ## Premium V15 — Original instanced vegetation, 2026-09-11
 

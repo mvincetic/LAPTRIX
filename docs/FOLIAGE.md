@@ -45,6 +45,13 @@ tree seeds and rendered terrain sampling are unchanged. The Dev Track retains
 383 trees; Red Bull Ring retains 474. Instance matrices, colors and culling
 boxes/spheres update together after source or fallback changes.
 
+Dense imported layouts retain at most 512 trees, selected deterministically across
+the full accepted candidate list. The maximum is 192,512 tree triangles in the two
+batches. This bounds a compact GPX scene that previously accepted 2,172 trees and
+submitted 816,672 triangles. Both bundled circuits remain below the cap and keep
+all their sites. Selection retains the existing road exclusions and terrain
+anchors; it changes no simulation geometry. See CI.md for repeated reload evidence.
+
 ## Loading and resource ownership
 
 The texture is requested only when Environment mounts. One cached texture retains

@@ -1,5 +1,24 @@
 # Decision log
 
+## 2026-09-15 — Bound contextual foliage before beginning Blender authoring
+
+**Decision:** Retain at most 512 accepted tree sites, sampling deterministically
+across the full candidate list when it exceeds the budget. **Reasoning:** The
+previously failing GPX journey reproduces locally, and its compact source accepts
+2,172 trees: 816,672 foliage triangles versus 192,512 after the cap. Reload traces
+show materially lower cost with the same test and deadline. **Consequence:** Both
+bundled circuits retain their 383/474 sites. Imported scene density is bounded;
+source geometry, ground anchors, road exclusions and playback remain authoritative.
+Regression tests cover deterministic full-area coverage, grounding and unchanged
+source data. Remote CI must verify the stabilization before Blender work begins.
+
+The new presentation brief makes Blender the primary authoring tool for premium
+bundled content, with retained editable sources, automated GLB export and the
+existing procedural presentation as fallback. The next sequence proves an original
+GT and Red Bull Ring start/finish-to-T1 slice before Formula 2026 and a formal
+browser quality checkpoint. Breadth follows demonstrated quality; simulation
+expansion is outside this phase. See ROADMAP.md for the active sequence.
+
 ## 2026-09-11 — Keep the current car readable through reference overlap
 
 **Decision:** Render reference standard materials at 28% opacity with depth testing

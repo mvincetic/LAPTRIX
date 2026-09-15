@@ -1,5 +1,14 @@
 # Rendering when the scene changes
 
+Contextual tree placement is now bounded to 512 retained sites. The fixed seeded
+candidate generation and all bundled sites remain unchanged; dense imports select
+evenly across the accepted list. At 376 triangles per tree, this caps tree geometry
+at 192,512 submitted triangles in the existing two batches. The compact GPX
+regression fixture previously used 816,672. Three identical integration repeats
+pass after the change, and local reload traces fall from 12.21–15.35 seconds to
+6.48–7.06 seconds. These are measurements of test-host reloads, not frame-rate
+claims. See CI.md and TERRAIN.md for evidence and source-preservation checks.
+
 The reference-clarity pass changes only reference material flags and omits its
 contact-shade plane. It adds no geometry, texture, frame callback or independent
 clock. Standard depth-tested transparency keeps the current vehicle's blue paint
