@@ -1,5 +1,21 @@
 # Continuous integration
 
+The Blender toolchain adds a separate 15-minute source/export job. It installs the
+checksum-pinned official 5.2.1 Linux archive, reopens the editable source, verifies
+GLB equivalence and exercises rejection of invalid units, pivots and shaders.
+The five development shards and separate production job retain their existing
+worker counts and deadlines. The ordinary full gate also validates committed
+Blender assets without needing the Blender executable. All seven jobs are required
+for the toolchain milestone; its new Linux export path awaits the first branch run.
+
+The [Blender baseline stabilization run](https://github.com/mvincetic/LAPTRIX/actions/runs/34981025546)
+at `3c12dea` succeeds in all six jobs. It passes 313 TypeScript / 152 Python tests
+(Python in 40.48 seconds), all 175 development journeys and all 37 production
+journeys (13.7 minutes). Development shards pass 35/35/37/36/32 cases in
+13.8/7.2/15.2/14.7/14.6 minutes. The previously failing desktop GPX journey passes
+in 26.7 seconds; its phone counterpart takes 19.5 seconds. Both retain the original
+60-second deadline. The baseline is verified remotely before Blender authoring.
+
 The [reference-presentation run](https://github.com/mvincetic/LAPTRIX/actions/runs/34633176853)
 at `8474e6d` finishes with 174 of 175 development journeys passing and all 37
 production journeys passing. Development shard 2 times out in the 1600 px GPX
@@ -17,7 +33,8 @@ The same three repeats then pass in 41.1, 26.4 and 27.0 seconds. Reloads fall fr
 15.35/12.21/14.87 seconds to 7.06/6.68/6.48 seconds in the local traces. The evidence
 points to scene resource cost accumulating inside a long integration test; it is
 not a failed source-data assertion. No deadline, viewport, assertion or test
-sequence is relaxed. Remote verification of the stabilization is still required.
+sequence is relaxed. The stabilization's remote verification succeeds as recorded
+above.
 
 The full local gate passes 313 TypeScript / 152 Python tests (40.46 seconds),
 all lint/type/asset/reproducibility/build checks, 13 targeted browser journeys

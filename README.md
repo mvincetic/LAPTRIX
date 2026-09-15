@@ -11,6 +11,13 @@ is not Spa-Francorchamps. No commercial game geometry, audio or team assets are 
 from OpenStreetMap and Land Steiermark terrain data. Its source snapshots, licenses,
 reproduction steps and limitations are in [the source record](data/sources/red-bull-ring/README.md).
 
+Premium bundled presentation now uses **Blender 5.2.1 LTS** as its primary authoring
+tool. The editable-source, validated GLB export and CI contract are established;
+the original GT and Red Bull Ring start/finish–T1 visual slice is next. See
+[the Blender pipeline](docs/BLENDER_PIPELINE.md) for commands and conventions, and
+[ROADMAP.md](docs/ROADMAP.md) for the active sequence. Running the application uses
+the checked-in runtime assets; Blender is needed for authoring and re-export.
+
 ## Start locally
 
 Requires Node.js **22.12 or newer** and Python **3.12**. Tested on Windows with Node

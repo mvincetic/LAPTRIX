@@ -5,6 +5,7 @@ import { isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
 import { Box3 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { validateBlenderEntry } from "./blender-glb.mjs";
 
 const root = await realpath(fileURLToPath(new URL("../", import.meta.url)));
 async function ownedPath(path) {
@@ -31,7 +32,7 @@ assert.equal(manifest.up, "+Y");
 assert.equal(manifest.forward, "+Z");
 assert.equal(manifest.handedness, "right");
 assert.equal(
-  manifest.assets.length,
+  manifest.assets.filter((entry) => entry.format !== "blender-glb").length,
   6,
   "Register a validator when adding another asset package.",
 );
@@ -39,6 +40,16 @@ const ids = new Set();
 for (const entry of manifest.assets) {
   assert(!ids.has(entry.id), "Asset IDs must be unique.");
   ids.add(entry.id);
+  if (entry.format === "blender-glb") {
+    for (const field of ["origin", "provenance", "rights"])
+      assert(entry[field]?.length > 10);
+    await ownedPath(entry.implementation);
+    const report = await validateBlenderEntry(root, entry);
+    console.log(
+      `Validated Blender asset ${entry.id} (${report.bytes} bytes, ${report.triangles} triangles).`,
+    );
+    continue;
+  }
   assert(
     [
       "laptrix.guardrail.v1",

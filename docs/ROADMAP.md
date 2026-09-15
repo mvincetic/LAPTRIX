@@ -11,8 +11,8 @@ single PlaybackClock remain authoritative. Never merge main or rewrite history.
 
 | Milestone | Acceptance and state |
 | --- | --- |
-| B0 Baseline stabilization | Local verification complete: the `8474e6d` GPX timeout reproduced; a 512-tree contextual cap resolves all three unchanged repeats. Full gate (313 TypeScript / 152 Python), 15 targeted browser cases, all 37 production cases and four GPX viewport reviews pass. Push and verify remote CI before Blender authoring; continue native visual/motion QA during that run. |
-| B1 Blender toolchain and contracts | Discover/install an official stable Blender release. Establish editable sources, explicit coordinate/pivot/material/node conventions, headless validation/export and automatic repository-relative runtime placement. |
+| B0 Baseline stabilization | Complete at `3c12dea`: the GPX timeout reproduced and a 512-tree contextual cap resolves it. The local gate, 15 targeted cases, 37 production cases, four GPX reviews, 48 foliage views, 45 terrain states and six motion sequences pass. All six Linux jobs succeed: 313 TypeScript / 152 Python, 175 development and 37 production cases. |
+| B1 Blender toolchain and contracts | Implemented locally: official Blender 5.2.1 LTS, editable basis gauge, explicit axis/pivot/material contract, headless source validation/export, independent GLB checks and automatic runtime placement/hashes. Full gate (319 TypeScript / 158 Python) and exact re-export pass. Push and verify the added Linux Blender job. |
 | B2 Red Bull Ring GT vertical slice | Build an original, materially richer GT and source-aligned start/finish–T1 environment in Blender. Integrate lazy GLBs, telemetry wheel/steering/brake nodes, current/reference styling, caching, disposal and procedural fallback. Judge actual browser Chase/Onboard/overview and motion. |
 | B3 Generic Formula 2026 | After the GT slice is stable, author a distinct original LAPTRIX Formula 2026 vehicle informed by public FIA direction. Retain editable source, web-compatible materials, telemetry rig and fallback. No team geometry, logos or proprietary models. |
 | B4 Formal visual checkpoint | Capture before/after GT and Formula views, environment/vehicle detail, motion and resource budgets. Stop adding content while assessing whether the first integrated results meet the quality bar. |
@@ -49,7 +49,7 @@ identities, all engineering contracts and the single playback clock.
 | V14 Showcase stabilization | Resolve remaining presentation defects, repeat production regressions and retain documented source/asset limits. |
 | V15 Vegetation presentation | Implemented: original textured spruce crowns and tapered trunks replace uniform cones while retaining grounded sites and the crown envelope. Complete asset provenance, failure recovery, bounds and resource checks accompany the actual camera review. |
 | V16 Reference ghost clarity | Implemented: 28% translucent reference bodywork preserves the opaque blue current car, with no reference contact shade or depth writing. The complete gate, 20 interaction journeys and 96 native overlap/separation camera states pass across Formula/GT, both tracks and three widths. |
-| V17 Ground material depth | Next: improve terrain/apron material scale and visual depth with original assets, measured rendering cost and unchanged authoritative geometry. |
+| V17 Ground material depth | Superseded by the 2026-09-15 Blender sequence above. Improve material scale and depth within the first authored GT/environment slice before broader rollout. |
 
 Both source tracks, their provenance, complete engineering workspaces and the
 shared playback clock remain authoritative. Original Formula/GT bodywork, Dev
@@ -63,8 +63,8 @@ silhouettes with original needle detail. Its final local gate passes 311 TypeScr
 journeys. Forty-eight final foliage views, 52 onboard views and six continuous
 sequences verify the result. V16 now preserves the current car's blue paint through
 reference overlap. Its complete local gate passes 311 TypeScript / 152 Python tests
-and all 20 final interaction journeys. At the user's latest request, close and
-commit this work cycle, then pause. V17 remains the next priority when work resumes.
+and all 20 final interaction journeys. The 2026-09-11 request closed and paused
+that cycle; the 2026-09-15 Blender sequence above resumes autonomous work.
 Keep both native laps, source identities and the single clock intact. See
 PRODUCT_PRESENTATION.md, FOLIAGE.md and REFERENCE_PRESENTATION.md for evidence.
 

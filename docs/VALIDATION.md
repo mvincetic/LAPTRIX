@@ -6,6 +6,15 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The Blender toolchain passes the complete local gate with 319 TypeScript /
+158 Python tests (39.73 seconds), seven asset packages, lint/type/build checks
+and the original pylon's byte-reproducible export. Its internal Blender gauge
+also re-exports byte-for-byte identically and reimports through Three.js with
+independent metre/axis/pivot expectations. Four in-Blender rejection probes pass,
+and the independent reader rejects corrupted buffers, animation and sheared
+frames. See BLENDER_PIPELINE.md. The added Linux source/export job awaits its
+first branch run; the preceding baseline is remotely green as recorded below.
+
 Blender B0 stabilization passes the complete local gate with 313 TypeScript /
 152 Python tests (40.46 seconds), six asset packages, reproducible GLB export and
 lint/type/build checks. The unchanged failing desktop GPX case reproduces one
@@ -15,8 +24,12 @@ Both additional terrain-clearance journeys pass in 58.0 seconds, and all 37
 production journeys pass in 8.3 minutes. Four GPX review/import viewport checks
 retain 512 rendered trees, source assumptions and readable desktop/phone scenes
 without page overflow or browser errors. The desktop and phone screenshots were
-inspected. Remote verification is still required; see CI.md for its status and
-the precise failure classification and local trace measurements.
+inspected. The additional 48 foliage views, 45 terrain states (9,618 clear probes)
+and six continuous playback sequences (281 frames, zero anchor drift) also pass.
+The Red Bull Ring source package reproduces exactly in its separate geodata
+environment. All six remote jobs succeed at `3c12dea`: 313 TypeScript / 152 Python,
+175 development and 37 production cases. The previously failing GPX desktop case
+takes 26.7 seconds on Linux. See CI.md for the exact run and failure investigation.
 
 The reference-presentation pass clears the complete local gate with 311 TypeScript
 / 152 Python tests (46.67 seconds), six asset packages, reproducible GLB export and

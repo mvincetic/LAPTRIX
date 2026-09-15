@@ -3,6 +3,8 @@
 *.woff binary
 *.woff2 binary
 *.tif binary
+*.blend binary
+*.glb binary
 # Preserve the exact downloaded/extracted bytes referenced by the source manifest.
 data/sources/red-bull-ring/osm-gp.osm -text
 data/sources/red-bull-ring/wcs-capabilities.xml -text

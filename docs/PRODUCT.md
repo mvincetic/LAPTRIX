@@ -5,6 +5,12 @@ must reveal a useful vehicle view, the road must read as part of its landscape,
 and all camera, vehicle and UI polish retains source identity and the canonical
 clock. ROADMAP.md orders the next product-quality milestones by observed defects.
 
+The next quality leap uses Blender as the primary authoring environment for premium
+bundled content. Its pinned editable-source/export contract is established; the
+first visible target is an original GT and Red Bull Ring start/finish through Turn 1,
+followed by LAPTRIX Formula 2026. Actual browser appearance and motion determine
+acceptance before broader circuit rollout. See BLENDER_PIPELINE.md and ROADMAP.md.
+
 LAPTRIX is a browser-based racing engineering and lap-optimization workspace. A
 user chooses a circuit, vehicle and setup, calculates a theoretical development
 lap, then inspects the racing line, speed, braking, apexes, sectors and telemetry.

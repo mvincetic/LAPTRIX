@@ -6,6 +6,25 @@
   "handedness": "right",
   "assets": [
     {
+      "id": "laptrix.blender-basis.v1",
+      "category": "validation",
+      "format": "blender-glb",
+      "parameters": "assets/blender/shared/basis-gauge.json",
+      "implementation": "scripts/blender/author_basis.py",
+      "sourceFile": "assets/blender/shared/basis-gauge.blend",
+      "runtimeFile": "assets/runtime/validation/basis-gauge.glb",
+      "origin": "Metre origin, +Y up and +Z forward in GLB; an internal coordinate gauge excluded from the application bundle",
+      "provenance": "Original LAPTRIX Blender pipeline verification geometry; three axis bars and named endpoint pivots",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": [],
+      "maxBytes": 32768,
+      "maxTriangles": 64,
+      "materialBatches": 3,
+      "sourceSha256": "7a1f1fed903f3127b34306ee0604d29d472ad21fdc8da817fe6ada80ccd9b479",
+      "sha256": "e52502d4a3b7017b5a9c4078544a367c5f1be110af107eabf1c8a7a8e8d96072",
+      "semanticSha256": "ba3ed15867805af40b09a9a8612eec61a47a247545ab44f6d02d1b28c8f1d2ff"
+    },
+    {
       "id": "laptrix.spruce.v1",
       "category": "environment",
       "format": "textured-procedural",

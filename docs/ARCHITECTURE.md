@@ -1,5 +1,22 @@
 # Architecture
 
+Premium bundled art now has a repository-local Blender authoring boundary.
+`assets/blender/` retains editable sources and per-asset contracts; headless Blender
+5.2.1 validates the selected hierarchy and exports a temporary GLB. An independent
+Node reader verifies binary data, physical bounds, rigid node frames, materials
+and budgets before `blender-tool.mjs` places runtime assets and updates manifest
+hashes. Ordinary export opens the `.blend` and preserves manual art edits.
+The internal basis gauge is loaded through Three.js in contract tests and stays
+outside the application bundle. Premium GT/environment runtime integration follows
+in the next slice. See BLENDER_PIPELINE.md for source ownership and commands.
+
+Authoring maps runtime `(x,y,z)` to Blender `(x,-z,y)` at one metre per unit.
+The glTF +Y-up export performs the inverse once. Source track positions, widths,
+elevation, distance and timing gates remain authoritative; Blender contributes
+visual meshes/materials. Named wheel/steering/lamp nodes must bind to the existing
+TelemetryGhost motion references and shared PlaybackClock. The current procedural
+vehicle/context builders remain the fallback during migration.
+
 Playback entry observes transitions of the existing clock to select the initial
 follow camera. Explicit camera/reset choices suppress automatic changes. The
 isolated ScenePlayback subscriber displays current/reference vehicle identity and
@@ -19,7 +36,7 @@ FastAPI → validation → bounded line optimization → speed envelope → tele
   │               Vite /api development proxy                      ▼
 React setup ──────────────────────────────────────────────── validated Lap
                                                              │  │  │  │
-                      procedural Three.js viewer ◀────────────┘  │  │  │
+                                 Three.js viewer ◀────────────┘  │  │  │
                       corner/sector analysis ◀───────────────────┘  │  │
                       shared PlaybackClock + interpolation ◀───────┘  │
                           │              │                            │
@@ -407,6 +424,6 @@ the latest authoritative props. Browser module failures may be cached, so recove
 uses an explicit page reload after Save rather than a misleading same-module retry.
 The existing in-viewer boundary still handles WebGL rendering failures separately.
 
-Blender is not a source of truth. Future licensed GLB cars, barriers or buildings
-may decorate the scene without defining track or physics. Neither track-specific
-coordinates nor vehicle performance conditionals belong in React components.
+Blender owns premium visual authoring; validated track/vehicle data owns simulation
+geometry and physics. Authored scene coordinates and provenance belong in asset
+data and export tooling. Vehicle performance remains outside React components.

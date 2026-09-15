@@ -1,6 +1,12 @@
 # Original LAPTRIX assets
 
-`manifest.json` describes the assets actually used by the viewer. The guardrail
+`manifest.json` describes delivered visual assets and explicitly categorized
+internal validation assets. Blender 5.2.1 LTS is now the primary authoring tool for
+premium bundled content. `blender/shared/basis-gauge.blend` and its exported GLB
+prove the editable-source, metre/axis/pivot and export contract; the gauge stays
+outside the browser bundle. See `docs/BLENDER_PIPELINE.md` for the automated flow.
+
+The guardrail
 package is an original corrugated guardrail, supports and reflectors. Its metre
 dimensions and colours are in `trackside/guardrail.json`; `roadside-context.ts`
 constructs source-framed geometry and `Trackside.tsx` renders three static batches.
@@ -69,12 +75,11 @@ not included in the browser bundle.
 
 The pylon establishes the actual static GLB export/loading pipeline; spruce uses
 an original image with procedural geometry, and the other four packages remain
-procedural. Blender is optional and was not used here.
-Future authored vehicle/environment assets should retain editable sources, validate
-metre scale and pivots, normalize materials, export and optimize GLB, then record
-the actual runtime resource and licence in the manifest. Add LODs only with actual
-visual and performance evidence. Track geometry must continue to come from its
-validated source data rather than an artist's scene.
+procedural. Those six earlier packages did not use Blender. New premium vehicle/
+environment sources use the implemented Blender validation/export contract and
+retain editable art, physical pivots, web materials and manifest provenance.
+Add LODs with actual visual and performance evidence. Track geometry continues
+to come from validated source data.
 
 Third-party assets require documented source, licence, modification and
 redistribution rights before inclusion. This original package adds no repository

@@ -1,11 +1,25 @@
-# Original static asset pipeline
+# Asset authoring and delivery
+
+Blender 5.2.1 LTS is the primary authoring tool for premium bundled vehicles and
+environment art. `BLENDER_PIPELINE.md` documents the implemented editable `.blend`
+→ source validation → GLB → manifest process, automated runtime placement and
+separate Linux export check. The registered internal basis gauge proves axes,
+metres and named pivots through actual Three.js import; the original GT and
+Red Bull Ring environment slice is the next content milestone.
+
+Existing procedural assets provide adaptable presentation and fallback during
+that rollout. Every representation consumes the authoritative source/telemetry
+frame. The current pylon's earlier JSON/Three exporter remains documented below.
+
+## Original Dev Track sign pipeline
 
 The Dev Track start signs are the first shipped GLB asset. Their editable source
 is `assets/trackside/dev-start-pylon.json` plus `dev-start-pylon.mjs`. Dimensions,
 materials and original polygonal capital outlines are authored locally; no font,
 image, manufacturer model or game mesh is embedded. The existing Formula/GT and
-guardrail packages remain procedural because they adapt to physical profiles and
-source geometry. Track geometry remains authoritative simulation data.
+guardrail packages currently remain procedural and adapt to physical profiles and
+source geometry. They remain available as fallback during the Blender rollout.
+Track geometry remains authoritative simulation data.
 
 The separate foliage package extends the manifest to an original generated texture
 with procedural branch geometry. Its unchanged PNG, complete generation prompt,
@@ -67,8 +81,8 @@ one failed request followed by visible recovery, all four cameras, metre scale,
 geometry retention, shared playback, pending edits and complete project exports.
 The compositor recovery check also runs against the production build.
 
-Blender was not used for this asset. A future artist-authored source must meet the
-same origin, units, axes, material and validation contracts before export; Blender
-must not replace source track data. Third-party artwork additionally requires
+Blender was not used for this pylon. The new Blender pipeline extends the origin,
+unit, axis, material and validation contracts to editable sources; it preserves
+source track data. Third-party artwork additionally requires
 documented redistribution/modification rights and attribution. This original asset
 uses the repository's distribution policy and introduces no new licence grant.

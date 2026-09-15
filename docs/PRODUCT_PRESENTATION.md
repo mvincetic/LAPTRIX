@@ -1,5 +1,31 @@
 # Product presentation milestones
 
+## Blender B1 — Editable source and export contract, 2026-09-15
+
+The existing official Blender 5.2.1 LTS installation runs headlessly. A repository
+tool now opens editable `.blend` sources, validates their metre-scale hierarchy,
+pivots, materials and geometry, exports to a temporary GLB and independently checks
+it before placing runtime output and updating the asset manifest. Routine export
+preserves art edits; authoring-script rebuilds are explicit. See BLENDER_PIPELINE.md.
+
+The internal three-axis gauge retains a 580,754-byte editable source and exports
+5,608 bytes, 36 triangles and three material primitives. Its known 1/2/3 m axes
+reimport correctly through Three's GLTFLoader, and repeated Blender exports are
+byte-identical locally. Invalid pivots, units, geometry, shaders, external buffers,
+animation and matrix shear are rejected. Source saving also clears an inactive
+factory file browser's personal Documents directory; the committed source contains
+no personal-home path. The gauge is validation content and does not ship in the app.
+
+The final complete gate passes 319 TypeScript / 158 Python tests (39.73 seconds),
+seven asset packages, lint/Ruff/typecheck, the original pylon's exact re-export and
+production build. Blender re-export and four source rejection probes also pass.
+Evidence uses `blender-toolchain-final-*`; a shear regression retains its failing
+and corrected runs as `blender-rig-matrix-{before,after}.log`. The distribution
+contains no gauge GLB or `.blend`. A separate Linux CI job verifies the pinned
+official Blender archive and export contract after the working-branch push.
+The next milestone is the original GT and source-aligned Red Bull Ring slice;
+this tooling foundation is not claimed as a visible product-quality upgrade.
+
 ## Blender B0 — Bound imported-scene cost, 2026-09-15
 
 The new brief begins with baseline stabilization before Blender authoring. A
@@ -21,7 +47,18 @@ trees and 192,512 tree triangles, with no overflow or browser errors. The settle
 scene submits 71 draws / 231,600 triangles and retains 11 textures. Desktop and
 phone scene images were opened and reviewed: the road/line and contextual coverage
 remain clear. Evidence uses the `blender-baseline-*` artifact prefix. Broader
-native-scene QA continues during remote verification; see CI.md for CI status.
+native-scene QA completes during remote verification; see CI.md for CI status.
+
+All 48 foliage camera/detail states pass, retaining 383 Dev Track and 474 Red Bull
+Ring trees with stable resource identities and bounds. Matched desktop Formula
+Chase counts remain 74 / 263,812 draws / triangles on Dev Track and 70 / 279,146
+on Red Bull Ring, with ten textures. All 45 terrain states pass with 9,618 clear
+road-visibility probes. Six continuous 1× playback sequences record 281 frames,
+142–217 m of vehicle travel and zero trackside-anchor drift. Actual imported-slope,
+native foliage/detail and desktop/phone GT motion screenshots were reviewed.
+The pinned Red Bull Ring package also reproduces both outputs exactly using the
+documented separate geodata environment. `visual-checkpoint/performance-before.json`
+retains the collected resource and playback observations; no hardware FPS is claimed.
 
 Six matching pre-Blender Red Bull Ring GT/Formula overview/Chase/Onboard images
 are retained in ignored `artifacts/visual-checkpoint/`, with original filenames,

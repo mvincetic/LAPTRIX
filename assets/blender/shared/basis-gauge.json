@@ -1,0 +1,25 @@
+{
+  "id": "laptrix.blender-basis.v1",
+  "rootNode": "CONTRACT_ROOT",
+  "exportCollection": "EXPORT",
+  "sourceFile": "assets/blender/shared/basis-gauge.blend",
+  "runtimeFile": "assets/runtime/validation/basis-gauge.glb",
+  "maxBytes": 32768,
+  "maxTriangles": 64,
+  "maxMeshes": 3,
+  "maxMaterials": 3,
+  "maxTextures": 0,
+  "maxTextureSize": 1024,
+  "bounds": {
+    "min": [-0.02, -0.02, -0.02],
+    "max": [1, 2, 3],
+    "tolerance": 0.00001
+  },
+  "requiredNodes": {
+    "CONTRACT_ROOT": [0, 0, 0],
+    "X_LEFT": [1, 0, 0],
+    "Y_UP": [0, 2, 0],
+    "Z_FORWARD": [0, 0, 3]
+  },
+  "purpose": "An internal coordinate/export gauge, excluded from the application bundle. It is pipeline verification geometry, not a premium vehicle or scenery asset."
+}

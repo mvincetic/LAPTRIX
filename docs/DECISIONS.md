@@ -1,5 +1,26 @@
 # Decision log
 
+## 2026-09-15 — Make editable Blender art the premium presentation source
+
+**Decision:** Pin the installed official Blender 5.2.1 LTS and establish a source
+validation/export contract with repository-relative paths, metre-scale axes,
+identity roots, declared pivots, web-compatible materials and per-asset budgets.
+**Reasoning:** The new visual quality bar requires authored vehicle/environment
+surfaces while preserving the technical MVP's geometry and telemetry.
+**Consequence:** Ordinary export reads the editable `.blend`, validates the actual
+GLB independently and places output/update hashes automatically. An internal
+three-axis gauge proves the pipeline through Three.js import and repeat export;
+it is not presented as premium product content. The next slice authors GT and
+Red Bull Ring before Formula 2026 and a formal browser quality checkpoint.
+
+The discovered executable runs the current stable release. A separate Linux CI job
+uses the checksum-pinned official archive and verifies source/export equivalence
+without changing the five development shards or separate production job. Runtime
+validation compares rigid frames as well as determinants: a regression caught a
+sheared empty pivot that preserved both determinant and position. Source saving
+also clears the factory workspace's personal Documents directory before writing
+through Blender's normal API. See BLENDER_PIPELINE.md for the tested conventions.
+
 ## 2026-09-15 — Bound contextual foliage before beginning Blender authoring
 
 **Decision:** Retain at most 512 accepted tree sites, sampling deterministically
@@ -10,7 +31,8 @@ show materially lower cost with the same test and deadline. **Consequence:** Bot
 bundled circuits retain their 383/474 sites. Imported scene density is bounded;
 source geometry, ground anchors, road exclusions and playback remain authoritative.
 Regression tests cover deterministic full-area coverage, grounding and unchanged
-source data. Remote CI must verify the stabilization before Blender work begins.
+source data. All six remote jobs succeed at `3c12dea` before Blender work begins;
+the formerly failing desktop GPX journey takes 26.7 seconds on Linux.
 
 The new presentation brief makes Blender the primary authoring tool for premium
 bundled content, with retained editable sources, automated GLB export and the
