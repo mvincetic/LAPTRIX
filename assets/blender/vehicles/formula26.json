@@ -1,0 +1,45 @@
+{
+  "id": "laptrix.blender-formula26.v1",
+  "rootNode": "FORMULA26_ROOT",
+  "exportCollection": "EXPORT",
+  "sourceFile": "assets/blender/vehicles/formula26.blend",
+  "runtimeFile": "assets/runtime/vehicles/formula26.glb",
+  "maxBytes": 3000000,
+  "maxTriangles": 70000,
+  "maxMeshes": 48,
+  "maxMaterials": 9,
+  "maxTextures": 0,
+  "maxTextureSize": 1024,
+  "bounds": {
+    "min": [-1.016, 0, -2.510219],
+    "max": [1.016, 1.100288, 2.69],
+    "tolerance": 0.001
+  },
+  "requiredNodes": {
+    "FORMULA26_ROOT": [0, 0, 0],
+    "WHEEL_FL": [0.81, 0.34, 1.8],
+    "WHEEL_FR": [-0.81, 0.34, 1.8],
+    "WHEEL_RL": [0.81, 0.34, -1.8],
+    "WHEEL_RR": [-0.81, 0.34, -1.8],
+    "SPIN_FL": [0.81, 0.34, 1.8],
+    "SPIN_FR": [-0.81, 0.34, 1.8],
+    "SPIN_RL": [0.81, 0.34, -1.8],
+    "SPIN_RR": [-0.81, 0.34, -1.8]
+  },
+  "vehicle": {
+    "id": "formula-development",
+    "bodyStyle": "formula",
+    "width": 2.0,
+    "wheelbase": 3.6,
+    "wheelRadius": 0.34
+  },
+  "purpose": "Original LAPTRIX Formula 2026 visual interpretation on the unchanged development vehicle rig; not a homologated car or a team replica.",
+  "designReferences": [
+    {
+      "title": "FIA public 2026 guide, 17 December 2025",
+      "url": "https://www.fia.com/news/f1s-new-era-everything-you-need-know-about-how-fia-making-formula-1-more-competitive-more",
+      "reviewed": "2026-09-15",
+      "scope": "Factual design direction only; no source illustrations, logos, article text or model geometry are redistributed. See docs/FORMULA26_BLENDER.md."
+    }
+  ]
+}

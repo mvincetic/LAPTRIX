@@ -108,17 +108,21 @@ try {
         .getByRole("checkbox", { name: "Show reference ghost", exact: true })
         .check();
       await page.getByRole("tab", { name: "Track View", exact: true }).click();
-      if (vehicle === "gt-development")
-        await page.waitForFunction(async () => {
-          const { _roots } =
-            await import("/node_modules/.vite/deps/@react-three_fiber.js");
-          const scene = _roots
-            .get(document.querySelector(".scene canvas"))
-            .store.getState().scene;
-          return ["current-ghost", "reference-ghost"].every(
-            (name) => !!scene.getObjectByName(name)?.getObjectByName("GT_ROOT"),
-          );
-        });
+      await page.waitForFunction(async (vehicle) => {
+        const { _roots } =
+          await import("/node_modules/.vite/deps/@react-three_fiber.js");
+        const scene = _roots
+          .get(document.querySelector(".scene canvas"))
+          .store.getState().scene;
+        return ["current-ghost", "reference-ghost"].every(
+          (name) =>
+            !!scene
+              .getObjectByName(name)
+              ?.getObjectByName(
+                vehicle === "gt-development" ? "GT_ROOT" : "FORMULA26_ROOT",
+              ),
+        );
+      }, vehicle);
       for (const phase of ["overlap", "separated"]) {
         if (phase === "separated") {
           await page.getByRole("slider", { name: "Fuel load" }).fill("45");
@@ -179,7 +183,7 @@ try {
             const state = await snapshot(page);
             expect(state.cars).toEqual(initial.cars);
             for (const [i, car] of state.cars.entries()) {
-              expect(car.shade).toBe(i === 0 && vehicle !== "gt-development");
+              expect(car.shade).toBe(false);
               for (const mesh of car.meshes) {
                 expect(mesh.opacity).toBe(i === 0 ? 1 : 0.28);
                 expect(mesh.transparent).toBe(i === 1);

@@ -8,7 +8,7 @@ import { VehicleMesh } from "./VehiclePresentation";
 import { brakeLightIntensity, type VehicleMotion } from "../vehicle-motion";
 import { VEHICLE_SURFACE_LIFT } from "../chase-camera";
 import { PremiumVehicle } from "./PremiumVehicle";
-import { supportsPremiumGT } from "../premium-vehicle";
+import { premiumVehicleKind } from "../premium-vehicle";
 
 export function TelemetryGhost({
   lap,
@@ -26,6 +26,7 @@ export function TelemetryGhost({
   groupRef: RefObject<Group | null>;
 }) {
   const color = reference ? "#78879c" : "#0866ec";
+  const premium = premiumVehicleKind(vehicle);
   const motion = useRef<VehicleMotion>({
     wheels: [],
     front: [],
@@ -78,8 +79,13 @@ export function TelemetryGhost({
       ref={groupRef}
       name={reference ? "reference-ghost" : "current-ghost"}
     >
-      {supportsPremiumGT(vehicle) ? (
-        <PremiumVehicle motion={motion} reference={reference}>
+      {premium ? (
+        <PremiumVehicle
+          key={premium}
+          kind={premium}
+          motion={motion}
+          reference={reference}
+        >
           {fallback}
         </PremiumVehicle>
       ) : (

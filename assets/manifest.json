@@ -157,6 +157,25 @@
       "sha256": "3dbbda1b17d2516e80ef0dab01dab6ddcca46b458df60631c2e5321b84cfe0ff",
       "semanticSha256": "fe6fa83b69969c2ebefd0bc99f68053ebf02761cb6f6b1ac74ec124b60d7b4cf",
       "materialBatches": 11
+    },
+    {
+      "id": "laptrix.blender-formula26.v1",
+      "category": "vehicles",
+      "format": "blender-glb",
+      "parameters": "assets/blender/vehicles/formula26.json",
+      "implementation": "scripts/blender/author_formula26.py",
+      "sourceFile": "assets/blender/vehicles/formula26.blend",
+      "runtimeFile": "assets/runtime/vehicles/formula26.glb",
+      "origin": "Contact plane beneath native wheelbase midpoint; GLB +Y up, +Z forward; physical Formula development wheel centres",
+      "provenance": "Original LAPTRIX Formula 2026 interpretation: sculpted body, open cockpit, halo, undercut sidepods, aerofoils and telemetry rig. Public FIA factual design direction only; no team or existing React geometry. See docs/FORMULA26_BLENDER.md.",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": [],
+      "maxBytes": 3000000,
+      "maxTriangles": 70000,
+      "sourceSha256": "1058e117c8ee9fb488ea3354a190da6511c88475ca7b42b385e9977f965b044c",
+      "sha256": "dbefbe9015578d1af967b2e50c900715e6c2e869ad4058f4209d4ff58addc96b",
+      "semanticSha256": "311ac508d942e96929571f8f112e1671338b5209c269473817da23cffc5d0535",
+      "materialBatches": 27
     }
   ]
 }

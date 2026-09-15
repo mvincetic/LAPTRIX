@@ -12,6 +12,12 @@ and no textures. It uses the existing GT profile's physical wheel rig. The brows
 loads it lazily with independent native-lap materials and procedural fallback.
 See `docs/VEHICLE_ASSETS.md` for editable source, provenance and lifecycle details.
 
+`blender/vehicles/formula26.blend` is the original Formula 2026 source in review:
+2,964,791 source bytes, a 1,054,352-byte GLB, 53,138 triangles, 27 batches and nine
+materials without textures. Its 3.6 m / 2.0 m / 0.34 m native development rig is
+unchanged. Public FIA features inform the original shape without copied media,
+geometry or branding; see `docs/FORMULA26_BLENDER.md` for scope and source review.
+
 `blender/tracks/red-bull-ring-slice.blend` adds the first source-aligned circuit
 reconstruction: start/finish through Turn 1, 79,530 visible plus 2,064 shadow
 triangles in eleven batches, a 3,585,828-byte GLB and no textures. The 4,611,444-byte editable source

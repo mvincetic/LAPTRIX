@@ -47,9 +47,26 @@ Chase camera, approximately doubling the GT's start-straight screen width. Close
 views show richer silhouette, fitted glass and wheel detail. Native GPU motion,
 64 camera poses and production delivery pass; see PRODUCT_PRESENTATION.md for
 measurements and the remaining surface/vegetation limitations.
-The Formula model below remains procedural until B3.
+## Blender Formula 2026
 
-## Formula bodywork
+`assets/blender/vehicles/formula26.blend` now supplies the matching native Formula
+profile through the same bounded loader and telemetry rig. Its original body
+cages, cockpit opening, halo, undercut sidepods, shaped wing elements, suspension,
+slicks and rims replace the former bundled presentation. The blue/ice/dark
+LAPTRIX livery contains no team or sponsor marks. The GLB contains 53,138 triangles
+in 27 batches, nine PBR materials and no textures, occupying 1,054,352 bytes.
+Public FIA design direction informs the silhouette; the model retains the existing
+3.6 m native wheelbase and is not claimed as a homologated 2026 car. See
+FORMULA26_BLENDER.md for sources, exact dimensions and modeling limits.
+
+GT and Formula have independent cache entries and model-specific budgets/rig
+validation. Each lap owns its mutable materials and wheel nodes. Changing category
+remounts the presentation before binding a different template, while the single
+native clock and pose remain authoritative. A failed request retains the working
+procedural fallback and is evicted for later retry. The Formula's rear safety lamp
+and wing surfaces are static; undeclared aero or energy signals are not invented.
+
+## Procedural Formula fallback
 
 `assets/vehicles/formula.json` is the authored source for the chassis, sidepods,
 engine cover, floor and convex rounded cross-section. It is registered as

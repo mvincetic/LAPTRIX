@@ -5,7 +5,7 @@ environment art. `BLENDER_PIPELINE.md` documents the implemented editable `.blen
 → source validation → GLB → manifest process, automated runtime placement and
 separate Linux export check. The registered internal basis gauge proves axes,
 metres and named pivots through actual Three.js import. The first original GT is
-integrated with a named native telemetry rig, independent instance materials,
+integrated alongside original LAPTRIX Formula 2026, with named native telemetry rigs, independent instance materials,
 bounded caching and procedural fallback. The first source-aligned Red Bull Ring
 scene uses the actual rendered ground context, pinned hashes and embedded source
 credits. See VEHICLE_ASSETS.md and RBR_BLENDER_SCENE.md for delivery and ownership.
@@ -20,8 +20,8 @@ The Dev Track start signs are the first shipped GLB asset. Their editable source
 is `assets/trackside/dev-start-pylon.json` plus `dev-start-pylon.mjs`. Dimensions,
 materials and original polygonal capital outlines are authored locally; no font,
 image, manufacturer model or game mesh is embedded. The existing Formula/GT and
-guardrail packages currently remain procedural and adapt to physical profiles and
-source geometry. They remain available as fallback during the Blender rollout.
+guardrail packages adapt to physical profiles and source geometry. Those earlier
+vehicle representations remain available as fallback during the Blender rollout.
 Track geometry remains authoritative simulation data.
 
 The separate foliage package extends the manifest to an original generated texture

@@ -1,5 +1,22 @@
 # Decision log
 
+## 2026-09-15 — Fit original Formula 2026 art to the authoritative native rig
+
+The Formula model interprets public FIA design direction with original sculpted
+surfaces and LAPTRIX livery. It contains no team model, logos or imported media.
+Its wheel pivots retain the existing development profile's 3.6 m wheelbase,
+2.0 m width and 0.34 m radius; 2026 homologation dimensions are not silently
+substituted into physics. Wings and the rear safety lamp retain static authored
+states because native telemetry has no active-aero or energy-light channel.
+
+GT and Formula share validation/loading/instancing logic with separate bounded
+cache entries. The model kind keys the React presentation to prevent a previous
+category's template binding to the new rig. Existing TelemetryGhost updates own
+all pose, steering and rolling motion. Each lap owns mutable materials/nodes;
+immutable geometry survives remounts. Both models retain procedural failure and
+custom-dimension fallback. The Blender studio preview command validates source
+and guards its hash; its temporary lights/cameras never enter the saved asset.
+
 ## 2026-09-15 — Continue candidate review during isolated fixture correction
 
 The GT/circuit application passes its local quality, production and visual gates.

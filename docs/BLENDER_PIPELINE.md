@@ -177,3 +177,14 @@ This operation is separate from routine export, so artists' source edits remain
 authoritative. Blender authoring is only the start of content acceptance: GT and
 environment work must also pass real browser loading/fallback, telemetry,
 playback/camera, resource and visual checks before becoming premium defaults.
+
+## Vehicle modeling previews
+
+`npm run blender:preview -- laptrix.blender-formula26.v1` validates one explicit
+vehicle source, adds a temporary Cycles studio stage and renders front, rear and
+side PNGs under `artifacts/blender/previews/<asset-id>/`. The retained JSON includes
+source hash, geometry validation and camera positions. Neither the stage nor its
+cameras/lights are saved; source hashes are checked before and after rendering.
+The preview uses 32 samples at 1280 × 800 with denoising and eight CPU threads.
+It is a modeling diagnostic. Materials, camera fit, speed and quality must still
+be reviewed in the actual browser; studio renders cannot establish acceptance.

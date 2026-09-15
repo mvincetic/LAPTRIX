@@ -9,13 +9,19 @@ import {
 import { useThree } from "@react-three/fiber";
 import { DirectionalLight, type Group } from "three";
 import type { VehicleMotion } from "../vehicle-motion";
-import { instantiatePremiumGT, loadPremiumGT } from "../premium-vehicle";
+import {
+  instantiatePremiumVehicle,
+  loadPremiumVehicle,
+  type PremiumVehicleKind,
+} from "../premium-vehicle";
 
 export function PremiumVehicle({
+  kind,
   motion,
   reference,
   children,
 }: {
+  kind: PremiumVehicleKind;
   motion: RefObject<VehicleMotion>;
   reference: boolean;
   children: ReactNode;
@@ -24,7 +30,7 @@ export function PremiumVehicle({
   const { scene, invalidate } = useThree();
   useEffect(() => {
     let active = true;
-    void loadPremiumGT()
+    void loadPremiumVehicle(kind)
       .then((result) => {
         if (active) setTemplate(result);
       })
@@ -34,10 +40,11 @@ export function PremiumVehicle({
     return () => {
       active = false;
     };
-  }, []);
+  }, [kind]);
   const instance = useMemo(
-    () => (template ? instantiatePremiumGT(template, reference) : null),
-    [template, reference],
+    () =>
+      template ? instantiatePremiumVehicle(template, reference, kind) : null,
+    [template, reference, kind],
   );
   useLayoutEffect(() => {
     if (!instance) return;

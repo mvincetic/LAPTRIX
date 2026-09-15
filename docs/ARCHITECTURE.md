@@ -32,6 +32,14 @@ visual meshes/materials. Named wheel/steering/lamp nodes must bind to the existi
 TelemetryGhost motion references and shared PlaybackClock. The current procedural
 vehicle/context builders remain the fallback during migration.
 
+The shared premium-vehicle loader now selects original GT and Formula 2026 GLBs
+by exact native identity and physical rig. Each asset has an independent bounded
+cache entry; each current/reference instance owns materials and steering/rolling
+nodes while sharing immutable geometry. Category changes remount the presentation
+so an old template cannot bind to a different rig. There are no GLB animation clips
+or additional clocks. Formula wings and its rear safety lamp retain authored static
+states; only declared native channels drive motion. See FORMULA26_BLENDER.md.
+
 Playback entry observes transitions of the existing clock to select the initial
 follow camera. Explicit camera/reset choices suppress automatic changes. The
 isolated ScenePlayback subscriber displays current/reference vehicle identity and

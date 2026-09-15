@@ -34,6 +34,18 @@ try {
       await expect(
         page.getByRole("button", { name: "Inspect corner 1", exact: true }),
       ).toBeVisible();
+      await page.waitForFunction(async (vehicle) => {
+        const { _roots } =
+          await import("/node_modules/.vite/deps/@react-three_fiber.js");
+        const scene = _roots
+          .get(document.querySelector(".scene canvas"))
+          .store.getState().scene;
+        return !!scene
+          .getObjectByName("current-ghost")
+          ?.getObjectByName(
+            vehicle === "gt-development" ? "GT_ROOT" : "FORMULA26_ROOT",
+          );
+      }, vehicle);
       await page.getByRole("button", { name: "Additional actions" }).click();
       const pending = page.waitForEvent("download");
       await page
@@ -87,7 +99,9 @@ try {
                   .store.getState();
                 const car = scene.getObjectByName("current-ghost");
                 const body = car.getObjectByName("vehicle-body");
-                const premium = body.getObjectByName("GT_ROOT");
+                const premium =
+                  body.getObjectByName("GT_ROOT") ??
+                  body.getObjectByName("FORMULA26_ROOT");
                 const wheels = premium
                   ? ["FR", "FL", "RR", "RL"].map((label) =>
                       premium.getObjectByName(`WHEEL_${label}`),

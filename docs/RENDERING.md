@@ -14,7 +14,12 @@ the detailed facility shadow submission with 2,064 coarse silhouette triangles.
 The unchanged motion deadline passes after this change. These are measurements
 from the test browser, not a hardware frame-rate guarantee.
 The authored scene itself stays within 16 material batches, 120,000 triangles,
-4.5 MB and zero textures. Formula currently retains its procedural fallback.
+4.5 MB and zero textures. The matching native Formula profile now loads its own
+53,138-triangle GLB in 27 batches. The original Formula remains the delivery and
+custom-geometry fallback. GT and Formula instances share their respective cached
+geometry while owning independent materials and native wheel nodes. Six native-GPU
+samples retain approximately 60 fps; see VISUAL_CHECKPOINT.md for measured
+conditions, per-scene submission counts and the short-sample limitation.
 
 Contextual tree placement is now bounded to 512 retained sites. The fixed seeded
 candidate generation and all generic bundled sites remain unchanged; dense imports select

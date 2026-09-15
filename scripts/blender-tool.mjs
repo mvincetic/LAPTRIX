@@ -17,8 +17,8 @@ const toolchain = JSON.parse(
 );
 const [mode = "inspect", assetId, ...flags] = process.argv.slice(2);
 assert(
-  ["inspect", "author", "export", "check"].includes(mode),
-  "Use inspect, author, export or check",
+  ["inspect", "author", "export", "check", "preview"].includes(mode),
+  "Use inspect, author, export, check or preview",
 );
 assert(flags.every((flag) => flag === "--replace-source"));
 const majorMinor = toolchain.version.split(".").slice(0, 2).join(".");
@@ -109,6 +109,11 @@ if (mode === "inspect") {
   );
   assert(entries.length, "No registered Blender asset matches");
   assert(
+    mode !== "preview" ||
+      (assetId && entries.length === 1 && entries[0].category === "vehicles"),
+    "Preview one explicit vehicle asset; circuit acceptance uses the actual browser scene",
+  );
+  assert(
     mode !== "author" || (assetId && entries.length === 1),
     "Author one explicit asset at a time",
   );
@@ -128,6 +133,22 @@ if (mode === "inspect") {
     }
     const sourcePath = await ownedAssetPath(root, entry.sourceFile);
     const sourceSha256 = sha256(await readFile(sourcePath));
+    if (mode === "preview") {
+      const destination = join(artifactRoot, "previews", entry.id);
+      await mkdir(destination, { recursive: true });
+      runBlender(sourcePath, join(root, "scripts/blender/render_preview.py"), [
+        "--asset",
+        entry.id,
+        "--output",
+        relative(root, destination).replaceAll("\\", "/"),
+      ]);
+      assert.equal(
+        sha256(await readFile(sourcePath)),
+        sourceSha256,
+        "Editable source changed during preview",
+      );
+      continue;
+    }
     const previous =
       mode === "check" ? await validateBlenderEntry(root, entry) : null;
     const destination = join(artifactRoot, `${mode}-${process.pid}`, entry.id);

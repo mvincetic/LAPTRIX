@@ -1,5 +1,21 @@
 # Continuous integration
 
+The Formula milestone's local gate passes 334 TypeScript / 162 Python tests
+(40.55 seconds), ten asset packages, lint/type checks and build. All four Blender
+assets reproduce byte-identically. Eight focused and 26 broader development
+journeys pass, as do all 40 production journeys (10.7 minutes). The suite now
+discovers 182 development journeys. The new candidate requires its own pushed
+workflow result; the preceding fully green run below remains the CI baseline.
+
+The [settled-foliage run](https://github.com/mvincetic/LAPTRIX/actions/runs/35005721062)
+is fully green at `738b6df`: all seven jobs succeed. It passes 330 TypeScript /
+162 Python tests (31.23 seconds), 179 development journeys (37/35/38/37/32 across
+the five shards), 39 production journeys (16.3 minutes) and all three byte-identical
+Blender exports. The corrected desktop foliage case passes in 26.5 seconds; the
+previously problematic desktop GPX restoration passes in 53.8 seconds under its
+unchanged 60-second deadline. This closes the GT/circuit stabilization gate before
+the Formula candidate's own full validation and push.
+
 The [asset-specific correction run](https://github.com/mvincetic/LAPTRIX/actions/runs/35003000492)
 at `c698a90` finishes with six successful jobs, including production, Blender,
 the full quality gate and both corrected pylon journeys. Shard 2 exposes one

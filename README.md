@@ -1,7 +1,7 @@
 # LAPTRIX
 
 A local browser workspace for racing-line development, approximate lap simulation,
-procedural 3D circuits and synchronized telemetry. The interface follows the supplied
+source-aligned 3D circuits and synchronized telemetry. The interface follows the supplied
 light engineering reference while using original LAPTRIX branding and data.
 
 **This is a Development Physics Model, not a validated Formula 1 simulator.** The
@@ -12,8 +12,9 @@ from OpenStreetMap and Land Steiermark terrain data. Its source snapshots, licen
 reproduction steps and limitations are in [the source record](data/sources/red-bull-ring/README.md).
 
 Premium bundled presentation now uses **Blender 5.2.1 LTS** as its primary authoring
-tool. The editable-source, validated GLB export and CI contract are established;
-the original GT and Red Bull Ring start/finish–T1 visual slice is next. See
+tool. Editable GT and LAPTRIX Formula 2026 vehicles and a Red Bull Ring
+start/finish–T1 environment export through validated GLB contracts. Generic
+imported geometry and delivery failures retain the procedural presentation. See
 [the Blender pipeline](docs/BLENDER_PIPELINE.md) for commands and conventions, and
 [ROADMAP.md](docs/ROADMAP.md) for the active sequence. Running the application uses
 the checked-in runtime assets; Blender is needed for authoring and re-export.

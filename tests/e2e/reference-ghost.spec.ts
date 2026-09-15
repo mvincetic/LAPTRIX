@@ -59,6 +59,27 @@ for (const width of [1600, 390]) {
     });
     await expect(reference).toBeVisible();
     await expect(current).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(async () => {
+          const moduleUrl = "/node_modules/.vite/deps/@react-three_fiber.js";
+          const { _roots } = (await import(
+            moduleUrl
+          )) as typeof import("@react-three/fiber");
+          const scene = _roots
+            .get(document.querySelector(".scene canvas") as HTMLCanvasElement)!
+            .store.getState().scene;
+          return [
+            !!scene
+              .getObjectByName("current-ghost")
+              ?.getObjectByName("GT_ROOT"),
+            !!scene
+              .getObjectByName("reference-ghost")
+              ?.getObjectByName("FORMULA26_ROOT"),
+          ];
+        }),
+      )
+      .toEqual([true, true]);
     await page.getByRole("tab", { name: "Cursor Data", exact: true }).click();
     await page.getByRole("button", { name: "Time", exact: true }).click();
     const atTime = page.getByRole("spinbutton", {

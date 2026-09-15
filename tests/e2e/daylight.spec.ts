@@ -41,7 +41,10 @@ async function lighting(page: Page, instrument = false) {
         position: car?.position.toArray(),
         casters,
         surfaces,
-        premium: !!car?.getObjectByName("GT_ROOT"),
+        premium: !!(
+          car?.getObjectByName("GT_ROOT") ??
+          car?.getObjectByName("FORMULA26_ROOT")
+        ),
       };
     });
     return {
@@ -114,13 +117,15 @@ for (const [track, vehicle, width] of [
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
     const before = await project(page),
       cursor = page.getByRole("slider", { name: "Viewer lap position" });
-    if (vehicle === "gt-development")
-      await expect
-        .poll(async () => {
-          const state = await lighting(page);
-          return state.cars.every((car) => car.premium) && state.scenery;
-        })
-        .toBe(true);
+    await expect
+      .poll(async () => {
+        const state = await lighting(page);
+        return (
+          state.cars.every((car) => car.premium) &&
+          (track !== "red-bull-ring" || state.scenery)
+        );
+      })
+      .toBe(true);
     await expect.poll(async () => (await lighting(page)).map).toBeTruthy();
     const beforeSeek = await lighting(page, true);
     await cursor.fill("5");

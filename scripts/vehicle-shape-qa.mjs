@@ -41,7 +41,29 @@ try {
       await expect(
         page.getByRole("button", { name: "Inspect corner 1", exact: true }),
       ).toBeVisible();
+      await page.waitForFunction(
+        async ({ track, vehicle }) => {
+          const { _roots } =
+            await import("/node_modules/.vite/deps/@react-three_fiber.js");
+          const scene = _roots
+            .get(document.querySelector(".scene canvas"))
+            .store.getState().scene;
+          return (
+            !!scene
+              .getObjectByName("current-ghost")
+              ?.getObjectByName(
+                vehicle === "gt-development" ? "GT_ROOT" : "FORMULA26_ROOT",
+              ) &&
+            (track !== "red-bull-ring" ||
+              !!scene.getObjectByName("RBR_SLICE_ROOT"))
+          );
+        },
+        { track, vehicle },
+      );
       await page.getByRole("button", { name: "3D View", exact: true }).click();
+      const key = page.getByRole("button", { name: "Track key", exact: true });
+      if ((await key.getAttribute("aria-expanded")) === "true")
+        await key.click();
       const cursor = page.getByRole("slider", { name: "Viewer lap position" });
       await cursor.fill("0");
       if (process.env.QA_BRAKE) {
@@ -69,7 +91,9 @@ try {
       for (const [view, offset] of [
         ["front", [6, 3.8, 7]],
         ["rear", [-6, 3.2, -7]],
-        ["side", [9, 2, 0]],
+        // Keep this close side camera inside the real fence, with enough room
+        // for the full front/rear wing span. Scenery stays visible and intact.
+        ["side", [4.2, 1.9, 0]],
       ]) {
         const metrics = await page.evaluate(
           async (offset) => {
@@ -115,7 +139,9 @@ try {
             };
           },
           offset.map(
-            (value) => value * (process.env.QA_DETAIL === "1" ? 0.7 : 1),
+            (value) =>
+              value *
+              (process.env.QA_DETAIL === "1" && view !== "side" ? 0.7 : 1),
           ),
         );
         // Allow the demand frame and HTML projection to settle before the capture.

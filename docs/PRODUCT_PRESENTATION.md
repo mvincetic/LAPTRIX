@@ -1,5 +1,36 @@
 # Product presentation milestones
 
+## Blender B3 — Original Formula and first combined checkpoint, 2026-09-15
+
+The bundled Formula now uses original editable Blender bodywork and a native
+telemetry rig: open cockpit, halo, undercut sidepods, shaped multi-element wings,
+visible suspension, slicks, detailed rims and LAPTRIX blue/ice/carbon livery.
+Public FIA 2026 design direction informs the silhouette without importing team
+geometry, images or branding. Native physics dimensions remain authoritative;
+this is a visual interpretation rather than a homologated 2026 vehicle.
+The GLB is 1,054,352 bytes, 53,138 triangles, 27 batches and nine PBR materials,
+with no textures. See FORMULA26_BLENDER.md for source and modeling detail.
+
+GT and Formula use the same validated lazy-loading/instancing path, with separate
+bounded caches and independent current/reference materials. Both retain working
+procedural delivery/custom-geometry fallback. The existing clock owns world pose,
+steering and wheel rotation; Formula does not invent aero or energy-light signals.
+The local quality gate passes 334 TypeScript / 162 Python tests (40.55 seconds),
+ten assets and build. All four Blender exports reproduce byte-for-byte. Eight
+focused browser cases, 64 native camera poses, 48 Formula reference states and
+26 Onboard states pass. All 26 broader development regressions pass in 7.8 minutes
+and all 40 production cases pass in 10.7 minutes. Native/custom profiles, GPX,
+portable projects, references, audio and idle rendering retain their contracts.
+
+The ignored visual checkpoint retains matched before/after GT and Formula views,
+actual vehicle/environment close views and measured resource records. Six native
+RTX 3060 Ti samples record 1,078 frames around 60 fps with zero anchor drift;
+three separate software Formula motion sequences pass too. These short samples
+are not a sustained full-lap or mobile-hardware guarantee. VISUAL_CHECKPOINT.md
+records the comparison conditions and explicit limitations. Cars and scale cues
+are materially improved, but ground/surface presentation still needs work.
+Keep broader circuit rollout paused and improve materials within this same slice.
+
 ## Blender B2b — Source-aligned circuit slice and camera scale, 2026-09-15
 
 The Red Bull Ring finish approach through Turn 1 now has original Blender-authored

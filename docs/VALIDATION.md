@@ -6,6 +6,29 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The Formula Blender candidate passes the complete local gate with 334 TypeScript
+tests across 55 files, 162 Python tests (40.55 seconds), ten asset packages,
+lint/typecheck and build. Four actual Blender exports are byte-identical and the
+four source rejection probes pass. The final studio preview verifies that the
+editable Formula source hash is unchanged after rendering.
+
+Eight initial browser cases pass in 2.8 minutes: both vehicles' delayed/failed
+delivery, visible paused replacement, native wheel motion and shadow/resource
+retention. All 26 broader development regressions pass in 7.8 minutes, including
+GPX restoration (32.7 seconds desktop, 25.9 seconds phone), custom profile imports,
+portable projects, audio, independent GT/Formula reference models, brake demand
+and zero idle drawing/scheduling. Actual browser QA passes 64 camera poses,
+48 Formula reference states, 26 Onboard states, six native-GPU motion samples
+and three separate software Formula samples. VISUAL_CHECKPOINT.md records the
+matched comparison, measured resources and remaining visual limitations.
+All 40 production-browser cases pass in 10.7 minutes against the same completed
+build, including both premium vehicles' visible delivery, reference paint,
+scenery/foliage recovery, source notices, portrait/fullscreen and graphics recovery.
+Evidence: `artifacts/blender-formula-check.log`, `blender-formula-repro.log`,
+`blender-formula-browser-first.log`, `blender-formula-regression.log`,
+`blender-formula-production.log` and the
+corresponding `blender-formula-*-qa.json` records.
+
 The `c698a90` remote run passes quality, Blender, production and four development
 shards; its remaining foliage failure is reproduced after waiting for the actual
 loaded circuit. The corrected test explicitly requires 473 Red Bull Ring trees

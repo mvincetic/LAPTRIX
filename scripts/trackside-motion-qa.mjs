@@ -44,6 +44,18 @@ try {
         await expect(
           page.getByRole("button", { name: "Inspect corner 1", exact: true }),
         ).toBeVisible();
+        await page.waitForFunction(async (vehicle) => {
+          const { _roots } =
+            await import("/node_modules/.vite/deps/@react-three_fiber.js");
+          const scene = _roots
+            .get(document.querySelector(".scene canvas"))
+            .store.getState().scene;
+          return !!scene
+            .getObjectByName("current-ghost")
+            ?.getObjectByName(
+              vehicle === "gt-development" ? "GT_ROOT" : "FORMULA26_ROOT",
+            );
+        }, vehicle);
         if (track === "red-bull-ring")
           await expect
             .poll(() =>

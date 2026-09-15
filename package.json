@@ -22,6 +22,7 @@
     "blender:context": "node scripts/blender-track-context.mjs",
     "blender:export": "node scripts/blender-tool.mjs export",
     "blender:check": "node scripts/blender-tool.mjs check",
+    "blender:preview": "node scripts/blender-tool.mjs preview",
     "lint:python": "node scripts/python.mjs -m ruff check apps/simulation scripts tests/python",
     "format:python": "node scripts/python.mjs -m ruff format apps/simulation scripts tests/python",
     "study:solver": "node scripts/python.mjs scripts/solver_study.py",
