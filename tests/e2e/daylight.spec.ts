@@ -25,12 +25,24 @@ async function lighting(page: Page, instrument = false) {
     const environment = scene.environment as DataTexture;
     const cars = ["current-ghost", "reference-ghost"].map((name) => {
       const car = scene.getObjectByName(name),
-        casters: string[] = [];
+        casters: string[] = [],
+        surfaces: string[] = [];
       car?.traverse((object) => {
-        if ((object as Mesh).isMesh && object.castShadow)
-          casters.push(object.uuid);
+        const mesh = object as Mesh;
+        if (!mesh.isMesh) return;
+        const materials = Array.isArray(mesh.material)
+          ? mesh.material
+          : [mesh.material];
+        if (materials.every((m) => "isMeshStandardMaterial" in m))
+          surfaces.push(object.uuid);
+        if (object.castShadow) casters.push(object.uuid);
       });
-      return { position: car?.position.toArray(), casters };
+      return {
+        position: car?.position.toArray(),
+        casters,
+        surfaces,
+        premium: !!car?.getObjectByName("GT_ROOT"),
+      };
     });
     return {
       environment: environment.uuid,
@@ -47,6 +59,7 @@ async function lighting(page: Page, instrument = false) {
         .toArray(),
       textures: gl.info.memory.textures,
       cars,
+      scenery: !!scene.getObjectByName("RBR_SLICE_ROOT"),
     };
   }, instrument);
 }
@@ -101,6 +114,13 @@ for (const [track, vehicle, width] of [
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
     const before = await project(page),
       cursor = page.getByRole("slider", { name: "Viewer lap position" });
+    if (vehicle === "gt-development")
+      await expect
+        .poll(async () => {
+          const state = await lighting(page);
+          return state.cars.every((car) => car.premium) && state.scenery;
+        })
+        .toBe(true);
     await expect.poll(async () => (await lighting(page)).map).toBeTruthy();
     const beforeSeek = await lighting(page, true);
     await cursor.fill("5");
@@ -113,7 +133,8 @@ for (const [track, vehicle, width] of [
     expect(initial.bytes).toBe(131072);
     expect(initial.mapSize).toEqual([1024, 1024]);
     expect(initial.autoUpdate).toBe(false);
-    expect(initial.cars[0].casters.length).toBeGreaterThan(40);
+    expect(initial.cars[0].surfaces.length).toBeGreaterThan(4);
+    expect(initial.cars[0].casters).toEqual(initial.cars[0].surfaces);
     expect(initial.cars[1].casters).toEqual([]);
     let solves = 0;
     page.on("request", (request) => {
@@ -130,6 +151,31 @@ for (const [track, vehicle, width] of [
       expect(next.target).toEqual(next.cars[0].position);
       expect(next.textures).toBeLessThanOrEqual(initial.textures);
       expect(await cursor.getAttribute("value")).toBe("5");
+    }
+    if (track === "red-bull-ring") {
+      await page
+        .getByRole("tab", { name: "Analysis Layers", exact: true })
+        .click();
+      const environment = page.getByRole("checkbox", {
+        name: "Environment",
+        exact: true,
+      });
+      const mounted = await lighting(page);
+      await environment.uncheck();
+      await expect
+        .poll(async () => (await lighting(page)).shadowPasses)
+        .toBeGreaterThan(mounted.shadowPasses);
+      const removed = await lighting(page);
+      expect(removed.scenery).toBe(false);
+      await environment.check();
+      await expect
+        .poll(async () => (await lighting(page)).shadowPasses)
+        .toBeGreaterThan(removed.shadowPasses);
+      const restored = await lighting(page);
+      expect(restored.scenery).toBe(true);
+      expect(restored.map).toBe(mounted.map);
+      expect(restored.cars).toEqual(mounted.cars);
+      await page.getByRole("tab", { name: "Track View", exact: true }).click();
     }
     for (const time of [20, 60, 5]) {
       const prior = await lighting(page);
@@ -174,8 +220,14 @@ for (const [track, vehicle, width] of [
     const hidden = await lighting(page);
     await current.check();
     await expect
-      .poll(async () => (await lighting(page)).cars[0].casters.length)
-      .toBeGreaterThan(40);
+      .poll(async () => {
+        const car = (await lighting(page)).cars[0];
+        return (
+          car.surfaces.length > 4 &&
+          JSON.stringify(car.casters) === JSON.stringify(car.surfaces)
+        );
+      })
+      .toBe(true);
     await expect
       .poll(async () => (await lighting(page)).shadowPasses)
       .toBeGreaterThan(hidden.shadowPasses);

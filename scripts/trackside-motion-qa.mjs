@@ -3,14 +3,27 @@ import { chromium, expect } from "@playwright/test";
 import { writeFile } from "node:fs/promises";
 
 const browser = await chromium.launch({
-  args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
+  args:
+    process.env.QA_GPU === "hardware"
+      ? ["--enable-gpu", "--enable-webgl", "--ignore-gpu-blocklist"]
+      : ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const results = [],
   prefix = process.env.PRESENTATION_QA_PREFIX ?? "trackside-motion";
 try {
-  for (const track of ["ardennes-development", "red-bull-ring"])
-    for (const vehicle of ["formula-development", "gt-development"])
-      for (const width of track === "red-bull-ring" ? [1600, 390] : [1600]) {
+  for (const track of ["ardennes-development", "red-bull-ring"].filter(
+    (id) => !process.env.QA_TRACK || id === process.env.QA_TRACK,
+  ))
+    for (const vehicle of ["formula-development", "gt-development"].filter(
+      (id) => !process.env.QA_VEHICLE || id === process.env.QA_VEHICLE,
+    ))
+      for (const width of (track === "red-bull-ring"
+        ? [1600, 390]
+        : [1600]
+      ).filter(
+        (width) =>
+          !process.env.QA_WIDTH || width === Number(process.env.QA_WIDTH),
+      )) {
         const page = await browser.newPage({
           viewport: { width, height: 900 },
           reducedMotion: "reduce",
@@ -31,6 +44,19 @@ try {
         await expect(
           page.getByRole("button", { name: "Inspect corner 1", exact: true }),
         ).toBeVisible();
+        if (track === "red-bull-ring")
+          await expect
+            .poll(() =>
+              page.evaluate(async () => {
+                const { _roots } =
+                  await import("/node_modules/.vite/deps/@react-three_fiber.js");
+                return !!_roots
+                  .get(document.querySelector(".scene canvas"))
+                  .store.getState()
+                  .scene.getObjectByName("RBR_SLICE_ROOT");
+              }),
+            )
+            .toBe(true);
         await page
           .getByRole("button", { name: "Onboard", exact: true })
           .click();
@@ -46,22 +72,32 @@ try {
             await import("/node_modules/.vite/deps/@react-three_fiber.js");
           const { Matrix4, Vector3 } =
             await import("/node_modules/.vite/deps/three.js");
-          const { scene, camera } = _roots
+          const { scene, camera, gl } = _roots
             .get(document.querySelector(".scene canvas"))
             .store.getState();
-          const posts = scene.getObjectByName("context-guardrail-posts"),
+          const posts =
+              scene.getObjectByName("RBR_SLICE_ROOT_RBR_Steel_LOD0") ??
+              scene.getObjectByName("context-guardrail-posts"),
             car = scene.getObjectByName("current-ghost");
           const matrix = new Matrix4(),
             point = new Vector3(),
             projected = new Vector3();
           let chosen = -1,
             best = Infinity;
-          for (let i = 0; i < posts.count; i++) {
-            posts.getMatrixAt(i, matrix);
-            point
-              .set(0, 0.5, 0)
-              .applyMatrix4(matrix)
-              .applyMatrix4(posts.matrixWorld);
+          const vertices = posts.isInstancedMesh
+            ? null
+            : posts.geometry.getAttribute("position");
+          const count = vertices?.count ?? posts.count;
+          const readPoint = (i) => {
+            if (vertices) point.fromBufferAttribute(vertices, i);
+            else {
+              posts.getMatrixAt(i, matrix);
+              point.set(0, 0.5, 0).applyMatrix4(matrix);
+            }
+            return point.applyMatrix4(posts.matrixWorld);
+          };
+          for (let i = 0; i < count; i++) {
+            readPoint(i);
             projected.copy(point).project(camera);
             const distance = point.distanceTo(camera.position),
               score = Math.abs(distance - 110);
@@ -82,12 +118,16 @@ try {
             throw new Error(
               "No forward support is available for the parallax probe.",
             );
-          posts.getMatrixAt(chosen, matrix);
-          const anchor = new Vector3(0, 0.5, 0)
-            .applyMatrix4(matrix)
-            .applyMatrix4(posts.matrixWorld);
+          const anchor = readPoint(chosen).clone();
           const start = car.position.clone();
+          const context = gl.getContext(),
+            debug = context.getExtension("WEBGL_debug_renderer_info");
           const stats = (window.tracksideMotion = {
+            renderer: context.getParameter(
+              debug?.UNMASKED_RENDERER_WEBGL ?? context.RENDERER,
+            ),
+            pixelRatio: gl.getPixelRatio(),
+            anchorObject: posts.name,
             frames: 0,
             seen: 0,
             minX: Infinity,
@@ -96,6 +136,10 @@ try {
             anchorDrift: 0,
             firstTime: Infinity,
             lastTime: 0,
+            firstFrameMs: Infinity,
+            lastFrameMs: 0,
+            maxDraws: 0,
+            maxTriangles: 0,
           });
           window.stopTracksideMotion = addAfterEffect(() => {
             if (!document.querySelector('[aria-label="Pause viewer lap"]'))
@@ -106,17 +150,21 @@ try {
                 .getAttribute("value"),
             );
             stats.frames++;
+            const now = window.performance.now();
+            stats.firstFrameMs = Math.min(stats.firstFrameMs, now);
+            stats.lastFrameMs = now;
+            stats.maxDraws = Math.max(stats.maxDraws, gl.info.render.calls);
+            stats.maxTriangles = Math.max(
+              stats.maxTriangles,
+              gl.info.render.triangles,
+            );
             stats.firstTime = Math.min(stats.firstTime, time);
             stats.lastTime = Math.max(stats.lastTime, time);
             stats.carDistance = Math.max(
               stats.carDistance,
               car.position.distanceTo(start),
             );
-            posts.getMatrixAt(chosen, matrix);
-            point
-              .set(0, 0.5, 0)
-              .applyMatrix4(matrix)
-              .applyMatrix4(posts.matrixWorld);
+            readPoint(chosen);
             stats.anchorDrift = Math.max(
               stats.anchorDrift,
               point.distanceTo(anchor),

@@ -18,7 +18,11 @@ export type RoadsidePost = {
 };
 
 /** Original source-framed visual context; no circuit identity or telemetry dependency. */
-export function roadsideContext(track: Track, surface: TerrainSurface) {
+export function roadsideContext(
+  track: Track,
+  surface: TerrainSurface,
+  omitRanges: number[][] = [],
+) {
   const { pieces, edge } = roadPieces(track, asset.postSpacing);
   const clear = roadClearance(track),
     rails: number[] = [],
@@ -27,6 +31,10 @@ export function roadsideContext(track: Track, surface: TerrainSurface) {
   let omittedSpans = 0;
   for (const { i, from, to, distance } of pieces)
     for (const side of [1, -1] as const) {
+      if (
+        omitRanges.some(([start, end]) => distance >= start && distance <= end)
+      )
+        continue;
       // Both endpoints lie on exact apron cross-sections, outside the shoulder.
       const base = (t: number) => {
         const inner = edge(i, t, side, 4, SHOULDER_SURFACE_LIFT - 0.02),

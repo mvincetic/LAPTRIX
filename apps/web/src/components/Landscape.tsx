@@ -1,5 +1,11 @@
-import { useEffect, useMemo } from "react";
-import { BufferAttribute, BufferGeometry, Color, DoubleSide } from "three";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  DoubleSide,
+  type Group,
+} from "three";
 import type { Track } from "../../../../packages/shared/schema";
 import { createTerrainSurface } from "../../../../packages/track-engine/terrain";
 import { roadApron } from "../road-presentation";
@@ -7,6 +13,12 @@ import { Trackside } from "./Trackside";
 import { TracksideAssets } from "./TracksideAssets";
 import { presentationForSource } from "../trackside-assets";
 import { Trees } from "./Trees";
+import { BlenderScenery } from "./BlenderScenery";
+import {
+  loadRBRScenery,
+  rbrSceneryContract,
+  sceneryFootprints,
+} from "../scenery-asset";
 
 export function Landscape({
   track,
@@ -16,6 +28,25 @@ export function Landscape({
   sourceFingerprint?: string;
 }) {
   const presentation = presentationForSource(sourceFingerprint);
+  const [scenery, setScenery] = useState<Group | null>(null);
+  const eligible = sourceFingerprint === rbrSceneryContract.sourceFingerprint;
+  useEffect(() => {
+    if (!eligible) return;
+    let active = true;
+    void loadRBRScenery()
+      .then((template) => {
+        if (active) setScenery(template);
+      })
+      .catch(() => {
+        console.warn(
+          "Showcase scenery could not load. Toggle Environment to retry.",
+        );
+      });
+    return () => {
+      active = false;
+    };
+  }, [eligible]);
+  const shownScenery = eligible ? scenery : null;
   const data = useMemo(() => {
     const surface = createTerrainSurface(track);
     const colors = new Float32Array(surface.distances.length * 3);
@@ -55,7 +86,14 @@ export function Landscape({
   }, [data]);
   return (
     <group>
-      <Trackside track={track} surface={data.surface} />
+      <Trackside
+        track={track}
+        surface={data.surface}
+        omitRanges={
+          shownScenery ? rbrSceneryContract.distanceRanges : undefined
+        }
+      />
+      {shownScenery && <BlenderScenery template={shownScenery} />}
       {presentation && (
         <TracksideAssets
           track={track}
@@ -69,7 +107,10 @@ export function Landscape({
       <mesh name="road-earthworks" geometry={data.apron} receiveShadow>
         <meshStandardMaterial color="#a8b395" roughness={1} side={DoubleSide} />
       </mesh>
-      <Trees positions={data.trees} />
+      <Trees
+        positions={data.trees}
+        exclusions={shownScenery ? sceneryFootprints(shownScenery) : undefined}
+      />
     </group>
   );
 }

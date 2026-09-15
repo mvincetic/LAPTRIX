@@ -141,22 +141,29 @@ buffer is discarded. It also retains the context's error check. See RENDERING.md
 and large source orbit/top/chase views at 1600, 1280 and 390 px. Images and numerical
 findings are retained locally in ignored `artifacts/`.
 
-## Product chase camera — 2026-09-11
+## Product chase camera — retuned with the Blender slice, 2026-09-15
 
 The follow camera now samples the canonical racing line at a physical distance
 behind the car, instead of placing it 50 m behind the instantaneous heading.
-Follow distance is `10 + 2 * wheelbase` metres; the look-ahead sample is
+Follow distance is `4.5 + 1.3 * wheelbase` metres; the look-ahead sample is
 `8 + 0.18 * speed` metres ahead (speed in m/s). Both distances are capped at 8% of
-lap length and wrap over the closed source. The target blends 35% towards that
+lap length and wrap over the closed source. The target blends 12% towards that
 sample from the car, keeping tight hairpins from cropping it on narrow screens.
-Base camera height is `3.4 + 0.35 * wheelbase` above the current
-sample, with at least 3.2 m clearance above its sampled rear position. The fixed
-55-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
+Base camera height is `1.7 + 0.25 * wheelbase` above the current
+sample, with at least 1.9 m clearance above its sampled rear position. The fixed
+58-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
 in phone and landscape views. Overview modes restore their 45-degree fit.
 
+With the GT this brings the follow distance from 14.914 m to 7.6941 m and the
+height from 4.26 m to 2.31425 m. Actual start-line browser captures show the GT
+roughly twice as wide on screen, with nearby fences and asphalt occupying more
+of the moving foreground. Aim height is 0.7 m above the body origin. The reduced
+anticipation retains the complete car through tight hairpins. Closed distance is
+normalized before adding offsets, making the finish endpoint exactly repeatable.
+
 Portrait fullscreen narrows horizontal field of view further than the normal
-phone panel. Below aspect 0.9, the camera retreats from its target along the same
-view ray by `0.9 / aspect`. Target, bearing and vertical field of view stay fixed;
+phone panel. Below aspect 1.05, the camera retreats from its target along the same
+view ray by `1.05 / aspect`. Target, bearing and vertical field of view stay fixed;
 the ordinary pose is returned unchanged for wider canvases. This preserves space
 around the car through hairpins without introducing a separate animation.
 

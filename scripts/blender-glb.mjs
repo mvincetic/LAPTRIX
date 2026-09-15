@@ -397,7 +397,7 @@ export function inspectBlenderGlb(bytes, config) {
 export async function validateBlenderEntry(root, entry) {
   assert.equal(entry.format, "blender-glb");
   assert(
-    ["validation", "vehicles", "environment", "trackside"].includes(
+    ["validation", "vehicles", "environment", "trackside", "tracks"].includes(
       entry.category,
     ),
   );
@@ -407,6 +407,37 @@ export async function validateBlenderEntry(root, entry) {
   assert.equal(config.id, entry.id);
   for (const field of ["sourceFile", "runtimeFile", "maxBytes", "maxTriangles"])
     assert.equal(entry[field], config[field]);
+  if (config.authoringContext) {
+    assert.equal(entry.authoringContext, config.authoringContext);
+    const contextBytes = await readFile(
+      await ownedAssetPath(root, config.authoringContext),
+    );
+    assert.equal(
+      sha256(contextBytes),
+      config.authoringContextSha256,
+      "Authoring context hash differs",
+    );
+    const context = JSON.parse(contextBytes.toString("utf8"));
+    assert.equal(context.sourceFingerprint, config.sourceFingerprint);
+    assert.equal(entry.sourceFingerprint, config.sourceFingerprint);
+    assert.deepEqual(entry.thirdPartySources, context.attribution.sources);
+    const runtimeBytes = await readFile(
+      await ownedAssetPath(root, entry.runtimeFile),
+    );
+    const json = JSON.parse(
+      runtimeBytes.toString("utf8", 20, 20 + runtimeBytes.readUInt32LE(12)),
+    );
+    const extras = json.nodes.find((n) => n.name === config.rootNode)?.extras;
+    assert.equal(extras?.source_fingerprint, config.sourceFingerprint);
+    assert.equal(
+      extras?.authoring_context_sha256,
+      config.authoringContextSha256,
+    );
+    assert.deepEqual(
+      JSON.parse(extras?.source_credits ?? "null"),
+      entry.thirdPartySources,
+    );
+  }
   const source = await readFile(await ownedAssetPath(root, entry.sourceFile));
   assert(
     !/[a-z]:[\\/]Users[\\/]|\/(?:Users|home)\//i.test(source.toString("utf8")),

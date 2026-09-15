@@ -121,6 +121,42 @@
       "sha256": "fb0fc851dd8bc3918661e7f1c2e9a23649600f2f696b39fd70cc02045f567318",
       "semanticSha256": "dbd91c62dd15202f45b962ab8722682becbfca5b7e48bde6b24acad8b1ebaecd",
       "materialBatches": 29
+    },
+    {
+      "id": "laptrix.blender-rbr-slice.v1",
+      "category": "tracks",
+      "format": "blender-glb",
+      "parameters": "assets/blender/tracks/red-bull-ring-slice.json",
+      "implementation": "scripts/blender/author_rbr.py",
+      "sourceFile": "assets/blender/tracks/red-bull-ring-slice.blend",
+      "runtimeFile": "assets/runtime/tracks/red-bull-ring-slice.glb",
+      "origin": "Authoritative Red Bull Ring origin; East/Up/South in GLB metres; source-aligned original scenery",
+      "provenance": "Original neutral LAPTRIX structures, curbs, fences and runoff aligned to the pinned OSM/Steiermark source and existing rendered road/terrain frame. Approximate visual reconstruction, not surveyed facilities.",
+      "rights": "Original structures: repository distribution policy. Source-derived geometry retains ODbL 1.0 and elevation CC BY 4.0 obligations; see data/sources/red-bull-ring/README.md.",
+      "thirdPartySources": [
+        {
+          "title": "GP centerline",
+          "credit": "© OpenStreetMap contributors",
+          "url": "https://www.openstreetmap.org/relation/5309181",
+          "license": "ODbL 1.0",
+          "licenseUrl": "https://opendatacommons.org/licenses/odbl/1-0/"
+        },
+        {
+          "title": "Terrain elevation · 2010",
+          "credit": "Datenquelle: CC-BY-4.0: Land Steiermark - data.steiermark.gv.at",
+          "url": "https://data.steiermark.at/cms/beitrag/12803290/97428847/",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "sourceFingerprint": "sha256:6269176570597be6d70057566a045d193bdbc18f3e59db8cad141c33798c4118",
+      "authoringContext": "assets/blender/tracks/red-bull-ring-context.json",
+      "maxBytes": 4500000,
+      "maxTriangles": 120000,
+      "sourceSha256": "f3cb5f18f86e48b686b39351e93ddd6050c820bf7296aa5b321c9a30ca708f34",
+      "sha256": "3dbbda1b17d2516e80ef0dab01dab6ddcca46b458df60631c2e5321b84cfe0ff",
+      "semanticSha256": "fe6fa83b69969c2ebefd0bc99f68053ebf02761cb6f6b1ac74ec124b60d7b4cf",
+      "materialBatches": 11
     }
   ]
 }

@@ -14,20 +14,22 @@ import { guardrailAsset as asset, roadsideContext } from "../roadside-context";
 export function Trackside({
   track,
   surface,
+  omitRanges,
 }: {
   track: Track;
   surface: TerrainSurface;
+  omitRanges?: number[][];
 }) {
   const invalidate = useThree((state) => state.invalidate);
   const posts = useRef<InstancedMesh>(null),
     reflectors = useRef<InstancedMesh>(null);
   const data = useMemo(() => {
-    const context = roadsideContext(track, surface),
+    const context = roadsideContext(track, surface, omitRanges),
       geometry = new BufferGeometry();
     geometry.setAttribute("position", new BufferAttribute(context.rails, 3));
     geometry.computeVertexNormals();
     return { ...context, geometry };
-  }, [track, surface]);
+  }, [track, surface, omitRanges]);
   useLayoutEffect(() => {
     const object = new Object3D();
     data.posts.forEach((post, i) => {

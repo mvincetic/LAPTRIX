@@ -1,5 +1,44 @@
 # Product presentation milestones
 
+## Blender B2b — Source-aligned circuit slice and camera scale, 2026-09-15
+
+The Red Bull Ring finish approach through Turn 1 now has original Blender-authored
+pit garages, graded foundations and pit lane, a LAPTRIX start gantry, grandstand,
+barriers, fences, braking boards, raised curbs and runoff. The visible main road
+and simulation geometry retain their existing source frame. Source/context hashes
+and OSM/Steiermark credits survive source authoring and GLB delivery. These are
+neutral approximate facilities; no official circuit geometry or branding is
+claimed. See RBR_BLENDER_SCENE.md for the source package and reconstruction limits.
+
+The 4,611,444-byte editable source exports 79,530 visible triangles and 2,064 coarse
+shadow triangles in eleven material batches, a 3,585,828-byte GLB, with no textures.
+The simpler shadow pass replaces detailed facility bevels/seat/lettering in the
+moving sun map; the same motion check passes without increasing its deadline.
+Lazy delivery is limited to the exact
+source fingerprint. Generic scenery remains available on failure, with remount
+retry and a bounded shared cache. Authored roof footprints resolve the tree crown
+intersection identified during browser review without renumbering surviving sites.
+
+A closer, lower 58-degree Chase camera approximately doubles the GT's screen
+width on the start straight. Reduced anticipation and additional narrow-aspect
+retreat preserve the entire car through the real Red Bull Ring hairpin. The final
+64-pose camera sweep passes across both cars, both circuits and desktop/phone.
+The complete local gate passes 330 TypeScript / 162 Python tests (40.63 seconds),
+nine assets, lint/typecheck and build. All three Blender exports are byte-identical.
+All six continuous sequences pass: 265 frames, 140–206 m traveled and zero
+trackside-anchor drift. Eleven additional start/finish–T1 Chase/Onboard/detail
+views were inspected after shadow optimization. All 17 targeted development
+journeys pass in 5.5 minutes and all 39 production journeys pass in 9.4 minutes,
+including lazy scenery recovery, cached remount, paused shadow refresh, GPX
+restoration, native brakes and portrait Chase containment.
+
+The separate native-GPU run identifies an NVIDIA GeForce RTX 3060 Ti through
+ANGLE/D3D11. At 1600 × 1000 and pixel ratio 1 it records 180 frames over 2.978 wall
+seconds, 185.236 m traveled and zero anchor drift. Peak submissions are 69 draws
+and 423,336 triangles. This is a short start-straight measurement, not a full-lap
+guarantee. Facility surfaces and surrounding vegetation remain simplified; the
+formal GT/Formula quality checkpoint will assess those limits before expansion.
+
 ## Blender B2a — Original GT integration, 2026-09-15
 
 The first Blender GT is integrated on its existing profile. It has an original

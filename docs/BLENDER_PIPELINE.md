@@ -51,6 +51,12 @@ does not constitute a premium vehicle or environment milestone.
 
 ## Coordinates, pivots and names
 
+The first source-aligned circuit package is documented in
+[RBR_BLENDER_SCENE.md](RBR_BLENDER_SCENE.md). Its authoring reference is regenerated
+from the actual source/road/terrain implementation, then pinned by source and
+context hashes. Those hashes and full source credits survive `.blend` → GLB;
+validation rejects stale alignment or lost attribution before delivery.
+
 | Contract | Blender source | LAPTRIX / GLB |
 | --- | --- | --- |
 | Units | Metric, scale length 1 | Metres, scale 1 |
@@ -74,6 +80,13 @@ names ending in `_LOD0`; future lower-detail exports use `_LOD1`, etc., with one
 selected LOD per export. Authoring guides/debug objects belong outside `EXPORT`
 and may use a `REF_` prefix. Cameras, lights, colliders and debug objects are not
 runtime content in the initial contract.
+
+The circuit's `SHADOW_CASTERS_LOD0` is an explicit render role: coarse solid
+silhouettes retained in the `.blend` and GLB for the moving sun map. Runtime
+disables color/depth writes for that node and assigns detailed visible meshes
+to receive the shadow. The authoring viewport shows the proxy as wire geometry;
+hide that role for standalone Blender beauty renders. The browser remains the
+acceptance target. Native vehicles keep their detailed telemetry-driven shadows.
 
 Vehicle rigs use `WHEEL_FL`, `WHEEL_FR`, `WHEEL_RL`, `WHEEL_RR` as wheel-center
 empty nodes and nested `SPIN_FL`, `SPIN_FR`, `SPIN_RL`, `SPIN_RR` nodes. FL/FR are

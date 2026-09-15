@@ -1,5 +1,6 @@
 """Repository-relative metre/axis contract, also testable without Blender."""
 
+import hashlib
 import json
 import math
 from pathlib import Path, PureWindowsPath
@@ -25,6 +26,27 @@ def owned_path(value: str) -> Path:
 
 def read_json(value: str):
     return json.loads(owned_path(value).read_text(encoding="utf-8"))
+
+
+def validate_source_context(config, properties):
+    """Bind authored world geometry and redistribution credits to its exact input."""
+    if "authoringContext" not in config:
+        return
+    raw = owned_path(config["authoringContext"]).read_bytes()
+    context = json.loads(raw)
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != config["authoringContextSha256"]:
+        raise ValueError("Authoring context changed; rebuild the scene against the new frame")
+    if properties.get("authoring_context_sha256") != digest:
+        raise ValueError("Blender source was authored against a different context")
+    if (
+        not context["sourceFingerprint"]
+        == config["sourceFingerprint"]
+        == properties.get("source_fingerprint")
+    ):
+        raise ValueError("Blender source fingerprint differs from the authoritative track")
+    if json.loads(properties.get("source_credits", "null")) != context["attribution"]["sources"]:
+        raise ValueError("Retain the complete source credits in the exported world")
 
 
 def vector3(value):

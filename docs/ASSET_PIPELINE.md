@@ -6,8 +6,9 @@ environment art. `BLENDER_PIPELINE.md` documents the implemented editable `.blen
 separate Linux export check. The registered internal basis gauge proves axes,
 metres and named pivots through actual Three.js import. The first original GT is
 integrated with a named native telemetry rig, independent instance materials,
-bounded caching and procedural fallback. The source-aligned Red Bull Ring scene
-and camera acceptance continue next. See VEHICLE_ASSETS.md for the GT contract.
+bounded caching and procedural fallback. The first source-aligned Red Bull Ring
+scene uses the actual rendered ground context, pinned hashes and embedded source
+credits. See VEHICLE_ASSETS.md and RBR_BLENDER_SCENE.md for delivery and ownership.
 
 Existing procedural assets provide adaptable presentation and fallback during
 that rollout. Every representation consumes the authoritative source/telemetry

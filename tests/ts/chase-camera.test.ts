@@ -43,15 +43,15 @@ describe("deterministic telemetry chase camera", () => {
     const lap = circle(),
       before = structuredClone(lap);
     const pose = chaseCameraPose(lap, 1.75);
-    expect(pose.position[0]).toBeCloseTo(100 * Math.sin((35 - 17.2) / 100), 2);
-    expect(pose.position[2]).toBeCloseTo(100 * Math.cos((35 - 17.2) / 100), 2);
-    expect(pose.position[1]).toBeCloseTo(4.66 + VEHICLE_SURFACE_LIFT, 12);
+    expect(pose.position[0]).toBeCloseTo(100 * Math.sin((35 - 9.18) / 100), 2);
+    expect(pose.position[2]).toBeCloseTo(100 * Math.cos((35 - 9.18) / 100), 2);
+    expect(pose.position[1]).toBeCloseTo(2.6 + VEHICLE_SURFACE_LIFT, 12);
     expect(pose.target[0]).toBeCloseTo(
-      65 * Math.sin(35 / 100) + 35 * Math.sin((35 + 11.6) / 100),
+      88 * Math.sin(35 / 100) + 12 * Math.sin((35 + 11.6) / 100),
       2,
     );
     expect(pose.target[2]).toBeCloseTo(
-      65 * Math.cos(35 / 100) + 35 * Math.cos((35 + 11.6) / 100),
+      88 * Math.cos(35 / 100) + 12 * Math.cos((35 + 11.6) / 100),
       2,
     );
     expect(lap).toEqual(before);
@@ -78,7 +78,7 @@ describe("deterministic telemetry chase camera", () => {
     const lap = circle(true),
       time = 3.123;
     const ordinary = chaseCameraPose(lap, time);
-    for (const aspect of [0.9, 1, 2.6])
+    for (const aspect of [1.05, 1.2, 2.6])
       expect(chaseCameraPose(lap, time, undefined, aspect)).toEqual(ordinary);
     const portrait = chaseCameraPose(lap, time, undefined, 0.45);
     expect(portrait.target).toEqual(ordinary.target);
@@ -88,7 +88,7 @@ describe("deterministic telemetry chase camera", () => {
     const b = new Vector3(...portrait.position).sub(
       new Vector3(...portrait.target),
     );
-    expect(b.length()).toBeCloseTo(a.length() * 2, 10);
+    expect(b.length()).toBeCloseTo(a.length() * (1.05 / 0.45), 10);
     expect(a.normalize().distanceTo(b.normalize())).toBeLessThan(1e-12);
     expect(chaseCameraPose(lap, time, undefined, 0.45)).toEqual(portrait);
     for (const aspect of [0, -1, NaN, Infinity])

@@ -120,7 +120,7 @@ and rasterio1.5.1.
 `reconstruction.json` records the actual resulting measurements:
 
 | Quantity | Reconstruction |
-| --- | ---: |
+| ------------------------------------ | -------------: |
 | Mapped horizontal polyline | 4306.888m |
 | Interpolated horizontal curve | 4307.620m |
 | Final 3D source polyline | 4311.389m |
@@ -145,3 +145,9 @@ measurement. Those values are factual comparison references, not imposed fitting
 targets. LAPTRIX displays its actual geometry length and **detected** corner count;
 detected features do not claim the official numbering. Vehicle physics, lap times
 and scenery remain approximate development output.
+
+The first Blender presentation layer adds original approximate start/finish–T1
+facilities aligned to this unchanged source frame. Its editable source and GLB
+retain the OSM/Steiermark credits and source/context hashes. See
+[the reconstruction documentation](../../../docs/RBR_BLENDER_SCENE.md) for asset
+paths, reproduction, attribution and the limits of those unsurveyed facilities.

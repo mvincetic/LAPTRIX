@@ -1,8 +1,9 @@
+import json
 import math
 
 import pytest
 
-from scripts.blender.contract import owned_path, to_blender, to_runtime
+from scripts.blender.contract import owned_path, read_json, to_blender, to_runtime, validate_source_context
 
 
 def test_vehicle_and_track_axis_contract_preserves_metres_and_handedness():
@@ -27,3 +28,25 @@ def test_invalid_authoring_coordinates_are_rejected(point):
 def test_authoring_paths_cannot_escape_the_repository(path):
     with pytest.raises(ValueError, match="relative|inside"):
         owned_path(path)
+
+
+@pytest.mark.parametrize("fault", [None, "context", "fingerprint", "credits"])
+def test_scenery_source_cannot_silently_change_alignment_or_lose_attribution(fault):
+    config = read_json("assets/blender/tracks/red-bull-ring-slice.json")
+    context = read_json(config["authoringContext"])
+    properties = {
+        "authoring_context_sha256": config["authoringContextSha256"],
+        "source_fingerprint": config["sourceFingerprint"],
+        "source_credits": json.dumps(context["attribution"]["sources"]),
+    }
+    if fault == "context":
+        properties["authoring_context_sha256"] = "outdated"
+    elif fault == "fingerprint":
+        properties["source_fingerprint"] = "different-track"
+    elif fault == "credits":
+        properties["source_credits"] = "[]"
+    if fault:
+        with pytest.raises(ValueError, match="context|fingerprint|credits"):
+            validate_source_context(config, properties)
+    else:
+        validate_source_context(config, properties)

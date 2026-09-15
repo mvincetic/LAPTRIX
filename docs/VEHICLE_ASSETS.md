@@ -42,10 +42,11 @@ Current meshes cast/receive shadows; late loading refreshes the cached sun shado
 Reference meshes retain 28% opacity, no depth writes/shadows and independent lamps.
 
 This is the first integrated authored GT, not the final quality checkpoint.
-The Red Bull Ring environment and camera retuning remain active in B2. Close
-views now show richer silhouette, fitted glass and wheel detail; the current
-Chase camera still leaves the GT small on a wide canvas. The surroundings,
-material depth and overall speed perception need assessment with the new slice.
+The B2 circuit slice adds source-aligned facilities and a closer/lower 58-degree
+Chase camera, approximately doubling the GT's start-straight screen width. Close
+views show richer silhouette, fitted glass and wheel detail. Native GPU motion,
+64 camera poses and production delivery pass; see PRODUCT_PRESENTATION.md for
+measurements and the remaining surface/vegetation limitations.
 The Formula model below remains procedural until B3.
 
 ## Formula bodywork

@@ -1,7 +1,23 @@
 # Rendering when the scene changes
 
+The first Blender Red Bull Ring slice adds ten visible material batches and one
+coarse shadow batch: 81,594 triangles through a 3,585,828-byte lazy GLB. One immutable template serves
+matching-source Landscape instances; a failed fetch preserves generic scenery.
+Mount/removal refreshes cached shadows. Roof footprints exclude intersecting
+contextual crowns while preserving the retained trees' original site indices.
+Generic source placement and the 512-site cap remain unchanged. See
+RBR_BLENDER_SCENE.md for source alignment, resource ownership and provenance.
+
+Before shadow optimization, the combined camera sweep records 52–87 calls and up
+to 505,984 submitted triangles for Red Bull Ring GT frames. The final scene replaces
+the detailed facility shadow submission with 2,064 coarse silhouette triangles.
+The unchanged motion deadline passes after this change. These are measurements
+from the test browser, not a hardware frame-rate guarantee.
+The authored scene itself stays within 16 material batches, 120,000 triangles,
+4.5 MB and zero textures. Formula currently retains its procedural fallback.
+
 Contextual tree placement is now bounded to 512 retained sites. The fixed seeded
-candidate generation and all bundled sites remain unchanged; dense imports select
+candidate generation and all generic bundled sites remain unchanged; dense imports select
 evenly across the accepted list. At 376 triangles per tree, this caps tree geometry
 at 192,512 submitted triangles in the existing two batches. The compact GPX
 regression fixture previously used 816,672. Three identical integration repeats

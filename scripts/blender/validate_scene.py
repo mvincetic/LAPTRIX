@@ -4,7 +4,7 @@ import math
 from pathlib import Path
 
 import bpy
-from contract import owned_path, read_json, to_runtime
+from contract import owned_path, read_json, to_runtime, validate_source_context
 from mathutils import Matrix
 
 
@@ -31,6 +31,7 @@ def validate_scene(config):
     root = bpy.data.objects.get(config["rootNode"])
     if root not in objects or root.type != "EMPTY" or root.parent:
         raise ValueError("The asset needs one unparented empty root")
+    validate_source_context(config, root)
     identity = Matrix.Identity(4)
     if any(abs(root.matrix_world[r][c] - identity[r][c]) > 1e-7 for r in range(4) for c in range(4)):
         raise ValueError("Asset root must retain the world/contact origin and identity transform")

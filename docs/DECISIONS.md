@@ -1,5 +1,34 @@
 # Decision log
 
+## 2026-09-15 — Align authored scenery to the actual rendered source frame
+
+The Red Bull Ring Blender slice consumes a reproducible export of the existing
+source normalization, road and contextual ground. A pinned context hash and
+source fingerprint bind editable art, GLB metadata and runtime eligibility. Full
+OSM/Steiermark credits accompany both source and runtime. Neutral facilities are
+original approximate scenery; they do not imply surveyed circuit detail.
+
+One bounded lazy static package shares immutable resources across environment
+remounts. Failed loading retains the generic scene and can retry. Authored
+distance ranges replace generic barriers only once the package is visible.
+Mount/removal refresh cached shadows. The native road, solver and playback clock
+remain authoritative. A lower, closer 58-degree Chase view uses real scale cues
+from the first integrated scene and retains analytical hairpin/portrait coverage.
+
+The first combined moving scene exceeded the existing software-rendered motion
+check's deadline: detailed facility geometry was submitted again to the small
+moving sun map. A separately authored 2,064-triangle solid silhouette batch
+replaces that repeated detail; visible scene meshes remain intact. Its runtime
+material writes neither color nor scene depth. The original deadline passes after
+the change. Fine fence/seat shadows are intentionally omitted, while the native
+vehicle shadow remains detailed. No simulation timing or playback rate changes.
+
+The first GT remote run exposed a stale daylight-test assumption of more than
+40 separate car meshes. The new GT has 29 batched surfaces. The assertion now
+checks that every loaded PBR surface casts a current-car shadow and every
+reference surface remains shadow-free, with explicit premium-load readiness.
+This preserves the intended rendering check across modeling/batching changes.
+
 ## 2026-09-15 — Integrate an original Blender GT on the native telemetry rig
 
 The first authored vehicle uses editable Blender mesh surfaces and a fixed native

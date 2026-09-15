@@ -12,12 +12,22 @@ import {
 import { spruceCrown } from "../foliage-geometry";
 import { loadFoliageTexture } from "../foliage-texture";
 import spruce from "../../../../assets/environment/spruce.json";
+import {
+  visibleTreeIndices,
+  type GroundFootprint,
+} from "../vegetation-clearance";
 
 export function Trees({
   positions,
+  exclusions,
 }: {
   positions: [number, number, number][];
+  exclusions?: GroundFootprint[];
 }) {
+  const visible = useMemo(
+    () => visibleTreeIndices(positions, exclusions),
+    [positions, exclusions],
+  );
   const invalidate = useThree((state) => state.invalidate),
     crownRef = useRef<InstancedMesh>(null),
     trunkRef = useRef<InstancedMesh>(null),
@@ -52,7 +62,8 @@ export function Trees({
       tint = new Color(),
       white = new Color("#ffffff"),
       cool = new Color("#d8e7df");
-    positions.forEach((position, i) => {
+    visible.forEach((i, slot) => {
+      const position = positions[i];
       const height = spruce.minHeight + (i % spruce.heightVariants),
         ground = position[1] - 6;
       object.rotation.set(0, i * 2.39996, 0);
@@ -67,9 +78,9 @@ export function Trees({
         height * spruce.radiusRatio,
       );
       object.updateMatrix();
-      crownRef.current?.setMatrixAt(i, object.matrix);
+      crownRef.current?.setMatrixAt(slot, object.matrix);
       tint.copy(white).lerp(cool, (i % 13) / 12);
-      crownRef.current?.setColorAt(i, tint);
+      crownRef.current?.setColorAt(slot, tint);
       const trunkHeight =
         height +
         spruce.crownBase +
@@ -78,7 +89,7 @@ export function Trees({
       object.position.y = ground - spruce.trunkEmbed + trunkHeight / 2;
       object.scale.set(spruce.trunkRadius, trunkHeight, spruce.trunkRadius);
       object.updateMatrix();
-      trunkRef.current?.setMatrixAt(i, object.matrix);
+      trunkRef.current?.setMatrixAt(slot, object.matrix);
     });
     for (const mesh of [crownRef.current, trunkRef.current]) {
       if (!mesh) continue;
@@ -88,7 +99,7 @@ export function Trees({
       mesh.computeBoundingSphere();
     }
     invalidate();
-  }, [positions, texture, invalidate]);
+  }, [positions, visible, texture, invalidate]);
   useEffect(
     () => () => {
       Object.values(shapes).forEach((shape) => shape.dispose());
@@ -103,7 +114,7 @@ export function Trees({
         args={[
           texture ? shapes.crown : shapes.fallback,
           undefined,
-          positions.length,
+          visible.length,
         ]}
       >
         <meshStandardMaterial
@@ -119,7 +130,7 @@ export function Trees({
       <instancedMesh
         ref={trunkRef}
         name="context-tree-trunks"
-        args={[shapes.trunk, undefined, positions.length]}
+        args={[shapes.trunk, undefined, visible.length]}
       >
         <meshStandardMaterial color="#827b6b" roughness={1} />
       </instancedMesh>

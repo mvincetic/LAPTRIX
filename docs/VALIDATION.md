@@ -6,6 +6,35 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The source-aligned Blender circuit slice passes the full local gate with 330
+TypeScript / 162 Python tests (40.63 seconds), nine assets, lint/type/build checks
+and three byte-identical Blender exports. The road/vegetation tests use exact
+exported triangles with a conservative spatial index; source/context hashes,
+credits, scene anchors, caching and coarse-shadow material flags are validated.
+The final camera sweep passes 64 poses across both cars/tracks and desktop/phone.
+Six moving sequences pass with 265 frames, 140–206 m traveled and zero fixed-anchor
+drift; eleven slice close/Chase/Onboard states were inspected in the real browser.
+The GT daylight regression now checks all actual PBR shadow surfaces rather than
+the former procedural mesh count. All 17 targeted development journeys pass in
+5.5 minutes, including GPX desktop restoration in 26.6 seconds and phone in 23.5
+seconds under the unchanged 60-second limit. All 39 production journeys pass in
+9.4 minutes, including failed/delayed scenery delivery, retry, cache reuse,
+graphics restoration, source preservation and exact paused workspace retention.
+Evidence: `blender-rbr-browser.log` and `blender-rbr-production.log` in `artifacts/`.
+The unchanged broad visual sweeps also pass all 48 foliage states and all 45
+terrain states across native and imported sources, including retained workspace,
+line visibility and pavement clearance. Evidence is `blender-rbr-foliage-qa.json`
+and `blender-rbr-terrain-qa.json` with their logs and actual compositor captures.
+
+A separate native-GPU motion run reports the actual ANGLE / NVIDIA GeForce RTX
+3060 Ti / D3D11 renderer at pixel ratio 1 and a 1600 × 1000 browser viewport.
+It records 180 frames over 2.978 wall seconds, 2.983 playback seconds, 185.236 m
+travel and zero fixed-anchor drift, with peaks of 69 draws and 423,336 submitted
+triangles. This short start-straight sample is approximately 60 presented frames
+per second; it is not a full-lap performance guarantee. The six software-rendered
+sequences remain separate evidence. See `blender-rbr-native-qa.json` and
+RBR_BLENDER_SCENE.md for reconstruction limits.
+
 The first Blender GT integration passes the complete local gate with 324
 TypeScript / 158 Python tests (39.50 seconds), eight asset packages and exact
 Blender re-export. Five GT unit cases cover native dimensions, the delivered rig,
@@ -1177,8 +1206,7 @@ document widths, bounded modal geometry and an unchanged 10-second cursor at
 Source-scaled camera framing passes lint, typecheck, build, all 87 TypeScript /
 96 Python tests, 60 development browser journeys and both production viewer
 journeys. The development suite completed before the overnight interruption; the
-remaining production checks passed after restarting the local services on September
-10. The initial workspace bundle remains 398.17 kB / 120.86 kB gzip; the camera helper
+remaining production checks passed after restarting the local services on September 10. The initial workspace bundle remains 398.17 kB / 120.86 kB gzip; the camera helper
 is part of the separate 952.42 kB / 254.34 kB gzip viewer.
 
 An independently validated 28,022.824 m synthetic fixture reproduced a blank phone

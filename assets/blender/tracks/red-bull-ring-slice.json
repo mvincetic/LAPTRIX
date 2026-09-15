@@ -1,0 +1,31 @@
+{
+  "id": "laptrix.blender-rbr-slice.v1",
+  "rootNode": "RBR_SLICE_ROOT",
+  "exportCollection": "EXPORT",
+  "sourceFile": "assets/blender/tracks/red-bull-ring-slice.blend",
+  "authoringContext": "assets/blender/tracks/red-bull-ring-context.json",
+  "authoringContextSha256": "9d81b169974301c7e92819e3fb7d26e9ca7773713c66b2a759404ab014a6d0f8",
+  "runtimeFile": "assets/runtime/tracks/red-bull-ring-slice.glb",
+  "maxBytes": 4500000,
+  "maxTriangles": 120000,
+  "maxMeshes": 16,
+  "maxMaterials": 11,
+  "maxTextures": 0,
+  "maxTextureSize": 1024,
+  "bounds": {
+    "min": [-580.069214, -2.612304, -50.662178],
+    "max": [146.922348, 22.02668, 156.42337],
+    "tolerance": 0.002
+  },
+  "requiredNodes": {
+    "RBR_SLICE_ROOT": [0, 0, 0],
+    "SHADOW_CASTERS_LOD0": [0, 0, 0],
+    "START_FINISH_ANCHOR": [0, 0.9191, 0]
+  },
+  "sourceFingerprint": "sha256:6269176570597be6d70057566a045d193bdbc18f3e59db8cad141c33798c4118",
+  "distanceRanges": [
+    [0, 650],
+    [4150, 4311.389]
+  ],
+  "purpose": "Source-aligned start/finish through Turn 1. Neutral original approximate facility art; no official structures or branding."
+}

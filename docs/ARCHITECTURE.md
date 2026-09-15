@@ -1,5 +1,12 @@
 # Architecture
 
+The first Blender circuit layer loads as an optional source-fingerprint-matched
+Landscape child. It shares one bounded immutable GLB template, reserves authored
+roof footprints for vegetation, replaces generic barriers only in its visible
+slice, retries failures on remount and refreshes paused shadows on mount/removal.
+The authoring context is exported from the actual road/terrain implementation and
+pinned by hash. See RBR_BLENDER_SCENE.md for source rights and reconstruction limits.
+
 The first Blender GT integrates as a visual child of the existing TelemetryGhost.
 `premium-vehicle.ts` validates a bounded local GLB and caches its immutable source
 geometry. Each current/reference instance owns cloned materials and named motion

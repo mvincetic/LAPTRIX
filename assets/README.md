@@ -12,6 +12,13 @@ and no textures. It uses the existing GT profile's physical wheel rig. The brows
 loads it lazily with independent native-lap materials and procedural fallback.
 See `docs/VEHICLE_ASSETS.md` for editable source, provenance and lifecycle details.
 
+`blender/tracks/red-bull-ring-slice.blend` adds the first source-aligned circuit
+reconstruction: start/finish through Turn 1, 79,530 visible plus 2,064 shadow
+triangles in eleven batches, a 3,585,828-byte GLB and no textures. The 4,611,444-byte editable source
+retains neutral original facilities and the exact OSM/Steiermark-derived ground
+frame. Runtime eligibility, roof clearances and credits are documented in
+`docs/RBR_BLENDER_SCENE.md`. The original simulation data remains authoritative.
+
 The guardrail
 package is an original corrugated guardrail, supports and reflectors. Its metre
 dimensions and colours are in `trackside/guardrail.json`; `roadside-context.ts`

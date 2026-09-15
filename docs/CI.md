@@ -1,5 +1,21 @@
 # Continuous integration
 
+The [first GT run](https://github.com/mvincetic/LAPTRIX/actions/runs/34992167406)
+at `ed37a21` finishes red with one daylight assertion failure. The old assertion
+expects more than 40 separate shadow-casting car meshes; the loaded Blender GT
+has 29 batched PBR surfaces. The other six jobs succeed, including production and
+byte-identical Blender export. The follow-up checks shadow coverage against
+every actual PBR surface, waits for premium model readiness, and retains the
+reference's zero-shadow requirement. It also checks paused scenery removal and
+restoration refresh the existing shadow map. No test deadlines are increased.
+
+The circuit package adds a reproducible authoring-context check to the asset gate
+and includes the editable scene in the Blender job. Export metadata binds the
+physical source fingerprint, rendered-ground context hash and full source
+credits. Grid-indexed world-triangle probes keep full road/vegetation clearance
+coverage fast in the parallel TypeScript suite; a planted obstruction verifies
+the probe detects intersections across cell boundaries.
+
 The Blender toolchain adds a separate 15-minute source/export job. It installs the
 checksum-pinned official 5.2.1 Linux archive, reopens the editable source, verifies
 GLB equivalence and exercises rejection of invalid units, pivots and shaders.

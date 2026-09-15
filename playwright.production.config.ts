@@ -21,6 +21,7 @@ export default defineConfig({
     "foliage-delivery.spec.ts",
     "reference-appearance.spec.ts",
     "premium-delivery.spec.ts",
+    "scenery-delivery.spec.ts",
   ],
   use: { ...base.use, baseURL: "http://127.0.0.1:5174" },
   webServer: [

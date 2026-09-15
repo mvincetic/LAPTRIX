@@ -2,7 +2,10 @@
 
 `laptrix.spruce.v1` replaces the uniform scenery cones with an original spruce
 bough on static branch cards and a tapered trunk. Both circuits retain their
-existing contextual tree positions. These are schematic scale cues, not surveyed
+existing contextual candidate positions. The Blender Red Bull Ring layer reserves
+the actual authored roof footprints plus a crown margin, resolving facility
+intersections. Retained sites preserve their original variation indices; generic
+fallback and imported tracks use the complete accepted list. These are schematic scale cues, not surveyed
 trees or a reconstruction of Red Bull Ring's actual vegetation.
 
 ## Source and runtime package
