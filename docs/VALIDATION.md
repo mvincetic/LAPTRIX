@@ -6,6 +6,18 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The driving-view caption candidate passes the complete local gate with 342
+TypeScript / 178 Python tests (46.69 seconds), asset/context validation,
+lint/types and build. Eighteen affected browser journeys pass in 6.2 minutes,
+covering Onboard preservation on both tracks/vehicles, fullscreen failure and
+recovery, camera/playback transitions, three fullscreen transport sizes and zero
+settled rendering. Thirty-two actual camera states and eight Play sequences
+verify one caption, preserved canvas/cursor and contained controls at desktop,
+320/390 px and short-landscape sizes. Six matched Onboard comparisons show the
+caption clearing the cockpit. All forty production-browser cases pass in 11.6
+minutes. This UI revision's remote checks remain pending.
+No Blender asset, source data, camera math or playback clock changes in this UI pass.
+
 The integrated regional-landscape candidate passes the complete local gate:
 342 TypeScript tests, 178 Python tests (47.32 seconds), lint/typecheck, ten asset
 packages, physical context reproduction and the production build. All four Blender
@@ -22,9 +34,12 @@ moving frames are retained. Six native-GPU sequences measure about 60.0–60.3 f
 with zero anchor drift/errors, unchanged peak draw calls and 10,640 added rendered
 triangles. The software-motion deadline remains **failed**, reaching 1.549934 lap
 seconds within twelve wall seconds. All forty production-browser journeys pass
-in 11.4 minutes against the completed build. Remote acceptance remains pending;
-the passing older baseline does not substitute for it. See REGIONAL_LANDSCAPE.md
-for source, payload and visual limitations.
+in 11.4 minutes against the completed build. Revision `76248c1` now passes all
+eight remote jobs in run `35130855476`: 342 TypeScript / 178 Python tests
+(46.57 seconds), all 190 development and forty production cases (20.0 minutes),
+plus four byte-identical Blender exports. See REGIONAL_LANDSCAPE.md for source,
+payload and visual limitations; the separate software-motion deadline is not
+covered by that success claim.
 
 `b4b8f51` passes all eight remote jobs in run `35124292344`: 337 TypeScript /
 162 Python tests (42.74 seconds), 190 development and forty production journeys,

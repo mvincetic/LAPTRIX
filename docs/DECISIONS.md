@@ -1,5 +1,16 @@
 # Decision log
 
+## 2026-09-16 — Keep driving-view circuit details clear of the cockpit
+
+The actual narrow Formula Onboard capture showed the track caption covering
+cockpit and halo detail. Move the single circuit caption below the canvas in
+Chase and Onboard, with a compact wrapping layout that remains inside fullscreen.
+Overview and Top View retain their caption. Keep camera/reset/exit actions,
+source status, mount guidance, transport and credits in their established places.
+This is a layout change: the canvas, camera math, source metrics and shared clock
+remain authoritative. Review both cars at desktop, narrow and short-landscape
+sizes and retain existing fullscreen, playback and idle-rendering checks.
+
 ## 2026-09-16 — Extend the landscape while preserving the complete driving foreground
 
 The surface checkpoint still showed an abrupt, uniform surrounding world. Use a

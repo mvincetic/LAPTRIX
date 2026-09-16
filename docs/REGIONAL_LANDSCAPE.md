@@ -1,8 +1,8 @@
 # Red Bull Ring regional landscape
 
 This is the next visual iteration within the existing finish–Turn 1 slice.
-The candidate is integrated and passes its local functional/asset gates;
-remote acceptance remains pending. Full-circuit facility expansion
+The integrated revision at `76248c1` passes local functional/asset gates and all
+eight remote jobs in run `35130855476`. Full-circuit facility expansion
 stays paused. LAPTRIX Dev Track and all simulation inputs remain unchanged.
 
 ## Source and interpretation
@@ -81,7 +81,9 @@ desktop overview/chase and phone chase/onboard images were opened and reviewed.
 The horizon is continuous and distant relief is visible; broad terrain remains
 simplified and the near-track forest is sparse. This is an incremental slice
 improvement, not acceptance of full-circuit facility expansion. All forty
-production-browser journeys pass in 11.4 minutes; remote acceptance remains pending.
+production-browser journeys pass in 11.4 minutes. Remote validation passes 342
+TypeScript / 178 Python tests, all 190 development and forty production cases,
+plus four byte-identical Blender exports. See CI.md for the exact run.
 The retained track-information box also overlaps part of the cockpit in narrow
 Onboard views. Follow with a focused presentation cleanup after this asset gate;
 camera/telemetry behavior and transport controls must remain intact.

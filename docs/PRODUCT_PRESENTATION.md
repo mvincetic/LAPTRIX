@@ -1,5 +1,34 @@
 # Product presentation milestones
 
+## Driving-view caption cleanup — 2026-09-16
+
+The regional landscape review exposed the circuit-information box covering the
+Formula cockpit on narrow Onboard views. Chase and Onboard now place that same
+circuit name, source distance, detected-corner count and elevation range in a
+compact wrapping strip below the canvas. Overview and Top View retain their
+original caption. Camera, reset and fullscreen actions stay in the scene; source
+status, mount guidance, credits and transport remain available. Camera switching
+does not replace the canvas, change the lap or create another clock.
+
+Six original desktop/phone/short-landscape before/after studies are retained under
+`artifacts/follow-caption-study/`. The implemented layout has its own visual and
+functional verification; prototype captures are not its final acceptance record.
+The complete local gate passes 342 TypeScript / 178 Python tests (46.69 seconds),
+asset checks, lint/types and build. Thirty-two integrated camera states cover
+both cars at 1600, 390 and 320 px and 844 × 390 fullscreen. Every driving caption
+sits below the canvas; overview captions remain inside it, with exactly one
+visible caption and the same canvas/cursor through all camera changes. Eight
+actual Play sequences advance the existing clock without new solves or runtime
+errors. Captures are retained in `artifacts/follow-caption-integrated/`.
+All eighteen focused interactions pass in 6.2 minutes: both cars/tracks Onboard,
+fullscreen failure/recovery, short-landscape controls, playback entry, synchronized
+transport and zero settled rendering. All forty production-browser cases pass in
+11.6 minutes. This UI revision still needs its own commit/push and remote acceptance.
+The preceding regional landscape is committed at `76248c1`, with local quality,
+export and forty production cases passing. All eight remote jobs pass in run
+`35130855476`; see CI.md. Full-circuit expansion remains paused while the slice
+quality improves.
+
 ## Blender B4 — Surface scale and shared ground materials, 2026-09-16
 
 Original packed asphalt, grass and gravel color/normal maps now live in the

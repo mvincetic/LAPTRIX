@@ -66,6 +66,11 @@ its original roof or roll-hoop mount and keeps the road sightline above visible
 bodywork. No fabricated cockpit instrumentation, camera shake or animated zoom is
 added. Four camera choices remain keyboard-operable on compact screens; first
 Play respects an explicitly selected Onboard view.
+Chase and Onboard place circuit identity and metrics in a quiet wrapping strip
+below the canvas so the information does not cover bodywork or cockpit detail.
+Overview and Top View retain their scene caption. The same source status,
+mount guidance, camera/exit actions, transport and attribution remain reachable,
+including short-landscape fullscreen. There is one visible circuit caption.
 Attributed circuits add a compact wrapping credit row below the playback readout;
 it remains inside the viewer in fullscreen. Track inspection exposes full source
 links and assumptions. The real showcase is labelled as an approximate circuit,

@@ -446,6 +446,17 @@ export function TrackView({
       ),
     [track],
   );
+  const driving = mode === "chase" || mode === "onboard";
+  const trackCaption = (
+    <div className={`track-caption${driving ? " track-caption-driving" : ""}`}>
+      <strong>{track.name}</strong>
+      <span>
+        {(frame.length / 1000).toFixed(3)} km <b>·</b>{" "}
+        {lap?.corners.length ?? "—"} detected corners <b>·</b>{" "}
+        {frame.elevationRange.toFixed(0)} m elevation
+      </span>
+    </div>
+  );
   return (
     <section
       ref={panel}
@@ -695,14 +706,7 @@ export function TrackView({
           <span>N</span>
         </div>
         <div className="scene-bottom">
-          <div className="track-caption">
-            <strong>{track.name}</strong>
-            <span>
-              {(frame.length / 1000).toFixed(3)} km <b>·</b>{" "}
-              {lap?.corners.length ?? "—"} detected corners <b>·</b>{" "}
-              {frame.elevationRange.toFixed(0)} m elevation
-            </span>
-          </div>
+          {!driving && trackCaption}
           <div className="view-actions">
             <div className="segmented">
               {(["orbit", "top", "chase", "onboard"] as CameraMode[]).map(
@@ -746,6 +750,7 @@ export function TrackView({
           </div>
         )}
       </div>
+      {driving && trackCaption}
       <ScenePlayback
         lap={lap}
         clock={clock}

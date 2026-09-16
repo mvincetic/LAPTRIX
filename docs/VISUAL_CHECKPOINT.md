@@ -34,12 +34,19 @@ triangles and twelve batches. Six short native-GPU sequences measure about
 60.0–60.3 fps, unchanged peak draw calls and 10,640 additional rendered triangles.
 The current software probe still misses its deadline at 1.549934 lap seconds.
 See REGIONAL_LANDSCAPE.md for exact contracts, evidence and limitations.
+The committed regional revision `76248c1` passes all eight remote jobs in run
+`35130855476`, including complete browser, quality and Blender-export gates.
 
 This makes the horizon and close ground more coherent, but broad terrain and
 forest remain simplified. Full-circuit construction stays paused. The observed
 narrow Onboard track-information box overlaps the cockpit; the next focused
-product iteration should clear that obstruction while retaining circuit identity,
-source access, camera controls and the authoritative transport/telemetry.
+product iteration moves that caption below the canvas in Chase and Onboard,
+retaining circuit identity, source access, camera controls and authoritative
+transport/telemetry. Its 32-state visual review, eight actual Play sequences,
+eighteen focused interactions, complete quality gate and forty production cases
+pass locally; remote acceptance remains pending. Six matched Onboard pairs are
+retained under `artifacts/follow-caption-integrated/`. Continue with the GT rear
+fascia's visible flatness after this UI milestone; broader rollout stays paused.
 
 ## Comparison conditions
 

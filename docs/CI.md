@@ -1,12 +1,14 @@
 # Continuous integration
 
-The regional landscape candidate passes the full local gate (342 TypeScript /
-178 Python), four reproducible Blender exports with source rejection probes,
-26 focused/broader development journeys and all forty production cases in
-11.4 minutes. The retained native visual/motion review is documented separately
-in REGIONAL_LANDSCAPE.md, including the failed software-motion deadline. Its new
-working-branch push requires all eight remote jobs; `b4b8f51` below remains the
-last verified remote baseline until that run completes.
+The [regional-landscape run](https://github.com/mvincetic/LAPTRIX/actions/runs/35130855476)
+at `76248c1` is **fully green**: all eight jobs pass, including 342 TypeScript /
+178 Python tests (46.57 seconds), 190 development cases, forty production cases
+and four byte-identical Blender exports with source rejection probes. Development
+shards pass 35/29/32/33/30/31 cases in 15.3/11.1/17.3/14.3/11.1/17.7 minutes;
+production takes 20.0 minutes. Local quality/export checks, 26 focused/broader
+journeys and forty production cases (11.4 minutes) also pass. The retained native
+visual/motion review is documented separately in REGIONAL_LANDSCAPE.md, including
+the still-failed software-motion deadline. Proceed with the caption cleanup.
 
 The [separated-journeys run](https://github.com/mvincetic/LAPTRIX/actions/runs/35124292344)
 at `b4b8f51` is **fully green**: all eight jobs succeed, including 337 TypeScript /
