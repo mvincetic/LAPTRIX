@@ -1,5 +1,15 @@
 # Continuous integration
 
+The [driving-caption run](https://github.com/mvincetic/LAPTRIX/actions/runs/35133390869)
+at `1d66369` is **fully green**: all eight jobs pass, with 342 TypeScript /
+178 Python tests (46.09 seconds), all 190 development cases, forty production
+cases and four byte-identical Blender exports. Development shards pass
+35/29/32/33/30/31 cases in 15.1/11.3/16.4/13.5/11.1/12.5 minutes; production
+takes 20.2 minutes. Its local gate, eighteen focused cases, forty production
+cases and desktop/phone/short-landscape visual review are also green. The next
+working milestone refines the GT rear bodywork; its acceptance is recorded
+separately in GT_REFINEMENT.md.
+
 The [regional-landscape run](https://github.com/mvincetic/LAPTRIX/actions/runs/35130855476)
 at `76248c1` is **fully green**: all eight jobs pass, including 342 TypeScript /
 178 Python tests (46.57 seconds), 190 development cases, forty production cases
@@ -8,7 +18,8 @@ shards pass 35/29/32/33/30/31 cases in 15.3/11.1/17.3/14.3/11.1/17.7 minutes;
 production takes 20.0 minutes. Local quality/export checks, 26 focused/broader
 journeys and forty production cases (11.4 minutes) also pass. The retained native
 visual/motion review is documented separately in REGIONAL_LANDSCAPE.md, including
-the still-failed software-motion deadline. Proceed with the caption cleanup.
+the still-failed software-motion deadline. The subsequent caption revision is
+verified above.
 
 The [separated-journeys run](https://github.com/mvincetic/LAPTRIX/actions/runs/35124292344)
 at `b4b8f51` is **fully green**: all eight jobs succeed, including 337 TypeScript /

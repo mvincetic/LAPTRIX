@@ -1,5 +1,20 @@
 # Decision log
 
+## 2026-09-16 — Model the GT rear recess in the existing Blender shell
+
+The browser close and Chase views showed a flat rear cap with a grille standing
+in front of it. Add a rolled paint transition, conforming carbon recess and an
+actual lower-shell opening around a tapered diffuser. Solid strakes follow the
+ramp and smaller exhausts fit above it. Reject the first exposed-ramp study;
+judge the second in the real browser before integrating the source.
+
+Retain the original rig, lamp geometry, physical profile and exact total bounds.
+The revised GT adds 1,140 triangles and 39,812 runtime bytes within unchanged
+limits, with the same 29 batches, ten materials and zero textures. A calmer
+carbon material also affects front/side details, so those views and reference
+rendering remain part of acceptance. Do not change camera or clock behavior to
+make the model look better. GT_REFINEMENT.md records the evidence and limitations.
+
 ## 2026-09-16 — Keep driving-view circuit details clear of the cockpit
 
 The actual narrow Formula Onboard capture showed the track caption covering

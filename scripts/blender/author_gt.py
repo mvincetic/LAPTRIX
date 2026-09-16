@@ -44,7 +44,7 @@ root["design"] = "Original LAPTRIX GT / continuous body control cage / ice-strip
 
 paint = material("GT_Paint", (0.012, 0.105, 0.52), 0.24, 0.45, coat=0.65)
 white = material("GT_Ice", (0.78, 0.85, 0.9), 0.27, 0.25, coat=0.5)
-carbon = material("GT_Carbon", (0.017, 0.023, 0.03), 0.48, 0.3)
+carbon = material("GT_Carbon", (0.010, 0.014, 0.019), 0.58, 0.06)
 rubber = material("GT_Rubber", (0.014, 0.017, 0.022), 0.86)
 glass = material("GT_Glass", (0.026, 0.067, 0.09), 0.1, 0.65, coat=0.65)
 alloy = material("GT_Alloy", (0.34, 0.40, 0.46), 0.25, 0.92)
@@ -96,7 +96,13 @@ for z, width, deck, fender, sill in interpolate(stations, 6):
     ]
     contour = half + [(-x, y) for x, y in half[:0:-1]]
     rings.append([(x, y, z) for x, y in contour])
-body = loft("Sculpted_shell_LOD0", rings, paint, collection, root)
+# The rear skin rolls into a real recessed fascia while retaining its outer cage.
+rear = rings[0]
+fascia = [
+    [(x * scale, 0.43 + (y - 0.43) * scale, z + depth) for x, y, z in rear]
+    for scale, depth in [(0.67, 0.09), (0.75, 0.075), (0.87, 0.015), (0.96, -0.009)]
+]
+body = loft("Sculpted_shell_LOD0", fascia + rings, paint, collection, root)
 
 # Real open wheel arches: the inner cutoff leaves the central chassis intact.
 wheelbase, radius = profile["wheelbase"], profile["wheelRadius"]
@@ -119,6 +125,45 @@ for side in (-1, 1):
         bpy.context.view_layer.objects.active = body
         bpy.ops.object.modifier_apply(modifier=modifier.name)
         bpy.data.objects.remove(cutter, do_unlink=True)
+# Open the underbody exit through the actual painted shell, leaving the side cheeks.
+cutter = box("Rear_exit_cutter", (0, 0.17, -2.02), (1.40, 0.48, 0.64), carbon, collection, root, 0.065)
+bpy.context.view_layer.objects.active = cutter
+cutter.select_set(True)
+for modifier in list(cutter.modifiers):
+    bpy.ops.object.modifier_apply(modifier=modifier.name)
+shroud_rings = [
+    [(x * scale, 0.43 + (y - 0.43) * scale, z + depth - 0.005) for x, y, z in rear]
+    for scale, depth in [(0.67, 0.09), (0.75, 0.075), (0.87, 0.015)]
+]
+n = len(rear)
+shroud_faces = [tuple(range(n - 1, -1, -1))]
+shroud_faces += [
+    (i * n + j, i * n + (j + 1) % n, (i + 1) * n + (j + 1) % n, (i + 1) * n + j)
+    for i in range(len(shroud_rings) - 1)
+    for j in range(n)
+]
+shroud = mesh(
+    "Sculpted_rear_carbon_recess",
+    [v for ring in shroud_rings for v in ring],
+    shroud_faces,
+    carbon,
+    collection,
+    root,
+    True,
+)
+wall = shroud.modifiers.new("Recess skin thickness", "SOLIDIFY")
+wall.thickness = 0.001
+wall.offset = -1
+bpy.context.view_layer.objects.active = shroud
+bpy.ops.object.modifier_apply(modifier=wall.name)
+for target in (body, shroud):
+    modifier = target.modifiers.new("Recessed diffuser exit", "BOOLEAN")
+    modifier.operation = "DIFFERENCE"
+    modifier.solver = "EXACT"
+    modifier.object = cutter
+    bpy.context.view_layer.objects.active = target
+    bpy.ops.object.modifier_apply(modifier=modifier.name)
+bpy.data.objects.remove(cutter, do_unlink=True)
 bevel(body, 0.008, 2)
 body.modifiers.remove(body.modifiers.get("Panel normals"))
 
@@ -317,9 +362,9 @@ for left, right in [(-0.125, -0.025), (0.025, 0.125)]:
         )
 
 # Rear: separated lamps, ventilation, wing with aerofoil section and vertical fins.
-part("Rear_grille", (0, 0.46, -2.164), (1.40, 0.18, 0.025), carbon, 0.04)
-for x in [i * 0.072 for i in range(-9, 10)]:
-    part("Rear_grille_slat", (x, 0.46, -2.181), (0.009, 0.14, 0.009), rotor_mat, 0.002)
+part("Recessed_rear_grille", (0, 0.475, -2.094), (0.98, 0.14, 0.018), carbon, 0.027)
+for x in [i * 0.05 for i in range(-9, 10)]:
+    part("Rear_grille_slat", (x, 0.475, -2.107), (0.006, 0.10, 0.008), rotor_mat, 0.0015)
 for side in (-1, 1):
     part(
         f"BRAKE_LIGHT_{'L' if side == 1 else 'R'}",
@@ -330,8 +375,8 @@ for side in (-1, 1):
     )
     part("Wing_stanchion", (side * 0.53, 1.05, -1.69), (0.035, 0.48, 0.075), carbon, 0.009)
     part("Wing_endplate", (side * 0.94, 1.282, -1.90), (0.022, 0.215, 0.44), paint, 0.016)
-    line("Exhaust", [(side * 0.31, 0.335, -2.08), (side * 0.31, 0.335, -2.23)], 0.065, alloy)
-    line("Exhaust_bore", [(side * 0.31, 0.335, -2.227), (side * 0.31, 0.335, -2.242)], 0.049)
+    line("Exhaust", [(side * 0.31, 0.355, -2.08), (side * 0.31, 0.355, -2.23)], 0.05, alloy)
+    line("Exhaust_bore", [(side * 0.31, 0.355, -2.227), (side * 0.31, 0.355, -2.242)], 0.038)
 wing_section = [
     (-0.24, 0.008),
     (-0.21, 0.035),
@@ -349,9 +394,31 @@ loft(
     collection,
     root,
 )
-part("Diffuser", (0, 0.255, -1.92), (1.62, 0.045, 0.51), carbon, 0.01)
-for x in (-0.73, -0.44, -0.18, 0.18, 0.44, 0.73):
-    patch("Diffuser_fin", [(x, 0.14, -1.73), (x, 0.14, -2.20), (x, 0.37, -2.20)], carbon)
+# A curved exit ramp and solid strakes connect to the opened underbody.
+diffuser_sections = [(-2.20, 0.29, 0.76), (-2.04, 0.25, 0.73), (-1.86, 0.19, 0.70), (-1.70, 0.16, 0.68)]
+loft(
+    "Diffuser_exit_ramp",
+    [[(-w, y, z), (w, y, z), (w, y - 0.022, z), (-w, y - 0.022, z)] for z, y, w in diffuser_sections],
+    carbon,
+    collection,
+    root,
+)
+for x in (-0.72, -0.44, -0.15, 0.15, 0.44, 0.72):
+    loft(
+        "Diffuser_strake",
+        [
+            [
+                (x * w / 0.76 - 0.004, top - 0.015, z),
+                (x * w / 0.76 + 0.004, top - 0.015, z),
+                (x * w / 0.76 + 0.004, 0.135, z),
+                (x * w / 0.76 - 0.004, 0.135, z),
+            ]
+            for z, top, w in diffuser_sections
+        ],
+        carbon,
+        collection,
+        root,
+    )
 
 # Native wheel rig. Stationary discs/calipers stay under the steering carrier.
 for side in (-1, 1):

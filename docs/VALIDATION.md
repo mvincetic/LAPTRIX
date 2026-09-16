@@ -6,6 +6,17 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The GT rear refinement passes the local gate with 342 TypeScript / 178 Python
+tests (47.01 seconds), ten asset packages, lint/types, context reproduction and
+build. Four Blender exports are byte-identical and source rejection probes pass.
+Sixteen affected browser journeys pass in 5.4 minutes. Thirty-six matched actual
+browser captures retain all four cameras and close front/rear/side views at
+desktop/phone widths; three native-GPU samples record 537 frames at about
+60.1–60.2 fps with zero drift/errors. The unchanged rigs, limits and remaining
+visual issues are documented in GT_REFINEMENT.md. All forty production-browser
+cases pass in 11.6m, and six integrated current/reference captures complete
+the visual review. Remote acceptance of this vehicle revision remains pending.
+
 The driving-view caption candidate passes the complete local gate with 342
 TypeScript / 178 Python tests (46.69 seconds), asset/context validation,
 lint/types and build. Eighteen affected browser journeys pass in 6.2 minutes,
@@ -15,7 +26,10 @@ settled rendering. Thirty-two actual camera states and eight Play sequences
 verify one caption, preserved canvas/cursor and contained controls at desktop,
 320/390 px and short-landscape sizes. Six matched Onboard comparisons show the
 caption clearing the cockpit. All forty production-browser cases pass in 11.6
-minutes. This UI revision's remote checks remain pending.
+minutes. Pushed revision `1d66369` passes all eight remote jobs in run
+`35133390869`: 342 TypeScript / 178 Python tests (46.09 seconds), all 190
+development cases, forty production cases (20.2 minutes) and four byte-identical
+Blender exports.
 No Blender asset, source data, camera math or playback clock changes in this UI pass.
 
 The integrated regional-landscape candidate passes the complete local gate:

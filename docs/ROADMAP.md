@@ -15,7 +15,7 @@ single PlaybackClock remain authoritative. Never merge main or rewrite history.
 | B1 Blender toolchain and contracts | Complete at `430682b`: official Blender 5.2.1 LTS, editable basis gauge, explicit axis/pivot/material contract, headless validation/export and independent GLB checks. All seven Linux jobs pass: 319 TypeScript / 158 Python, 175 development and 37 production cases, plus byte-identical Windows/Linux Blender re-export. |
 | B2 Red Bull Ring GT vertical slice | Complete through `738b6df`: all seven remote jobs pass, with 330 TypeScript / 162 Python, 179 development and 39 production cases, plus three byte-identical exports. The two outdated asset/foliage fixtures are corrected without changing deadlines or application contracts. Local camera, terrain, foliage, reference and hardware/software motion evidence is retained. |
 | B3 Generic Formula 2026 | Complete at `12b42cb`: all seven remote jobs pass in run `35010222217`, including 334 TypeScript / 162 Python, 182 development and 40 production cases and four Blender exports. Original editable source, native wheel rig, shaped aero surfaces and LAPTRIX livery are integrated. Local visual evidence includes 64 poses, 48 Formula reference and 26 Onboard states, plus six native-GPU and three software motion samples. |
-| B4 Formal visual checkpoint | Regional landscape is complete at `76248c1`: all eight remote jobs pass, with 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. Pinned licensed terrain, protected foreground, original vertex art, shared maps and source-scoped haze improve ground continuity. Local evidence includes 32 camera states, six native motion samples, four real Play clips and eight matched comparison pairs. The caption cleanup is the current follow-up. Keep full-circuit structures paused: terrain/forest remain simplified, and the software-motion deadline remains unmet. See REGIONAL_LANDSCAPE.md, VISUAL_CHECKPOINT.md and CI.md. |
+| B4 Formal visual checkpoint | Regional landscape is complete at `76248c1`: all eight remote jobs pass, with 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. Pinned licensed terrain, protected foreground, original vertex art, shared maps and source-scoped haze improve ground continuity. Local evidence includes 32 camera states, six native motion samples, four real Play clips and eight matched comparison pairs. Caption cleanup is complete at `1d66369`, with all eight remote jobs green. GT rear refinement passes local acceptance and awaits its own remote verification. Keep full-circuit structures paused: terrain/forest remain simplified, and the software-motion deadline remains unmet. See REGIONAL_LANDSCAPE.md, VISUAL_CHECKPOINT.md and CI.md. |
 | B5 Complete validation | Run the complete quality, Blender-asset, export, browser and production gates; re-run GPX, imports, persistence, references, custom vehicles and narrow views. Commit/push and verify remote CI. |
 | B6 Broader rollout | Only after a convincing checkpoint: extend Red Bull Ring, Formula presentation, Dev Track, shared assets, terrain/materials, useful broadcast/trackside cameras, UI and telemetry audio. Iterate on the slice first if its visual quality is weak. |
 
@@ -24,14 +24,23 @@ clean commits, working-branch pushes and remote CI verification. Continue after
 each stable milestone; stop only for a genuine blocker requiring user input.
 
 The regional landscape is committed and pushed as `76248c1`; run `35130855476`
-passes all eight jobs for that exact revision. The next
-caption cleanup is implemented locally: circuit details move below the canvas
-in driving views, preserving one caption, camera/transport access and the clock.
-Its full local gate, eighteen affected interactions, forty production cases and
-32-state/eight-Play visual review pass. Commit/push and verify this UI revision
-separately. Then refine the GT's visibly flat rear fascia within the
-existing vehicle slice, retaining the native rig and bounded asset contract;
-judge the modeled result in actual Chase and close browser views before integration.
+passes all eight jobs for that exact revision. Caption cleanup is pushed as
+`1d66369`: circuit details move below the canvas in driving views, preserving one
+caption, camera/transport access and the clock. Its local quality gate, eighteen
+affected interactions, forty production cases and 32-state/eight-Play review pass.
+All eight remote jobs pass in run `35133390869`, including 190 development and
+forty production cases plus four byte-identical Blender exports.
+
+The GT rear bodywork refinement is now integrated locally after paired close,
+Chase and actual Play study review. It retains the exact rig and vehicle bounds
+with the same material/draw counts; the full local gate and four byte-identical
+exports pass. Sixteen focused cases, 36 matched captures, six reference views,
+three native motion samples and forty production cases (11.6m) complete
+local acceptance. Commit/push and verify remote CI. See GT_REFINEMENT.md.
+After that stable cycle, continue with the GT's visibly detached side stripe and
+simplified front grille within the existing slice. Fit visible surfaces to the
+actual body and compare close and moving browser views before adoption. Broader
+circuit rollout remains paused.
 
 ## Premium product phase — 2026-09-11
 

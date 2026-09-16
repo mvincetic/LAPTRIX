@@ -1,5 +1,23 @@
 # Product presentation milestones
 
+## GT rear bodywork — 2026-09-16
+
+The GT's Blender shell now has a rolled rear recess, fitted carbon surround,
+inset grille and an opened underbody around a tapered diffuser with solid strakes.
+Exhaust outlets fit the recess, and the existing carbon material is darker and
+less metallic. The original rig, lamp geometry and total bounds stay exact.
+The 1,362,548-byte GLB contains 42,770 triangles in the same 29 batches and ten
+materials, with no textures. See GT_REFINEMENT.md for source ownership, isolated
+before/after studies, integrated acceptance and remaining visual limitations.
+
+The full local gate passes 342 TypeScript / 178 Python tests (47.01 seconds),
+lint/types, asset/context validation and production build. Four Blender sources
+re-export byte-identically with source rejection probes. Sixteen focused browser
+cases pass in 5.4 minutes, alongside 36 matched captures and three native-GPU
+samples (537 frames, about 60.1–60.2 fps, no drift/errors). All forty production
+cases pass in 11.6m, with six further integrated current/reference views.
+Commit/push and remote acceptance follow. The wider visual checkpoint remains open.
+
 ## Driving-view caption cleanup — 2026-09-16
 
 The regional landscape review exposed the circuit-information box covering the
@@ -23,7 +41,9 @@ errors. Captures are retained in `artifacts/follow-caption-integrated/`.
 All eighteen focused interactions pass in 6.2 minutes: both cars/tracks Onboard,
 fullscreen failure/recovery, short-landscape controls, playback entry, synchronized
 transport and zero settled rendering. All forty production-browser cases pass in
-11.6 minutes. This UI revision still needs its own commit/push and remote acceptance.
+11.6 minutes. Pushed revision `1d66369` passes all eight remote jobs in run
+`35133390869`, including 342 TypeScript / 178 Python, all 190 development and
+forty production cases, plus four byte-identical Blender exports. See CI.md.
 The preceding regional landscape is committed at `76248c1`, with local quality,
 export and forty production cases passing. All eight remote jobs pass in run
 `35130855476`; see CI.md. Full-circuit expansion remains paused while the slice

@@ -44,9 +44,16 @@ product iteration moves that caption below the canvas in Chase and Onboard,
 retaining circuit identity, source access, camera controls and authoritative
 transport/telemetry. Its 32-state visual review, eight actual Play sequences,
 eighteen focused interactions, complete quality gate and forty production cases
-pass locally; remote acceptance remains pending. Six matched Onboard pairs are
-retained under `artifacts/follow-caption-integrated/`. Continue with the GT rear
-fascia's visible flatness after this UI milestone; broader rollout stays paused.
+pass locally. Revision `1d66369` passes all eight remote jobs in run `35133390869`.
+Six matched Onboard pairs are retained under `artifacts/follow-caption-integrated/`.
+
+The next GT iteration rolls the painted rear into a fitted carbon recess and
+opens the lower shell around a tapered diffuser with solid strakes. It preserves
+the exact rig and outer bounds, with the same material/draw counts. The first
+isolated study was rejected for its exposed, unfinished-looking ramp; the second
+was reviewed in matched close/Chase views and four real Play sequences before
+integration. GT_REFINEMENT.md records the current integrated acceptance and
+remaining limits. Broader rollout stays paused.
 
 ## Comparison conditions
 
