@@ -1,10 +1,40 @@
-# MVP validation — through 2026-09-15
+# MVP validation — through 2026-09-16
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
 and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
+
+The ground-material iteration passes the complete local gate: 337 TypeScript
+tests across 55 files, 162 Python tests (44.58 seconds), ten asset packages,
+lint/typecheck and production build. Four Blender exports remain byte-identical,
+including the textured Red Bull Ring; source rejection probes pass. Three new
+unit cases check physical UV agreement, embedded-image corruption/bounds and
+shared-map ownership/disposal. The existing road/vegetation clearance cases pass.
+An independent binary comparison against `12b42cb` confirms exact equality of
+all circuit positions, normals, indices and node transforms. Evidence is
+`blender-surface-check.log`, `blender-surface-repro.log`, and
+`blender-surface-geometry-proof.json` under ignored `artifacts/`.
+
+All thirteen affected development journeys are verified: daylight, foliage, six
+GPX import/recovery cases, scenery delivery and two new ground-resource cases.
+The first batch passes twelve and exposes a new test's early canvas read; its
+readiness guard is corrected and both ground cases pass (16.3/13.2 seconds).
+No application deadline is increased. All forty production journeys pass in
+11.1 minutes. Final test/script ESLint and TypeScript checks also pass.
+Thirty-two actual camera/material states, six native-GPU sequences (1,072 frames)
+and four native Play clips with twenty moving screenshots are retained. Geometry,
+map sharing, repeated toggles, source isolation and paused workspace retention
+pass. The separate software motion deadline remains unmet on this host and also
+fails on the unchanged isolated baseline; SURFACE_MATERIALS.md records the exact
+limits without labeling that check green. Evidence: `blender-surface-browser.log`,
+`blender-surface-ground-browser.log`, `blender-surface-production.log`,
+`surface-material-qa.json`, `blender-surface-native-qa.json`, and
+`visual-checkpoint/surface-iteration/checkpoint.json` under ignored `artifacts/`.
+
+The Formula milestone at `12b42cb` has completed all seven remote jobs, including
+182 development and 40 production cases; CI.md records run `35010222217`.
 
 The Formula Blender candidate passes the complete local gate with 334 TypeScript
 tests across 55 files, 162 Python tests (40.55 seconds), ten asset packages,

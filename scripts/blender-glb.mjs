@@ -104,7 +104,9 @@ export function inspectBlenderGlb(bytes, config) {
     (json.materials?.length ?? 0) > 0 &&
       json.materials.length <= config.maxMaterials,
   );
-  assert((json.images?.length ?? 0) <= config.maxTextures);
+  assert(
+    (json.images?.length ?? 0) <= (config.maxImages ?? config.maxTextures),
+  );
   assert((json.textures?.length ?? 0) <= config.maxTextures);
   const bufferView = (index) => {
     const view = json.bufferViews[index];
@@ -318,10 +320,35 @@ export function inspectBlenderGlb(bytes, config) {
       for (const primitive of geometry[node.mesh]) {
         primitives++;
         triangles += primitive.triangles;
-        for (let i = 0; i < primitive.position.length; i += 3)
-          bounds.expandByPoint(
-            point.fromArray(primitive.position, i).applyMatrix4(world),
+        const material = json.materials[primitive.material];
+        const ground = Object.values(config.groundMaterials ?? {}).find(
+          (spec) => spec.name === material.name,
+        );
+        if (ground) {
+          assert.equal(material.extras?.laptrix_tile_metres, ground.tileMetres);
+          assert(
+            material.pbrMetallicRoughness?.baseColorTexture &&
+              material.normalTexture,
+            "Ground needs packed color and normal maps",
           );
+        }
+        for (let i = 0; i < primitive.position.length; i += 3) {
+          point.fromArray(primitive.position, i).applyMatrix4(world);
+          bounds.expandByPoint(point);
+          if (ground) {
+            const uv =
+              primitive.attributes.TEXCOORD_0?.values.slice(
+                (i / 3) * 2,
+                (i / 3) * 2 + 2,
+              ) ?? [];
+            near(
+              uv,
+              [point.x / ground.tileMetres, 1 - point.z / ground.tileMetres],
+              0.0001,
+              "Exported world ground UV",
+            );
+          }
+        }
       }
     }
     for (const child of node.children ?? []) visit(child, world);

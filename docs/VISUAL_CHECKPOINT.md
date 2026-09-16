@@ -4,9 +4,25 @@ This checkpoint reviews the integrated Red Bull Ring finish approach through
 Turn 1, original GT and LAPTRIX Formula 2026. It gates broader content work.
 The local captures and machine-specific measurements live in the ignored
 `artifacts/visual-checkpoint/` directory; they are not distributed as repository
-assets. The candidate passes local browser and full quality gates. Its milestone
-commit and remote CI verification complete the technical gate; the visual
+assets. The Formula milestone at `12b42cb` passes local browser/full quality gates
+and all seven remote CI jobs in run `35010222217`; the visual
 assessment below keeps broader rollout paused for further slice improvement.
+
+The surface iteration of 2026-09-16 retains this original checkpoint and adds
+`SURFACE_MATERIALS.md`: five packed Blender color/normal maps, coherent metre
+scale on existing road/terrain and richer grass color. The updated circuit asset
+is 4,224,716 bytes, with geometry and eleven batches unchanged. The table below
+describes the retained **pre-material checkpoint**. New captures and playback
+measurements are kept separately so the before comparison remains recoverable.
+
+The new 32-state desktop/phone review shows clearer close-range road grain and
+richer grass color. The overview still exposes broad, uniform ground and sparse
+context; the material pass alone does not justify full-circuit expansion. Four
+native playback clips and twenty moving frames are retained in
+`artifacts/visual-checkpoint/surface-iteration/`. Six separate native-GPU samples
+retain 60.0–60.2 fps and unchanged submission counts, with zero anchor drift.
+The software motion deadline remains unmet on this host and also fails on an
+isolated unchanged `12b42cb`; see SURFACE_MATERIALS.md for exact evidence and limits.
 
 ## Comparison conditions
 

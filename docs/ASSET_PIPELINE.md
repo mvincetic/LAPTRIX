@@ -10,6 +10,11 @@ bounded caching and procedural fallback. The first source-aligned Red Bull Ring
 scene uses the actual rendered ground context, pinned hashes and embedded source
 credits. See VEHICLE_ASSETS.md and RBR_BLENDER_SCENE.md for delivery and ownership.
 
+The Red Bull Ring `.blend` also owns five original packed ground PNG maps. They
+export with standard PBR nodes and drive both its authored patches and the native
+road/terrain meshes at a shared world-space metre scale. No external texture data
+is introduced. See SURFACE_MATERIALS.md for bounds, ownership and visual review.
+
 Existing procedural assets provide adaptable presentation and fallback during
 that rollout. Every representation consumes the authoritative source/telemetry
 frame. The current pylon's earlier JSON/Three exporter remains documented below.

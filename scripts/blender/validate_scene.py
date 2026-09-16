@@ -71,6 +71,22 @@ def validate_scene(config):
                     maximum[axis] = max(maximum[axis], point[axis])
             if any(face.area < 1e-12 for face in mesh.loop_triangles):
                 raise ValueError(f"{obj.name}: degenerate evaluated triangle")
+            ground = {item["name"]: item for item in config.get("groundMaterials", {}).values()}
+            for polygon in mesh.polygons:
+                mat = mesh.materials[polygon.material_index]
+                if mat.name not in ground:
+                    continue
+                tile = ground[mat.name]["tileMetres"]
+                if mat.get("laptrix_tile_metres") != tile or not mesh.uv_layers.active:
+                    raise ValueError(f"{mat.name}: missing metre-scaled ground UV contract")
+                for index in polygon.loop_indices:
+                    point = to_runtime(obj.matrix_world @ mesh.vertices[mesh.loops[index].vertex_index].co)
+                    close_vector(
+                        mesh.uv_layers.active.data[index].uv,
+                        (point[0] / tile, point[2] / tile),
+                        0.0001,
+                        f"{obj.name} ground UV",
+                    )
         finally:
             evaluated.to_mesh_clear()
     if meshes > config["maxMeshes"] or triangles > config["maxTriangles"]:
@@ -101,7 +117,7 @@ def validate_scene(config):
                 images.add(node.image)
         if shader_count != 1:
             raise ValueError(f"{material.name}: expected one Principled shader")
-    if len(images) > config["maxTextures"]:
+    if len(images) > config.get("maxImages", config["maxTextures"]):
         raise ValueError("Texture count budget exceeded")
     for image in images:
         if image.file_format != "PNG":

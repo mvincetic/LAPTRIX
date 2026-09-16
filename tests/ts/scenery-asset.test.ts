@@ -1,12 +1,22 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
-import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
+import {
+  BoxGeometry,
+  Mesh,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+  Vector3,
+} from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   loadRBRScenery,
   rbrSceneryContract,
   validateRBRScenery,
+  validateSceneryContainer,
+  sceneryGroundMaterials,
+  disposeRejectedScenery,
 } from "../../apps/web/src/scenery-asset";
+import { groundUV, groundMaterial } from "../../apps/web/src/ground-materials";
 import source from "../../data/tracks/red-bull-ring.json";
 import { normalizeTrack } from "../../packages/track-engine";
 import { trackSchema } from "../../packages/shared/schema";
@@ -28,9 +38,133 @@ const buffer = () =>
   ) as ArrayBuffer;
 const template = async () =>
   (await new GLTFLoader().parseAsync(buffer(), "")).scene;
+const nativeFetch = globalThis.fetch;
+beforeEach(() => {
+  vi.stubGlobal("self", globalThis);
+  // Node has no bitmap decoder. Browser delivery/visual QA decodes actual pixels;
+  // here the real GLTFLoader still reads embedded blobs and their PNG dimensions.
+  vi.stubGlobal("createImageBitmap", async (blob: Blob) => {
+    const png = new DataView(await blob.arrayBuffer());
+    return {
+      width: png.getUint32(16),
+      height: png.getUint32(20),
+      close: vi.fn(),
+    };
+  });
+});
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Blender circuit reconstruction", () => {
+  it("keeps metre-scale ground UVs consistent between real Blender meshes and runtime surfaces", async () => {
+    validateSceneryContainer(bytes);
+    const scene = validateRBRScenery(await template());
+    const materials = sceneryGroundMaterials(scene),
+      point = new Vector3();
+    let probes = 0;
+    scene.traverse((node) => {
+      if (
+        !(node instanceof Mesh) ||
+        !(node.material instanceof MeshStandardMaterial)
+      )
+        return;
+      const spec = Object.values(rbrSceneryContract.groundMaterials).find(
+        (s) => s.name === node.material.name,
+      );
+      if (!spec) return;
+      const position = node.geometry.getAttribute("position"),
+        uv = node.geometry.getAttribute("uv");
+      for (let i = 0; i < position.count; i++) {
+        point.fromBufferAttribute(position, i).applyMatrix4(node.matrixWorld);
+        expect(uv.getX(i)).toBeCloseTo(point.x / spec.tileMetres, 3);
+        expect(uv.getY(i)).toBeCloseTo(1 - point.z / spec.tileMetres, 3);
+        probes++;
+      }
+    });
+    expect(probes).toBeGreaterThan(1000);
+    const coordinates = new Float32Array([-2, 9, 6, 0, 8, 4, 2, 7, 2]);
+    const original = coordinates.slice();
+    expect(Array.from(groundUV(coordinates, 2).array)).toEqual([
+      -1, -2, 0, -1, 1, 0,
+    ]);
+    expect(coordinates).toEqual(original);
+    expect(materials.asphalt.normalMap).toBe(materials.gravel.normalMap);
+    const owned = groundMaterial(materials.asphalt),
+      disposal = vi.fn();
+    materials.asphalt.map!.addEventListener("dispose", disposal);
+    expect(owned.map).toBe(materials.asphalt.map);
+    expect(owned).not.toBe(materials.asphalt);
+    owned.dispose();
+    expect(disposal).not.toHaveBeenCalled();
+  });
+
+  it("rejects external, truncated and oversized images before browser decoding", () => {
+    const document = JSON.parse(
+      bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString(),
+    );
+    const replaceJson = (edit: (json: typeof document) => void) => {
+      const changed = structuredClone(document);
+      edit(changed);
+      const text = Buffer.from(JSON.stringify(changed));
+      const padded = Buffer.alloc(Math.ceil(text.length / 4) * 4, 32);
+      text.copy(padded);
+      const bin = bytes.subarray(20 + bytes.readUInt32LE(12));
+      const result = Buffer.concat([bytes.subarray(0, 20), padded, bin]);
+      result.writeUInt32LE(result.length, 8);
+      result.writeUInt32LE(padded.length, 12);
+      return result;
+    };
+    for (const edit of [
+      (j: typeof document) => {
+        j.images[0].uri = "https://invalid.example/remote.png";
+      },
+      (j: typeof document) => {
+        j.images[0].bufferView = -1;
+      },
+      (j: typeof document) => {
+        j.bufferViews[j.images[0].bufferView].byteLength = 20;
+      },
+      (j: typeof document) => {
+        j.buffers[0].uri = "remote.bin";
+      },
+      (j: typeof document) => {
+        j.textures[0].source = 99;
+      },
+    ])
+      expect(() => validateSceneryContainer(replaceJson(edit))).toThrow();
+    const oversized = Buffer.from(bytes);
+    const imageOffset =
+      28 +
+      bytes.readUInt32LE(12) +
+      document.bufferViews[document.images[0].bufferView].byteOffset;
+    oversized.writeUInt32BE(16384, imageOffset + 16);
+    expect(() => validateSceneryContainer(oversized)).toThrow(
+      /oversized scenery PNG/,
+    );
+    expect(() =>
+      validateSceneryContainer(bytes.subarray(0, bytes.length - 4)),
+    ).toThrow();
+  });
+
+  it("releases owned textures if a parsed package is rejected, while instance disposal keeps cached maps", async () => {
+    const scene = await template(),
+      materials = sceneryGroundMaterials(scene);
+    const maps = new Set(
+      Object.values(materials).flatMap((m) => [m.map!, m.normalMap!]),
+    );
+    expect(maps.size).toBe(5);
+    const counts = [...maps].map((map) => {
+      const dispose = vi.fn();
+      map.addEventListener("dispose", dispose);
+      return { map, dispose };
+    });
+    disposeRejectedScenery(scene);
+    counts.forEach(({ map, dispose }) => {
+      expect(dispose).toHaveBeenCalledTimes(1);
+      expect(
+        (map.source.data as { close: () => void }).close,
+      ).toHaveBeenCalledTimes(1);
+    });
+  });
   it("rejects the wrong source frame, stale ground context and displaced scene", async () => {
     const scene = await template();
     expect(validateRBRScenery(scene)).toBe(scene);
@@ -109,7 +243,11 @@ describe("Blender circuit reconstruction", () => {
       .fn()
       .mockResolvedValueOnce(new Response("unavailable", { status: 503 }))
       .mockResolvedValueOnce(new Response(buffer()));
-    vi.stubGlobal("fetch", request);
+    vi.stubGlobal("fetch", (input: RequestInfo | URL, init?: RequestInit) =>
+      String(input).startsWith("blob:")
+        ? nativeFetch(input, init)
+        : request(input, init),
+    );
     await expect(loadRBRScenery()).rejects.toThrow(/unavailable/);
     const a = loadRBRScenery(),
       b = loadRBRScenery();

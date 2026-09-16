@@ -60,8 +60,8 @@ on the authored structures.
 | Authoring script     | `scripts/blender/author_rbr.py`                         |
 | Exported triangles   | 81,594 / 120,000 maximum; 79,530 visible + 2,064 shadow |
 | Material primitives  | 11 / 16 maximum                                         |
-| GLB bytes            | 3,585,828 / 4,500,000 maximum                           |
-| Materials / textures | 11 Principled PBR materials; no textures                |
+| GLB bytes            | 4,224,716 / 4,500,000 maximum                           |
+| Materials / textures | 11 Principled PBR materials; five packed PNG maps, 512 px maximum |
 
 Run `node scripts/blender-tool.mjs author laptrix.blender-rbr-slice.v1
 --replace-source` only to intentionally rebuild the source from the authoring
@@ -90,8 +90,10 @@ omitted; the existing native vehicle still casts its detailed shadow. The origin
 12-second software-rendered motion check passes after this optimization, without
 changing the clock or test deadline.
 
-The original contextual terrain, road material, source shoulders, trees and the
-remainder of the circuit remain generated in the viewer. LAPTRIX Dev Track and
-custom/imported geometry retain that generic path. Main-road material detail,
-vegetation and the simplified facility surfaces remain visible limitations to
-evaluate at the formal GT/Formula quality checkpoint.
+The original contextual terrain, road/shoulder geometry, trees and the remainder
+of the circuit remain generated in the viewer. The matching Red Bull Ring road,
+shoulders and ground now share the Blender package's metre-scaled asphalt, gravel
+and grass materials. See SURFACE_MATERIALS.md for packed image ownership, UV
+continuity and unchanged geometry evidence. LAPTRIX Dev Track, custom/imported
+geometry and failed downloads retain the generic path. Vegetation, sparse distant
+context and simplified facilities remain visible checkpoint limitations.

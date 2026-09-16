@@ -10,8 +10,14 @@
   "maxTriangles": 120000,
   "maxMeshes": 16,
   "maxMaterials": 11,
-  "maxTextures": 0,
-  "maxTextureSize": 1024,
+  "maxTextures": 6,
+  "maxImages": 5,
+  "maxTextureSize": 512,
+  "groundMaterials": {
+    "asphalt": { "name": "LTX_RBR_PitAsphalt", "tileMetres": 2 },
+    "grass": { "name": "LTX_RBR_Grass", "tileMetres": 8 },
+    "gravel": { "name": "LTX_RBR_Gravel", "tileMetres": 2 }
+  },
   "bounds": {
     "min": [-580.069214, -2.612304, -50.662178],
     "max": [146.922348, 22.02668, 156.42337],

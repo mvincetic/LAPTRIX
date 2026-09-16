@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from contract import owned_path, read_json, to_blender, to_runtime, validate_source_context  # noqa: E402
 from modeling import box, consolidate, loft, material, mesh, tube  # noqa: E402
 from source_io import save_editable  # noqa: E402
+from surface_materials import ground_materials, world_uv  # noqa: E402
 from track_context import TrackContext  # noqa: E402
 
 config = read_json("assets/blender/tracks/red-bull-ring-slice.json")
@@ -47,9 +48,8 @@ dark = material("RBR_Charcoal", (0.035, 0.045, 0.05), 0.75, 0.12)
 steel = material("RBR_Steel", (0.30, 0.35, 0.38), 0.42, 0.7)
 glass = material("RBR_Glass", (0.065, 0.135, 0.17), 0.2, 0.65)
 red = material("RBR_CurbRed", (0.46, 0.025, 0.016), 0.8)
-grass = material("RBR_Grass", (0.22, 0.30, 0.14), 0.96)
-gravel = material("RBR_Gravel", (0.47, 0.42, 0.32), 1)
-asphalt = material("RBR_PitAsphalt", (0.09, 0.104, 0.114), 0.91)
+surfaces = ground_materials()
+grass, gravel, asphalt = (surfaces[key] for key in ("grass", "gravel", "asphalt"))
 
 
 def p(distance, lateral=0, height=0, ground=True):
@@ -379,6 +379,9 @@ for name, position in config["requiredNodes"].items():
     collection.objects.link(obj)
     obj.parent = root
     obj.location = to_blender(position)
+for obj in collection.objects:
+    if obj.type == "MESH" and obj.data.materials[0] in surfaces.values():
+        world_uv(obj, obj.data.materials[0]["laptrix_tile_metres"])
 consolidate(collection, protected=("SHADOW_CASTERS_LOD0",))
 scene.world = bpy.data.worlds.new("Authoring daylight")
 save_editable(config)

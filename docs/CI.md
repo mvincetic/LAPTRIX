@@ -1,11 +1,23 @@
 # Continuous integration
 
+The surface-material candidate passes the local 337-TypeScript / 162-Python gate,
+four byte-identical Blender exports, thirteen affected development journeys and
+all forty production journeys (11.1 minutes). Its pushed revision still needs its
+own remote result. The separate local software motion deadline fails on both the
+candidate and isolated unchanged `12b42cb`; this is retained as an explicit host
+limitation rather than a passed check. Six native-GPU samples and actual Play
+recordings pass. See SURFACE_MATERIALS.md for the diagnostic evidence.
+
+The [Formula milestone run](https://github.com/mvincetic/LAPTRIX/actions/runs/35010222217)
+at `12b42cb` passes all seven jobs: 334 TypeScript / 162 Python tests (42.94 seconds),
+182 development journeys (37/38/38/33/36), 40 production journeys (13.8 minutes)
+and all four Blender exports. This is the current verified baseline.
+
 The Formula milestone's local gate passes 334 TypeScript / 162 Python tests
 (40.55 seconds), ten asset packages, lint/type checks and build. All four Blender
 assets reproduce byte-identically. Eight focused and 26 broader development
 journeys pass, as do all 40 production journeys (10.7 minutes). The suite now
-discovers 182 development journeys. The new candidate requires its own pushed
-workflow result; the preceding fully green run below remains the CI baseline.
+discovers 182 development journeys. Its remote result above completes the gate.
 
 The [settled-foliage run](https://github.com/mvincetic/LAPTRIX/actions/runs/35005721062)
 is fully green at `738b6df`: all seven jobs succeed. It passes 330 TypeScript /

@@ -1,7 +1,7 @@
 # Rendering when the scene changes
 
 The first Blender Red Bull Ring slice adds ten visible material batches and one
-coarse shadow batch: 81,594 triangles through a 3,585,828-byte lazy GLB. One immutable template serves
+coarse shadow batch: 81,594 triangles through a 4,224,716-byte lazy GLB. One immutable template serves
 matching-source Landscape instances; a failed fetch preserves generic scenery.
 Mount/removal refreshes cached shadows. Roof footprints exclude intersecting
 contextual crowns while preserving the retained trees' original site indices.
@@ -14,7 +14,11 @@ the detailed facility shadow submission with 2,064 coarse silhouette triangles.
 The unchanged motion deadline passes after this change. These are measurements
 from the test browser, not a hardware frame-rate guarantee.
 The authored scene itself stays within 16 material batches, 120,000 triangles,
-4.5 MB and zero textures. The matching native Formula profile now loads its own
+4.5 MB and five embedded PNG images (six texture references), at most 512 pixels.
+The main road, shoulders and ground share those Blender-authored maps without
+changing geometry. UV/color updates reuse their existing buffers; surface material
+clones leave cached maps alive on disposal. See SURFACE_MATERIALS.md.
+The matching native Formula profile now loads its own
 53,138-triangle GLB in 27 batches. The original Formula remains the delivery and
 custom-geometry fallback. GT and Formula instances share their respective cached
 geometry while owning independent materials and native wheel nodes. Six native-GPU

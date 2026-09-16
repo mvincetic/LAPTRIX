@@ -153,9 +153,9 @@
       "authoringContext": "assets/blender/tracks/red-bull-ring-context.json",
       "maxBytes": 4500000,
       "maxTriangles": 120000,
-      "sourceSha256": "f3cb5f18f86e48b686b39351e93ddd6050c820bf7296aa5b321c9a30ca708f34",
-      "sha256": "3dbbda1b17d2516e80ef0dab01dab6ddcca46b458df60631c2e5321b84cfe0ff",
-      "semanticSha256": "fe6fa83b69969c2ebefd0bc99f68053ebf02761cb6f6b1ac74ec124b60d7b4cf",
+      "sourceSha256": "7e73c28dc4ba6f356ee1f6b3e4cb87ff4bf806ef64630cc7b0b61acd59ffd1d9",
+      "sha256": "bbc64b7667b9c1b785533aa50c26f2c8cf074573e71a886b6ec88d82a40be188",
+      "semanticSha256": "345eb2a5a988b19c8dc33d3301fdc86dc901bec79580ba63af3881591fb3bd4a",
       "materialBatches": 11
     },
     {

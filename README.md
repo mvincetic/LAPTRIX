@@ -18,6 +18,9 @@ imported geometry and delivery failures retain the procedural presentation. See
 [the Blender pipeline](docs/BLENDER_PIPELINE.md) for commands and conventions, and
 [ROADMAP.md](docs/ROADMAP.md) for the active sequence. Running the application uses
 the checked-in runtime assets; Blender is needed for authoring and re-export.
+The Red Bull Ring ground now shares original packed Blender PBR materials across
+its road, runoff and terrain; [surface materials](docs/SURFACE_MATERIALS.md)
+documents texture scale, payload and preserved source geometry.
 
 ## Start locally
 

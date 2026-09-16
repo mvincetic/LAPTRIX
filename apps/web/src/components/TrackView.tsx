@@ -2,6 +2,7 @@ import {
   Component,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -18,6 +19,7 @@ import {
   PCFShadowMap,
   PerspectiveCamera,
   type Group,
+  type MeshStandardMaterial,
 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { RotateCcw, Flag, MousePointer2 } from "lucide-react";
@@ -51,6 +53,9 @@ import {
 } from "../onboard-camera";
 import { roadShoulders, roadSurface } from "../road-presentation";
 import { surfaceGrain } from "../surface-grain";
+import { useRBRScenery } from "../use-rbr-scenery";
+import { sceneryGroundMaterials, rbrSceneryContract } from "../scenery-asset";
+import { groundUV, groundMaterial } from "../ground-materials";
 import { northScreenAngle, northScreenLabel } from "../north-indicator";
 import { orbitDampingFactor } from "../orbit-damping";
 import { normalizeTrack, type Vec3 } from "../../../../packages/track-engine";
@@ -104,10 +109,12 @@ function Ribbon({
   track,
   color,
   shoulder = false,
+  surface,
 }: {
   track: Track;
   color: string;
   shoulder?: boolean;
+  surface?: MeshStandardMaterial;
 }) {
   const geometry = useMemo(() => {
     const frame = normalizeTrack(track),
@@ -124,23 +131,45 @@ function Ribbon({
     g.setAttribute("uv", new BufferAttribute(uv, 2));
     if (data.indices) g.setIndex(new BufferAttribute(data.indices, 1));
     g.computeVertexNormals();
-    return g;
+    return {
+      mesh: g,
+      fallbackUV: uv.slice(),
+      authoredUV: groundUV(
+        data.positions,
+        rbrSceneryContract.groundMaterials[shoulder ? "gravel" : "asphalt"]
+          .tileMetres,
+      ),
+    };
   }, [track, shoulder]);
-  useEffect(() => () => geometry.dispose(), [geometry]);
+  useEffect(() => () => geometry.mesh.dispose(), [geometry]);
+  useLayoutEffect(() => {
+    const uv = geometry.mesh.getAttribute("uv");
+    uv.array.set(surface ? geometry.authoredUV.array : geometry.fallbackUV);
+    uv.needsUpdate = true;
+  }, [geometry, surface]);
+  const material = useMemo(
+    () => (surface ? groundMaterial(surface) : null),
+    [surface],
+  );
+  useEffect(() => () => material?.dispose(), [material]);
   const grain = useMemo(() => surfaceGrain(), []);
   useEffect(() => () => grain.dispose(), [grain]);
   return (
     <mesh
       name={shoulder ? "road-shoulders" : "road-asphalt"}
-      geometry={geometry}
+      geometry={geometry.mesh}
       receiveShadow
     >
-      <meshStandardMaterial
-        color={color}
-        map={grain}
-        roughness={1}
-        side={DoubleSide}
-      />
+      {material ? (
+        <primitive object={material} attach="material" dispose={null} />
+      ) : (
+        <meshStandardMaterial
+          color={color}
+          map={grain}
+          roughness={1}
+          side={DoubleSide}
+        />
+      )}
     </mesh>
   );
 }
@@ -319,6 +348,14 @@ export function TrackView({
     [compactScene, setCompactScene] = useState(false),
     [legendChoice, setLegendChoice] = useState<boolean | null>(null);
   const legendOpen = legendChoice ?? !compactScene;
+  const scenery = useRBRScenery(
+    lap?.alignment?.trackFingerprint,
+    layers.terrain,
+  );
+  const surfaces = useMemo(
+    () => (scenery ? sceneryGroundMaterials(scenery) : null),
+    [scenery],
+  );
   const cameraChosen = useRef(false);
   // Observe only play transitions; the scene must not rerender at clock cadence.
   useEffect(() => {
@@ -475,10 +512,16 @@ export function TrackView({
               <Landscape
                 track={track}
                 sourceFingerprint={lap?.alignment?.trackFingerprint}
+                scenery={scenery}
               />
             )}
-            <Ribbon track={track} color="#c9c5b7" shoulder />
-            <Ribbon track={track} color="#363d43" />
+            <Ribbon
+              track={track}
+              color="#c9c5b7"
+              shoulder
+              surface={surfaces?.gravel}
+            />
+            <Ribbon track={track} color="#363d43" surface={surfaces?.asphalt} />
             <RoadDetails track={track} />
             {layers.centerline && (
               <Line

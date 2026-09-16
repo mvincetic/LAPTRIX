@@ -1,5 +1,28 @@
 # Product presentation milestones
 
+## Blender B4 — Surface scale and shared ground materials, 2026-09-16
+
+Original packed asphalt, grass and gravel color/normal maps now live in the
+editable Red Bull Ring Blender source. The authored ground and existing native
+road/terrain share physical tile scale and UV phase. The 4,224,716-byte circuit
+remains inside its 4.5 MB budget with exactly unchanged positions, normals,
+indices and transforms. Five PNG maps total 624,228 bytes; the scene still has
+81,594 triangles and eleven batches. Source/physics identities remain unchanged.
+
+The complete local quality/export gate passes 337 TypeScript / 162 Python tests
+and four byte-identical Blender exports. Thirteen affected development journeys,
+all forty production journeys (11.1 minutes), 32 visual states, six native-GPU
+sequences and four actual Play clips verify the integrated candidate. Native
+samples retain approximately 60 fps. The software-renderer motion deadline also
+fails on the unchanged baseline on this host; it is explicitly not claimed green.
+SURFACE_MATERIALS.md and VISUAL_CHECKPOINT.md retain evidence and limitations.
+
+Close surface detail improves, but overview terrain remains too uniform and
+distant scenery sparse. Keep full-circuit structures paused. After the working
+branch's CI verification, improve the landscape context of this same slice;
+any additional source data must retain reusable rights, pinned provenance and
+the existing authoritative driving geometry.
+
 ## Blender B3 — Original Formula and first combined checkpoint, 2026-09-15
 
 The bundled Formula now uses original editable Blender bodywork and a native

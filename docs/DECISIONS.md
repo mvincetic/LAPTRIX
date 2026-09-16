@@ -1,5 +1,23 @@
 # Decision log
 
+## 2026-09-16 — Share authored ground materials without replacing source geometry
+
+The first combined checkpoint identified coarse asphalt and pale ground as the
+next visible weakness. Original packed color/normal art now lives in the existing
+Red Bull Ring `.blend`, with exact physical tile dimensions and shared world UV
+phase across authored patches and runtime road/terrain. Blender remains the
+material author; existing track functions retain every position and triangle.
+No second asset library, network request, custom shader or simulation displacement
+is introduced. Five bounded images fit the existing 4.5 MB GLB budget.
+
+One source/environment eligibility hook serves scenery and surface materials.
+Instance material disposal retains cache-owned maps, and UV/color updates reuse
+existing GPU attributes. Source and independent GLB validators check metre-scale
+UVs; runtime checks embedded image bounds before decoding. The Dev Track and
+imported sources preserve generic rendering. Exact exported position/normal/index
+comparison against `12b42cb` confirms unchanged geometry. Further breadth remains
+subject to actual browser visual and playback review.
+
 ## 2026-09-15 — Fit original Formula 2026 art to the authoritative native rig
 
 The Formula model interprets public FIA design direction with original sculpted

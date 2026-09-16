@@ -166,6 +166,13 @@ gauge through Three's GLTFLoader and check known metre/axis/pivot expectations;
 corruption cases exercise invalid data, external buffers, animation, shear and
 budget failures. Python tests cover the coordinate conversion and portable paths.
 
+Ground materials add packed original PNG color/normal maps to the editable Red
+Bull Ring source. Both the Blender validator and independent GLB reader check
+world-coordinate UV scale against configured tile metres. The runtime uses the
+exported V convention for existing road/terrain meshes. Five images stay inside
+the 4.5 MB package limit; bounded PNG headers are checked before browser decoding.
+See SURFACE_MATERIALS.md for the texture/geometry ownership contract.
+
 Authoring scripts are explicit reconstruction tools. For example:
 
 ```text
