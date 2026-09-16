@@ -17,7 +17,11 @@ matched captures, six reference views and three native-GPU samples (538 frames,
 about 60.0–60.2 fps, zero drift/errors and unchanged draws). The final phone
 inspection views stay inside the fence and keep every vehicle vertex in frame.
 All forty production cases pass in 11.6 minutes. Local acceptance is complete;
-remote acceptance of the resulting revision remains pending. See GT_BODY_FITTING.md.
+the pushed `867fae9` passes seven remote jobs but has one desktop load-extrema
+deadline miss. The focused screenshot/test separation passes an isolated full
+gate (342 TypeScript / 178 Python, 47.51 seconds), four journey repeats and 24
+dedicated visual states. Remote acceptance of that fix remains pending; see
+GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
 
 The GT rear refinement passes the local gate with 342 TypeScript / 178 Python
 tests (47.01 seconds), ten asset packages, lint/types, context reproduction and

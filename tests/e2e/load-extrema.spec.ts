@@ -104,9 +104,7 @@ for (const width of [1600, 390]) {
     await expect(
       page.getByRole("button", { name: "Dismiss notification" }),
     ).toBeHidden();
-    await page
-      .locator(".telemetry-panel")
-      .screenshot({ path: `artifacts/load-extrema-${width}.png` });
+    // Expanded-panel captures are retained by scripts/load-graphs-qa.mjs.
     await disclosure.locator("summary").click();
     await expect(disclosure).not.toHaveAttribute("open");
     await expect(page.getByTestId("current-trace-normalLoadG")).toHaveAttribute(

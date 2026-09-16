@@ -41,7 +41,9 @@ The following front/livery pass is integrated locally: body-fitted stripe,
 three actual front openings, tapered carbon liners and fitted hood seams.
 The full local quality and Blender gates, sixteen focused and forty production
 cases pass. Thirty-six matched captures, six reference views and three native
-motion samples complete local acceptance. Commit, push and verify remote CI.
+motion samples complete local acceptance. The pushed `867fae9` passes seven CI
+jobs, with one desktop load-extrema deadline miss. Complete the focused capture
+stabilization and verify remote CI; see LOAD_EXTREMA_CI.md.
 The accepted study and independent mesh evidence are in GT_BODY_FITTING.md.
 Continue by reviewing nearby vegetation silhouette and depth within
 the existing finish–T1 slice, using a focused Blender asset study and actual

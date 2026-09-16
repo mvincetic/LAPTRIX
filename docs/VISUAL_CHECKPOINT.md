@@ -62,7 +62,8 @@ study captures and four actual Onboard sequences. Independent mesh probes verify
 stripe clearance and open inlets with retained structural lips. See
 GT_BODY_FITTING.md for completed local acceptance: sixteen focused and forty
 production cases, 36 matched captures, six reference views and three native
-motion samples. The resulting revision requires remote CI. Broader rollout stays paused.
+motion samples. Pushed `867fae9` passes seven CI jobs; LOAD_EXTREMA_CI.md records
+the remaining desktop test deadline and focused stabilization. Broader rollout stays paused.
 
 ## Comparison conditions
 

@@ -16,8 +16,10 @@ are byte-identical. Sixteen focused cases pass in 5.5 minutes; 36 matched
 integrated captures and six reference views complete visual review. Three
 native-GPU samples record 538 frames at about 60.0–60.2 fps, with zero drift/errors
 and unchanged draw calls. All forty production cases pass in 11.6 minutes.
-Local acceptance is complete; the resulting revision still requires remote CI.
-See GT_BODY_FITTING.md for evidence and remaining limitations.
+Local acceptance is complete. Pushed `867fae9` passes seven remote jobs, with
+one desktop load-extrema deadline miss. The focused capture separation retains
+all assertions and passes its isolated quality/repeat/visual checks; remote
+verification remains pending. See GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
 
 ## GT rear bodywork — 2026-09-16
 

@@ -1,5 +1,16 @@
 # Continuous integration
 
+The [GT body-fitting run](https://github.com/mvincetic/LAPTRIX/actions/runs/35142086900)
+at `867fae9` has seven successful jobs and one failed development shard. All
+quality/export checks, 189 development cases and forty production cases pass.
+The desktop load-extrema journey reaches its 60-second deadline after passing
+its application assertions; an unasserted screenshot consumes 11.6 seconds.
+The focused follow-up retains every assertion and moves that capture responsibility
+to the existing visual QA script. See LOAD_EXTREMA_CI.md for trace evidence and
+separate validation. This revision is not recorded as remotely green. The focused
+fix passes the complete isolated quality gate, four journey repeats and 24
+dedicated visual states; its resulting revision still needs remote verification.
+
 The [GT rear-refinement run](https://github.com/mvincetic/LAPTRIX/actions/runs/35137255410)
 at `22dafad` is **fully green**: all eight jobs pass, including 342 TypeScript /
 178 Python tests (27.23 seconds), all 190 development cases, forty production

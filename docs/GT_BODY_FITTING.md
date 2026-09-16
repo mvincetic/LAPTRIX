@@ -110,9 +110,11 @@ The earlier regional software-renderer deadline remains unresolved.
 
 All forty production-browser cases pass in 11.6 minutes, including imported
 tracks, save/restore, references, asset recovery and narrow viewer controls.
-Local acceptance is complete. Remote acceptance must be verified for the
-resulting working-branch revision. The preceding rear refinement passes all
-eight remote jobs; see CI.md.
+Local acceptance is complete. Pushed revision `867fae9` has seven successful
+remote jobs in run `35142086900`, with one desktop load-extrema timeout after
+its application assertions pass. Forty production cases and all four exports
+pass remotely. LOAD_EXTREMA_CI.md records the trace and focused stabilization;
+remote acceptance remains open. The preceding rear refinement is fully green.
 
 The model still has simplified side vents, door detailing and untextured glass
 and carbon. Ground context remains sparse and facilities approximate. This pass
