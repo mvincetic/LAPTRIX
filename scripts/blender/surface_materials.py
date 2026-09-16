@@ -92,13 +92,13 @@ def ground_materials():
     asphalt_normal = packed_image("LTX_Asphalt_Normal", normal_pixels(normal_height, 2), color=False)
 
     size = 256
-    patch = noise(size, 5, 2237) * 0.45 + noise(size, 23, 5323) * 0.35
-    patch += noise(size, 128, 7489) * 0.20
+    # Low-frequency variation lives in editable landscape vertex paint. Keeping
+    # this repeated map fine and restrained avoids a visible eight-metre grid.
+    patch = noise(size, 32, 2237) * 0.4 + noise(size, 128, 7489) * 0.6
     flecks = np.random.default_rng(8353).random((size, size)) - 0.5
-    low = np.array([0.228, 0.286, 0.150])
-    high = np.array([0.342, 0.382, 0.239])
     grass = packed_image(
-        "LTX_Grass_Color", low + (high - low) * patch[:, :, None] + flecks[:, :, None] * 0.022
+        "LTX_Grass_Color",
+        np.array([0.32, 0.365, 0.22]) + patch[:, :, None] * 0.04 + flecks[:, :, None] * 0.016,
     )
     grass_height = (noise(256, 96, 8363) - 0.5) * 0.005
     grass_normal = packed_image("LTX_Grass_Normal", normal_pixels(grass_height, 8), color=False)
@@ -111,7 +111,7 @@ def ground_materials():
     )
     return {
         "asphalt": textured("RBR_PitAsphalt", asphalt, asphalt_normal, 0.9, 2, (0.20, 0.206, 0.213)),
-        "grass": textured("RBR_Grass", grass, grass_normal, 0.99, 8, (0.285, 0.335, 0.195)),
+        "grass": textured("RBR_Grass", grass, grass_normal, 0.99, 8, (0.34, 0.385, 0.24)),
         "gravel": textured("RBR_Gravel", gravel, asphalt_normal, 0.99, 2, (0.5, 0.473, 0.42)),
     }
 

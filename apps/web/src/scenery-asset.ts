@@ -151,7 +151,9 @@ export function validateRBRScenery(scene: Group) {
   if (
     !root ||
     root.userData.source_fingerprint !== contract.sourceFingerprint ||
-    root.userData.authoring_context_sha256 !== contract.authoringContextSha256
+    root.userData.authoring_context_sha256 !==
+      contract.authoringContextSha256 ||
+    root.userData.regional_context_sha256 !== contract.landscape.contextSha256
   )
     throw new Error("Scenery source frame differs");
   const footprints = JSON.parse(root.userData.vegetation_exclusions ?? "null");
@@ -193,6 +195,20 @@ export function validateRBRScenery(scene: Group) {
     const positions = node.geometry.getAttribute("position");
     if (!positions || !Array.from(positions.array).every(Number.isFinite))
       throw new Error("Invalid scenery positions");
+    if (node.name === contract.landscape.node) {
+      const color = node.geometry.getAttribute("color");
+      if (
+        node.material.name !== contract.landscape.material ||
+        !node.material.vertexColors ||
+        !color ||
+        ![3, 4].includes(color.itemSize) ||
+        color.count !== positions.count ||
+        !Array.from(color.array).every(
+          (v) => typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1,
+        )
+      )
+        throw new Error("Invalid regional ground palette");
+    }
     triangles += (node.geometry.index?.count ?? positions.count) / 3;
     meshes++;
     const shadowOnly = node.name === "SHADOW_CASTERS_LOD0";
@@ -201,6 +217,8 @@ export function validateRBRScenery(scene: Group) {
     node.material.colorWrite = !shadowOnly;
     node.material.depthWrite = !shadowOnly;
   });
+  if (!(scene.getObjectByName(contract.landscape.node) instanceof Mesh))
+    throw new Error("Missing regional ground mesh");
   if (
     triangles < 1 ||
     triangles > contract.maxTriangles ||

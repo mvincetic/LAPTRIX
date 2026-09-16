@@ -2,7 +2,8 @@
 
 The first authored environment covers the finish approach and start/finish through
 Turn 1. The `.blend` contains editable mesh islands, grouped into ten visible
-material batches and one coarse shadow batch. It adds a graded pit lane, garage modules with glazed
+material batches and one coarse shadow batch, plus one continuous regional ground
+batch. It adds a graded pit lane, garage modules with glazed
 upper floors, a neutral LAPTRIX start gantry, original grandstand seating,
 corrugated barriers, fences, 150/100/50 m boards, raised alternating curbs and
 runoff. Dimensions and facility arrangements are original approximate art.
@@ -58,10 +59,10 @@ on the authored structures.
 | Editable source      | `assets/blender/tracks/red-bull-ring-slice.blend`       |
 | Runtime asset        | `assets/runtime/tracks/red-bull-ring-slice.glb`         |
 | Authoring script     | `scripts/blender/author_rbr.py`                         |
-| Exported triangles   | 81,594 / 120,000 maximum; 79,530 visible + 2,064 shadow |
-| Material primitives  | 11 / 16 maximum                                         |
-| GLB bytes            | 4,224,716 / 4,500,000 maximum                           |
-| Materials / textures | 11 Principled PBR materials; five packed PNG maps, 512 px maximum |
+| Exported triangles   | 109,834 / 120,000 maximum; 107,770 visible + 2,064 shadow |
+| Material primitives  | 12 / 16 maximum                                         |
+| GLB bytes            | 5,017,628 / 5,250,000 maximum                           |
+| Materials / textures | 12 Principled PBR materials; five packed PNG maps, 512 px maximum |
 
 Run `node scripts/blender-tool.mjs author laptrix.blender-rbr-slice.v1
 --replace-source` only to intentionally rebuild the source from the authoring
@@ -71,8 +72,12 @@ editable art changes, validates and places the GLB automatically.
 
 The browser fetches one bounded package only when the installed source fingerprint
 matches. Pending or failed loading retains generic scenery. Successful loading
-replaces generic guardrails only within the authored distance ranges. Environment
-remount retries a failed fetch; successful remounts share immutable geometry and
+replaces generic guardrails only within the authored distance ranges. Loading
+also replaces the contextual ground with the continuous protected
+[regional landscape](REGIONAL_LANDSCAPE.md), using separately documented
+historical elevation and original vertex paint. Road/shoulder/apron geometry and
+tree sites remain unchanged. Source-scoped haze follows scenery visibility.
+A remount retries a failed fetch; successful remounts share immutable geometry and
 materials through a single bounded cache. Scene instances own their hierarchy.
 Mount and removal refresh cached sun shadows, including while paused. Actual
 garage/grandstand roof footprints are exported before material batching; tree

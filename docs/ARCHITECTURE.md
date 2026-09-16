@@ -15,6 +15,14 @@ changing their positions or indices. Optional material clones own their mutable
 state; the template cache owns texture pixels. Existing UV/color buffers are
 updated in place on fallback changes. See SURFACE_MATERIALS.md.
 
+The optional Red Bull Ring regional ground replaces only the visible contextual
+terrain. Its protected foreground retains the existing triangles and tree bases;
+the road, shoulder and earthworks buffers remain authoritative. Separately pinned
+historical elevations supply distant relief in the same coordinate frame.
+Original Blender vertex art shares cached grass textures, and static distance
+haze mounts/removes with the scenery. Generic terrain remains available for
+fallback, other sources and failed asset delivery. See REGIONAL_LANDSCAPE.md.
+
 The first Blender GT integrates as a visual child of the existing TelemetryGhost.
 `premium-vehicle.ts` validates a bounded local GLB and caches its immutable source
 geometry. Each current/reference instance owns cloned materials and named motion

@@ -19,12 +19,14 @@ edits; only explicit authoring with `--replace-source` regenerates them.
 | --- | ---: | ---: | ---: |
 | Asphalt color | 512 × 512 | 324,590 | 2 m |
 | Asphalt normal | 256 × 256 | 58,952 | 2 m |
-| Grass color | 256 × 256 | 79,535 | 8 m |
+| Grass color | 256 × 256 | 71,200 | 8 m |
 | Grass normal | 256 × 256 | 70,855 | 8 m |
 | Gravel color | 256 × 256 | 90,296 | 2 m |
 
-The five maps total 624,228 bytes; gravel shares the asphalt micro-normal map.
-Blender emits six texture references to five images; Three's loader shares the
+The five maps total 615,893 bytes; gravel shares the asphalt micro-normal map.
+The regional iteration replaces coarse grass patches with finer original color
+variation; larger meadow/forest variation lives in editable vertex paint.
+Blender emits eight texture references to five images; Three's loader shares the
 repeated source/sampler. Including mipmaps, five RGBA8 GPU images use approximately
 2.67 MiB. Four-times anisotropic filtering retains detail at grazing angles,
 subject to the device limit. Normal maps affect shading only, never displacement.
@@ -38,11 +40,13 @@ same grass map. There are no baked directional shadows or lighting in the maps.
 
 ## Delivery and ownership
 
-The 5,299,167-byte editable source exports a 4,224,716-byte GLB within the existing
-4.5 MB limit. Geometry is unchanged at 81,594 triangles and eleven batches. An
-independent comparison with `12b42cb` finds exact equality of every position,
-normal, triangle index and node transform (`artifacts/blender-surface-geometry-proof.json`).
-Authoring context and licensed geometry provenance remain pinned and unchanged.
+The regional iteration's 7,578,437-byte source exports a 5,017,628-byte GLB within
+its 5.25 MB limit. It adds a 28,240-triangle landscape to the existing 81,594
+triangles, bringing the package to twelve batches. All original circuit node
+positions, normals, indices and transforms remain exactly equal to `b4b8f51`;
+the preceding material-only comparison against `12b42cb` is also retained.
+Physical authoring context stays unchanged, and the visual regional source has
+its own pinned provenance chain. See REGIONAL_LANDSCAPE.md for foreground proof.
 
 The optional package loads only for the matching source with Environment enabled.
 One cache owns its textures and geometry. Road/terrain instances own material
@@ -54,7 +58,7 @@ attach to another source. No solve or clock update is caused by asset delivery.
 
 Before image decoding, runtime validation rejects external dependencies, invalid
 GLB/chunk bounds, invalid embedded PNG headers and oversized images. The source
-allows at most five images, six texture references and 512-pixel image dimensions.
+allows at most five images, eight texture references and 512-pixel image dimensions.
 An invalid parsed package releases its geometry, materials and owned image data.
 The successful cache retains the packed maps across toggles.
 
@@ -68,7 +72,7 @@ available. This pass improves surface scale and color, while approximate facilit
 architecture, repeated forest silhouettes and sparse distant scenery remain
 limitations. Broader circuit construction stays gated by the visual checkpoint.
 
-The first completed review retains 32 actual browser states, four native Play
+The preceding material-only review retains 32 actual browser states, four native Play
 clips and twenty moving-frame captures. Six native-GPU motion samples record
 1,072 frames at 60.0–60.2 fps on RTX 3060 Ti / ANGLE Direct3D 11, pixel ratio one.
 Both cars run on both tracks at 1600 × 900, with an additional 390 × 900 fullscreen

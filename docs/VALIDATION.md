@@ -6,6 +6,32 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The integrated regional-landscape candidate passes the complete local gate:
+342 TypeScript tests, 178 Python tests (47.32 seconds), lint/typecheck, ten asset
+packages, physical context reproduction and the production build. All four Blender
+assets re-export byte-identically, with four additional actual-source rejection
+probes for regional provenance, protected ground and vertex-color blending.
+Seventeen focused browser journeys pass in 5.3 minutes and nine broader journeys
+in 3.4 minutes, retaining GPX recovery/restoration, source isolation, scenery
+fallback, camera/terrain/apex behavior and zero settled rendering.
+
+The actual runtime GLB preserves thirteen original circuit nodes and all 4,074
+ground-contact probes within 0.00000475 m. Thirty-two integrated camera states,
+eight matched before/after pairs and four actual Play recordings with twenty
+moving frames are retained. Six native-GPU sequences measure about 60.0–60.3 fps
+with zero anchor drift/errors, unchanged peak draw calls and 10,640 added rendered
+triangles. The software-motion deadline remains **failed**, reaching 1.549934 lap
+seconds within twelve wall seconds. All forty production-browser journeys pass
+in 11.4 minutes against the completed build. Remote acceptance remains pending;
+the passing older baseline does not substitute for it. See REGIONAL_LANDSCAPE.md
+for source, payload and visual limitations.
+
+`b4b8f51` passes all eight remote jobs in run `35124292344`: 337 TypeScript /
+162 Python tests (42.74 seconds), 190 development and forty production journeys,
+plus four byte-identical Blender exports. The bounded daylight, GPX and apex
+journeys retain their coverage and original deadlines. Regional landscape
+integration proceeds from this verified surface baseline; see CI.md.
+
 Run `35120515839` at `b398f3f` passes the complete quality gate, four Blender
 exports, forty production and 184 of 186 development journeys. The revised
 daylight checks and six-shard suite limits pass, but the desktop GPX and phone

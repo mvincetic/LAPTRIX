@@ -151,3 +151,11 @@ facilities aligned to this unchanged source frame. Its editable source and GLB
 retain the OSM/Steiermark credits and source/context hashes. See
 [the reconstruction documentation](../../../docs/RBR_BLENDER_SCENE.md) for asset
 paths, reproduction, attribution and the limits of those unsurveyed facilities.
+
+The subsequent visual landscape uses a separate [regional source package](regional/README.md):
+a 6 × 6 km Land Steiermark DGM crop at 20 m service sampling, intersecting survey
+blocks from 2010–2012. This historical regional data shares the existing circuit
+origin and height offset but changes only distant visual terrain. The protected
+foreground and physical track remain unchanged. Meadow/forest paint is original
+interpretation, not measured land cover. The regional manifest, license, exact
+requests and modification record accompany the editable Blender source and GLB.

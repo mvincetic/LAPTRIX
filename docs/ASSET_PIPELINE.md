@@ -15,6 +15,13 @@ export with standard PBR nodes and drive both its authored patches and the nativ
 road/terrain meshes at a shared world-space metre scale. No external texture data
 is introduced. See SURFACE_MATERIALS.md for bounds, ownership and visual review.
 
+Its optional regional ground now uses a separately pinned CC BY 4.0 elevation
+crop in the same source frame. Editable Blender vertex paint shares those grass
+maps, while actual source/GLB checks protect existing foreground triangles and
+retain full provenance. It replaces the visible contextual terrain only for the
+validated showcase source. See REGIONAL_LANDSCAPE.md for the source chain,
+clearance proof, payload budget and integrated review status.
+
 Existing procedural assets provide adaptable presentation and fallback during
 that rollout. Every representation consumes the authoritative source/telemetry
 frame. The current pylon's earlier JSON/Three exporter remains documented below.

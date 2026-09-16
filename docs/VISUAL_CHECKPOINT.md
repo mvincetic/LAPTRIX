@@ -24,6 +24,23 @@ retain 60.0–60.2 fps and unchanged submission counts, with zero anchor drift.
 The software motion deadline remains unmet on this host and also fails on an
 isolated unchanged `12b42cb`; see SURFACE_MATERIALS.md for exact evidence and limits.
 
+The subsequent regional landscape iteration retains eight matched before/after
+camera pairs, 32 integrated desktop/phone states and four actual Play clips with
+twenty moving frames under `artifacts/visual-checkpoint/regional-landscape/`.
+The original foreground is preserved inside a continuous Blender landscape,
+with pinned CC BY 4.0 historical regional relief, original vertex-painted tones,
+shared grass maps and source-scoped haze. Its 5,017,628-byte GLB has 109,834
+triangles and twelve batches. Six short native-GPU sequences measure about
+60.0–60.3 fps, unchanged peak draw calls and 10,640 additional rendered triangles.
+The current software probe still misses its deadline at 1.549934 lap seconds.
+See REGIONAL_LANDSCAPE.md for exact contracts, evidence and limitations.
+
+This makes the horizon and close ground more coherent, but broad terrain and
+forest remain simplified. Full-circuit construction stays paused. The observed
+narrow Onboard track-information box overlaps the cockpit; the next focused
+product iteration should clear that obstruction while retaining circuit identity,
+source access, camera controls and the authoritative transport/telemetry.
+
 ## Comparison conditions
 
 The retained before views come from `8474e6d`, before the Blender phase. Matching

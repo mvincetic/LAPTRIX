@@ -131,8 +131,8 @@
       "sourceFile": "assets/blender/tracks/red-bull-ring-slice.blend",
       "runtimeFile": "assets/runtime/tracks/red-bull-ring-slice.glb",
       "origin": "Authoritative Red Bull Ring origin; East/Up/South in GLB metres; source-aligned original scenery",
-      "provenance": "Original neutral LAPTRIX structures, curbs, fences and runoff aligned to the pinned OSM/Steiermark source and existing rendered road/terrain frame. Approximate visual reconstruction, not surveyed facilities.",
-      "rights": "Original structures: repository distribution policy. Source-derived geometry retains ODbL 1.0 and elevation CC BY 4.0 obligations; see data/sources/red-bull-ring/README.md.",
+      "provenance": "Original neutral LAPTRIX structures, curbs, fences and runoff aligned to the pinned OSM/Steiermark source and existing rendered road/terrain frame. Approximate visual reconstruction, not surveyed facilities. Distant relief uses the separately pinned Land Steiermark 2010–2012 regional crop; meadow/forest colors are original interpretation, not surveyed land cover.",
+      "rights": "Original structures: repository distribution policy. Source-derived geometry retains ODbL 1.0 and elevation CC BY 4.0 obligations; see data/sources/red-bull-ring/README.md. Regional landscape also retains CC BY 4.0 credit; see data/sources/red-bull-ring/regional/README.md.",
       "thirdPartySources": [
         {
           "title": "GP centerline",
@@ -151,12 +151,22 @@
       ],
       "sourceFingerprint": "sha256:6269176570597be6d70057566a045d193bdbc18f3e59db8cad141c33798c4118",
       "authoringContext": "assets/blender/tracks/red-bull-ring-context.json",
-      "maxBytes": 4500000,
+      "maxBytes": 5250000,
       "maxTriangles": 120000,
-      "sourceSha256": "7e73c28dc4ba6f356ee1f6b3e4cb87ff4bf806ef64630cc7b0b61acd59ffd1d9",
-      "sha256": "bbc64b7667b9c1b785533aa50c26f2c8cf074573e71a886b6ec88d82a40be188",
-      "semanticSha256": "345eb2a5a988b19c8dc33d3301fdc86dc901bec79580ba63af3881591fb3bd4a",
-      "materialBatches": 11
+      "sourceSha256": "ed67fa84338805416b53a8340eedafc87b8a8043ca5ccc9890b71c5bcf4ecd8b",
+      "sha256": "95f1788f2486567951d21103065ef9d311a4553c314a3f30a21e315a34c7990c",
+      "semanticSha256": "a312b816f4d1e47ec0876114c026594030c58422ee9e319a5c143d97dfdc9670",
+      "materialBatches": 12,
+      "landscapeContext": "assets/blender/tracks/red-bull-ring-regional.json",
+      "landscapeSources": [
+        {
+          "title": "Regional terrain elevation · 2010–2012",
+          "credit": "Datenquelle: CC-BY-4.0: Land Steiermark - data.steiermark.gv.at",
+          "url": "https://data.steiermark.at/cms/beitrag/12803290/97428847/",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ]
     },
     {
       "id": "laptrix.blender-formula26.v1",

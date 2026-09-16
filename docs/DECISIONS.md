@@ -1,5 +1,29 @@
 # Decision log
 
+## 2026-09-16 — Extend the landscape while preserving the complete driving foreground
+
+The surface checkpoint still showed an abrupt, uniform surrounding world. Use a
+separately pinned historical Land Steiermark DGM crop to author distant terrain
+in Blender, in the existing circuit coordinate frame. Preserve vertices within
+320 m and prove every changed triangle stays beyond a 270 m protected corridor;
+blend to regional heights by 700 m and stitch fourteen perimeter rings. The
+single continuous mesh avoids the visible seam found in the first separate-hill
+prototype. Physical track/elevation/widths, road/shoulder/apron buffers and tree
+sites remain unchanged.
+
+Original editable vertex paint supplies meadow/forest variation while finer
+grass art avoids obvious repeated patches. A standard color multiply retains
+the same meaning in glTF, shares the existing five images, and adds one material
+batch. Show the authored ground only after source validation; retain generic
+terrain for fallback. Matching daylight-colored distance haze follows scenery
+mount/removal without adding a clock. Keep historical elevation provenance
+separate from physical track credits and original land-cover interpretation.
+
+The preceding surface baseline is fully green at `b4b8f51`. The regional candidate
+must pass actual desktop/phone, fallback, ground, playback, performance, export,
+production and remote CI gates before broader rollout. The quality bar still
+applies to the vertical slice, so full-circuit facilities remain paused.
+
 ## 2026-09-16 — Separate portable restoration and annotation playback journeys
 
 Run `35120515839` validates the daylight split and six-shard suite budget but

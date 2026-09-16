@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
 import { Box3, Matrix4, Quaternion, Vector3 } from "three";
+import { validateRegionalSource } from "./regional-source.mjs";
 
 export const sha256 = (bytes) =>
   createHash("sha256").update(bytes).digest("hex");
@@ -246,7 +247,8 @@ export function inspectBlenderGlb(bytes, config) {
   const nodeRecords = [],
     namedPositions = {};
   let triangles = 0,
-    primitives = 0;
+    primitives = 0,
+    landscapeSeen = false;
   function visit(index, parent) {
     const node = json.nodes[index];
     assert(node && !visited.has(index), "Invalid or repeated hierarchy node");
@@ -317,13 +319,40 @@ export function inspectBlenderGlb(bytes, config) {
     });
     if (node.mesh !== undefined) {
       assert(geometry[node.mesh]);
+      const isLandscape = node.name === config.landscape?.node;
+      if (isLandscape) {
+        landscapeSeen = true;
+        assert.equal(
+          geometry[node.mesh].length,
+          1,
+          "Landscape must use one ground batch",
+        );
+      }
       for (const primitive of geometry[node.mesh]) {
         primitives++;
         triangles += primitive.triangles;
         const material = json.materials[primitive.material];
-        const ground = Object.values(config.groundMaterials ?? {}).find(
-          (spec) => spec.name === material.name,
-        );
+        const groundSpecs = Object.values(config.groundMaterials ?? {});
+        if (config.landscape)
+          groundSpecs.push({
+            name: config.landscape.material,
+            tileMetres: config.groundMaterials.grass.tileMetres,
+          });
+        const ground = groundSpecs.find((spec) => spec.name === material.name);
+        if (isLandscape) {
+          assert.equal(material.name, config.landscape.material);
+          const color = primitive.attributes.COLOR_0;
+          assert(
+            color && ["VEC3", "VEC4"].includes(color.type),
+            "Retain regional vertex paint",
+          );
+          assert.equal(color.componentType, 5126);
+          assert.equal(color.normalized, false);
+          assert(
+            color.values.every((v) => v >= 0 && v <= 1),
+            "Regional colors exceed 0–1",
+          );
+        }
         if (ground) {
           assert.equal(material.extras?.laptrix_tile_metres, ground.tileMetres);
           assert(
@@ -356,6 +385,7 @@ export function inspectBlenderGlb(bytes, config) {
   const rootIndex = json.scenes[0].nodes[0];
   assert.equal(json.nodes[rootIndex].name, config.rootNode);
   visit(rootIndex, new Matrix4());
+  assert(!config.landscape || landscapeSeen, "Missing regional ground mesh");
   near(nodeRecords[0].matrix, new Matrix4().elements, 1e-6, "Asset root");
   assert.equal(visited.size, json.nodes.length, "Orphaned GLB node");
   assert(
@@ -464,6 +494,22 @@ export async function validateBlenderEntry(root, entry) {
       JSON.parse(extras?.source_credits ?? "null"),
       entry.thirdPartySources,
     );
+    if (config.landscape) {
+      const regional = await validateRegionalSource(
+        config.landscape,
+        async (path) => readFile(await ownedAssetPath(root, path)),
+      );
+      assert.equal(entry.landscapeContext, config.landscape.context);
+      assert.deepEqual(entry.landscapeSources, [regional.attribution]);
+      assert.equal(
+        extras?.regional_context_sha256,
+        config.landscape.contextSha256,
+      );
+      assert.deepEqual(
+        JSON.parse(extras?.regional_source_credit ?? "null"),
+        regional.attribution,
+      );
+    }
   }
   const source = await readFile(await ownedAssetPath(root, entry.sourceFile));
   assert(

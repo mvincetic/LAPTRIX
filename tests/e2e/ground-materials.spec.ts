@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import type { Mesh, MeshStandardMaterial } from "three";
+import type { Fog, Mesh, MeshStandardMaterial } from "three";
 
 async function surfaces(page: Page) {
   return page.evaluate(async () => {
@@ -10,7 +10,15 @@ async function surfaces(page: Page) {
     const root = _roots.get(
       document.querySelector(".scene canvas") as HTMLCanvasElement,
     );
-    if (!root) return { ready: false, meshes: [], textures: 0 };
+    if (!root)
+      return {
+        ready: false,
+        meshes: [],
+        textures: 0,
+        regional: null,
+        fog: null,
+        foregroundVisible: undefined,
+      };
     const { scene, gl } = root.store.getState();
     const names = [
       "road-asphalt",
@@ -67,10 +75,25 @@ async function surfaces(page: Page) {
         };
       }),
     );
+    const regional = scene.getObjectByName("REGIONAL_TERRAIN_LOD0") as
+      Mesh | undefined;
+    const fog = scene.fog as Fog | null;
     return {
       ready: !!scene.getObjectByName("RBR_SLICE_ROOT"),
       meshes,
       textures: gl.info.memory.textures,
+      foregroundVisible: scene.getObjectByName("context-terrain")?.visible,
+      fog: fog
+        ? { color: fog.color.getHexString(), near: fog.near, far: fog.far }
+        : null,
+      regional: regional
+        ? {
+            geometry: regional.geometry.uuid,
+            map: (regional.material as MeshStandardMaterial).map?.uuid,
+            vertexColors: (regional.material as MeshStandardMaterial)
+              .vertexColors,
+          }
+        : null,
     };
   });
 }
@@ -98,6 +121,10 @@ for (const width of [1600, 390])
     expect(before.meshes[0]!.image).toEqual([512, 512]);
     expect(before.meshes[2]!.map).toBe(before.meshes[3]!.map);
     expect(before.meshes[0]!.normal).toBe(before.meshes[1]!.normal);
+    expect(before.foregroundVisible).toBe(false);
+    expect(before.regional?.map).toBe(before.meshes[3]!.map);
+    expect(before.regional?.vertexColors).toBe(true);
+    expect(before.fog).toEqual({ color: "edf2f5", near: 600, far: 5500 });
     let solves = 0;
     page.on("request", (request) => {
       if (request.url().endsWith("/api/simulate")) solves++;
@@ -113,11 +140,16 @@ for (const width of [1600, 390])
       await environment.uncheck();
       const fallback = await surfaces(page);
       expect(fallback.ready).toBe(false);
+      expect(fallback.regional).toBeNull();
+      expect(fallback.fog).toBeNull();
       expect(fallback.meshes[0]!.normal).toBeUndefined();
       expect(fallback.meshes[0]!.uvHash).not.toBe(before.meshes[0]!.uvHash);
       await environment.check();
       await expect.poll(async () => (await surfaces(page)).ready).toBe(true);
       const after = await surfaces(page);
+      expect(after.regional).toEqual(before.regional);
+      expect(after.fog).toEqual(before.fog);
+      expect(after.foregroundVisible).toBe(false);
       for (let i = 0; i < 2; i++) {
         expect(after.meshes[i]).toEqual(before.meshes[i]);
         expect(fallback.meshes[i]!.positionHash).toBe(
@@ -137,6 +169,9 @@ for (const width of [1600, 390])
     ).toBeEnabled();
     const dev = await surfaces(page);
     expect(dev.ready).toBe(false);
+    expect(dev.regional).toBeNull();
+    expect(dev.fog).toBeNull();
+    expect(dev.foregroundVisible).toBe(true);
     expect(dev.meshes.every((m) => !m?.normal)).toBe(true);
     expect(errors).toEqual([]);
   });

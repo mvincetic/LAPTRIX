@@ -37,6 +37,8 @@ bpy.ops.export_scene.gltf(
     export_normals=True,
     export_tangents=False,
     export_materials="EXPORT",
+    export_vertex_color="MATERIAL",
+    export_all_vertex_colors=False,
     export_image_format="AUTO",
     export_animations=False,
     export_skins=False,

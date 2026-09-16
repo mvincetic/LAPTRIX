@@ -4,8 +4,11 @@ import math
 from pathlib import Path
 
 import bpy
+import numpy as np
 from contract import owned_path, read_json, to_runtime, validate_source_context
 from mathutils import Matrix
+from regional_geometry import validate_foreground
+from regional_source import validate_regional_properties
 
 
 def close_vector(actual, expected, tolerance, label):
@@ -32,6 +35,9 @@ def validate_scene(config):
     if root not in objects or root.type != "EMPTY" or root.parent:
         raise ValueError("The asset needs one unparented empty root")
     validate_source_context(config, root)
+    landscape = config.get("landscape")
+    if landscape:
+        validate_regional_properties(landscape, root, lambda path: owned_path(path).read_bytes())
     identity = Matrix.Identity(4)
     if any(abs(root.matrix_world[r][c] - identity[r][c]) > 1e-7 for r in range(4) for c in range(4)):
         raise ValueError("Asset root must retain the world/contact origin and identity transform")
@@ -42,6 +48,7 @@ def validate_scene(config):
     nodes = {}
     triangles = 0
     meshes = 0
+    landscape_seen = False
     for obj in objects:
         if obj.type not in {"EMPTY", "MESH"} or obj.hide_render:
             raise ValueError(f"{obj.name}: export only visible mesh/empty nodes")
@@ -71,7 +78,25 @@ def validate_scene(config):
                     maximum[axis] = max(maximum[axis], point[axis])
             if any(face.area < 1e-12 for face in mesh.loop_triangles):
                 raise ValueError(f"{obj.name}: degenerate evaluated triangle")
+            if landscape and obj.name == landscape["node"]:
+                landscape_seen = True
+                if len(mesh.materials) != 1 or mesh.materials[0].name != landscape["material"]:
+                    raise ValueError("Retain the declared regional ground material")
+                validate_foreground(
+                    np.array([to_runtime(obj.matrix_world @ v.co) for v in mesh.vertices]),
+                    np.array([tuple(face.vertices) for face in mesh.loop_triangles]),
+                    read_json(config["authoringContext"]),
+                    landscape,
+                )
+                palette = mesh.color_attributes.get("RegionalPalette")
+                if not palette or palette.domain != "POINT" or len(palette.data) != len(mesh.vertices):
+                    raise ValueError("Retain editable regional vertex colors")
+                colors = np.array([tuple(value.color) for value in palette.data])
+                if not np.isfinite(colors).all() or np.any(colors < 0) or np.any(colors > 1):
+                    raise ValueError("Regional vertex colors must remain finite within 0–1")
             ground = {item["name"]: item for item in config.get("groundMaterials", {}).values()}
+            if landscape:
+                ground[landscape["material"]] = config["groundMaterials"]["grass"]
             for polygon in mesh.polygons:
                 mat = mesh.materials[polygon.material_index]
                 if mat.name not in ground:
@@ -89,6 +114,8 @@ def validate_scene(config):
                     )
         finally:
             evaluated.to_mesh_clear()
+    if landscape and not landscape_seen:
+        raise ValueError("Missing editable regional landscape mesh")
     if meshes > config["maxMeshes"] or triangles > config["maxTriangles"]:
         raise ValueError("Evaluated geometry exceeds the declared mesh/triangle budget")
     if len(materials) > config["maxMaterials"]:
@@ -102,6 +129,8 @@ def validate_scene(config):
         "ShaderNodeUVMap",
         "ShaderNodeSeparateColor",
         "ShaderNodeRGB",
+        "ShaderNodeVertexColor",
+        "ShaderNodeMix",
     }
     for material in materials:
         if not material.use_nodes or material.animation_data:
@@ -110,6 +139,18 @@ def validate_scene(config):
         for node in material.node_tree.nodes:
             if node.bl_idname not in allowed_nodes:
                 raise ValueError(f"{material.name}: bake or translate unsupported node {node.bl_idname}")
+            if node.bl_idname in {"ShaderNodeVertexColor", "ShaderNodeMix"}:
+                if not landscape or material.name != landscape["material"]:
+                    raise ValueError("Vertex-color mixing is limited to the declared landscape material")
+                if node.bl_idname == "ShaderNodeVertexColor" and node.layer_name != "RegionalPalette":
+                    raise ValueError("Retain the regional palette layer")
+                if node.bl_idname == "ShaderNodeMix" and (
+                    node.data_type != "RGBA"
+                    or node.blend_type != "MULTIPLY"
+                    or node.inputs[0].default_value != 1
+                    or node.inputs[0].is_linked
+                ):
+                    raise ValueError("Use the web-compatible full vertex-color multiply")
             shader_count += node.bl_idname == "ShaderNodeBsdfPrincipled"
             if node.bl_idname == "ShaderNodeTexImage":
                 if not node.image:

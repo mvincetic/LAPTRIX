@@ -170,8 +170,17 @@ Ground materials add packed original PNG color/normal maps to the editable Red
 Bull Ring source. Both the Blender validator and independent GLB reader check
 world-coordinate UV scale against configured tile metres. The runtime uses the
 exported V convention for existing road/terrain meshes. Five images stay inside
-the 4.5 MB package limit; bounded PNG headers are checked before browser decoding.
+the current 5.25 MB package limit; bounded PNG headers are checked before browser decoding.
 See SURFACE_MATERIALS.md for the texture/geometry ownership contract.
+
+The regional landscape adds a separately hashed prepared elevation grid and
+source manifest, retaining the original physical authoring context unchanged.
+Blender evaluates its actual mesh against protected native foreground faces and
+rejects moved, missing, duplicate or downward ground. The named vertex-color
+layer is editable; only a full color multiply is accepted, preserving its glTF
+meaning. Export uses the material's active vertex colors and suppresses unrelated
+color layers. Independent GLB validation checks the regional node, UV scale,
+bounded colors and complete source/frame/credit chain. See REGIONAL_LANDSCAPE.md.
 
 Authoring scripts are explicit reconstruction tools. For example:
 

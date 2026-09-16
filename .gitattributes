@@ -10,3 +10,5 @@ data/sources/red-bull-ring/osm-gp.osm -text
 data/sources/red-bull-ring/wcs-capabilities.xml -text
 data/sources/red-bull-ring/flight-block.json -text
 data/sources/red-bull-ring/*.txt -text
+data/sources/red-bull-ring/regional/wcs-capabilities.xml -text
+data/sources/red-bull-ring/regional/flight-blocks.json -text

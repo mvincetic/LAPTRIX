@@ -130,7 +130,12 @@ export function Landscape({
           presentation={presentation}
         />
       )}
-      <mesh name="context-terrain" geometry={data.geometry} receiveShadow>
+      <mesh
+        name="context-terrain"
+        geometry={data.geometry}
+        receiveShadow
+        visible={!shownScenery}
+      >
         {grass ? (
           <primitive object={grass} attach="material" dispose={null} />
         ) : (

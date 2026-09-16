@@ -1,12 +1,15 @@
 import { Mesh, Object3D, Ray, Vector3 } from "three";
 
 /** Exact world-triangle ray test with a conservative XZ grid broad phase. */
-export function verticalSceneryProbe(scene: Object3D) {
+export function verticalSceneryProbe(
+  scene: Object3D,
+  include: (mesh: Mesh) => boolean = () => true,
+) {
   const cells = new Map<string, [Vector3, Vector3, Vector3][]>();
   const cellSize = 32;
   scene.updateMatrixWorld(true);
   scene.traverse((node) => {
-    if (!(node instanceof Mesh)) return;
+    if (!(node instanceof Mesh) || !include(node)) return;
     const positions = node.geometry.getAttribute("position"),
       indices = node.geometry.index;
     for (let i = 0; i < (indices?.count ?? positions.count); i += 3) {

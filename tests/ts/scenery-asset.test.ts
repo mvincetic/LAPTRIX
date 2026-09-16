@@ -20,7 +20,10 @@ import { groundUV, groundMaterial } from "../../apps/web/src/ground-materials";
 import source from "../../data/tracks/red-bull-ring.json";
 import { normalizeTrack } from "../../packages/track-engine";
 import { trackSchema } from "../../packages/shared/schema";
-import { createTerrainSurface } from "../../packages/track-engine/terrain";
+import {
+  createTerrainSurface,
+  terrainHeightAt,
+} from "../../packages/track-engine/terrain";
 import { visibleTreeIndices } from "../../apps/web/src/vegetation-clearance";
 import { sceneryFootprints } from "../../apps/web/src/scenery-asset";
 import { verticalSceneryProbe } from "../fixtures/scenery-clearance";
@@ -67,9 +70,13 @@ describe("Blender circuit reconstruction", () => {
         !(node.material instanceof MeshStandardMaterial)
       )
         return;
-      const spec = Object.values(rbrSceneryContract.groundMaterials).find(
-        (s) => s.name === node.material.name,
-      );
+      const spec =
+        Object.values(rbrSceneryContract.groundMaterials).find(
+          (s) => s.name === node.material.name,
+        ) ??
+        (node.name === rbrSceneryContract.landscape.node
+          ? rbrSceneryContract.groundMaterials.grass
+          : undefined);
       if (!spec) return;
       const position = node.geometry.getAttribute("position"),
         uv = node.geometry.getAttribute("uv");
@@ -80,7 +87,14 @@ describe("Blender circuit reconstruction", () => {
         probes++;
       }
     });
-    expect(probes).toBeGreaterThan(1000);
+    expect(probes).toBeGreaterThan(14000);
+    const regional = scene.getObjectByName(
+      rbrSceneryContract.landscape.node,
+    ) as Mesh;
+    const regionalMaterial = regional.material as MeshStandardMaterial;
+    expect(regionalMaterial.map).toBe(materials.grass.map);
+    expect(regionalMaterial.normalMap).toBe(materials.grass.normalMap);
+    expect(regionalMaterial.vertexColors).toBe(true);
     const coordinates = new Float32Array([-2, 9, 6, 0, 8, 4, 2, 7, 2]);
     const original = coordinates.slice();
     expect(Array.from(groundUV(coordinates, 2).array)).toEqual([
@@ -182,13 +196,67 @@ describe("Blender circuit reconstruction", () => {
     });
     const root = scene.getObjectByName(rbrSceneryContract.rootNode)!;
     const original = { ...root.userData };
-    for (const field of ["source_fingerprint", "authoring_context_sha256"]) {
+    for (const field of [
+      "source_fingerprint",
+      "authoring_context_sha256",
+      "regional_context_sha256",
+    ]) {
       root.userData[field] = "wrong";
       expect(() => validateRBRScenery(scene)).toThrow(/source frame/);
       root.userData = { ...original };
     }
     root.position.x = 1;
     expect(() => validateRBRScenery(scene)).toThrow(/anchor/);
+  });
+
+  it("rejects missing or unbounded regional vertex paint", async () => {
+    const scene = await template();
+    const terrain = scene.getObjectByName(
+      rbrSceneryContract.landscape.node,
+    ) as Mesh;
+    const colors = terrain.geometry.getAttribute("color"),
+      original = colors.getX(0);
+    for (const invalid of [NaN, 1.5, -0.1]) {
+      colors.setX(0, invalid);
+      expect(() => validateRBRScenery(scene)).toThrow(
+        /regional ground palette/,
+      );
+    }
+    colors.setX(0, original);
+    terrain.geometry.deleteAttribute("color");
+    expect(() => validateRBRScenery(scene)).toThrow(/regional ground palette/);
+    terrain.geometry.setAttribute("color", colors);
+    expect(validateRBRScenery(scene)).toBe(scene);
+  });
+
+  it("preserves ground contact at every tree base and across the complete source road footprint", async () => {
+    const scene = validateRBRScenery(await template());
+    const regional = scene.getObjectByName(rbrSceneryContract.landscape.node)!;
+    const ground = verticalSceneryProbe(regional),
+      track = trackSchema.parse(source);
+    const surface = createTerrainSurface(track),
+      frame = normalizeTrack(track);
+    for (const [x, y, z] of surface.trees)
+      expect(
+        ground(x, y - 6 + 0.0001, z, 0.0002),
+        `Tree ground ${x}, ${z}`,
+      ).toBe(true);
+    let probes = 0;
+    track.points.forEach((p, i) => {
+      for (const offset of [-6, -3, 0, 3, 6]) {
+        const n = frame.normals[i],
+          x = p.x + n[0] * offset,
+          z = p.z + n[2] * offset;
+        const height = terrainHeightAt(surface, x, z)!;
+        expect(
+          ground(x, height + 0.0001, z, 0.0002),
+          `Source ground ${i}/${offset}`,
+        ).toBe(true);
+        probes++;
+      }
+    });
+    expect(surface.trees).toHaveLength(474);
+    expect(probes).toBe(3600);
   });
 
   it("keeps curbs, runoff, barriers and structures clear of the source driving surface", async () => {
@@ -261,7 +329,11 @@ describe("Blender circuit reconstruction", () => {
     const scene = validateRBRScenery(await template());
     const trees = createTerrainSurface(trackSchema.parse(source)).trees;
     const visible = visibleTreeIndices(trees, sceneryFootprints(scene));
-    const obstructed = verticalSceneryProbe(scene);
+    // This checks roofs/facilities; ground contact has its own complete ray oracle.
+    const obstructed = verticalSceneryProbe(
+      scene,
+      (mesh) => mesh.name !== rbrSceneryContract.landscape.node,
+    );
     expect(visible.length).toBeGreaterThan(trees.length - 10);
     expect(visible).not.toContain(314); // Browser review: crown intersected the stand canopy.
     for (const i of visible) {

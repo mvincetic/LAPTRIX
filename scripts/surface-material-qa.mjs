@@ -64,6 +64,7 @@ try {
               "road-shoulders",
               "context-terrain",
               "road-earthworks",
+              "REGIONAL_TERRAIN_LOD0",
             ].map((name) => {
               const mesh = scene.getObjectByName(name),
                 mat = mesh.material;
@@ -73,6 +74,7 @@ try {
                 map: mat.map?.uuid,
                 normal: mat.normalMap?.uuid,
                 image: [mat.map?.image.width, mat.map?.image.height],
+                visible: mesh.visible,
               };
             });
             return {
@@ -83,9 +85,23 @@ try {
                 debug?.UNMASKED_RENDERER_WEBGL ?? context.RENDERER,
               ),
               ground,
+              fog: scene.fog
+                ? {
+                    color: scene.fog.color.getHexString(),
+                    near: scene.fog.near,
+                    far: scene.fog.far,
+                  }
+                : null,
             };
           });
           expect(measured.ground.every((m) => m.map && m.normal)).toBe(true);
+          expect(measured.ground[2].visible).toBe(false);
+          expect(measured.ground[4].map).toBe(measured.ground[3].map);
+          expect(measured.fog).toEqual({
+            color: "edf2f5",
+            near: 600,
+            far: 5500,
+          });
           expect(errors).toEqual([]);
           records.push({
             track: "red-bull-ring",

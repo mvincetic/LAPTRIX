@@ -211,9 +211,18 @@ if (mode === "inspect") {
     );
     await rename(`${manifestPath}.tmp`, manifestPath);
   }
-  if (mode === "check")
+  if (mode === "check") {
     runBlender(
       join(root, "assets/blender/shared/basis-gauge.blend"),
       join(root, "scripts/blender/probe_contract.py"),
     );
+    const landscape = entries.find(
+      (entry) => entry.id === "laptrix.blender-rbr-slice.v1",
+    );
+    if (landscape)
+      runBlender(
+        await ownedAssetPath(root, landscape.sourceFile),
+        join(root, "scripts/blender/probe_landscape.py"),
+      );
+  }
 }

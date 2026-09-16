@@ -15,6 +15,8 @@ import bpy
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from contract import owned_path, read_json, to_blender, to_runtime, validate_source_context  # noqa: E402
 from modeling import box, consolidate, loft, material, mesh, tube  # noqa: E402
+from regional_landscape import author_landscape  # noqa: E402
+from regional_source import load_regional_source, validate_regional_properties  # noqa: E402
 from source_io import save_editable  # noqa: E402
 from surface_materials import ground_materials, world_uv  # noqa: E402
 from track_context import TrackContext  # noqa: E402
@@ -40,6 +42,10 @@ root["authoring_context_sha256"] = hashlib.sha256(
 root["source_credits"] = json.dumps(context.data["attribution"]["sources"], ensure_ascii=False)
 root["reconstruction"] = "OSM/Steiermark-derived alignment; original approximate facility art"
 validate_source_context(config, root)
+regional = load_regional_source(config["landscape"], lambda path: owned_path(path).read_bytes())
+root["regional_context_sha256"] = config["landscape"]["contextSha256"]
+root["regional_source_credit"] = json.dumps(regional["attribution"], ensure_ascii=False)
+validate_regional_properties(config["landscape"], root, lambda path: owned_path(path).read_bytes())
 
 concrete = material("RBR_Concrete", (0.44, 0.46, 0.44), 0.88)
 white = material("RBR_Ice", (0.80, 0.82, 0.80), 0.68)
@@ -373,7 +379,7 @@ shadow["purpose"] = "Coarse shadow silhouettes; runtime disables color/depth wri
 shadow.display_type = "WIRE"
 
 for name, position in config["requiredNodes"].items():
-    if name in {config["rootNode"], "SHADOW_CASTERS_LOD0"}:
+    if name in {config["rootNode"], "SHADOW_CASTERS_LOD0", config["landscape"]["node"]}:
         continue
     obj = bpy.data.objects.new(name, None)
     collection.objects.link(obj)
@@ -383,6 +389,7 @@ for obj in collection.objects:
     if obj.type == "MESH" and obj.data.materials[0] in surfaces.values():
         world_uv(obj, obj.data.materials[0]["laptrix_tile_metres"])
 consolidate(collection, protected=("SHADOW_CASTERS_LOD0",))
+author_landscape(context.data, regional, config["landscape"], grass, collection, root)
 scene.world = bpy.data.worlds.new("Authoring daylight")
 save_editable(config)
 print(f"Authored source-aligned slice: {config['sourceFile']}")

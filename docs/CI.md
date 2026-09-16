@@ -1,5 +1,22 @@
 # Continuous integration
 
+The regional landscape candidate passes the full local gate (342 TypeScript /
+178 Python), four reproducible Blender exports with source rejection probes,
+26 focused/broader development journeys and all forty production cases in
+11.4 minutes. The retained native visual/motion review is documented separately
+in REGIONAL_LANDSCAPE.md, including the failed software-motion deadline. Its new
+working-branch push requires all eight remote jobs; `b4b8f51` below remains the
+last verified remote baseline until that run completes.
+
+The [separated-journeys run](https://github.com/mvincetic/LAPTRIX/actions/runs/35124292344)
+at `b4b8f51` is **fully green**: all eight jobs succeed, including 337 TypeScript /
+162 Python tests (42.74 seconds), all 190 development cases, forty production
+journeys and four byte-identical Blender exports. Development shards pass
+35/29/32/33/30/31 cases in 16.0/14.6/17.0/15.1/14.7/12.7 minutes. The repaired
+apex journeys take 32.8–44.1 seconds; saved GPX reload takes 48.5/34.4 seconds,
+and portable restoration 35.2/25.7 seconds. No deadlines were increased. This
+closes surface stabilization before regional landscape integration.
+
 The [bounded-daylight run](https://github.com/mvincetic/LAPTRIX/actions/runs/35120515839)
 at `b398f3f` passes the quality gate (337 TypeScript / 162 Python), four Blender
 exports, all forty production journeys and 184 of 186 development cases. Every
@@ -75,7 +92,7 @@ recordings pass. See SURFACE_MATERIALS.md for the diagnostic evidence.
 The [Formula milestone run](https://github.com/mvincetic/LAPTRIX/actions/runs/35010222217)
 at `12b42cb` passes all seven jobs: 334 TypeScript / 162 Python tests (42.94 seconds),
 182 development journeys (37/38/38/33/36), 40 production journeys (13.8 minutes)
-and all four Blender exports. This is the current verified baseline.
+and all four Blender exports. This was the verified baseline before the surface iteration.
 
 The Formula milestone's local gate passes 334 TypeScript / 162 Python tests
 (40.55 seconds), ten asset packages, lint/type checks and build. All four Blender

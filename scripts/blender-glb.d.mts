@@ -1,4 +1,5 @@
 import type { Buffer } from "node:buffer";
+import type { RegionalSettings } from "./regional-source.mjs";
 export type BlenderConfig = {
   id: string;
   rootNode: string;
@@ -7,7 +8,10 @@ export type BlenderConfig = {
   maxMeshes: number;
   maxMaterials: number;
   maxTextures: number;
+  maxImages?: number;
   maxTextureSize: number;
+  groundMaterials?: Record<string, { name: string; tileMetres: number }>;
+  landscape?: RegionalSettings & { node: string; material: string };
   bounds: { min: number[]; max: number[]; tolerance: number };
   requiredNodes: Record<string, number[]>;
 };

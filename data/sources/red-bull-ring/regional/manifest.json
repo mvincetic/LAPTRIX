@@ -1,0 +1,56 @@
+{
+  "format": "laptrix-regional-terrain-source-v1",
+  "retrieved": "2026-09-16",
+  "purpose": "Visual regional landscape only. Does not alter the simulation track, elevation, widths or timing gates.",
+  "url": "https://gis.stmk.gv.at/arcgis/services/OGD/ALSGelaendeinformation_1m_UTM33N/MapServer/WCSServer?service=WCS&version=2.0.1&request=GetCoverage&coverageId=Coverage4&format=image%2Ftiff&subset=x%28479000%2C485000%29&subset=y%285227500%2C5233500%29&scaleSize=x%28300%29%2Cy%28300%29",
+  "responseSha256": "0351cb926fd2e16f3553f17625a6012fdbe16a1a5aacbb55b8e884cfb802a7da",
+  "boundsUtm33n": [
+    479000,
+    5227500,
+    485000,
+    5233500
+  ],
+  "pixelMetres": 20,
+  "width": 300,
+  "height": 300,
+  "coverage": "Coverage4 (terrain-height model)",
+  "flightQuery": "https://gis.stmk.gv.at/arcgis/rest/services/OGD/ALSGelaendeinformation_1m_UTM33N/MapServer/1/query?f=json&geometry=479000%2C5227500%2C485000%2C5233500&geometryType=esriGeometryEnvelope&inSR=32633&outFields=%2A&returnGeometry=false",
+  "epochs": [
+    {
+      "block": "Judenburg",
+      "flightYear": 2010
+    },
+    {
+      "block": "Gleinalm",
+      "flightYear": 2011
+    },
+    {
+      "block": "Seckau",
+      "flightYear": 2012
+    }
+  ],
+  "attribution": {
+    "title": "Regional terrain elevation · 2010–2012",
+    "credit": "Datenquelle: CC-BY-4.0: Land Steiermark - data.steiermark.gv.at",
+    "url": "https://data.steiermark.at/cms/beitrag/12803290/97428847/",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "providerTerms": "https://data.steiermark.at/cms/ziel/95633648/DE/",
+  "licenseFile": "../CC-BY-4.0.txt",
+  "trackReconstructionSha256": "36a48e09b8f0d4f6daa3938353613b9ce70cd5221943a164db8206c11e5f7b04",
+  "files": {
+    "terrain-20m.tif": {
+      "bytes": 591073,
+      "sha256": "5c4a517f8972ea76992d647ffb04b77da4dfc6cf62ad06aa417f86ffee8f4125"
+    },
+    "flight-blocks.json": {
+      "bytes": 1777,
+      "sha256": "615c3c973be4c0a3248c4fec8215dd416ef18e231ba3414b338da23ada363b2a"
+    },
+    "wcs-capabilities.xml": {
+      "bytes": 8004,
+      "sha256": "b0b662157d371c67145d42460ce1ae83110694228dccbc316ab82dcc95cd4686"
+    }
+  }
+}
