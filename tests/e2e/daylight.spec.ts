@@ -242,8 +242,48 @@ for (const [track, vehicle, width] of [
     expect(final.target).toEqual(final.cars[0].position);
     expect(await project(page)).toEqual(before);
     expect(solves).toBe(0);
+    expect(errors).toEqual([]);
+  });
+
+  test(`daylight reanchors at zero clock time after source changes on ${track}`, async ({
+    page,
+  }) => {
+    // This source-replacement regression is independent of the camera, playback
+    // and visibility lifecycle above. Keep both journeys within the same 60 s cap.
+    await page.setViewportSize({ width, height: 1000 });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/");
+    await expect(page.getByTestId("lap-time")).toBeVisible();
+    await page
+      .getByRole("combobox", { name: "Track", exact: true })
+      .selectOption(track);
+    await expect(
+      page.getByRole("button", { name: "Run Simulation", exact: true }),
+    ).toBeEnabled();
+    await page
+      .getByRole("combobox", { name: "Car profile" })
+      .selectOption(vehicle);
+    await expect(
+      page.getByRole("button", { name: "Run Simulation", exact: true }),
+    ).toBeEnabled();
+    await expect
+      .poll(async () => {
+        const state = await lighting(page);
+        return (
+          state.cars[0].premium &&
+          !!state.map &&
+          (track !== "red-bull-ring" || state.scenery)
+        );
+      })
+      .toBe(true);
+    const initial = await lighting(page, true),
+      cursor = page.getByRole("slider", { name: "Viewer lap position" });
+    await cursor.fill("5");
+    await expect
+      .poll(async () => (await lighting(page)).shadowPasses)
+      .toBeGreaterThan(initial.shadowPasses);
     // A newly calculated circuit can keep the same group and zero clock time.
-    await page.getByRole("tab", { name: "Track View", exact: true }).click();
     const beforeZero = await lighting(page);
     await cursor.fill("0");
     await expect

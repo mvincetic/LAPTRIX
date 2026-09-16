@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-16 — Keep browser deadlines while bounding each CI journey
+
+Surface run `35116764981` exposes two cumulative execution limits: the daylight
+lifecycle reaches 60 seconds during its final independent source-switch sequence,
+and a 41-case shard exhausts 20 minutes after 39 successes. The retained trace
+shows the daylight assertions succeeding; unchanged local repetitions pass in
+45.1, 42.6 and 43.7 seconds. Split zero-clock source replacement into its own
+two-source regression, retaining all existing coverage, and use six development
+shards. The single-worker model, 60-second individual deadline, 20-minute suite
+deadline, production job and one complete quality gate are preserved. Verify the
+correction remotely before integrating the prepared landscape study.
+
 ## 2026-09-16 — Share authored ground materials without replacing source geometry
 
 The first combined checkpoint identified coarse asphalt and pale ground as the

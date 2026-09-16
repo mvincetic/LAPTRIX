@@ -6,6 +6,20 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Remote run `35116764981` for `bab6b26` passes the complete quality gate, all four
+Blender exports, forty production and 181 development journeys. It is not green:
+the cumulative daylight lifecycle exceeds 60 seconds and another shard reaches
+its 20-minute suite limit with two cases unrun. The retained daylight trace shows
+the final source-switch checks succeeding after the deadline. The unchanged case
+passes locally three times (45.1/42.6/43.7 seconds). Separate the independent
+zero-clock source-switch journey and distribute development coverage across six
+jobs without changing deadlines; verify this correction separately. See CI.md.
+All four revised daylight journeys pass twice locally (eight cases in 3.3 minutes).
+The six-shard discovery check retains all 186 development cases exactly once.
+The correction's full local gate passes 337 TypeScript / 162 Python tests
+(40.95 seconds), asset validation, lint/typecheck and production build. Application
+code and asset bytes remain unchanged by this CI/test correction.
+
 The ground-material iteration passes the complete local gate: 337 TypeScript
 tests across 55 files, 162 Python tests (44.58 seconds), ten asset packages,
 lint/typecheck and production build. Four Blender exports remain byte-identical,

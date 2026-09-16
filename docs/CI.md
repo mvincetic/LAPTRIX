@@ -1,9 +1,45 @@
 # Continuous integration
 
-The surface-material candidate passes the local 337-TypeScript / 162-Python gate,
-four byte-identical Blender exports, thirteen affected development journeys and
-all forty production journeys (11.1 minutes). Its pushed revision still needs its
-own remote result. The separate local software motion deadline fails on both the
+The [surface-material run](https://github.com/mvincetic/LAPTRIX/actions/runs/35116764981)
+at `bab6b26` finishes with five successful jobs and two failures. The complete
+337-TypeScript / 162-Python gate, four byte-identical Blender exports and all forty
+production journeys pass (18.2 minutes). Development passes 181 of 184 journeys:
+the Red Bull Ring daylight lifecycle reaches its 60-second test deadline, and
+shard 3 reaches the 20-minute suite deadline after 39 passing cases, leaving two
+unrun. This revision is **not remotely green**.
+
+The retained CI trace shows every daylight assertion succeeding, with the test
+deadline reached during its final source-switch sequence. The unchanged local
+test passes in 45.1 seconds, then twice more in 42.6/43.7 seconds. The independent
+zero-clock source-switch regression is separated into its own journey for both
+sources, retaining its seeks, return trip, map/environment identity and anchor
+checks. Camera/visibility/playback/reference and workspace checks remain in the
+original lifecycle journey. All test and suite deadlines remain unchanged.
+Six development shards replace five to reduce cumulative software-rendered
+browser work per job. Production and the full gate still run once. This correction
+requires its own remote verification before the next asset is integrated.
+The correction's complete local gate passes: 337 TypeScript / 162 Python tests
+(40.95 seconds), ten asset packages, lint/typecheck and production build. Runtime
+code and asset bytes are unchanged, so the successful forty-case production job
+and four Blender re-exports above remain applicable; the new CI run checks them
+again alongside the revised development distribution.
+
+The revised four daylight journeys pass twice locally (eight cases, 3.3 minutes):
+the two lifecycle runs take 27.7–33.7 seconds and source replacement takes
+16.3–19.4 seconds. A list-only distribution check proves all 186 development
+cases appear exactly once across six shards (33/29/32/31/30/31). Using this run's
+measured durations, the six-shard estimate is 14.1–16.6 minutes, compared with
+16.4–21.0 minutes for five. The four changed/new daylight cases and two previously
+unrun cases are estimates, not measurements of the future runner. Evidence stays
+in ignored `surface-daylight-{reproduction,repeat,split}.log`,
+`surface-daylight-ci.zip` and `surface-shard-study.json` under `artifacts/`.
+The two reference-ordering cases left unrun by the suite deadline also pass
+locally (10.7/13.2 seconds; 26 seconds total), retained in
+`artifacts/surface-ci-unrun-local.log`.
+
+The surface-material candidate's local gate also passes thirteen affected
+development journeys and forty production journeys (11.1 minutes). The separate
+local software motion deadline fails on both the
 candidate and isolated unchanged `12b42cb`; this is retained as an explicit host
 limitation rather than a passed check. Six native-GPU samples and actual Play
 recordings pass. See SURFACE_MATERIALS.md for the diagnostic evidence.
