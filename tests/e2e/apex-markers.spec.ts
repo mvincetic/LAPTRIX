@@ -35,6 +35,33 @@ async function markers(page: Page) {
   });
 }
 
+async function prepareMarkers(page: Page, track: string) {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await expect(page.getByTestId("lap-time")).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Track", exact: true })
+    .selectOption(track);
+  await expect(
+    page.getByRole("button", { name: "Run Simulation", exact: true }),
+  ).toBeEnabled();
+  await expect(
+    page.getByRole("button", { name: "Inspect corner 1", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("slider", { name: "Fuel load" }).fill("21");
+  const project = await exportProject(page),
+    lap: Lap = project.lap;
+  let solves = 0;
+  page.on("request", (request) => {
+    if (request.url().endsWith("/api/simulate")) solves++;
+  });
+  const cursor = page.getByRole("slider", { name: "Viewer lap position" });
+  await cursor.fill("5");
+  await page.getByRole("button", { name: "3D View", exact: true }).click();
+  return { project, lap, cursor, errors, getSolves: () => solves };
+}
+
 for (const [track, width, ratio] of [
   ["ardennes-development", 1600, 1],
   ["red-bull-ring", 390, 2],
@@ -44,28 +71,10 @@ for (const [track, width, ratio] of [
     test("apex annotations retain a readable size through close and distant Orbit views", async ({
       page,
     }) => {
-      const errors: string[] = [];
-      page.on("pageerror", (error) => errors.push(error.message));
-      await page.goto("/");
-      await expect(page.getByTestId("lap-time")).toBeVisible();
-      await page
-        .getByRole("combobox", { name: "Track", exact: true })
-        .selectOption(track);
-      await expect(
-        page.getByRole("button", { name: "Run Simulation", exact: true }),
-      ).toBeEnabled();
-      await expect(
-        page.getByRole("button", { name: "Inspect corner 1", exact: true }),
-      ).toBeVisible();
-      await page.getByRole("slider", { name: "Fuel load" }).fill("21");
-      const project = await exportProject(page),
-        lap: Lap = project.lap;
-      let solves = 0;
-      page.on("request", (request) => {
-        if (request.url().endsWith("/api/simulate")) solves++;
-      });
-      const cursor = page.getByRole("slider", { name: "Viewer lap position" });
-      await cursor.fill("5");
+      const { project, lap, errors, getSolves } = await prepareMarkers(
+        page,
+        track,
+      );
       const sample = lap.samples[lap.corners[0].apexIndex];
       await page.getByRole("button", { name: "3D View", exact: true }).click();
       await page
@@ -124,15 +133,25 @@ for (const [track, width, ratio] of [
         await page
           .getByRole("tab", { name: "Track View", exact: true })
           .click();
-        await page
-          .locator(".track-panel")
-          .screenshot({
-            path: `artifacts/apex-${track}-${width}-${distance}.png`,
-          });
+        await page.locator(".track-panel").screenshot({
+          path: `artifacts/apex-${track}-${width}-${distance}.png`,
+        });
         await page
           .getByRole("tab", { name: "Analysis Layers", exact: true })
           .click();
       }
+      expect(await exportProject(page)).toEqual(project);
+      expect(getSolves()).toBe(0);
+      expect(errors).toEqual([]);
+    });
+
+    test("apex visibility follows camera changes and preserves the workspace during playback", async ({
+      page,
+    }) => {
+      const { project, cursor, errors, getSolves } = await prepareMarkers(
+        page,
+        track,
+      );
       await page.getByRole("tab", { name: "Track View", exact: true }).click();
       for (const camera of ["Top View", "Chase", "Onboard", "3D View"]) {
         await page.getByRole("button", { name: camera, exact: true }).click();
@@ -140,11 +159,9 @@ for (const [track, width, ratio] of [
         await expect
           .poll(async () => Boolean(await markers(page)))
           .toBe(camera === "Top View" || camera === "3D View");
-        await page
-          .locator(".track-panel")
-          .screenshot({
-            path: `artifacts/apex-${track}-${width}-${camera.replaceAll(" ", "-")}.png`,
-          });
+        await page.locator(".track-panel").screenshot({
+          path: `artifacts/apex-${track}-${width}-${camera.replaceAll(" ", "-")}.png`,
+        });
       }
       await page
         .getByRole("button", { name: "Play viewer lap", exact: true })
@@ -156,7 +173,7 @@ for (const [track, width, ratio] of [
         .getByRole("button", { name: "Pause viewer lap", exact: true })
         .click();
       expect(await exportProject(page)).toEqual(project);
-      expect(solves).toBe(0);
+      expect(getSolves()).toBe(0);
       expect(errors).toEqual([]);
     });
   });

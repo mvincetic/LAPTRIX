@@ -6,6 +6,22 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+Run `35120515839` at `b398f3f` passes the complete quality gate, four Blender
+exports, forty production and 184 of 186 development journeys. The revised
+daylight checks and six-shard suite limits pass, but the desktop GPX and phone
+apex journeys hit their individual deadlines. Their traces show successful
+assertions at the deadline: GPX times out during final page close; apex finishes
+its project export just after 60 seconds. Split the independent restoration and
+camera/playback journeys while retaining their checks and deadlines. The revised
+suite discovers 190 cases. See CI.md for evidence and the next remote result.
+All eight revised journeys pass twice locally (16 cases, 5.9 minutes), with
+individual durations of 15.0–26.2 seconds and unchanged 60-second deadlines.
+List-only verification places every one of the 190 cases in exactly one shard.
+The full local gate passes 337 TypeScript / 167 Python tests, asset validation,
+lint/typecheck and production build. Five Python cases belong to the preserved,
+uncommitted regional study; this focused correction leaves the committed 162-case
+Python suite and every runtime/application byte unchanged.
+
 Remote run `35116764981` for `bab6b26` passes the complete quality gate, all four
 Blender exports, forty production and 181 development journeys. It is not green:
 the cumulative daylight lifecycle exceeds 60 seconds and another shard reaches

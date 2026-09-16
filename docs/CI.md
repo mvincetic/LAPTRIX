@@ -1,5 +1,33 @@
 # Continuous integration
 
+The [bounded-daylight run](https://github.com/mvincetic/LAPTRIX/actions/runs/35120515839)
+at `b398f3f` passes the quality gate (337 TypeScript / 162 Python), four Blender
+exports, all forty production journeys and 184 of 186 development cases. Every
+shard completes within the suite limit, and all four daylight journeys pass.
+Two cumulative journeys still reach the individual deadline: desktop GPX and
+phone apex annotations. This revision is **not remotely green**.
+
+Their retained traces identify the boundaries: GPX completes every assertion by
+59.37 seconds, then times out closing the additional page; apex pixel, camera and
+playback checks succeed, but the final project export completes at 60.20 seconds.
+The unchanged desktop GPX journey passes locally twice in 31.4/31.7 seconds.
+Separate GPX saved reload from fresh-context portability, and apex pixel sizing
+from camera/playback visibility. Both widths/sources retain all original checks;
+portable restoration additionally compares the full lap and project name. Close
+the originating page before opening the clean portable workspace. No application
+code, asset, individual deadline, suite deadline or worker count changes.
+The suite now discovers 190 development journeys. Verify the correction remotely.
+All eight revised journeys pass twice locally (16 cases in 5.9 minutes): apex
+pixel checks take 16.7–22.5 seconds, camera/playback 21.6–25.6, saved GPX reload
+21.3–26.2 and portable restoration 15.0–20.5. Discovery proves exactly-once
+coverage across six shards (35/29/32/33/30/31). Evidence is retained in ignored
+`surface-{gpx,apex}-ci.zip`, `surface-gpx-repeat.log`, `surface-journey-split.log`
+and `surface-journey-distribution.json` under `artifacts/`.
+The full local gate also passes: 337 TypeScript / 167 Python tests, all ten asset
+packages, lint/typecheck and production build (`surface-journey-check.log`). The
+Python count includes five isolated, uncommitted regional-geometry preparation
+tests; the focused CI correction retains the 162-test committed Python suite.
+
 The [surface-material run](https://github.com/mvincetic/LAPTRIX/actions/runs/35116764981)
 at `bab6b26` finishes with five successful jobs and two failures. The complete
 337-TypeScript / 162-Python gate, four byte-identical Blender exports and all forty

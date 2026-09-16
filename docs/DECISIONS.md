@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-16 — Separate portable restoration and annotation playback journeys
+
+Run `35120515839` validates the daylight split and six-shard suite budget but
+exposes two other cumulative 60-second boundaries. The GPX trace completes all
+assertions at 59.37 seconds before timing out on page close; the apex trace passes
+pixel/camera/playback checks and finishes its project export at 60.20 seconds.
+Two unchanged local GPX repetitions pass in 31.4/31.7 seconds. Keep the deadline
+and application intact, with independent saved-reload/portable-import and
+pixel-size/camera-playback journeys. Reuse actual UI setup, retain both widths and
+sources, and close the original GPX page before loading the fresh context. All
+original assertions remain, with complete portable lap/name comparisons added.
+
 ## 2026-09-16 — Keep browser deadlines while bounding each CI journey
 
 Surface run `35116764981` exposes two cumulative execution limits: the daylight

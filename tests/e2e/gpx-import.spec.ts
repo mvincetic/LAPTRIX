@@ -41,6 +41,31 @@ async function upload(page: Page, xml = gpxFixture()) {
   });
 }
 
+async function reviewStudy(page: Page) {
+  const dialog = await openImport(page);
+  await upload(page, gpxFixture({ latitude: -33, longitude: 151 }));
+  await dialog
+    .getByLabel("Track name", { exact: true })
+    .fill("Original GPX study");
+  await dialog
+    .getByLabel("Source description", { exact: true })
+    .fill(
+      "Original analytic test circuit; synthetic fixture, not recorded data.",
+    );
+  await dialog
+    .getByLabel("Assumed left half-width (m)", { exact: true })
+    .fill("7");
+  await dialog
+    .getByLabel("Assumed right half-width (m)", { exact: true })
+    .fill("8");
+  expect(
+    await dialog.evaluate(
+      (element) => element.scrollWidth <= element.clientWidth + 1,
+    ),
+  ).toBe(true);
+  return dialog;
+}
+
 test("GPX geometry validation rejects incomplete or ambiguous sources before simulation", async ({
   page,
 }) => {
@@ -232,9 +257,8 @@ test("cancelling GPX activation aborts both calculations and preserves the compl
   }
 });
 for (const width of [1600, 390]) {
-  test(`GPX review, calculation and project restoration preserve declared geometry at ${width}px`, async ({
+  test(`GPX review, calculation and saved reload preserve declared geometry at ${width}px`, async ({
     page,
-    browser,
   }) => {
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
@@ -270,27 +294,7 @@ for (const width of [1600, 390]) {
     expect(requests).toBe(0);
     expect(await cursor.inputValue()).toBe("10");
     expect(await exportProject(page)).toEqual(before);
-    await openImport(page);
-    await upload(page, gpxFixture({ latitude: -33, longitude: 151 }));
-    await dialog
-      .getByLabel("Track name", { exact: true })
-      .fill("Original GPX study");
-    await dialog
-      .getByLabel("Source description", { exact: true })
-      .fill(
-        "Original analytic test circuit; synthetic fixture, not recorded data.",
-      );
-    await dialog
-      .getByLabel("Assumed left half-width (m)", { exact: true })
-      .fill("7");
-    await dialog
-      .getByLabel("Assumed right half-width (m)", { exact: true })
-      .fill("8");
-    expect(
-      await dialog.evaluate(
-        (element) => element.scrollWidth <= element.clientWidth + 1,
-      ),
-    ).toBe(true);
+    await reviewStudy(page);
     expect(requests).toBe(0);
     await apply.click();
     await expect(dialog).toHaveCount(0);
@@ -348,9 +352,31 @@ for (const width of [1600, 390]) {
     const saved = await exportProject(page);
     expect(saved.track).toEqual(after.track);
     expect(saved.reference).toEqual(importedReference);
+  });
+
+  test(`a GPX project restores its complete geometry and baseline in a fresh workspace at ${width}px`, async ({
+    page,
+    browser,
+    baseURL,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await expect(page.getByTestId("lap-time")).toBeVisible();
+    await page.getByRole("slider", { name: "Fuel load" }).fill("100");
+    const dialog = await reviewStudy(page);
+    await dialog
+      .getByRole("button", { name: "Import and simulate", exact: true })
+      .click();
+    await expect(dialog).toHaveCount(0);
+    await expect(
+      page.getByRole("combobox", { name: "Track", exact: true }),
+    ).toHaveValue(/^gpx-/);
+    const after = await exportProject(page);
+    // A second clean context proves portability without sharing local storage.
+    await page.close();
     const fresh = await browser.newPage({ viewport: { width, height: 900 } });
     try {
-      await fresh.goto("http://127.0.0.1:5173/");
+      await fresh.goto(baseURL!);
       await expect(fresh.getByTestId("lap-time")).toBeVisible();
       await fresh
         .getByLabel("Import project file", { exact: true })
@@ -365,6 +391,8 @@ for (const width of [1600, 390]) {
       const restored = await exportProject(fresh);
       expect(restored.track).toEqual(after.track);
       expect(restored.reference).toEqual(after.reference);
+      expect(restored.lap).toEqual(after.lap);
+      expect(restored.projectName).toBe(after.projectName);
     } finally {
       await fresh.close();
     }
