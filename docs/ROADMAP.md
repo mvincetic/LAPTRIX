@@ -15,7 +15,7 @@ single PlaybackClock remain authoritative. Never merge main or rewrite history.
 | B1 Blender toolchain and contracts | Complete at `430682b`: official Blender 5.2.1 LTS, editable basis gauge, explicit axis/pivot/material contract, headless validation/export and independent GLB checks. All seven Linux jobs pass: 319 TypeScript / 158 Python, 175 development and 37 production cases, plus byte-identical Windows/Linux Blender re-export. |
 | B2 Red Bull Ring GT vertical slice | Complete through `738b6df`: all seven remote jobs pass, with 330 TypeScript / 162 Python, 179 development and 39 production cases, plus three byte-identical exports. The two outdated asset/foliage fixtures are corrected without changing deadlines or application contracts. Local camera, terrain, foliage, reference and hardware/software motion evidence is retained. |
 | B3 Generic Formula 2026 | Complete at `12b42cb`: all seven remote jobs pass in run `35010222217`, including 334 TypeScript / 162 Python, 182 development and 40 production cases and four Blender exports. Original editable source, native wheel rig, shaped aero surfaces and LAPTRIX livery are integrated. Local visual evidence includes 64 poses, 48 Formula reference and 26 Onboard states, plus six native-GPU and three software motion samples. |
-| B4 Formal visual checkpoint | Regional landscape is complete at `76248c1`: all eight remote jobs pass, with 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. Pinned licensed terrain, protected foreground, original vertex art, shared maps and source-scoped haze improve ground continuity. Local evidence includes 32 camera states, six native motion samples, four real Play clips and eight matched comparison pairs. Caption cleanup is complete at `1d66369`, with all eight remote jobs green. GT rear refinement passes local acceptance and awaits its own remote verification. Keep full-circuit structures paused: terrain/forest remain simplified, and the software-motion deadline remains unmet. See REGIONAL_LANDSCAPE.md, VISUAL_CHECKPOINT.md and CI.md. |
+| B4 Formal visual checkpoint | Regional landscape `76248c1`, caption cleanup `1d66369` and GT rear refinement `22dafad` each pass all eight remote jobs, including 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. The GT front/livery revision passes all local quality/export gates, sixteen focused and forty production cases, with integrated visual/motion review complete; its resulting revision requires remote acceptance. Continue within the existing slice: vegetation/context remain simplified, and the software-motion deadline remains unmet. See GT_BODY_FITTING.md, REGIONAL_LANDSCAPE.md, VISUAL_CHECKPOINT.md and CI.md. |
 | B5 Complete validation | Run the complete quality, Blender-asset, export, browser and production gates; re-run GPX, imports, persistence, references, custom vehicles and narrow views. Commit/push and verify remote CI. |
 | B6 Broader rollout | Only after a convincing checkpoint: extend Red Bull Ring, Formula presentation, Dev Track, shared assets, terrain/materials, useful broadcast/trackside cameras, UI and telemetry audio. Iterate on the slice first if its visual quality is weak. |
 
@@ -31,16 +31,22 @@ affected interactions, forty production cases and 32-state/eight-Play review pas
 All eight remote jobs pass in run `35133390869`, including 190 development and
 forty production cases plus four byte-identical Blender exports.
 
-The GT rear bodywork refinement is now integrated locally after paired close,
-Chase and actual Play study review. It retains the exact rig and vehicle bounds
-with the same material/draw counts; the full local gate and four byte-identical
-exports pass. Sixteen focused cases, 36 matched captures, six reference views,
-three native motion samples and forty production cases (11.6m) complete
-local acceptance. Commit/push and verify remote CI. See GT_REFINEMENT.md.
-After that stable cycle, continue with the GT's visibly detached side stripe and
-simplified front grille within the existing slice. Fit visible surfaces to the
-actual body and compare close and moving browser views before adoption. Broader
-circuit rollout remains paused.
+The GT rear refinement is pushed as `22dafad`; all eight remote jobs pass in
+run `35137255410`, including 190 development and forty production cases plus
+four byte-identical exports. Sixteen focused local cases, 36 matched captures,
+six reference views, three native motion samples and forty production cases
+complete its local acceptance. See GT_REFINEMENT.md.
+
+The following front/livery pass is integrated locally: body-fitted stripe,
+three actual front openings, tapered carbon liners and fitted hood seams.
+The full local quality and Blender gates, sixteen focused and forty production
+cases pass. Thirty-six matched captures, six reference views and three native
+motion samples complete local acceptance. Commit, push and verify remote CI.
+The accepted study and independent mesh evidence are in GT_BODY_FITTING.md.
+Continue by reviewing nearby vegetation silhouette and depth within
+the existing finish–T1 slice, using a focused Blender asset study and actual
+driving-view comparison before adoption. Keep tree placement/ground contacts and
+performance bounded. Broader circuit construction remains paused.
 
 ## Premium product phase — 2026-09-11
 

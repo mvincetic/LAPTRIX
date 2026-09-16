@@ -6,6 +6,19 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The GT front/livery revision passes the complete local gate with 342 TypeScript /
+178 Python tests (47.32 seconds), lint/types, ten asset packages, physical context
+reproduction and production build. All four Blender exports are byte-identical,
+with actual-source rejection probes passing. Independent exported-mesh raycasts
+verify 324 stripe clearances and the three front openings with retained lips.
+Four study Onboard sequences preserve native motion, lamps and lap results at
+desktop/phone widths. Sixteen integrated cases pass in 5.5 minutes, with 36
+matched captures, six reference views and three native-GPU samples (538 frames,
+about 60.0–60.2 fps, zero drift/errors and unchanged draws). The final phone
+inspection views stay inside the fence and keep every vehicle vertex in frame.
+All forty production cases pass in 11.6 minutes. Local acceptance is complete;
+remote acceptance of the resulting revision remains pending. See GT_BODY_FITTING.md.
+
 The GT rear refinement passes the local gate with 342 TypeScript / 178 Python
 tests (47.01 seconds), ten asset packages, lint/types, context reproduction and
 build. Four Blender exports are byte-identical and source rejection probes pass.
@@ -15,7 +28,10 @@ desktop/phone widths; three native-GPU samples record 537 frames at about
 60.1–60.2 fps with zero drift/errors. The unchanged rigs, limits and remaining
 visual issues are documented in GT_REFINEMENT.md. All forty production-browser
 cases pass in 11.6m, and six integrated current/reference captures complete
-the visual review. Remote acceptance of this vehicle revision remains pending.
+the visual review. Pushed revision `22dafad` passes all eight remote jobs in
+run `35137255410`: 342 TypeScript / 178 Python tests (27.23 seconds), all 190
+development and forty production cases (15.6 minutes), plus four byte-identical
+Blender exports.
 
 The driving-view caption candidate passes the complete local gate with 342
 TypeScript / 178 Python tests (46.69 seconds), asset/context validation,

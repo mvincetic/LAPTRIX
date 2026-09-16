@@ -1,5 +1,24 @@
 # Product presentation milestones
 
+## GT front openings and fitted livery — 2026-09-16
+
+The side stripe now follows the exported body within 1.467–1.597 mm, replacing
+a visible 25–178 mm gap. Three rounded front openings have actual depth and
+tapered carbon liners; a stronger nose surround and fitted hood seam complete
+the original Blender revision. The 1,463,676-byte GLB contains 45,122 triangles
+with the same rig, total bounds, 29 batches, ten materials and no textures.
+
+The accepted study passes fourteen matched close/camera captures and four real
+desktop/phone Onboard sequences. The integrated GLB is byte-identical to that
+study. Its full local gate passes 342 TypeScript / 178 Python tests (47.32
+seconds), lint/types, asset/context validation and build. Four Blender exports
+are byte-identical. Sixteen focused cases pass in 5.5 minutes; 36 matched
+integrated captures and six reference views complete visual review. Three
+native-GPU samples record 538 frames at about 60.0–60.2 fps, with zero drift/errors
+and unchanged draw calls. All forty production cases pass in 11.6 minutes.
+Local acceptance is complete; the resulting revision still requires remote CI.
+See GT_BODY_FITTING.md for evidence and remaining limitations.
+
 ## GT rear bodywork — 2026-09-16
 
 The GT's Blender shell now has a rolled rear recess, fitted carbon surround,
@@ -16,7 +35,9 @@ re-export byte-identically with source rejection probes. Sixteen focused browser
 cases pass in 5.4 minutes, alongside 36 matched captures and three native-GPU
 samples (537 frames, about 60.1–60.2 fps, no drift/errors). All forty production
 cases pass in 11.6m, with six further integrated current/reference views.
-Commit/push and remote acceptance follow. The wider visual checkpoint remains open.
+Revision `22dafad` passes all eight remote jobs in run `35137255410`, including
+342 TypeScript / 178 Python, all 190 development and forty production cases,
+plus four byte-identical Blender exports. The wider visual checkpoint remains open.
 
 ## Driving-view caption cleanup — 2026-09-16
 

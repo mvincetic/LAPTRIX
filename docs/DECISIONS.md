@@ -1,5 +1,21 @@
 # Decision log
 
+## 2026-09-16 — Fit GT livery to the body and model front inlet depth
+
+Actual exported raycasts show the old side stripe 25–178 mm outside the painted
+shell. Sample the original body skin along a new ribbon, then independently
+check exported vertices and triangle centroids: all 324 lie 1.467–1.597 mm above
+the body. The offset prevents depth fighting without a visible gap.
+
+Cut three rounded openings through the nose and add tapered carbon liners behind
+the retained lips and dividing bridges. Raise the final nose crown by 70 mm for
+a stronger surround, and fit the hood seam to the revised skin. Reject the first
+pinched, unlined browser study. Promote the accepted editable `.blend` directly;
+the registered exporter reproduces the reviewed GLB byte-for-byte. Preserve the
+exact rig, lamps, total bounds, 29 batches, ten materials and existing budgets.
+No physics, camera, clock or source-data changes accompany the artwork.
+GT_BODY_FITTING.md records validation and remaining presentation limits.
+
 ## 2026-09-16 — Model the GT rear recess in the existing Blender shell
 
 The browser close and Chase views showed a flat rear cap with a grille standing

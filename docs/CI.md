@@ -1,5 +1,15 @@
 # Continuous integration
 
+The [GT rear-refinement run](https://github.com/mvincetic/LAPTRIX/actions/runs/35137255410)
+at `22dafad` is **fully green**: all eight jobs pass, including 342 TypeScript /
+178 Python tests (27.23 seconds), all 190 development cases, forty production
+cases and four byte-identical Blender exports. Development shards pass
+35/29/32/33/30/31 cases in 8.6/14.2/17.1/15.1/13.2/12.9 minutes; production
+takes 15.6 minutes. Local acceptance includes sixteen affected journeys, forty
+production cases (11.6 minutes), 36 matched captures, six reference views and
+three native-GPU samples. The next working milestone fits the GT's side livery
+and models its front openings; see GT_BODY_FITTING.md for its separate state.
+
 The [driving-caption run](https://github.com/mvincetic/LAPTRIX/actions/runs/35133390869)
 at `1d66369` is **fully green**: all eight jobs pass, with 342 TypeScript /
 178 Python tests (46.09 seconds), all 190 development cases, forty production

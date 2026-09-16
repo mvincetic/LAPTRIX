@@ -17,7 +17,7 @@ geometry nor any manufacturer model is imported. `scripts/blender/author_gt.py`
 is an explicit rebuild recipe; ordinary `blender:export` retains edits to the
 actual `.blend`. Mesh islands remain editable after material/rig consolidation.
 
-The refined source is 2,773,442 bytes. Its GLB is **1,362,548 bytes, 42,770 triangles,
+The refined source is 2,902,262 bytes. Its GLB is **1,463,676 bytes, 45,122 triangles,
 29 material batches and ten materials**, with no image textures. Budgets are
 2.5 MB, 60,000 triangles and 48 batches. Dimensions include mirrors and aero:
 2.054 m wide, 4.407 m long and 1.390 m high. Physical wheel centers remain at
@@ -29,6 +29,12 @@ and an opened underbody around a tapered diffuser ramp. Its six solid strakes
 follow the ramp rather than intersecting a flat rear cap. The existing carbon
 material has a darker, less metallic response. See GT_REFINEMENT.md for matched
 browser evidence, unchanged rig/bounds and the current validation state.
+
+The following body-fitting pass cuts three actual front openings with shaped
+carbon liners, fits the side stripe to the shell and conforms the hood seams to
+the revised nose. Actual exported raycasts verify stripe clearance and inlet
+depth; all wheel/lamp geometry and total bounds remain exact. See
+GT_BODY_FITTING.md for the latest source hashes, evidence and acceptance state.
 
 The bundled GT presentation loads lazily for the matching profile ID/body style
 and exact physical dimensions. Custom geometry uses the existing adaptable car.

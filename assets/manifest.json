@@ -117,9 +117,9 @@
       "thirdPartySources": [],
       "maxBytes": 2500000,
       "maxTriangles": 60000,
-      "sourceSha256": "b0db3fb600708f9a4cf57dad3200968608473cd98b5ee13ceb593d4778faa411",
-      "sha256": "d59c4932a547c09add039b512aca9e6651c57a836bd38fbf210ac922ee7b0a1d",
-      "semanticSha256": "1636577dfa5106536f3273bc2eabb5f9c65d98230e63ac2e732d7ce92a0805c6",
+      "sourceSha256": "7ae5e876d46a9d9e4f7df82f79db2ac88ff1299fa5b1ca702491ee7808fdd9d8",
+      "sha256": "9dda545c94f417ed59ed1b31afe924054661de7a46b4efcb470ef9c03cd715f4",
+      "semanticSha256": "aa9c91ad02c3923f15d33c4823f07304801568b898e1a57e74c92cad27cba344",
       "materialBatches": 29
     },
     {

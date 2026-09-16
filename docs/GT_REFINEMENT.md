@@ -1,5 +1,9 @@
 # GT rear bodywork refinement — 2026-09-16
 
+This record describes revision `22dafad`, whose eight remote CI jobs pass in
+run `35137255410`. The subsequent front/livery work is recorded separately in
+GT_BODY_FITTING.md; the values below retain the rear milestone's exact evidence.
+
 The previous GT ended in a broad flat painted cap, with its grille and exhausts
 standing in front of that surface. The revised editable Blender model rolls the
 painted skin into a recessed carbon surround, seats a narrower grille inside it
@@ -98,8 +102,10 @@ software-motion deadline remains unmet; this pass does not claim to resolve it.
 
 All forty production-browser cases pass in 11.6m. Six additional integrated
 current/reference captures at desktop and phone widths retain the blue current
-car and distinct translucent reference. The working revision is ready to commit
-and push; remote acceptance must be verified for the resulting revision.
+car and distinct translucent reference. Pushed revision `22dafad` passes all
+eight remote jobs in run `35137255410`: 342 TypeScript / 178 Python tests
+(27.23 seconds), all 190 development and forty production cases (15.6 minutes),
+plus four byte-identical Blender exports. See CI.md.
 
 This is a bounded improvement to the GT's rear, not completion of the overall
 visual quality target. The front grille and some side panel/stripe transitions

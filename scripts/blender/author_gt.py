@@ -62,8 +62,32 @@ def line(name, points, radius=0.005, mat=carbon, parent=root):
     return tube(name, points, radius, mat, collection, parent)
 
 
-def patch(name, points, mat, parent=root):
-    return mesh(name, points, [tuple(range(len(points)))], mat, collection, parent)
+def intake_liner(name, x, y, width, height, edge):
+    # Open, tapering carbon bowl; its physical skin has visible inner walls.
+    rings = []
+    for z, scale in [(2.108, 1), (1.98, 0.94)]:
+        half_w, half_h = width * scale / 2 - 0.002, height * scale / 2 - 0.002
+        radius = edge * scale - 0.002
+        points = []
+        for angle, cx, cy in [
+            (0, half_w - radius, half_h - radius),
+            (90, -half_w + radius, half_h - radius),
+            (180, -half_w + radius, -half_h + radius),
+            (270, half_w - radius, -half_h + radius),
+        ]:
+            for i in range(5):
+                a = math.radians(angle + i * 90 / 4)
+                points.append((x + cx + radius * math.cos(a), y + cy + radius * math.sin(a), z))
+        rings.append(points)
+    n = len(rings[0])
+    faces = [(j, (j + 1) % n, n + (j + 1) % n, n + j) for j in range(n)]
+    faces.append(tuple(n + j for j in range(n)))
+    liner = mesh(name, rings[0] + rings[1], faces, carbon, collection, root, True)
+    wall = liner.modifiers.new("Inlet skin thickness", "SOLIDIFY")
+    wall.thickness = 0.001
+    wall.offset = -1
+    bpy.context.view_layer.objects.active = liner
+    bpy.ops.object.modifier_apply(modifier=wall.name)
 
 
 # Longitudinal silhouette stations: z, half width, deck crown, fender crown, sill.
@@ -79,7 +103,7 @@ stations = [
     (1.23, 0.95, 0.65, 0.835, 0.22),
     (1.60, 0.925, 0.60, 0.75, 0.22),
     (1.99, 0.86, 0.51, 0.59, 0.23),
-    (2.12, 0.76, 0.43, 0.49, 0.25),
+    (2.12, 0.76, 0.50, 0.56, 0.24),
 ]
 rings = []
 for z, width, deck, fender, sill in interpolate(stations, 6):
@@ -164,6 +188,23 @@ for target in (body, shroud):
     bpy.context.view_layer.objects.active = target
     bpy.ops.object.modifier_apply(modifier=modifier.name)
 bpy.data.objects.remove(cutter, do_unlink=True)
+# Cut three rounded inlet openings through the painted nose.
+for name, center, size, edge in [
+    ("Central_inlet_opening", (0, 0.355, 2.125), (1.05, 0.18, 0.32), 0.030),
+    ("Left_brake_opening", (0.655, 0.36, 2.125), (0.145, 0.15, 0.32), 0.024),
+    ("Right_brake_opening", (-0.655, 0.36, 2.125), (0.145, 0.15, 0.32), 0.024),
+]:
+    cutter = box(name, center, size, carbon, collection, root, edge)
+    bpy.context.view_layer.objects.active = cutter
+    for modifier in list(cutter.modifiers):
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+    modifier = body.modifiers.new(name, "BOOLEAN")
+    modifier.operation = "DIFFERENCE"
+    modifier.solver = "EXACT"
+    modifier.object = cutter
+    bpy.context.view_layer.objects.active = body
+    bpy.ops.object.modifier_apply(modifier=modifier.name)
+    bpy.data.objects.remove(cutter, do_unlink=True)
 bevel(body, 0.008, 2)
 body.modifiers.remove(body.modifiers.get("Panel normals"))
 
@@ -270,15 +311,27 @@ for side in (-1, 1):
     line("Door_perimeter", seam, 0.004)
     part("Door_handle", (side * 0.889, 0.69, -0.40), (0.011, 0.019, 0.10), carbon, 0.006)
     part("Sill_blade", (side * 0.904, 0.205, -0.12), (0.08, 0.045, 1.65), carbon, 0.014)
-    patch(
-        "Sill_ice_spear",
-        [
-            (side * 0.950, 0.246, -0.65),
-            (side * 0.886, 0.41, 0.39),
-            (side * 0.902, 0.35, 0.41),
-            (side * 0.954, 0.229, -0.60),
-        ],
+    # Sample the side skin along the entire stripe, so it reads as painted livery.
+    stripe_rows = []
+    for i in range(41):
+        t = i / 40
+        z = -0.64 + 1.04 * t
+        center = 0.266 + 0.12 * t
+        half_width = 0.006 + 0.022 * t
+        row = []
+        for y in (center - half_width, center + half_width):
+            x, y, z = skin_point(rings, y, z, axis=1, offset=0.0015)
+            row.append((side * x, y, z))
+        stripe_rows.append(row)
+    stripe_faces = [(i * 2, i * 2 + 1, i * 2 + 3, i * 2 + 2) for i in range(40)]
+    mesh(
+        "Fitted_sill_ice_spear",
+        [v for row in stripe_rows for v in row],
+        stripe_faces if side == 1 else [tuple(reversed(f)) for f in stripe_faces],
         white,
+        collection,
+        root,
+        True,
     )
     part("Side_intake", (side * 0.918, 0.60, -0.79), (0.018, 0.11, 0.18), carbon, 0.03)
     line("Mirror_arm", [(side * 0.72, 0.80, 0.43), (side * 0.93, 0.88, 0.34)], 0.018)
@@ -287,11 +340,11 @@ for side in (-1, 1):
 
 # Nose: recessed intake, carbon splitter, offset LED signatures and hood extraction.
 part("Front_splitter", (0, 0.185, 1.79), (1.91, 0.055, 0.75), carbon, 0.028)
-part("Central_intake", (0, 0.355, 2.106), (1.10, 0.21, 0.028), carbon, 0.045)
-for x in [i * 0.06 for i in range(-8, 9)]:
-    part("Intake_grid", (x, 0.355, 2.125), (0.007, 0.145, 0.006), rotor_mat, 0.002)
+intake_liner("Central_intake_liner", 0, 0.355, 1.05, 0.18, 0.03)
+for x in [i * 0.055 for i in range(-8, 9)]:
+    part("Intake_grid", (x, 0.355, 1.997), (0.006, 0.138, 0.008), rotor_mat, 0.0015)
 for side in (-1, 1):
-    part("Brake_duct", (side * 0.682, 0.37, 2.064), (0.18, 0.18, 0.042), carbon, 0.035)
+    intake_liner("Brake_intake_liner", side * 0.655, 0.36, 0.145, 0.15, 0.024)
     points = [
         skin_point(rings, side * x, z, offset=0.009)
         for x, z in [(0.48, 1.91), (0.59, 1.865), (0.68, 1.83), (0.75, 1.75), (0.79, 1.68)]
@@ -332,12 +385,10 @@ for side in (-1, 1):
     line(
         "Hood_seam",
         [
-            (side * 0.50, 0.713, 0.72),
-            (side * 0.55, 0.710, 1.08),
-            (side * 0.56, 0.664, 1.57),
-            (side * 0.43, 0.581, 1.85),
+            skin_point(rings, side * x, z, offset=0.002)
+            for x, z in interpolate([(0.50, 0.72), (0.55, 1.08), (0.56, 1.57), (0.43, 1.85)], 8)
         ],
-        0.003,
+        0.002,
     )
 
 # Ice centre stripes are fitted to hood and roof, leaving the glazing unobstructed.

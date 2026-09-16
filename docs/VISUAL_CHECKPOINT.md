@@ -52,8 +52,17 @@ opens the lower shell around a tapered diffuser with solid strakes. It preserves
 the exact rig and outer bounds, with the same material/draw counts. The first
 isolated study was rejected for its exposed, unfinished-looking ramp; the second
 was reviewed in matched close/Chase views and four real Play sequences before
-integration. GT_REFINEMENT.md records the current integrated acceptance and
-remaining limits. Broader rollout stays paused.
+integration. Revision `22dafad` passes all eight remote jobs in run `35137255410`.
+GT_REFINEMENT.md retains its exact integrated acceptance and remaining limits.
+
+The subsequent body-fitting iteration fixes the detached side stripe and models
+actual front inlet depth, with shaped liners and a revised nose surround. The
+accepted source is integrated byte-for-byte after fourteen matched close/camera
+study captures and four actual Onboard sequences. Independent mesh probes verify
+stripe clearance and open inlets with retained structural lips. See
+GT_BODY_FITTING.md for completed local acceptance: sixteen focused and forty
+production cases, 36 matched captures, six reference views and three native
+motion samples. The resulting revision requires remote CI. Broader rollout stays paused.
 
 ## Comparison conditions
 
