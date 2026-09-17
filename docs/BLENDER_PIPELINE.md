@@ -110,6 +110,14 @@ shader nodes are rejected, so procedural Blender shaders must be baked or transl
 Image textures are embedded in GLB. There are no external network buffers or images.
 The gauge needs no texture; premium content budgets will be measured per asset.
 
+The shared spruce declares a single image-alpha cutout material. Its exact graph
+contains one Image Texture, GREATER_THAN threshold at 0.45, Principled shader and
+output. `cutout_material.py` checks the links, cutoff, double-sided policy, color
+space and pinned packed PNG bytes. Other Math-node use remains rejected. Both
+source and independent GLB validation require mapped cutout UVs; runtime delivery
+also checks decoded bounds and alpha settings. Five source rejection probes cover
+operator/cutoff changes, bypass, color space and absent UVs. See BLENDER_VEGETATION.md.
+
 The exporter selects the asset hierarchy, evaluates modifiers and preserves named
 nodes. It emits normals/UVs/materials and +Y-up GLB, with no cameras, lights, skins,
 morph targets, animation clips, compression runtime or experimental GPU-instancing

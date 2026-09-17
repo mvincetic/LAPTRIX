@@ -13,6 +13,7 @@ import { Trackside } from "./Trackside";
 import { TracksideAssets } from "./TracksideAssets";
 import { presentationForSource } from "../trackside-assets";
 import { Trees } from "./Trees";
+import { hasAuthoredSpruce } from "../spruce-asset";
 import { BlenderScenery } from "./BlenderScenery";
 import {
   rbrSceneryContract,
@@ -155,6 +156,7 @@ export function Landscape({
       </mesh>
       <Trees
         positions={data.trees}
+        authored={hasAuthoredSpruce(sourceFingerprint)}
         exclusions={shownScenery ? sceneryFootprints(shownScenery) : undefined}
       />
     </group>

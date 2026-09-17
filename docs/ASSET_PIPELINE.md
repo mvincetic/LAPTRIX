@@ -26,6 +26,14 @@ Existing procedural assets provide adaptable presentation and fallback during
 that rollout. Every representation consumes the authoritative source/telemetry
 frame. The current pylon's earlier JSON/Three exporter remains documented below.
 
+The shared Blender spruce adds editable curved branch clusters, a tapered trunk
+and one packed 512 px original cutout. Its registered export uses two materials
+and 624 triangles inside a 393,216-byte/640-triangle budget. A narrowly validated
+alpha-threshold graph exports as a double-sided glTF MASK material. The existing
+foliage package remains the recovery path and generic imported-track presentation.
+See BLENDER_VEGETATION.md for original image provenance, instance bases and the
+current integration/acceptance state.
+
 ## Original Dev Track sign pipeline
 
 The Dev Track start signs are the first shipped GLB asset. Their editable source

@@ -1,5 +1,14 @@
 # Architecture
 
+The optional shared spruce template loads for the exact Dev Track and Red Bull
+Ring source identities. `spruce-asset.ts` validates the bounded embedded PNG and
+GLB, then normalizes authored crown/trunk meshes for the existing instance bases.
+`Trees` owns disposable geometry/material clones; the cache retains source data
+and image pixels. Existing sites, exclusion footprints and ground contacts stay
+authoritative. Failed loads retain original textured foliage, then cones if the
+fallback image also fails; Environment remount retries. See BLENDER_VEGETATION.md
+for the ongoing integrated acceptance and remaining limits.
+
 The Blender circuit layer loads through `useRBRScenery` for the matching source
 and enabled Environment control. TrackView shares the resulting template with
 Landscape and the main road/shoulder materials. It shares one bounded immutable

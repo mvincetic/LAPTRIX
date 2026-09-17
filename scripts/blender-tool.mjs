@@ -224,5 +224,13 @@ if (mode === "inspect") {
         await ownedAssetPath(root, landscape.sourceFile),
         join(root, "scripts/blender/probe_landscape.py"),
       );
+    const spruce = entries.find(
+      (entry) => entry.id === "laptrix.blender-spruce.v1",
+    );
+    if (spruce)
+      runBlender(
+        await ownedAssetPath(root, spruce.sourceFile),
+        join(root, "scripts/blender/probe_spruce.py"),
+      );
   }
 }

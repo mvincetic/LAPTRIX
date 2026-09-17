@@ -63,7 +63,26 @@ stripe clearance and open inlets with retained structural lips. See
 GT_BODY_FITTING.md for completed local acceptance: sixteen focused and forty
 production cases, 36 matched captures, six reference views and three native
 motion samples. Pushed `867fae9` passes seven CI jobs; LOAD_EXTREMA_CI.md records
-the remaining desktop test deadline and focused stabilization. Broader rollout stays paused.
+the desktop test deadline and focused stabilization. Follow-up `6350896` passes
+all eight remote jobs in run `35145598853`, accepting the GT revision.
+
+The shared spruce iteration replaces the repeated flat crown with original
+Blender curved bough clusters, an upright leader and a shaped trunk. It retains
+the same source placement and two draw batches. The final 293,596-byte tree has
+624 triangles and a packed original 512² cutout. The sparse first study was
+rejected before the fuller silhouette was integrated. The separate record in
+`artifacts/spruce-integrated/` retains 160 camera/motion captures and exact paired
+placement hashes. The core gate, five export reproductions and 22 browser cases
+pass. All 42 distinct production cases pass across the main run and focused
+recovery; remote acceptance remains pending. Native short samples
+remain near 60 fps; paired software samples both miss the unchanged deadline.
+See BLENDER_VEGETATION.md for costs and limits. Broader rollout stays paused.
+
+Next review camera height, follow distance and fixed FOV using real high-speed
+and braking playback within the existing finish–T1 slice. Keep the deterministic
+source/telemetry pose, readable vehicle, narrow controls and one playback clock.
+Adopt a change only after matched actual-browser comparison and camera/ground
+clearance checks; do not extend circuit facilities while that review is open.
 
 ## Comparison conditions
 

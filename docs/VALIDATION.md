@@ -6,6 +6,21 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
+The shared Blender spruce passes the complete local gate: 354 TypeScript / 178
+Python tests (46.70 seconds), lint/types, eleven asset packages, source-context
+reproduction and build. Five Blender exports are byte-identical, including five
+new actual-source cutout rejection probes. Twenty-two browser cases pass in 8.1
+minutes, covering repeated resource disposal, failed/malformed delivery, both
+cars/tracks Onboard, lighting, references, bounds, load extrema and graphics
+recovery. The visual review retains 160 captures, including 56 static pairs and
+48 frames from sixteen actual Play sequences. Six native samples record 1,079
+frames near 60 fps. Placement and draw counts match; tree triangles increase by
+248 per instance. Both paired software samples miss the twelve-second deadline.
+All 42 distinct production cases pass across the main run and targeted recovery.
+The interrupted overnight run passes forty cases and times out in one showcase
+export case; that unchanged case and the retained procedural-image recovery test
+pass on focused rerun. Remote acceptance remains pending. See BLENDER_VEGETATION.md.
+
 The GT front/livery revision passes the complete local gate with 342 TypeScript /
 178 Python tests (47.32 seconds), lint/types, ten asset packages, physical context
 reproduction and production build. All four Blender exports are byte-identical,
@@ -20,8 +35,10 @@ All forty production cases pass in 11.6 minutes. Local acceptance is complete;
 the pushed `867fae9` passes seven remote jobs but has one desktop load-extrema
 deadline miss. The focused screenshot/test separation passes an isolated full
 gate (342 TypeScript / 178 Python, 47.51 seconds), four journey repeats and 24
-dedicated visual states. Remote acceptance of that fix remains pending; see
-GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
+dedicated visual states. Follow-up `6350896` passes all eight remote jobs in run
+`35145598853`: 342 TypeScript / 178 Python tests (34.46 seconds), 190 development
+and forty production cases (20.5 minutes), plus four byte-identical exports.
+See GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
 
 The GT rear refinement passes the local gate with 342 TypeScript / 178 Python
 tests (47.01 seconds), ten asset packages, lint/types, context reproduction and

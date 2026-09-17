@@ -46,9 +46,11 @@ script passes 24 states at 1600, 1280 and 390 px, including expanded extrema,
 with no overflow or runtime errors. Desktop and narrow extrema captures were
 visually inspected. There is no application, asset, clock or timeout change.
 
-The resulting working-branch revision must pass remote CI before the body-fitting
-milestone is remotely accepted. Uncommitted vegetation work remains outside this
-focused stabilization commit.
+The focused revision `6350896` passes all eight remote jobs in run `35145598853`:
+342 TypeScript / 178 Python tests (34.46 seconds), all 190 development cases,
+forty production cases (20.5 minutes) and four byte-identical Blender exports.
+The body-fitting milestone is remotely accepted through this follow-up. Subsequent
+vegetation work remains outside the focused stabilization commit.
 
 Evidence is retained locally as `artifacts/gt-body-ci-load-extrema.zip`, its
 extracted trace, `gt-body-ci-trace-events.json` and the baseline/fix logs. The

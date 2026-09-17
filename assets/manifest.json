@@ -186,6 +186,25 @@
       "sha256": "dbefbe9015578d1af967b2e50c900715e6c2e869ad4058f4209d4ff58addc96b",
       "semanticSha256": "311ac508d942e96929571f8f112e1671338b5209c269473817da23cffc5d0535",
       "materialBatches": 27
+    },
+    {
+      "id": "laptrix.blender-spruce.v1",
+      "category": "environment",
+      "format": "blender-glb",
+      "parameters": "assets/blender/shared/spruce.json",
+      "implementation": "scripts/blender/author_spruce.py",
+      "sourceFile": "assets/blender/shared/spruce.blend",
+      "runtimeFile": "assets/runtime/environment/spruce.glb",
+      "origin": "Ground-contact origin in metres; runtime +Y up. Separate crown/trunk instance bases retain existing placement.",
+      "provenance": "Original LAPTRIX Blender branch clusters and trunk; original project foliage cutout with pixel-preserving PNG encoding. See assets/environment/spruce-generation.json.",
+      "rights": "Original project asset; repository distribution policy applies",
+      "thirdPartySources": [],
+      "maxBytes": 393216,
+      "maxTriangles": 640,
+      "sourceSha256": "edac64084758947464bdfbbb0f38104f62c1d6583674a257aec9b4a583c6a828",
+      "sha256": "07638093998951028dce4652f828fe8764b8b75dbc1917e8bef45fc82a902e04",
+      "semanticSha256": "d09c5872de16fe10fb2bc08b250c35db736408f3708ba805f335ee9bb13f7eb0",
+      "materialBatches": 2
     }
   ]
 }

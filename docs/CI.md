@@ -1,5 +1,14 @@
 # Continuous integration
 
+The [GT capture-stabilization run](https://github.com/mvincetic/LAPTRIX/actions/runs/35145598853)
+at `6350896` is **fully green**: all eight jobs pass, including 342 TypeScript /
+178 Python tests (34.46 seconds), all 190 development cases, forty production
+cases (20.5 minutes) and four byte-identical Blender exports. Development shards
+pass 35/29/32/33/30/31 cases in 12.2/15.4/16.5/15.1/13.8/16.1 minutes.
+This accepts the GT body-fitting milestone with unchanged application/assets and
+test deadlines. The subsequent shared Blender spruce has separate local and
+remote acceptance; see BLENDER_VEGETATION.md.
+
 The [GT body-fitting run](https://github.com/mvincetic/LAPTRIX/actions/runs/35142086900)
 at `867fae9` has seven successful jobs and one failed development shard. All
 quality/export checks, 189 development cases and forty production cases pass.
@@ -9,7 +18,8 @@ The focused follow-up retains every assertion and moves that capture responsibil
 to the existing visual QA script. See LOAD_EXTREMA_CI.md for trace evidence and
 separate validation. This revision is not recorded as remotely green. The focused
 fix passes the complete isolated quality gate, four journey repeats and 24
-dedicated visual states; its resulting revision still needs remote verification.
+dedicated visual states. Its green follow-up is recorded above; the original
+failed run remains part of the evidence.
 
 The [GT rear-refinement run](https://github.com/mvincetic/LAPTRIX/actions/runs/35137255410)
 at `22dafad` is **fully green**: all eight jobs pass, including 342 TypeScript /

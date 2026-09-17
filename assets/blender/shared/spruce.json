@@ -1,0 +1,76 @@
+{
+  "id": "laptrix.blender-spruce.v1",
+  "rootNode": "SPRUCE_ROOT",
+  "exportCollection": "EXPORT",
+  "sourceFile": "assets/blender/shared/spruce.blend",
+  "runtimeFile": "assets/runtime/environment/spruce.glb",
+  "maxBytes": 393216,
+  "maxTriangles": 640,
+  "maxMeshes": 2,
+  "maxMaterials": 2,
+  "maxTextures": 1,
+  "maxImages": 1,
+  "maxTextureSize": 512,
+  "bounds": {
+    "min": [
+      -3.481666088104248,
+      -0.15000000596046448,
+      -3.4548587799072266
+    ],
+    "max": [
+      3.3251872062683105,
+      10.5,
+      3.4419076442718506
+    ],
+    "tolerance": 0.00001
+  },
+  "requiredNodes": {
+    "SPRUCE_ROOT": [
+      0,
+      0,
+      0
+    ],
+    "SPRUCE_CROWN_LOD0": [
+      0,
+      0,
+      0
+    ],
+    "SPRUCE_TRUNK_LOD0": [
+      0,
+      0,
+      0
+    ]
+  },
+  "cutoutMaterials": {
+    "LTX_Spruce_Needles": {
+      "alphaCutoff": 0.45,
+      "textureFile": "assets/blender/shared/spruce-bough.png",
+      "textureSha256": "c8a73827997486a511cc9655dcfd5f6a0cc80f941440f27fe98dc841f41382ee"
+    }
+  },
+  "instanceBasis": {
+    "crown": {
+      "node": "SPRUCE_CROWN_LOD0",
+      "centerY": 6,
+      "height": 9,
+      "radius": 3.78
+    },
+    "trunk": {
+      "node": "SPRUCE_TRUNK_LOD0",
+      "centerY": 5.075,
+      "height": 10.45,
+      "radius": 0.28
+    }
+  },
+  "sourceFingerprints": [
+    "sha256:6269176570597be6d70057566a045d193bdbc18f3e59db8cad141c33798c4118",
+    "sha256:a2e611b0d0a69621ff5c04d0003f15e3a92f49fb78ee623a8cda1a60f9d5f689"
+  ],
+  "textureOrigin": {
+    "file": "assets/environment/spruce-bough.webp",
+    "sha256": "c618b147c6dce0a905b7982ae977de0a0ba56d2d353b4d1846ebbfde228bff74",
+    "encoding": "PNG encoding of the existing original 512px WebP; all decoded browser RGBA channels match.",
+    "generation": "assets/environment/spruce-generation.json"
+  },
+  "purpose": "Original curved and crossed branch clusters with an upright leader and tapered bent trunk. Existing source-derived sites, scales and ground contacts stay authoritative."
+}

@@ -15,7 +15,7 @@ single PlaybackClock remain authoritative. Never merge main or rewrite history.
 | B1 Blender toolchain and contracts | Complete at `430682b`: official Blender 5.2.1 LTS, editable basis gauge, explicit axis/pivot/material contract, headless validation/export and independent GLB checks. All seven Linux jobs pass: 319 TypeScript / 158 Python, 175 development and 37 production cases, plus byte-identical Windows/Linux Blender re-export. |
 | B2 Red Bull Ring GT vertical slice | Complete through `738b6df`: all seven remote jobs pass, with 330 TypeScript / 162 Python, 179 development and 39 production cases, plus three byte-identical exports. The two outdated asset/foliage fixtures are corrected without changing deadlines or application contracts. Local camera, terrain, foliage, reference and hardware/software motion evidence is retained. |
 | B3 Generic Formula 2026 | Complete at `12b42cb`: all seven remote jobs pass in run `35010222217`, including 334 TypeScript / 162 Python, 182 development and 40 production cases and four Blender exports. Original editable source, native wheel rig, shaped aero surfaces and LAPTRIX livery are integrated. Local visual evidence includes 64 poses, 48 Formula reference and 26 Onboard states, plus six native-GPU and three software motion samples. |
-| B4 Formal visual checkpoint | Regional landscape `76248c1`, caption cleanup `1d66369` and GT rear refinement `22dafad` each pass all eight remote jobs, including 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. The GT front/livery revision passes all local quality/export gates, sixteen focused and forty production cases, with integrated visual/motion review complete; its resulting revision requires remote acceptance. Continue within the existing slice: vegetation/context remain simplified, and the software-motion deadline remains unmet. See GT_BODY_FITTING.md, REGIONAL_LANDSCAPE.md, VISUAL_CHECKPOINT.md and CI.md. |
+| B4 Formal visual checkpoint | Regional landscape, caption cleanup and both GT refinements are remotely accepted through `6350896`, whose eight jobs pass 342 TypeScript / 178 Python, 190 development and forty production cases plus four byte-identical exports. The shared Blender spruce passes the local core/export gates, 22 browser cases and integrated camera/motion review; 42 distinct production cases also pass across the main run and targeted recovery, with remote acceptance pending. Next review camera behavior and speed perception within the existing finish–T1 slice. Context remains simplified and the software-motion deadline remains unmet. See BLENDER_VEGETATION.md, VISUAL_CHECKPOINT.md and CI.md. |
 | B5 Complete validation | Run the complete quality, Blender-asset, export, browser and production gates; re-run GPX, imports, persistence, references, custom vehicles and narrow views. Commit/push and verify remote CI. |
 | B6 Broader rollout | Only after a convincing checkpoint: extend Red Bull Ring, Formula presentation, Dev Track, shared assets, terrain/materials, useful broadcast/trackside cameras, UI and telemetry audio. Iterate on the slice first if its visual quality is weak. |
 
@@ -42,13 +42,32 @@ three actual front openings, tapered carbon liners and fitted hood seams.
 The full local quality and Blender gates, sixteen focused and forty production
 cases pass. Thirty-six matched captures, six reference views and three native
 motion samples complete local acceptance. The pushed `867fae9` passes seven CI
-jobs, with one desktop load-extrema deadline miss. Complete the focused capture
-stabilization and verify remote CI; see LOAD_EXTREMA_CI.md.
-The accepted study and independent mesh evidence are in GT_BODY_FITTING.md.
-Continue by reviewing nearby vegetation silhouette and depth within
-the existing finish–T1 slice, using a focused Blender asset study and actual
-driving-view comparison before adoption. Keep tree placement/ground contacts and
-performance bounded. Broader circuit construction remains paused.
+jobs, with one desktop load-extrema deadline miss. Focused capture stabilization
+`6350896` passes all eight jobs in run `35145598853`, retaining every assertion
+and existing deadlines. See LOAD_EXTREMA_CI.md and GT_BODY_FITTING.md.
+
+The vegetation study rejects a sparse first shape and integrates a fuller
+original Blender spruce without moving existing sites or ground contacts. The
+293,596-byte / 624-triangle package retains two instanced batches and the original
+foliage fallback. Its complete gate passes 354 TypeScript / 178 Python tests;
+five exports reproduce byte-identically and 22 browser cases pass. The integrated
+160-capture review preserves exact placement, while six short native samples
+remain near 60 fps. The paired software samples both miss the existing deadline;
+the added triangle cost is documented. All 42 distinct production cases pass
+across the main run and focused recovery of the interrupted-run timeout. Commit
+and push this milestone; remote acceptance remains pending. See BLENDER_VEGETATION.md.
+
+The next bounded milestone, when autonomous work resumes, is a camera/speed study
+in the same finish–T1 slice:
+compare current views with lower/closer Chase and a modestly wider fixed FOV,
+using identical high-speed, braking and corner samples for both cars at desktop
+and narrow sizes. Review actual Play sequences, car framing and ground clearance
+before adopting a candidate. Preserve deterministic seeking, authoritative poses,
+one clock and all engineering data. Follow with implementation, meaningful tests,
+integrated visual QA, documentation, clean commit/push and exact-revision CI.
+The user requested a usage-saving stop after the vegetation commit on 2026-09-17.
+The camera study is prepared locally but has not run; no camera change is adopted.
+Broader circuit construction remains paused.
 
 ## Premium product phase — 2026-09-11
 

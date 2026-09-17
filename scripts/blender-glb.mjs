@@ -332,6 +332,13 @@ export function inspectBlenderGlb(bytes, config) {
         primitives++;
         triangles += primitive.triangles;
         const material = json.materials[primitive.material];
+        if (config.cutoutMaterials?.[material.name]) {
+          const uv = primitive.attributes.TEXCOORD_0;
+          assert(
+            uv?.type === "VEC2" && uv.values.every((v) => v >= 0 && v <= 1),
+            "Retain the cutout image UV coordinates",
+          );
+        }
         const groundSpecs = Object.values(config.groundMaterials ?? {});
         if (config.landscape)
           groundSpecs.push({
@@ -425,6 +432,22 @@ export function inspectBlenderGlb(bytes, config) {
     );
     return { sha256: sha256(data), width, height, bytes: data.length };
   });
+  for (const [name, spec] of Object.entries(config.cutoutMaterials ?? {})) {
+    const material = json.materials.find((value) => value.name === name);
+    assert(material, "Missing declared cutout material");
+    assert.equal(material.alphaMode, "MASK", "Retain the foliage alpha mask");
+    assert.equal(material.doubleSided, true);
+    assert(Math.abs(material.alphaCutoff - spec.alphaCutoff) < 1e-7);
+    const map = material.pbrMetallicRoughness?.baseColorTexture;
+    assert(map && (map.texCoord ?? 0) === 0 && !map.extensions);
+    const texture = json.textures[map.index];
+    assert(texture && !texture.extensions);
+    assert.equal(
+      images[texture.source]?.sha256,
+      spec.textureSha256,
+      "Cutout must retain the pinned original PNG",
+    );
+  }
   const semantic = canonical({
     nodes: nodeRecords.sort((a, b) => a.name.localeCompare(b.name)),
     meshes: geometry.map((primitives) =>
@@ -462,6 +485,12 @@ export async function validateBlenderEntry(root, entry) {
     await readFile(await ownedAssetPath(root, entry.parameters), "utf8"),
   );
   assert.equal(config.id, entry.id);
+  for (const spec of Object.values(config.cutoutMaterials ?? {}))
+    assert.equal(
+      sha256(await readFile(await ownedAssetPath(root, spec.textureFile))),
+      spec.textureSha256,
+      "Cutout PNG source differs",
+    );
   for (const field of ["sourceFile", "runtimeFile", "maxBytes", "maxTriangles"])
     assert.equal(entry[field], config[field]);
   if (config.authoringContext) {

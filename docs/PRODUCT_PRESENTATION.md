@@ -1,5 +1,25 @@
 # Product presentation milestones
 
+## Original Blender vegetation — 2026-09-16
+
+Both bundled circuits retain their exact tree placement while receiving original
+Blender curved bough clusters, an upright leader and a shaped trunk. The 293,596
+byte GLB contains 624 triangles, two materials and one original 512² image. The
+procedural tree remains the generic/imported-source and delivery fallback.
+
+The full local gate passes 354 TypeScript / 178 Python tests, eleven asset
+packages, lint/types, context reproduction and build. Five Blender exports are
+byte-identical. Twenty-two browser cases pass in 8.1 minutes, including repeated
+resource cleanup, malformed/missing delivery, camera/source changes and graphics
+restoration. The review retains 160 integrated captures, with exact placement and
+draw counts preserved; six short native-GPU samples stay near 60 fps. The paired
+software samples both miss the existing deadline, with the geometry cost recorded
+explicitly. All 42 distinct production cases pass across the main run and
+focused recovery; the interrupted-run timeout is documented. Remote acceptance
+remains pending. See
+BLENDER_VEGETATION.md. Next, review camera height, distance and fixed FOV against
+actual high-speed and braking playback inside the existing finish–T1 slice.
+
 ## GT front openings and fitted livery — 2026-09-16
 
 The side stripe now follows the exported body within 1.467–1.597 mm, replacing
@@ -18,8 +38,10 @@ native-GPU samples record 538 frames at about 60.0–60.2 fps, with zero drift/e
 and unchanged draw calls. All forty production cases pass in 11.6 minutes.
 Local acceptance is complete. Pushed `867fae9` passes seven remote jobs, with
 one desktop load-extrema deadline miss. The focused capture separation retains
-all assertions and passes its isolated quality/repeat/visual checks; remote
-verification remains pending. See GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
+all assertions and passes its isolated quality/repeat/visual checks. Follow-up
+`6350896` passes all eight remote jobs in run `35145598853`, including 190
+development and forty production cases plus four byte-identical exports.
+See GT_BODY_FITTING.md and LOAD_EXTREMA_CI.md.
 
 ## GT rear bodywork — 2026-09-16
 

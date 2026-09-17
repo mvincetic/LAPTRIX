@@ -45,6 +45,7 @@ async function trees(page: Page) {
       triangles: crowns.geometry.index!.count / 3,
       overflow,
       textures: gl.info.memory.textures,
+      geometries: gl.info.memory.geometries,
       matrices: Array.from(crowns.instanceMatrix.array),
       trunkMatrices: Array.from(trunks.instanceMatrix.array),
       castShadow: crowns.castShadow || trunks.castShadow,
@@ -71,8 +72,8 @@ for (const [track, width] of [
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("request", (request) => {
       if (
-        request.resourceType() === "image" &&
-        request.url().includes("spruce-bough")
+        request.resourceType() === "fetch" &&
+        /\/spruce(?:-[a-zA-Z0-9_-]+)?\.glb/.test(request.url())
       )
         downloads++;
     });
@@ -88,7 +89,7 @@ for (const [track, width] of [
     await settledScenery(page, track);
     const before = (await trees(page))!;
     expect(before.count).toBe(track === "red-bull-ring" ? 473 : 383);
-    expect(before.triangles).toBeLessThanOrEqual(384);
+    expect(before.triangles).toBe(544);
     expect(before.size).toEqual([512, 512]);
     expect(before.overflow).toBeLessThan(0.001);
     expect(before.castShadow).toBe(false);
@@ -174,6 +175,35 @@ for (const [track, width] of [
       expect(after.texture).toBe(before.texture);
       expect(after.overflow).toBeLessThan(0.001);
       if (id === track) expect(after.matrices).toEqual(before.matrices);
+    }
+    const warmed = (await trees(page))!;
+    let priorGeometry = warmed.geometry;
+    for (let cycle = 0; cycle < 3; cycle++) {
+      await page
+        .getByRole("tab", { name: "Analysis Layers", exact: true })
+        .click();
+      const environment = page.getByRole("checkbox", {
+        name: "Environment",
+        exact: true,
+      });
+      await environment.uncheck();
+      await environment.check();
+      await page.getByRole("tab", { name: "Track View", exact: true }).click();
+      await expect.poll(async () => (await trees(page))?.triangles).toBe(544);
+      await expect
+        .poll(async () => (await trees(page))?.geometry)
+        .not.toBe(priorGeometry);
+      await expect
+        .poll(async () => (await trees(page))?.geometries)
+        .toBe(warmed.geometries);
+      await expect
+        .poll(async () => (await trees(page))?.textures)
+        .toBe(warmed.textures);
+      const restored = (await trees(page))!;
+      expect(restored.texture).toBe(warmed.texture);
+      expect(restored.matrices).toEqual(warmed.matrices);
+      expect(restored.trunkMatrices).toEqual(warmed.trunkMatrices);
+      priorGeometry = restored.geometry;
     }
     expect(downloads).toBe(1);
     expect(errors).toEqual([]);

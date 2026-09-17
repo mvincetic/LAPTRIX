@@ -1,5 +1,22 @@
 # Decision log
 
+## 2026-09-16 — Author a shared spruce while retaining source placement
+
+Replace the bundled circuits' flat procedural crown with original curved/crossed
+Blender bough clusters and a shaped trunk. Reject the sparse first browser study;
+retain a fuller form with an upright leader. Re-encode the existing original
+WebP as a packed PNG with identical decoded browser pixels. No new third-party
+art or forest survey enters the project. Preserve the actual placement matrices,
+source identities and crown/trunk envelopes rather than re-scattering sites.
+
+Accept a bounded increase from 376 to 624 triangles per tree while keeping two
+instanced material batches. Judge that cost with integrated motion/resource QA.
+Cache one validated GLB and image; mounted pairs own disposable mesh/material
+clones. Retain the original textured tree as failure recovery and the generic
+imported-track renderer. Support only the exact declared image-alpha threshold
+graph in Blender, and reject unsafe or visually incompatible runtime packages.
+BLENDER_VEGETATION.md records the ongoing acceptance and remaining limitations.
+
 ## 2026-09-16 — Fit GT livery to the body and model front inlet depth
 
 Actual exported raycasts show the old side stripe 25–178 mm outside the painted

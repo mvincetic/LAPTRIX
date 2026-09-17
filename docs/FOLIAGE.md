@@ -1,5 +1,14 @@
 # Original track vegetation
 
+The exact bundled circuits now use `laptrix.blender-spruce.v1`, documented in
+BLENDER_VEGETATION.md. Its editable curved bough clusters and tapered trunk reuse
+this original image through a pixel-identical PNG encoding. The two instanced
+batches, ground contacts and placement remain unchanged: 383 Dev Track trees and
+473 on the authored Red Bull Ring scene. The 624-triangle Blender tree replaces
+the 376-triangle shape below only for the two pinned source identities. This
+document describes the retained procedural fallback and imported-track path;
+Red Bull Ring's generic path has 474 trees before authored roof exclusions.
+
 `laptrix.spruce.v1` replaces the uniform scenery cones with an original spruce
 bough on static branch cards and a tapered trunk. Both circuits retain their
 existing contextual candidate positions. The Blender Red Bull Ring layer reserves
@@ -24,8 +33,9 @@ bytes (89.3 KiB), below its 128 KiB limit. `-- --check` compares a local re-expo
 with the checked-in file; encoder byte identity across operating systems is not
 assumed. Normal CI validates both committed hashes, dimensions, RGBA/alpha flags,
 provenance paths and geometry parameters without requiring an installed browser.
-Only the WebP is imported by the viewer; the original PNG and prompt do not ship
-in the browser bundle. A future re-export must update the manifest hash after QA.
+The fallback viewer imports only the WebP; the authored tree embeds the separately
+pinned 512² PNG in its GLB. The original full-resolution PNG and prompt do not
+ship in the browser bundle. A future re-export must update the manifest hash after QA.
 
 ## Shape, placement and lighting
 

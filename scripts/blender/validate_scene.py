@@ -6,6 +6,7 @@ from pathlib import Path
 import bpy
 import numpy as np
 from contract import owned_path, read_json, to_runtime, validate_source_context
+from cutout_material import validate_cutout
 from mathutils import Matrix
 from regional_geometry import validate_foreground
 from regional_source import validate_regional_properties
@@ -99,6 +100,8 @@ def validate_scene(config):
                 ground[landscape["material"]] = config["groundMaterials"]["grass"]
             for polygon in mesh.polygons:
                 mat = mesh.materials[polygon.material_index]
+                if mat.name in config.get("cutoutMaterials", {}) and not mesh.uv_layers.active:
+                    raise ValueError("Retain editable cutout UV coordinates")
                 if mat.name not in ground:
                     continue
                 tile = ground[mat.name]["tileMetres"]
@@ -121,6 +124,8 @@ def validate_scene(config):
     if len(materials) > config["maxMaterials"]:
         raise ValueError("Material budget exceeded")
     images = set()
+    if not set(config.get("cutoutMaterials", {})).issubset({m.name for m in materials}):
+        raise ValueError("Retain all declared cutout materials")
     allowed_nodes = {
         "ShaderNodeOutputMaterial",
         "ShaderNodeBsdfPrincipled",
@@ -131,14 +136,20 @@ def validate_scene(config):
         "ShaderNodeRGB",
         "ShaderNodeVertexColor",
         "ShaderNodeMix",
+        "ShaderNodeMath",
     }
     for material in materials:
         if not material.use_nodes or material.animation_data:
             raise ValueError(f"{material.name}: use static web-compatible Principled materials")
+        cutout = config.get("cutoutMaterials", {}).get(material.name)
+        if cutout:
+            validate_cutout(material, cutout)
         shader_count = 0
         for node in material.node_tree.nodes:
             if node.bl_idname not in allowed_nodes:
                 raise ValueError(f"{material.name}: bake or translate unsupported node {node.bl_idname}")
+            if node.bl_idname == "ShaderNodeMath" and not cutout:
+                raise ValueError("Math shaders are limited to the declared image-alpha cutout")
             if node.bl_idname in {"ShaderNodeVertexColor", "ShaderNodeMix"}:
                 if not landscape or material.name != landscape["material"]:
                     raise ValueError("Vertex-color mixing is limited to the declared landscape material")

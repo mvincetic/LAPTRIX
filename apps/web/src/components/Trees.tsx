@@ -5,12 +5,14 @@ import {
   ConeGeometry,
   CylinderGeometry,
   DoubleSide,
+  MeshStandardMaterial,
   Object3D,
   type InstancedMesh,
   type Texture,
 } from "three";
 import { spruceCrown } from "../foliage-geometry";
 import { loadFoliageTexture } from "../foliage-texture";
+import { loadSpruceAsset, type SpruceTemplate } from "../spruce-asset";
 import spruce from "../../../../assets/environment/spruce.json";
 import {
   visibleTreeIndices,
@@ -20,9 +22,11 @@ import {
 export function Trees({
   positions,
   exclusions,
+  authored = false,
 }: {
   positions: [number, number, number][];
   exclusions?: GroundFootprint[];
+  authored?: boolean;
 }) {
   const visible = useMemo(
     () => visibleTreeIndices(positions, exclusions),
@@ -31,20 +35,66 @@ export function Trees({
   const invalidate = useThree((state) => state.invalidate),
     crownRef = useRef<InstancedMesh>(null),
     trunkRef = useRef<InstancedMesh>(null),
-    [texture, setTexture] = useState<Texture | null>(null);
+    [detail, setDetail] = useState<{
+      authored: boolean;
+      template: SpruceTemplate | null;
+      texture: Texture;
+    } | null>(null);
+  const current = detail?.authored === authored ? detail : null,
+    texture = current?.texture ?? null,
+    template = current?.template ?? null;
   const shapes = useMemo(
     () => ({
-      crown: spruceCrown(),
+      crown: template?.crown.geometry.clone() ?? spruceCrown(),
       fallback: new ConeGeometry(1, 1, 9),
-      trunk: new CylinderGeometry(spruce.trunkTipRatio, 1, 1, 7),
+      trunk:
+        template?.trunk.geometry.clone() ??
+        new CylinderGeometry(spruce.trunkTipRatio, 1, 1, 7),
     }),
-    [],
+    [template],
+  );
+  const materials = useMemo(
+    () => ({
+      crown:
+        template?.crown.material.clone() ??
+        new MeshStandardMaterial({
+          map: texture,
+          color: texture ? "#ffffff" : "#819780",
+          vertexColors: Boolean(texture),
+          alphaTest: texture ? spruce.alphaTest : 0,
+          side: DoubleSide,
+          forceSinglePass: true,
+          roughness: 1,
+        }),
+      trunk:
+        template?.trunk.material.clone() ??
+        new MeshStandardMaterial({ color: "#827b6b", roughness: 1 }),
+    }),
+    [template, texture],
   );
   useEffect(() => {
     let active = true;
-    loadFoliageTexture()
-      .then((map) => {
-        if (active) setTexture(map);
+    (async () => {
+      if (authored) {
+        try {
+          const asset = await loadSpruceAsset();
+          return {
+            authored,
+            template: asset,
+            texture: asset.crown.material.map!,
+          };
+        } catch (error) {
+          if (active)
+            console.warn(
+              "Authored tree detail could not load. Using original foliage; toggle Environment to retry.",
+              error,
+            );
+        }
+      }
+      return { authored, template: null, texture: await loadFoliageTexture() };
+    })()
+      .then((loaded) => {
+        if (active) setDetail(loaded);
       })
       .catch((error) => {
         if (active)
@@ -56,7 +106,7 @@ export function Trees({
     return () => {
       active = false;
     };
-  }, []);
+  }, [authored]);
   useLayoutEffect(() => {
     const object = new Object3D(),
       tint = new Color(),
@@ -99,7 +149,13 @@ export function Trees({
       mesh.computeBoundingSphere();
     }
     invalidate();
-  }, [positions, visible, texture, invalidate]);
+  }, [positions, visible, texture, template, invalidate]);
+  useEffect(
+    () => () => {
+      Object.values(materials).forEach((material) => material.dispose());
+    },
+    [materials],
+  );
   useEffect(
     () => () => {
       Object.values(shapes).forEach((shape) => shape.dispose());
@@ -113,27 +169,15 @@ export function Trees({
         name="context-tree-crowns"
         args={[
           texture ? shapes.crown : shapes.fallback,
-          undefined,
+          materials.crown,
           visible.length,
         ]}
-      >
-        <meshStandardMaterial
-          map={texture}
-          color={texture ? "#ffffff" : "#819780"}
-          vertexColors={Boolean(texture)}
-          alphaTest={texture ? spruce.alphaTest : 0}
-          side={DoubleSide}
-          forceSinglePass
-          roughness={1}
-        />
-      </instancedMesh>
+      />
       <instancedMesh
         ref={trunkRef}
         name="context-tree-trunks"
-        args={[shapes.trunk, undefined, visible.length]}
-      >
-        <meshStandardMaterial color="#827b6b" roughness={1} />
-      </instancedMesh>
+        args={[shapes.trunk, materials.trunk, visible.length]}
+      />
     </group>
   );
 }
