@@ -1,5 +1,34 @@
 # Continuous integration
 
+The [continuous-turning run](https://github.com/mvincetic/LAPTRIX/actions/runs/35616609107)
+at `f8ab1ab` passes six of eight jobs. Core checks, all five Blender exports,
+the new rendered-motion cases and the separated daylight journeys pass. The
+remaining failures are the narrow GT-brake journey and one production fullscreen
+journey. The complete local production run passes all 42 cases in 13.7 minutes.
+
+The GT trace shows about 12.5 seconds in browser setup, successful native brake,
+resource, camera and playback assertions, then a final export beyond the test's
+minute. The unmodified test journeys pass locally with the camera candidate in
+35.6/41.7 seconds. The
+follow-up partitions the four-state camera matrix into coast/peak and
+interpolation/return journeys on each circuit. Both retain the full four-point
+seek history and resource identity checks; live playback remains once per
+circuit. Native current/reference demand, pending project inputs, export and
+zero-extra-solve assertions are retained. Test timeouts remain 60 seconds.
+
+The production trace spends 35.7 seconds creating the browser context before the
+first page action. Its fullscreen-exit poll then reaches the minute deadline;
+the whole production job takes 23.2 minutes against the 25-minute job limit.
+The cause of that context delay is not established as an application defect.
+Production now runs in two isolated shards to shorten the critical path and each
+browser process's workload. Local discovery verifies disjoint 22/20-case sets
+covering exactly the same 42 cases. Six development shards remain; job and test
+deadlines are unchanged, with the existing 20-minute browser-run ceiling also
+applied to each production shard. There are nine jobs including Blender.
+The exact-revision follow-up is pending; original failures and traces remain
+under `artifacts/motion-continuity/`. Camera refinement is independently documented
+in CAMERA_SPEED_STUDY.md.
+
 The [Blender vegetation run](https://github.com/mvincetic/LAPTRIX/actions/runs/35210739649)
 at `2fc50a8` passes seven jobs, including production and all five Blender exports.
 One Red Bull Ring daylight journey reaches its unchanged 60-second deadline.
