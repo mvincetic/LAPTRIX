@@ -25,9 +25,10 @@ browser process's workload. Local discovery verifies disjoint 22/20-case sets
 covering exactly the same 42 cases. Six development shards remain; job and test
 deadlines are unchanged, with the existing 20-minute browser-run ceiling also
 applied to each production shard. There are nine jobs including Blender.
-The exact-revision follow-up is pending; original failures and traces remain
-under `artifacts/motion-continuity/`. Camera refinement is independently documented
-in CAMERA_SPEED_STUDY.md.
+The focused CI follow-up is `97eed11`; camera refinement is documented separately
+in CAMERA_SPEED_STUDY.md. Check the exact pushed revision in the
+[working-branch runs](https://github.com/mvincetic/LAPTRIX/actions?query=branch%3Acodex%2Fautonomous-mvp).
+Original failures and traces remain under `artifacts/motion-continuity/`.
 
 The [Blender vegetation run](https://github.com/mvincetic/LAPTRIX/actions/runs/35210739649)
 at `2fc50a8` passes seven jobs, including production and all five Blender exports.

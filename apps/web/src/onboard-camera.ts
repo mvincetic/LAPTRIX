@@ -3,7 +3,7 @@ import { ghostPose } from "../../../packages/telemetry";
 import type { Vec3 } from "../../../packages/track-engine";
 import { VEHICLE_SURFACE_LIFT } from "./chase-camera";
 
-export const ONBOARD_FOV = 60;
+export const ONBOARD_FOV = 66;
 export const ONBOARD_NEAR = 0.08;
 
 /** Original visual mounts, independent of drivetrain/solver definitions. */

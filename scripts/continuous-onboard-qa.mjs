@@ -106,7 +106,7 @@ try {
             if (
               mountError > 1e-7 ||
               horizonError > 1e-10 ||
-              camera.fov !== 60 ||
+              camera.fov !== 66 ||
               camera.near !== 0.08
             ) {
               if (stats.bad.length < 5)

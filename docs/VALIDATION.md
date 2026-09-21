@@ -6,7 +6,15 @@ and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
 
-The continuous turn-in candidate passes the full core gate: 360 TypeScript /
+The lower/closer camera candidate passes the full core gate: 360 TypeScript /
+178 Python tests (46.56 seconds), asset/context validation, lint/types and build
+(870 ms). Seventeen affected development journeys pass in 7.5 minutes. The
+72-state / 24-Play study and 24-state / eight-Play integrated comparison retain
+exact authoritative lap hashes and projected vehicle bounds. Four complete
+portrait-fullscreen laps inspect another 19,728 frames without clipping or runtime
+errors. CAMERA_SPEED_STUDY.md and CI.md link exact-revision remote results.
+
+The continuous turn-in fix passes the full core gate: 360 TypeScript /
 178 Python tests (46.05 seconds), lint/types, eleven asset packages, source-context
 reproduction and build (3.22 seconds). Six new analytical cases protect smooth
 orientation, steering bounds, exact telemetry and seek/finish behavior. Native
@@ -15,8 +23,10 @@ unchanged regular clock advance and about 60 fps on the identified local GPU.
 Nineteen affected development journeys pass, including the two new rendered
 motion regressions and the separated daylight remount journey. Four complete
 portrait-fullscreen laps inspect 19,728 native-GPU frames with no cropped body
-bounds or runtime errors. Production-browser acceptance and the daylight CI follow-up remain in progress;
-see MOTION_CONTINUITY.md and CI.md.
+bounds or runtime errors. All 42 production cases pass in one uninterrupted
+13.7-minute run. The fix is pushed as `f8ab1ab`; its remote run passes six of eight
+jobs, including the new motion and repaired daylight cases. Two further deadline
+failures and their follow-ups are recorded in CI.md. See MOTION_CONTINUITY.md.
 
 The shared Blender spruce passes the complete local gate: 354 TypeScript / 178
 Python tests (46.70 seconds), lint/types, eleven asset packages, source-context

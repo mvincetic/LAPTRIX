@@ -154,7 +154,7 @@ try {
             ...metrics,
             errors: [...errors],
           });
-          expect(metrics.fov).toBe(60);
+          expect(metrics.fov).toBe(66);
           expect(metrics.treeBatches).toBe(2);
           expect(metrics.treeBoundOverflow).toBeLessThan(0.001);
           expect(metrics.near).toBe(0.08);

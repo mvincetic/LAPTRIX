@@ -167,7 +167,7 @@ no secondary state, persistence field or input-to-simulation path is introduced.
 with a fixed field of view and no history-dependent smoothing. Below canvas aspect
 0.9 it retreats on the same view ray to retain portrait fullscreen car clearance.
 `onboard-camera.ts` applies an original roof/roll-hoop mount in the exact yaw/pitch
-frame used by the current vehicle. Its fixed 60-degree field of view and 8 cm near
+frame used by the current vehicle. Its fixed 66-degree field of view and 8 cm near
 plane retain close bodywork without roll, damping history or a separate clock.
 Camera mode, Reset and aspect changes keep the same mounted pose; overview/chase
 restore their own projection settings. Driving camera choices reveal the current

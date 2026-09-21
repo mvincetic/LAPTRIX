@@ -150,7 +150,7 @@ try {
             })
             .toBeLessThan(1e-8);
           expect(pose.scale).toEqual([1, 1, 1]);
-          expect(pose.fov).toBe(58);
+          expect(pose.fov).toBe(64);
           expect(pose.wheels).toHaveLength(4);
           for (const wheel of pose.wheels) {
             expect(wheel.spin).toBeCloseTo(

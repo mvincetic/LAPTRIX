@@ -2,7 +2,7 @@ import type { Lap, Vehicle } from "../../../packages/shared/schema";
 import { interpolate } from "../../../packages/telemetry";
 import type { Vec3 } from "../../../packages/track-engine";
 
-export const CHASE_FOV = 58;
+export const CHASE_FOV = 64;
 export const ROAD_SURFACE_LIFT = 0.55;
 export const VEHICLE_SURFACE_LIFT = ROAD_SURFACE_LIFT + 0.03;
 
@@ -17,9 +17,9 @@ export function chaseCameraPose(
     throw new Error("Chase camera aspect must be finite and positive.");
   const current = interpolate(lap.samples, time);
   const wheelbase = vehicle?.wheelbase ?? lap.vehicle?.wheelbase ?? 3.6;
-  const follow = Math.min(4.5 + wheelbase * 1.3, lap.length * 0.08);
+  const follow = Math.min(4 + wheelbase * 1.2, lap.length * 0.08);
   const ahead = Math.min(8 + current.speed * 0.18, lap.length * 0.08);
-  const height = 1.7 + wheelbase * 0.25;
+  const height = 1.25 + wheelbase * 0.22;
   const wrap = (distance: number) =>
     ((distance % lap.length) + lap.length) % lap.length;
   const rear = interpolate(
@@ -34,7 +34,7 @@ export function chaseCameraPose(
   );
   const position: Vec3 = [
     rear.x,
-    Math.max(current.y + height, rear.y + 1.9) + VEHICLE_SURFACE_LIFT,
+    Math.max(current.y + height, rear.y + 1.5) + VEHICLE_SURFACE_LIFT,
     rear.z,
   ];
   // A full look-ahead target can point past a hairpin and crop the car on phones.

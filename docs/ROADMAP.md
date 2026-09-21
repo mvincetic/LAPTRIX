@@ -14,6 +14,17 @@ prepared camera/speed study, with implementation, visual QA, tests, documentatio
 clean commits and working-branch pushes. This resumes the earlier usage-saving
 pause. Preserve both circuits; do not merge main or expand the solver.
 
+The turning repair is pushed as `f8ab1ab`, with 42 local production cases green.
+Its remote run passes six of eight jobs, including both new motion cases and
+the daylight repair; CI.md records the two subsequent deadline failures and
+bounded follow-ups. The next camera milestone is already integrated: a lower,
+closer 64° Chase and fixed 66° Onboard, selected from 72 matched states and 24
+actual Play sequences. Its core gate and exact prototype/integration comparison
+pass. Seventeen affected browser journeys and four full portrait-fullscreen laps
+also pass. Keep the camera and CI follow-ups as focused commits; the nine-job
+workflow verifies each pushed revision. The current result is linked from
+CAMERA_SPEED_STUDY.md and CI.md. Broader scenery remains outside this bounded repair.
+
 ## Blender presentation phase — 2026-09-15
 
 The user has resumed autonomous work with a higher visual quality bar. Blender

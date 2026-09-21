@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-21 — Select a lower, closer camera with modest fixed FOV expansion
+
+A matched three-variant browser study keeps native laps and the shared clock
+unchanged. Reject a wider-only Chase because it reduces projected car size by
+11.3%. Pair 64° Chase with lower/closer positioning to retain its width within
+roughly 4% while showing more lateral road context. Use 66° Onboard with the
+original physical mounts. Keep deterministic seeking, target blend and portrait
+retreat; do not add animated zoom or artificial acceleration. CAMERA_SPEED_STUDY.md
+records selection, exact parameters, sampled ground clearance and acceptance.
+
 ## 2026-09-21 — Derive continuous vehicle frames from native distance samples
 
 The fixed 0.15-second forward chord produces alternating held and abrupt heading

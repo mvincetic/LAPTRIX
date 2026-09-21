@@ -1,5 +1,19 @@
 # Product presentation milestones
 
+## Camera scale and road context — 2026-09-21
+
+The selected camera refinement pairs wider fixed fields of view with a lower,
+closer Chase position. The 72-state / 24-Play comparison rejects widening alone,
+which shrinks the car by 11.3%; the selected Chase preserves projected width
+within roughly 4% and retains at least 2.074 m road clearance in the sampled
+slice. The actual integrated application matches all 24 selected camera and
+vehicle projections exactly and passes eight further Play sequences without
+extra solves or runtime errors. The complete core gate passes 360 TypeScript /
+178 Python tests. Seventeen affected development journeys pass in 7.5 minutes;
+four complete portrait-fullscreen laps inspect 19,728 frames with no clipped
+vehicle bounds or runtime errors. Exact-revision CI remains the branch's release gate.
+See CAMERA_SPEED_STUDY.md and CI.md.
+
 ## Continuous turn-in — 2026-09-21
 
 The fixed-time look-ahead made the vehicle alternate between held heading and
@@ -11,8 +25,10 @@ cover both cars/tracks and desktop/narrow driving views; full-lap numerical
 measurements reduce peak sampled yaw acceleration by about 95–97%. The full core
 gate passes 360 TypeScript / 178 Python tests, asset/context checks and build.
 Nineteen affected development journeys and four full portrait-fullscreen laps
-pass; 19,728 native-GPU frames retain complete vehicle bounds. Production-browser
-and remote acceptance remain in progress. See
+pass; 19,728 native-GPU frames retain complete vehicle bounds. All 42 production
+cases pass in 13.7 minutes. The fix is pushed as `f8ab1ab`; six of eight remote
+jobs pass, including the motion and daylight cases. CI.md records the remaining
+deadline follow-ups. See
 MOTION_CONTINUITY.md. Camera height/distance/FOV review follows this correctness fix.
 
 ## Original Blender vegetation — 2026-09-16

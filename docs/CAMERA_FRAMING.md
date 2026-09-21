@@ -1,5 +1,9 @@
 # Source-scaled camera framing
 
+The 2026-09-21 camera study selects the lower/closer 64° Chase and 66° Onboard
+settings documented below. See CAMERA_SPEED_STUDY.md for matched native-lap
+comparisons, sampled ground clearance and the current acceptance state.
+
 ## Playback entry
 
 The initial paused workspace retains the whole-circuit engineering overview.
@@ -27,7 +31,7 @@ when necessary to retain 0.22 m above the tyres. These are original visualizatio
 mounts for the procedural bodywork, not surveyed camera or driver eye positions.
 
 The forward target is 30 m along the same yaw/pitch frame. World up prevents roll;
-road pitch remains perceptible. A fixed 60-degree vertical field of view and 0.08 m
+road pitch remains perceptible. A fixed 66-degree vertical field of view and 0.08 m
 near plane show bodywork below the forward road sightline. Aspect changes preserve
 the physical mount. There is no animated zoom, smoothing history, independent
 animation clock or new physics. Seeking and Reset reproduce the same pose, and
@@ -149,13 +153,13 @@ findings are retained locally in ignored `artifacts/`.
 
 The follow camera now samples the canonical racing line at a physical distance
 behind the car, instead of placing it 50 m behind the instantaneous heading.
-Follow distance is `4.5 + 1.3 * wheelbase` metres; the look-ahead sample is
+Follow distance is `4 + 1.2 * wheelbase` metres; the look-ahead sample is
 `8 + 0.18 * speed` metres ahead (speed in m/s). Both distances are capped at 8% of
 lap length and wrap over the closed source. The target blends 12% towards that
 sample from the car, keeping tight hairpins from cropping it on narrow screens.
-Base camera height is `1.7 + 0.25 * wheelbase` above the current
-sample, with at least 1.9 m clearance above its sampled rear position. The fixed
-58-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
+Base camera height is `1.25 + 0.22 * wheelbase` above the current
+sample, with at least 1.5 m clearance above its sampled rear position. The fixed
+64-degree field of view and 0.2 m near plane retain the vehicle and upcoming road
 in phone and landscape views. Overview modes restore their 45-degree fit.
 
 With the GT this brings the follow distance from 14.914 m to 7.6941 m and the

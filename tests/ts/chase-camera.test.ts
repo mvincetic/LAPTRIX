@@ -43,9 +43,9 @@ describe("deterministic telemetry chase camera", () => {
     const lap = circle(),
       before = structuredClone(lap);
     const pose = chaseCameraPose(lap, 1.75);
-    expect(pose.position[0]).toBeCloseTo(100 * Math.sin((35 - 9.18) / 100), 2);
-    expect(pose.position[2]).toBeCloseTo(100 * Math.cos((35 - 9.18) / 100), 2);
-    expect(pose.position[1]).toBeCloseTo(2.6 + VEHICLE_SURFACE_LIFT, 12);
+    expect(pose.position[0]).toBeCloseTo(100 * Math.sin((35 - 8.32) / 100), 2);
+    expect(pose.position[2]).toBeCloseTo(100 * Math.cos((35 - 8.32) / 100), 2);
+    expect(pose.position[1]).toBeCloseTo(2.042 + VEHICLE_SURFACE_LIFT, 12);
     expect(pose.target[0]).toBeCloseTo(
       88 * Math.sin(35 / 100) + 12 * Math.sin((35 + 11.6) / 100),
       2,

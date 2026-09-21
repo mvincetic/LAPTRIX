@@ -81,8 +81,11 @@ Four complete native-GPU 1× laps in 390 px portrait fullscreen inspect 19,728
 presented frames across both cars and circuits. Conservative body bounds remain
 inside the frustum throughout (largest horizontal normalized bound 0.803), with
 no runtime errors. Finish and widest-projection captures are retained under
-`artifacts/motion-continuity-chase-*`. Production-browser and remote acceptance
-remain in progress.
+`artifacts/motion-continuity-chase-*`. Both focused Red Bull Ring rig inspections
+also pass. All 42 production-browser cases pass in one uninterrupted 13.7-minute
+run. The fix is committed and pushed as `f8ab1ab`. Its remote run passes six of
+eight jobs, including both motion regressions and the daylight follow-up. CI.md
+records the GT-brake/fullscreen deadline failures and their bounded follow-ups.
 
 ## Remaining limits and next step
 
