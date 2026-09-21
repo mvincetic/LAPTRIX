@@ -17,6 +17,10 @@ including fullscreen. These are view preferences, not saved project or lap data.
 ## Vehicle-mounted onboard — 2026-09-11
 
 Onboard uses the current vehicle's exact `ghostPose` frame and source-metre scale.
+Since 2026-09-21, that frame uses continuous distance-based tangent interpolation
+instead of the 0.15-second forward chord. This removes the measured held-then-fast
+turning in sparse corners while preserving the mount, source position and clock.
+See MOTION_CONTINUITY.md for before/after evidence and its remaining limits.
 The Formula mount sits 1.18 m above its body origin and 0.45 m behind it; the GT
 roof mount sits 1.48 m up and 0.12 m behind. Imported wheel radii raise the mount
 when necessary to retain 0.22 m above the tyres. These are original visualization
@@ -194,4 +198,5 @@ widest-projection screenshots under ignored `artifacts/`; an optional
 `PRESENTATION_QA_PREFIX` preserves separate runs. It uses the existing development
 renderer read-only, stopping playback on an out-of-frustum bound. World boxes
 are conservative; the separate pixel regression establishes actual car clearance.
-Frame counts depend on the software renderer and do not establish hardware FPS.
+The default renderer is SwiftShader; `QA_GPU=hardware` selects native GPU rendering
+for sustained local motion review. Frame counts alone do not establish hardware FPS.

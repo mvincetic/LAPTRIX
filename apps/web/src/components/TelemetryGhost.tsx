@@ -62,7 +62,7 @@ export function TelemetryGhost({
         wheel.rotation.x =
           pose.sample.distance / (vehicle?.wheelRadius ?? 0.34);
     for (const front of motion.current.front)
-      if (front) front.rotation.y = pose.sample.steering;
+      if (front) front.rotation.y = pose.steering;
     for (const lamp of motion.current.brakeLights ?? [])
       if (lamp) lamp.emissiveIntensity = brakeLightIntensity(pose.sample.brake);
   }, -0.5);

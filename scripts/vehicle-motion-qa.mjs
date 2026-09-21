@@ -85,7 +85,16 @@ try {
           const blend =
             b.time === a.time ? 0 : (time - a.time) / (b.time - a.time);
           const distance = a.distance + (b.distance - a.distance) * blend;
-          const steering = a.steering + (b.steering - a.steering) * blend;
+          // The rig binds to the continuous visual frame; numerical channels
+          // remain separately covered by interpolation and export tests.
+          const steering = await page.evaluate(
+            async ({ lap, time }) => {
+              const { ghostPose } =
+                await import("/packages/telemetry/index.ts");
+              return ghostPose(lap, time).steering;
+            },
+            { lap, time },
+          );
           let pose;
           await expect
             .poll(async () => {

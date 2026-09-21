@@ -1,10 +1,22 @@
-# MVP validation — through 2026-09-16
+# MVP validation — through 2026-09-21
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
 and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
+
+The continuous turn-in candidate passes the full core gate: 360 TypeScript /
+178 Python tests (46.05 seconds), lint/types, eleven asset packages, source-context
+reproduction and build (3.22 seconds). Six new analytical cases protect smooth
+orientation, steering bounds, exact telemetry and seek/finish behavior. Native
+browser recordings retain twelve actual Play sequences before and after, with
+unchanged regular clock advance and about 60 fps on the identified local GPU.
+Nineteen affected development journeys pass, including the two new rendered
+motion regressions and the separated daylight remount journey. Four complete
+portrait-fullscreen laps inspect 19,728 native-GPU frames with no cropped body
+bounds or runtime errors. Production-browser acceptance and the daylight CI follow-up remain in progress;
+see MOTION_CONTINUITY.md and CI.md.
 
 The shared Blender spruce passes the complete local gate: 354 TypeScript / 178
 Python tests (46.70 seconds), lint/types, eleven asset packages, source-context

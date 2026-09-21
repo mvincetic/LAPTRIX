@@ -138,7 +138,10 @@ Four wheel centres remain at ±half wheelbase, at the profile's wheel radius abo
 the local contact plane. Their lateral centres preserve the original overall tyre
 envelope. Rounded tyre shoulders retain exact radius and width; they do not alter
 solver rolling radius. The existing telemetry distance/radius rotates the spin
-groups and telemetry steering rotates the two front pivots. There is no second
+groups and continuously interpolated telemetry steering rotates the two front
+pivots. Native steering knots remain exact and intervening angles do not overshoot
+their neighbouring values; numerical readouts/exports are unchanged. See
+MOTION_CONTINUITY.md for the visual-frame contract. There is no second
 clock, suspension simulation or independent animation timeline.
 
 ## Materials and resources

@@ -1,5 +1,21 @@
 # Continuous integration
 
+The [Blender vegetation run](https://github.com/mvincetic/LAPTRIX/actions/runs/35210739649)
+at `2fc50a8` passes seven jobs, including production and all five Blender exports.
+One Red Bull Ring daylight journey reaches its unchanged 60-second deadline.
+The trace shows successful camera, resource, playback and visibility assertions;
+the final project download straddles the deadline, after approximately 5.9 seconds
+of setup and several multi-second UI actions. The trace is retained under
+`artifacts/motion-continuity/`. Two unchanged local repetitions pass in 38.8 and
+41.1 seconds; the runner-only timeout is not reproduced locally.
+
+The focused follow-up separates Environment unmount/remount into its own journey,
+retaining both cars, shadow refresh/reuse, pending inputs, complete project export,
+cursor and zero-extra-solve assertions. Camera, seek, playback and car-visibility
+checks remain in the original journey. No test deadline or rendering budget is
+increased. This accompanies the independently measured vehicle turn-in repair;
+exact-revision remote acceptance remains pending. See MOTION_CONTINUITY.md.
+
 The [GT capture-stabilization run](https://github.com/mvincetic/LAPTRIX/actions/runs/35145598853)
 at `6350896` is **fully green**: all eight jobs pass, including 342 TypeScript /
 178 Python tests (34.46 seconds), all 190 development cases, forty production

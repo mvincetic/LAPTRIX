@@ -157,31 +157,6 @@ for (const [track, vehicle, width] of [
       expect(next.textures).toBeLessThanOrEqual(initial.textures);
       expect(await cursor.getAttribute("value")).toBe("5");
     }
-    if (track === "red-bull-ring") {
-      await page
-        .getByRole("tab", { name: "Analysis Layers", exact: true })
-        .click();
-      const environment = page.getByRole("checkbox", {
-        name: "Environment",
-        exact: true,
-      });
-      const mounted = await lighting(page);
-      await environment.uncheck();
-      await expect
-        .poll(async () => (await lighting(page)).shadowPasses)
-        .toBeGreaterThan(mounted.shadowPasses);
-      const removed = await lighting(page);
-      expect(removed.scenery).toBe(false);
-      await environment.check();
-      await expect
-        .poll(async () => (await lighting(page)).shadowPasses)
-        .toBeGreaterThan(removed.shadowPasses);
-      const restored = await lighting(page);
-      expect(restored.scenery).toBe(true);
-      expect(restored.map).toBe(mounted.map);
-      expect(restored.cars).toEqual(mounted.cars);
-      await page.getByRole("tab", { name: "Track View", exact: true }).click();
-    }
     for (const time of [20, 60, 5]) {
       const prior = await lighting(page);
       await cursor.fill(String(time));
@@ -244,6 +219,98 @@ for (const [track, vehicle, width] of [
     expect(solves).toBe(0);
     expect(errors).toEqual([]);
   });
+
+  if (track === "red-bull-ring") {
+    test("daylight scenery remount retains both cars, shadow resources and the paused project", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 1000 });
+      const errors: string[] = [];
+      page.on("pageerror", (error) => errors.push(error.message));
+      await page.goto("/");
+      await expect(page.getByTestId("lap-time")).toBeVisible();
+      await page
+        .getByRole("combobox", { name: "Track", exact: true })
+        .selectOption(track);
+      await expect(
+        page.getByRole("button", { name: "Run Simulation", exact: true }),
+      ).toBeEnabled();
+      await page
+        .getByRole("combobox", { name: "Car profile", exact: true })
+        .selectOption(vehicle);
+      await expect(
+        page.getByRole("button", { name: "Run Simulation", exact: true }),
+      ).toBeEnabled();
+      await expect(
+        page.getByRole("button", { name: "Inspect corner 1", exact: true }),
+      ).toBeVisible();
+      await page
+        .getByRole("button", { name: "Set reference", exact: true })
+        .click();
+      await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+      await page
+        .getByRole("checkbox", { name: "Show reference ghost", exact: true })
+        .check();
+      await page.getByRole("tab", { name: "Track View", exact: true }).click();
+      await page.getByRole("slider", { name: "Fuel load" }).fill("21");
+      const before = await project(page),
+        cursor = page.getByRole("slider", { name: "Viewer lap position" });
+      await expect
+        .poll(async () => {
+          const state = await lighting(page);
+          return (
+            state.cars.every((car) => car.premium) &&
+            (track !== "red-bull-ring" || state.scenery)
+          );
+        })
+        .toBe(true);
+      await expect.poll(async () => (await lighting(page)).map).toBeTruthy();
+      const beforeSeek = await lighting(page, true);
+      await cursor.fill("5");
+      // The DOM cursor can lead the next demanded frame. Measure camera-only work
+      // after the seek has actually refreshed the existing shadow map.
+      await expect
+        .poll(async () => (await lighting(page)).shadowPasses)
+        .toBeGreaterThan(beforeSeek.shadowPasses);
+
+      let solves = 0;
+      page.on("request", (request) => {
+        if (request.url().endsWith("/api/simulate")) solves++;
+      });
+      if (track === "red-bull-ring") {
+        await page
+          .getByRole("tab", { name: "Analysis Layers", exact: true })
+          .click();
+        const environment = page.getByRole("checkbox", {
+          name: "Environment",
+          exact: true,
+        });
+        const mounted = await lighting(page);
+        await environment.uncheck();
+        await expect
+          .poll(async () => (await lighting(page)).shadowPasses)
+          .toBeGreaterThan(mounted.shadowPasses);
+        const removed = await lighting(page);
+        expect(removed.scenery).toBe(false);
+        await environment.check();
+        await expect
+          .poll(async () => (await lighting(page)).shadowPasses)
+          .toBeGreaterThan(removed.shadowPasses);
+        const restored = await lighting(page);
+        expect(restored.scenery).toBe(true);
+        expect(restored.map).toBe(mounted.map);
+        expect(restored.cars).toEqual(mounted.cars);
+        await page
+          .getByRole("tab", { name: "Track View", exact: true })
+          .click();
+      }
+
+      expect(await cursor.getAttribute("value")).toBe("5");
+      expect(await project(page)).toEqual(before);
+      expect(solves).toBe(0);
+      expect(errors).toEqual([]);
+    });
+  }
 
   test(`daylight reanchors at zero clock time after source changes on ${track}`, async ({
     page,

@@ -5,6 +5,7 @@ import {
   type Reference,
   type Sample,
 } from "../shared/schema";
+import { motionFrame } from "./motion-frame";
 
 function interpolateValues(axis: number[], values: number[], at: number) {
   if (!Number.isFinite(at)) throw new Error("Alignment cursor must be finite");
@@ -269,17 +270,9 @@ export function ghostPose(
     throw new Error("Playback time must be finite");
   const time = Math.max(0, Math.min(lap.lapTime, elapsedTime));
   const sample = interpolate(lap.samples, time);
-  const next = interpolate(
-    lap.samples,
-    (time + Math.min(0.15, lap.lapTime / 4)) % lap.lapTime,
-  );
-  const dx = next.x - sample.x,
-    dy = next.y - sample.y,
-    dz = next.z - sample.z;
   return {
     sample,
-    yaw: Math.atan2(dx, dz),
-    pitch: -Math.atan2(dy, Math.hypot(dx, dz)),
+    ...motionFrame(lap.samples, sample.distance),
     finished: time >= lap.lapTime,
   };
 }

@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-21 — Derive continuous vehicle frames from native distance samples
+
+The fixed 0.15-second forward chord produces alternating held and abrupt heading
+changes in slow, sparsely sampled corners. Native browser recordings reproduce
+the defect with regular clock steps and about 60 fps. Replace it with neighbouring
+source tangents and shape-preserving cubic angle/steering interpolation in
+distance. Keep numerical interpolation and positions exact. Preserve native
+steering knots and avoid overshoot, frame-history damping or speed-dependent lag.
+The same function drives both bodies and Onboard mounting, including seeks and
+finished references. This is a visual-frame repair, not solver expansion.
+MOTION_CONTINUITY.md records measurements, regression contracts and limits.
+
 ## 2026-09-16 — Author a shared spruce while retaining source placement
 
 Replace the bundled circuits' flat procedural crown with original curved/crossed

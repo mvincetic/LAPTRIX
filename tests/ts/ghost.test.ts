@@ -70,7 +70,8 @@ describe("shared-clock ghost poses", () => {
     const pose = ghostPose(source, 1);
     expect([pose.sample.x, pose.sample.y, pose.sample.z]).toEqual([5, 1, 0]);
     expect(pose.yaw).toBeCloseTo(Math.PI / 2, 12);
-    expect(pose.pitch).toBeCloseTo(-Math.atan(0.2), 12);
+    // The sparse square's neighbouring tangents share its rising edge.
+    expect(pose.pitch).toBeCloseTo(-Math.atan(0.2 / Math.sqrt(2)), 12);
     expect(pose.finished).toBe(false);
     expect(source).toEqual(before);
     expect(() => ghostPose(source, NaN)).toThrow(/finite/);
@@ -97,7 +98,8 @@ describe("shared-clock ghost poses", () => {
     ]);
     expect(finish.finished).toBe(true);
     expect(ghostPose(reference, 13)).toEqual(finish);
-    expect(finish.yaw).toBeCloseTo(Math.PI / 2, 12);
+    expect(finish.yaw).toBeCloseTo((3 * Math.PI) / 4, 12);
+    expect(finish.yaw).toBeCloseTo(ghostPose(reference, 0).yaw, 12);
     clock.play(true);
     clock.advance(4);
     expect(clock.getSnapshot().time).toBe(1);

@@ -4,7 +4,10 @@ import { writeFile } from "node:fs/promises";
 // Read-only inspection of each presented development frame; no extra clock.
 const browser = await chromium.launch({
   headless: true,
-  args: ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
+  args:
+    process.env.QA_GPU === "hardware"
+      ? ["--enable-gpu", "--enable-webgl", "--ignore-gpu-blocklist"]
+      : ["--use-angle=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"],
 });
 const records = [];
 const fullscreen = process.argv.includes("--fullscreen");

@@ -1,5 +1,19 @@
 # Roadmap
 
+## Turn-in and camera presentation — 2026-09-21
+
+The user resumed work after reporting jerky, unnatural turn-in. First remove the
+measured orientation discontinuities from the 0.15-second forward-chord pose.
+The fix uses distance-based continuous body/steering interpolation while
+retaining every numerical telemetry sample, source position and the shared clock.
+Native before/after recordings and analytical checks show substantially smaller
+rotation spikes. The core gate, nineteen affected browser journeys and four full
+portrait-fullscreen laps pass. Verify production and the remote daylight follow-up;
+see MOTION_CONTINUITY.md and CI.md. Then proceed into the
+prepared camera/speed study, with implementation, visual QA, tests, documentation,
+clean commits and working-branch pushes. This resumes the earlier usage-saving
+pause. Preserve both circuits; do not merge main or expand the solver.
+
 ## Blender presentation phase — 2026-09-15
 
 The user has resumed autonomous work with a higher visual quality bar. Blender

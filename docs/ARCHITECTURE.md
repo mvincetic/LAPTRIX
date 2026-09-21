@@ -1,5 +1,12 @@
 # Architecture
 
+Vehicle orientation and visual steering use distance-derived, shape-preserving
+cubic frame curves in `packages/telemetry/motion-frame.ts`. Native numerical
+interpolation, positions and clock time remain unchanged. `ghostPose` supplies
+the same continuous frame to current/reference bodies and Onboard mounting;
+front-wheel groups use its separate visual steering channel. Weakly cached
+curves have no per-frame history. See MOTION_CONTINUITY.md.
+
 The optional shared spruce template loads for the exact Dev Track and Red Bull
 Ring source identities. `spruce-asset.ts` validates the bounded embedded PNG and
 GLB, then normalizes authored crown/trunk meshes for the existing instance bases.
@@ -169,7 +176,8 @@ the footer retains vehicle identity and all transports.
 VehiclePresentation
 contains original Formula/GT bodywork in metres. Its memoized geometry survives
 ordinary setup/viewer edits; TelemetryGhost updates wheel spin from travelled
-distance and front steering from the existing sample in the same pose callback.
+distance and front steering from the continuous visual frame in the same pose callback.
+Numerical steering readouts/exports retain ordinary telemetry interpolation.
 The road, racing line and tyre bases share explicit display offsets, avoiding
 the previous enlarged mesh and floating line. Overview dots are screen-space
 locators rather than enlarged vehicle geometry.

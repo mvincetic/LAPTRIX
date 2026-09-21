@@ -1,5 +1,20 @@
 # Product presentation milestones
 
+## Continuous turn-in — 2026-09-21
+
+The fixed-time look-ahead made the vehicle alternate between held heading and
+abrupt rotation on sparse slow corners. Distance-derived continuous orientation
+and visual steering remove those measured discontinuities while retaining native
+position, telemetry, steering samples, playback and reference timing. Onboard
+uses the same repaired body frame. Twelve native browser sequences per version
+cover both cars/tracks and desktop/narrow driving views; full-lap numerical
+measurements reduce peak sampled yaw acceleration by about 95–97%. The full core
+gate passes 360 TypeScript / 178 Python tests, asset/context checks and build.
+Nineteen affected development journeys and four full portrait-fullscreen laps
+pass; 19,728 native-GPU frames retain complete vehicle bounds. Production-browser
+and remote acceptance remain in progress. See
+MOTION_CONTINUITY.md. Camera height/distance/FOV review follows this correctness fix.
+
 ## Original Blender vegetation — 2026-09-16
 
 Both bundled circuits retain their exact tree placement while receiving original
