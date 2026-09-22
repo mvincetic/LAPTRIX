@@ -7,9 +7,11 @@ async function trees(page: Page) {
       t = "/node_modules/.vite/deps/three.js";
     const { _roots } = (await import(f)) as typeof import("@react-three/fiber");
     const { Matrix4, Sphere } = (await import(t)) as typeof import("three");
-    const { scene, gl } = _roots
-      .get(document.querySelector(".scene canvas") as HTMLCanvasElement)!
-      .store.getState();
+    const root = _roots.get(
+      document.querySelector(".scene canvas") as HTMLCanvasElement,
+    );
+    if (!root) return null;
+    const { scene, gl } = root.store.getState();
     const crowns = scene.getObjectByName("context-tree-crowns") as
         InstancedMesh | undefined,
       trunks = scene.getObjectByName("context-tree-trunks") as
@@ -33,6 +35,16 @@ async function trees(page: Page) {
     return {
       count: crowns.count,
       sceneryReady: !!scene.getObjectByName("RBR_SLICE_ROOT"),
+      devSceneryReady: [
+        "pylon-frame",
+        "pylon-face",
+        "pylon-blue",
+        "asset-foundations",
+      ].every(
+        (name) =>
+          (scene.getObjectByName(name) as InstancedMesh | undefined)?.count ===
+          2,
+      ),
       geometry: crowns.geometry.uuid,
       trunk: trunks.geometry.uuid,
       texture: map?.uuid,
@@ -57,6 +69,27 @@ async function settledScenery(page: Page, track: string) {
   await expect
     .poll(async () => (await trees(page))?.sceneryReady)
     .toBe(track === "red-bull-ring");
+  await expect
+    .poll(async () => (await trees(page))?.devSceneryReady)
+    .toBe(track === "ardennes-development");
+  // Mounting the async asset is not the same as uploading its geometry. Compare
+  // memory only after the complete scene has actually been drawn.
+  await page.evaluate(async () => {
+    const url = "/node_modules/.vite/deps/@react-three_fiber.js";
+    const { _roots, addAfterEffect } = (await import(
+      url
+    )) as typeof import("@react-three/fiber");
+    const root = _roots.get(
+      document.querySelector(".scene canvas") as HTMLCanvasElement,
+    )!;
+    await new Promise<void>((resolve) => {
+      const stop = addAfterEffect(() => {
+        stop();
+        resolve();
+      });
+      root.store.getState().invalidate();
+    });
+  });
 }
 
 for (const [track, width] of [
@@ -189,6 +222,7 @@ for (const [track, width] of [
       await environment.uncheck();
       await environment.check();
       await page.getByRole("tab", { name: "Track View", exact: true }).click();
+      await settledScenery(page, track);
       await expect.poll(async () => (await trees(page))?.triangles).toBe(544);
       await expect
         .poll(async () => (await trees(page))?.geometry)

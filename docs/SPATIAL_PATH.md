@@ -74,6 +74,12 @@ RTX 3060 Ti / ANGLE Direct3D11 recordings stay around 60 fps, with no repeated
 vehicle positions, runtime errors or additional simulation requests. These short
 recordings do not establish full-lap or low-end hardware performance.
 
+A separate full-lap portrait-fullscreen run subsequently checks 19,723 presented
+frames across all four vehicle/circuit combinations, with no clipped body bounds
+or runtime errors. Additional matched paused apex captures show the old polygon
+and the new continuous bend at the same clock time. Eight jobs accept the original
+commit on CI; CI.md records the remaining scenery-readiness test correction.
+
 | Circuit / car | Native / drawn vertices | Largest chord join, before / after | Maximum positional departure |
 | --- | ---: | ---: | ---: |
 | Red Bull Ring / Formula | 721 / 1,420 | 24.38° / 3.99° | 0.189 m |

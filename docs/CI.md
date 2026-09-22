@@ -1,5 +1,28 @@
 # Continuous integration
 
+The spatial-path commit `e00d241` passes eight jobs in
+[run 35706443868](https://github.com/mvincetic/LAPTRIX/actions/runs/35706443868)
+after repeating failed jobs on the unchanged revision. The initial aero reload,
+large-import camera and fullscreen deadlines pass on repeat and in seven local
+follow-up cases. The foliage resource assertion fails consistently on CI:
+its warmed Dev Track baseline counts 64 geometries, then 65 after Environment
+remount. Local inspection with GPU-registration diagnostics identifies a delayed
+Dev Track sign/foundation mount: the three sign geometries are already cached,
+while the new foundation adds one geometry after the premature snapshot.
+
+The test's scenery readiness helper previously checked only whether the Red Bull
+Ring root was present or absent. It now also waits for all three Dev Track sign
+parts and their two foundation instances, then a completed render before taking
+resource snapshots. The same synchronization follows remounts. Strict geometry
+and texture equality, three remount cycles, source/camera checks and all deadlines
+remain unchanged. Both local foliage journeys pass with this correction.
+A diagnostic run with deliberately delayed cached sign delivery demonstrates the
+gap: the old test can also pass at 64 geometries with no foundation mounted at
+all. The corrected test passes at 65 with the actual uploaded foundation present,
+including all three remounts. This delays optional scenery only in the diagnostic
+browser; application loading code is unchanged. Evidence is retained under
+`artifacts/foliage-probe*` alongside the original CI traces.
+
 The [camera/CI follow-up](https://github.com/mvincetic/LAPTRIX/actions/runs/35621594775)
 at `b2a4089` passes all nine jobs: 360 TypeScript / 178 Python tests,
 197 development and 42 production browser cases, plus all Blender reproduction

@@ -8,8 +8,10 @@ continuous interpolant through native samples, and adaptively tessellate its ben
 Both vehicles/cameras, cursor positions and comparison exports share the curve;
 retain native solver results, source tracks and the single clock. The local core
 gate, fourteen affected browser cases and 24 matched before/after Play sequences
-pass. The correction is ready for a focused working-branch commit and push;
-verify exact-revision CI through the link in CI.md. See SPATIAL_PATH.md. Broader solver/scenery work remains
+pass. The correction is pushed as `e00d241`; four full portrait laps also pass.
+Eight CI jobs pass after repeating the original deadline failures. Complete the
+documented scenery-readiness test correction and verify its exact revision through
+the link in CI.md. See SPATIAL_PATH.md. Broader solver/scenery work remains
 outside this focused correction; never merge main or rewrite history.
 
 ## Turn-in and camera presentation — 2026-09-21
