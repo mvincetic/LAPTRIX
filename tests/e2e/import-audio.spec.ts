@@ -14,7 +14,7 @@ test("valid and invalid custom track imports preserve a usable project", async (
   await expect(page.getByRole("alert")).toBeVisible();
   await expect(
     page.getByRole("combobox", { name: "Track", exact: true }),
-  ).toHaveValue(source.id);
+  ).toHaveValue("red-bull-ring");
   const imported = {
     ...source,
     id: "browser-imported",

@@ -121,10 +121,10 @@ for (const failedSolver of ["optimized", "centerline"]) {
     );
     await expect(
       page.getByRole("combobox", { name: "Track", exact: true }),
-    ).toHaveValue(source.id);
+    ).toHaveValue(before.track.id);
     await expect(
       page.getByRole("combobox", { name: "Track", exact: true }),
-    ).toHaveAccessibleDescription("Development");
+    ).toHaveAccessibleDescription("Real · approximate");
     await expect(
       page.getByRole("option", { name: crossing.name, exact: true }),
     ).toHaveCount(0);

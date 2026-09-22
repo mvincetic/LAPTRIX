@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import type { Lap, Sample } from "../../packages/shared/schema";
 import { formatTime } from "../../packages/telemetry";
 
@@ -56,6 +57,8 @@ async function readouts(
     );
   }
 }
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`native reference traces share physical positions, units and the current cursor at ${width}px`, async ({

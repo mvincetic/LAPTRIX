@@ -1,4 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("the built trackside asset recovers visibly without changing the engineering workspace", async ({
   page,

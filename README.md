@@ -49,7 +49,8 @@ the last completed result remains visible if a solve fails.
 ## What works
 
 - A validated, data-driven 720-sample circuit with width and elevation.
-- Preserved LAPTRIX Dev Track plus a separately selectable Red Bull Ring showcase.
+- Red Bull Ring is the default circuit for fresh workspaces; saved projects retain
+  their selected track. LAPTRIX Dev Track remains selectable.
 - Track selection groups development, real and imported circuits with visible source status.
 - Visible source attribution and portable licenses for the real-circuit reconstruction.
 - Procedural terrain, circuit ribbon, racing line, braking segments and markers.

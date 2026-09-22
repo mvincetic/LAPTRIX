@@ -58,7 +58,7 @@ for (const width of [1600, 390]) {
     await expect(panel).toContainText("Ready");
     await expect(panel).toHaveAttribute("aria-live", "off");
     await expect(page.locator(".track-caption strong")).toHaveText(
-      "LAPTRIX Dev Track",
+      "Red Bull Ring",
     );
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
     const before = await project(page),

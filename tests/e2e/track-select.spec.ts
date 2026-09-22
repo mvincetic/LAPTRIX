@@ -124,7 +124,7 @@ test("compact native-scrollbar header keeps branding clear with bundled and fall
     await expect(page.getByTestId("lap-time")).toHaveText(lap!);
     await expect(
       page.getByRole("combobox", { name: "Track", exact: true }),
-    ).toHaveAccessibleDescription("Development");
+    ).toHaveAccessibleDescription("Real · approximate");
     await expect(page.getByRole("alert")).toHaveCount(0);
   } finally {
     releaseCatalog();

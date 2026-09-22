@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import type { Lap } from "../../packages/shared/schema";
 
 async function exported(page: Page, action = "Export project") {
@@ -28,6 +29,8 @@ function legacyShape(lap: Lap) {
   }
   return legacy;
 }
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`load graphs compare real unequal grids without inventing legacy reference channels at ${width}px`, async ({

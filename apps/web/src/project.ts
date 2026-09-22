@@ -83,13 +83,21 @@ const savedProjectSchema = z.object({
   reference: z.unknown().optional(),
 });
 
+/** Prefer the showcase circuit independently of catalog ordering. */
+export function defaultTrack(catalog: Catalog) {
+  return (
+    catalog.tracks.find((track) => track.id === "red-bull-ring") ??
+    catalog.tracks[0]
+  );
+}
+
 /** Adapt local saves through the same collision/validation boundary as portable files. */
 export async function prepareSavedProject(value: unknown, catalog: Catalog) {
   const saved = savedProjectSchema.parse(value);
   const track =
     saved.customTrack ??
     catalog.tracks.find((item) => item.id === saved.trackId) ??
-    catalog.tracks[0];
+    defaultTrack(catalog);
   const vehicle =
     saved.customVehicle ??
     catalog.vehicles.find((item) => item.id === saved.vehicleId) ??

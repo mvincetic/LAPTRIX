@@ -45,7 +45,7 @@ import { Analysis } from "./components/Analysis";
 import { Telemetry } from "./components/Telemetry";
 import { useLapTools } from "./useLapTools";
 import { restoreReference } from "./reference";
-import { prepareProject, prepareSavedProject } from "./project";
+import { defaultTrack, prepareProject, prepareSavedProject } from "./project";
 import { prepareVehicleProfile } from "../../../packages/shared/vehicle-profile";
 import { AeroSweepDialog } from "./components/AeroSweepDialog";
 import { RenameProjectDialog } from "./components/RenameProjectDialog";
@@ -336,7 +336,7 @@ export function App() {
             prepared.vehicle.id,
             prepared.embeddedVehicle,
           );
-        const chosen = prepared?.track ?? parsed.tracks[0];
+        const chosen = prepared?.track ?? defaultTrack(parsed);
         const chosenVehicle = prepared?.vehicle.id ?? parsed.vehicles[0].id;
         const initialSetup = prepared?.setup ?? defaultSetup;
         const restoredReference = prepared?.reference ?? null;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import data from "../../data/tracks/ardennes-development.json";
+import showcase from "../../data/tracks/red-bull-ring.json";
 import formula from "../../data/vehicles/formula-development.json";
 import {
   catalogSchema,
@@ -8,6 +9,7 @@ import {
 } from "../../packages/shared/schema";
 import { trackFingerprint } from "../../packages/track-engine";
 import {
+  defaultTrack,
   prepareProject,
   prepareSavedProject,
 } from "../../apps/web/src/project";
@@ -24,6 +26,27 @@ const project = {
 };
 
 describe("portable project preparation", () => {
+  it("defaults to Red Bull Ring while retaining saved choices and supporting smaller catalogs", async () => {
+    const installed = catalogSchema.parse({
+      tracks: [data, showcase],
+      vehicles: [formula],
+    });
+    expect(defaultTrack(installed).id).toBe(showcase.id);
+    expect(
+      defaultTrack({ ...installed, tracks: [...installed.tracks].reverse() })
+        .id,
+    ).toBe(showcase.id);
+    expect(defaultTrack(catalog)).toBe(project.track);
+    for (const trackId of [undefined, "removed", data.id, showcase.id]) {
+      const restored = await prepareSavedProject(
+        { version: 1, trackId, setup: defaultSetup },
+        installed,
+      );
+      expect(restored.track.id).toBe(
+        trackId === data.id ? data.id : showcase.id,
+      );
+    }
+  });
   it("resolves the former development track label to the preserved catalog source", async () => {
     const previous = {
       ...project,

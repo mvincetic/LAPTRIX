@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { cornerDelta, signed } from "../../packages/telemetry";
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("resampling keeps source geometry and reference alignment through save and reload", async ({
   page,

@@ -21,7 +21,10 @@ sequence prioritizes presentation: visual polish, camera behavior, speed
 perception, track grounding, clearer playback/UI and higher-quality vehicles.
 The original circuit remains available as LAPTRIX Dev Track; Red Bull Ring
 is available alongside it as the first real showcase using documented reusable
-data. ROADMAP.md defines the implementation, verification and source requirements.
+data. New workspaces start on Red Bull Ring; valid saved projects retain their
+selected track, including LAPTRIX Dev Track and imported circuits. Missing saved
+track IDs fall back to Red Bull Ring. ROADMAP.md defines the implementation,
+verification and source requirements.
 
 The current product is local: the original development circuit, an approximate
 Red Bull Ring GP reconstruction, Formula

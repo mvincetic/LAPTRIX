@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { imageDifference } from "../fixtures/image-difference";
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("source-aligned scenery loads lazily, recovers after failure and preserves the paused workspace", async ({
   page,

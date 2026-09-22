@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import type { InstancedMesh } from "three";
 
 async function exportProject(page: Page) {
@@ -46,6 +47,8 @@ async function assets(page: Page) {
     );
   });
 }
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const [width, failFirst] of [
   [1600, false],

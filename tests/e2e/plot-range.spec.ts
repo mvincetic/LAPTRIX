@@ -1,4 +1,5 @@
 import { test, expect, type Locator } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { referenceGeometry } from "./reference-geometry";
 import type { Lap } from "../../packages/shared/schema";
 
@@ -22,6 +23,8 @@ function timeAt(lap: Lap, distance: number) {
   const fraction = (distance - a.distance) / (b.distance - a.distance);
   return a.time * (1 - fraction) + b.time * fraction;
 }
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`sector inspection clips existing curves and retains the shared workspace at ${width}px`, async ({

@@ -1,4 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("lap-time refinement reports its real gain, persists and drives playback", async ({
   page,

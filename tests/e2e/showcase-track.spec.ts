@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
 import source from "../../data/tracks/red-bull-ring.json" with { type: "json" };
+import development from "../../data/tracks/ardennes-development.json" with { type: "json" };
 
 async function readDownload(page: Page, action: () => Promise<void>) {
   const pending = page.waitForEvent("download");
@@ -40,7 +41,7 @@ async function exportProject(page: Page) {
 }
 
 for (const width of [1600, 390]) {
-  test(`Red Bull Ring coexists with Dev Track and retains sources through save and portable restoration at ${width}px`, async ({
+  test(`Red Bull Ring is the default while both circuits retain sources through save and portable restoration at ${width}px`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 1000 });
@@ -49,8 +50,11 @@ for (const width of [1600, 390]) {
     await page.goto("/");
     await expect(page.getByTestId("lap-time")).toBeVisible();
     const select = page.getByRole("combobox", { name: "Track", exact: true });
-    await expect(select).toHaveValue("ardennes-development");
-    await expect(select).toHaveAccessibleDescription("Development");
+    await expect(select).toHaveValue("red-bull-ring");
+    await expect(select).toHaveAccessibleDescription("Real · approximate");
+    await expect(page.locator(".track-caption strong")).toHaveText(
+      "Red Bull Ring",
+    );
     await expect(
       select.locator('optgroup[label="Development Tracks"] option'),
     ).toHaveText(["LAPTRIX Dev Track"]);
@@ -60,9 +64,10 @@ for (const width of [1600, 390]) {
     await expect(
       select.locator('optgroup[label="Imported Tracks"]'),
     ).toHaveCount(0);
-    const original = await exportProject(page);
     await page.getByRole("slider", { name: "Fuel load" }).fill("21");
-    await select.selectOption("red-bull-ring");
+    await page
+      .getByRole("button", { name: "Run Simulation", exact: true })
+      .click();
     await expect(page.locator(".track-caption strong")).toHaveText(
       "Red Bull Ring",
     );
@@ -119,9 +124,6 @@ for (const width of [1600, 390]) {
     expect(saved.reference.alignment.trackFingerprint).toBe(
       saved.lap.alignment.trackFingerprint,
     );
-    expect(saved.lap.alignment.trackFingerprint).not.toBe(
-      original.lap.alignment.trackFingerprint,
-    );
     await page.reload();
     await expect(page.getByTestId("lap-time")).toBeVisible();
     await expect(select).toHaveValue("red-bull-ring");
@@ -143,14 +145,19 @@ for (const width of [1600, 390]) {
     await expect(attribution).toHaveCount(0);
     await expect(select).toHaveAccessibleDescription("Development");
     const dev = await exportProject(page);
-    expect(dev.track.points).toEqual(original.track.points);
-    expect(dev.lap.alignment.trackFingerprint).toBe(
-      original.lap.alignment.trackFingerprint,
+    expect(dev.track.points).toEqual(development.points);
+    expect(dev.lap.alignment.trackFingerprint).not.toBe(
+      saved.lap.alignment.trackFingerprint,
     );
     expect(dev.reference.trackId).toBe("ardennes-development");
     expect(dev.reference.alignment.trackFingerprint).toBe(
       dev.lap.alignment.trackFingerprint,
     );
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.reload();
+    await expect(page.getByTestId("lap-time")).toBeVisible();
+    await expect(select).toHaveValue("ardennes-development");
+    expect((await exportProject(page)).track).toEqual(dev.track);
     await page
       .getByLabel("Import project file", { exact: true })
       .setInputFiles({

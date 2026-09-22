@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import type { Lap, TimingReference } from "../../packages/shared/schema";
 import type { ComparisonReport } from "../../packages/telemetry/comparison-csv";
 
@@ -89,6 +90,8 @@ async function assertCsv(page: Page, report: ComparisonReport) {
     );
   }
 }
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`comparison export preserves native/timing inputs and the inspected sector at ${width}px`, async ({

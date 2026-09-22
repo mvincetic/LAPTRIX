@@ -14,8 +14,6 @@ for (const [vehicle, width] of [
     await page.setViewportSize({ width, height: 1000 });
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    await page.goto("/");
-    await expect(page.getByTestId("lap-time")).toBeVisible();
     let [response] = await Promise.all([
       page.waitForResponse(
         (r) =>
@@ -23,10 +21,9 @@ for (const [vehicle, width] of [
           r.ok() &&
           r.request().postDataJSON().setup.solver === "optimized",
       ),
-      page
-        .getByRole("combobox", { name: "Track", exact: true })
-        .selectOption("red-bull-ring"),
+      page.goto("/"),
     ]);
+    await expect(page.getByTestId("lap-time")).toBeVisible();
     if (vehicle === "gt-development")
       [response] = await Promise.all([
         page.waitForResponse(
@@ -40,6 +37,7 @@ for (const [vehicle, width] of [
           .selectOption(vehicle),
       ]);
     const lap = (await response.json()) as Lap;
+    expect(lap.trackId).toBe("red-bull-ring");
     expect(lap.vehicleId).toBe(vehicle);
     expect(lap.setup.solver).toBe("optimized");
     await page.getByRole("button", { name: "Chase", exact: true }).click();

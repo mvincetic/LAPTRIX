@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { profileTrack } from "../fixtures/source-profile";
 import { gpxFixture } from "../fixtures/gpx";
 import source from "../../data/tracks/ardennes-development.json" with { type: "json" };
@@ -14,6 +15,8 @@ async function exportProject(page: Page) {
   for await (const chunk of stream!) chunks.push(chunk);
   return JSON.parse(Buffer.concat(chunks).toString());
 }
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
+
 for (const width of [1600, 390]) {
   test(`source profiles inspect exact original geometry without changing playback at ${width}px`, async ({
     page,

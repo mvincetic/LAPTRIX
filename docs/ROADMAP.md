@@ -1,5 +1,20 @@
 # Roadmap
 
+## Showcase default — 2026-09-22
+
+Red Bull Ring is the explicit default for fresh workspaces and unavailable saved
+track IDs, independent of catalog ordering. Existing saved/imported selections
+still take precedence. LAPTRIX Dev Track remains available with its original
+geometry and identity. Browser coverage checks fresh desktop/phone startup and
+restoration of both circuits; source-specific regressions choose Dev Track
+explicitly.
+
+Validation: the core gate passes with 366 TypeScript and 178 Python tests;
+36 affected development and six production browser cases pass. Fresh desktop
+(1600px) and phone (390px) views show Red Bull Ring without runtime errors.
+Local evidence: `artifacts/showcase-default-{check,browser,production}.log`
+and `artifacts/showcase-default-{1600,390}.png`.
+
 ## Continuous racing-line path — 2026-09-22
 
 The user identified the remaining polygonal path after the orientation repair.
@@ -9,9 +24,9 @@ Both vehicles/cameras, cursor positions and comparison exports share the curve;
 retain native solver results, source tracks and the single clock. The local core
 gate, fourteen affected browser cases and 24 matched before/after Play sequences
 pass. The correction is pushed as `e00d241`; four full portrait laps also pass.
-Eight CI jobs pass after repeating the original deadline failures. Complete the
-documented scenery-readiness test correction and verify its exact revision through
-the link in CI.md. See SPATIAL_PATH.md. Broader solver/scenery work remains
+The scenery-readiness test correction is accepted at `dfe82b4`: all nine CI jobs
+pass in run `35711708922`, including 197 development and 42 production browser
+cases. See CI.md and SPATIAL_PATH.md. Broader solver/scenery work remains
 outside this focused correction; never merge main or rewrite history.
 
 ## Turn-in and camera presentation — 2026-09-21

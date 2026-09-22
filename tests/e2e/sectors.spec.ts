@@ -1,6 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import source from "../../data/tracks/ardennes-development.json" with { type: "json" };
 import { lapSchema } from "../../packages/shared/schema";
+
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("fixed source sectors compare legacy references correctly and remain fixed after resampling", async ({
   page,
