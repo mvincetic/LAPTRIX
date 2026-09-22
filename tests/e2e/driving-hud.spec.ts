@@ -51,6 +51,11 @@ for (const [track, vehicle, width] of [
     await page.getByRole("button", { name: "Time", exact: true }).click();
     const input = page.getByRole("spinbutton", { name: "Inspect at time (s)" });
     const cursor = page.getByRole("slider", { name: "Viewer lap position" });
+    await page.getByRole("tab", { name: "Ghost Car", exact: true }).click();
+    await page
+      .getByRole("checkbox", { name: "Show reference ghost", exact: true })
+      .check();
+    await page.getByRole("tab", { name: "Track View", exact: true }).click();
     const seek = async (time: number) => {
       await input.fill(String(time));
       await input.press("Enter");
@@ -92,6 +97,30 @@ for (const [track, vehicle, width] of [
       await expect(
         page.getByRole("meter", { name: "Driving throttle" }),
       ).toHaveAttribute("value", String(lap.samples[0].throttle));
+      await expect(page.locator(".ghost-tag")).toHaveCount(
+        camera === "Chase" ? 2 : 1,
+      );
+      await expect
+        .poll(() =>
+          page.locator(".scene").evaluate((scene) => {
+            const cards = [...scene.querySelectorAll(".hud-card")].map((n) =>
+              n.getBoundingClientRect(),
+            );
+            return [...scene.querySelectorAll<HTMLElement>(".ghost-tag")]
+              .filter((tag) => !tag.hidden)
+              .every((tag) => {
+                const r = tag.getBoundingClientRect();
+                return cards.every(
+                  (card) =>
+                    r.right <= card.left ||
+                    r.left >= card.right ||
+                    r.bottom <= card.top ||
+                    r.top >= card.bottom,
+                );
+              });
+          }),
+        )
+        .toBe(true);
       await page
         .getByRole("button", { name: "Play viewer lap", exact: true })
         .click();

@@ -25,6 +25,8 @@ map and compact instruments, with labelled throttle/brake meters. Short landscap
 fullscreen arranges the map and instruments side by side and omits the secondary
 RPM row. The centre of the driving view and camera controls stay clear. Readouts
 have no live-region announcements and do not intercept camera gestures.
+Ghost name placement treats the three HUD cards as occupied screen space, keeping
+visible current/reference names clear of the map, instruments and sector timing.
 
 Validation covers split boundaries, finish rounding, backwards seeks, map fitting
 on both circuits, both cameras/vehicles, Play/Pause, fullscreen, and zero new

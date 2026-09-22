@@ -23,7 +23,7 @@ const canvasOrigin = (): [number, number] => [0, 0];
 // Each car's projection determines visibility, independent of the world origin.
 const ignoreHtmlOcclusion = () => {};
 const obstacleSelector =
-  ".sector-label, .corner-marker, .start-marker, .event-marker, .legend, .viewer-popover, .scene-top-left, .compass, .scene-bottom";
+  ".sector-label, .corner-marker, .start-marker, .event-marker, .legend, .viewer-popover, .scene-top-left, .compass, .scene-bottom, .hud-card";
 
 export function GhostLabels({
   labels,
