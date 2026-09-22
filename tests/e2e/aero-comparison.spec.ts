@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import {
   lapSchema,
   defaultSetup,
@@ -23,6 +24,9 @@ async function openComparison(page: Page) {
     .click();
   return page.getByRole("dialog", { name: "Compare aero settings" });
 }
+
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("real aero runs keep other settings fixed and apply the fastest checked lap with its reference intact", async ({
   page,

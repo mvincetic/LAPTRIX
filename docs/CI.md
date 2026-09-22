@@ -1,5 +1,10 @@
 # Continuous integration
 
+The Red Bull Ring default's CI timing follow-up is recorded in
+[SHOWCASE_DEFAULT_VALIDATION.md](SHOWCASE_DEFAULT_VALIDATION.md). Its added Dev
+Track persistence journey is now isolated without dropping assertions or widening
+timeouts. The subsequent driving HUD has its own synchronization/layout coverage.
+
 The spatial-path commit `e00d241` passes eight jobs in
 [run 35706443868](https://github.com/mvincetic/LAPTRIX/actions/runs/35706443868)
 after repeating failed jobs on the unchanged revision. The initial aero reload,

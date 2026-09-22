@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { largeFramingTrack } from "../fixtures/camera";
 import { racingLinePixels } from "../fixtures/viewer-pixels";
 
@@ -14,6 +15,9 @@ async function exportProject(page: Page) {
   return JSON.parse(Buffer.concat(chunks).toString());
 }
 
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
+
 test("large imported circuits remain rendered through mobile resize, camera changes and reset", async ({
   page,
 }) => {
@@ -21,13 +25,11 @@ test("large imported circuits remain rendered through mobile resize, camera chan
   await expect(page.getByTestId("lap-time")).toBeVisible();
   const track = page.getByRole("combobox", { name: "Track", exact: true });
   const originalID = await track.inputValue();
-  await page
-    .getByLabel("Import track file", { exact: true })
-    .setInputFiles({
-      name: "large-framing.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(largeFramingTrack)),
-    });
+  await page.getByLabel("Import track file", { exact: true }).setInputFiles({
+    name: "large-framing.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(largeFramingTrack)),
+  });
   await expect(track).toHaveValue(largeFramingTrack.id);
   await expect(page.locator(".scene canvas")).toBeVisible();
   const cursor = page.getByRole("slider", { name: "Lap playback position" });

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import formula from "../../data/vehicles/formula-development.json" with { type: "json" };
 import crossing from "../fixtures/crossing-track.json" with { type: "json" };
 import { formatTime } from "../../packages/telemetry";
@@ -9,6 +10,9 @@ const profile = {
   name: "User Formula study",
   assumptions: ["Original synthetic test fixture; no measured calibration."],
 };
+
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 test("accepted long vehicle metadata remains readable without horizontal panel overflow", async ({
   page,

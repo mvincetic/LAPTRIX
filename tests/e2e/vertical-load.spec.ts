@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { lapSchema, type Lap } from "../../packages/shared/schema";
 
 async function exportFile(page: Page, action: string) {
@@ -22,6 +23,9 @@ function legacyShape(lap: Lap) {
   }
   return legacy;
 }
+
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`normal-load telemetry remains authoritative through inspection and mixed-generation project restoration at ${width}px`, async ({

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import { racingLinePixels } from "../fixtures/viewer-pixels";
 
 type RecoveryWindow = Window & {
@@ -21,6 +22,9 @@ async function project(page: Page) {
     chunks.push(chunk);
   return JSON.parse(Buffer.concat(chunks).toString());
 }
+
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`a paused circuit redraws after repeated graphics restoration at ${width}px`, async ({

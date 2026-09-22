@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 
 async function project(page: Page) {
   await page.getByRole("button", { name: "Additional actions" }).click();
@@ -11,6 +12,9 @@ async function project(page: Page) {
     chunks.push(chunk);
   return JSON.parse(Buffer.concat(chunks).toString());
 }
+
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
 
 for (const width of [1600, 390]) {
   test(`ghost names stay clear of timing and controls at ${width}px`, async ({

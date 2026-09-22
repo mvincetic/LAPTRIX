@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { useDevelopmentWorkspace } from "../fixtures/development-workspace";
 import type { Lap } from "../../packages/shared/schema";
 
 async function exported(page: Page) {
@@ -12,6 +13,9 @@ async function exported(page: Page) {
     chunks.push(chunk);
   return JSON.parse(Buffer.concat(chunks).toString());
 }
+// Keep the original Dev Track fixture for this independent regression workflow.
+test.beforeEach(async ({ page }) => useDevelopmentWorkspace(page));
+
 for (const width of [1600, 390]) {
   test(`load extrema pause at exact current samples and preserve the project at ${width}px`, async ({
     page,

@@ -153,11 +153,6 @@ for (const width of [1600, 390]) {
     expect(dev.reference.alignment.trackFingerprint).toBe(
       dev.lap.alignment.trackFingerprint,
     );
-    await page.getByRole("button", { name: "Save", exact: true }).click();
-    await page.reload();
-    await expect(page.getByTestId("lap-time")).toBeVisible();
-    await expect(select).toHaveValue("ardennes-development");
-    expect((await exportProject(page)).track).toEqual(dev.track);
     await page
       .getByLabel("Import project file", { exact: true })
       .setInputFiles({
@@ -176,6 +171,30 @@ for (const width of [1600, 390]) {
     expect(imported.setup).toEqual(saved.setup);
     expect(await select.locator("option").count()).toBe(2);
     expect(errors).toEqual([]);
+  });
+
+  test(`saved Dev Track takes precedence over the showcase default at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/");
+    await expect(page.getByTestId("lap-time")).toBeVisible();
+    const select = page.getByRole("combobox", { name: "Track", exact: true });
+    await expect(select).toHaveValue("red-bull-ring");
+    await select.selectOption("ardennes-development");
+    await expect(
+      page.getByRole("button", { name: "Run Simulation", exact: true }),
+    ).toBeEnabled();
+    const saved = await exportProject(page);
+    expect(saved.track.points).toEqual(development.points);
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.reload();
+    await expect(page.getByTestId("lap-time")).toBeVisible();
+    await expect(select).toHaveValue("ardennes-development");
+    const restored = await exportProject(page);
+    expect(restored.track).toEqual(saved.track);
+    expect(restored.setup).toEqual(saved.setup);
+    expect(restored.reference).toEqual(saved.reference);
   });
 }
 
