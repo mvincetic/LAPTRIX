@@ -4,6 +4,7 @@ import base from "./playwright.config";
 export default defineConfig({
   ...base,
   testMatch: [
+    "driving-hud.spec.ts",
     "viewer-loading.spec.ts",
     "viewer-recovery.spec.ts",
     "csv-worker.spec.ts",

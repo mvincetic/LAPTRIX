@@ -1,5 +1,20 @@
 # Roadmap
 
+## Driving overview and audio sourcing — 2026-09-22
+
+Add a full-circuit position map and live instruments to Chase/Onboard: speed,
+gear, RPM, throttle/brake, current/completed sector times and aligned reference
+delta. Implemented with the shared clock, source geometry and camera pose intact.
+The 369/178 core gate, twelve affected development browser cases and three
+production HUD cases pass. Desktop, phone and short fullscreen layouts have
+visual/bounds evidence. See DRIVING_HUD.md.
+
+Audio remains procedural. The next sound milestone requires a suitable licensed
+turbo-V6 sample bank; the publicly verified Formula recording library is an older
+V8. AUDIO_SOURCING.md records provider links, pricing, limits and the proposed
+acquisition/integration brief. Do not silently present old-engine recordings as
+authentic 2026 audio, purchase assets or contact suppliers without authorization.
+
 ## Showcase default — 2026-09-22
 
 Red Bull Ring is the explicit default for fresh workspaces and unavailable saved

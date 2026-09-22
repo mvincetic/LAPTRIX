@@ -1,0 +1,305 @@
+.driving-hud {
+  position: absolute;
+  inset: 62px 14px auto;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  pointer-events: none;
+  color: #edf5ff;
+  font-variant-numeric: tabular-nums;
+}
+.hud-card {
+  border: 1px solid #d7e9ff35;
+  background: #102235ed;
+  box-shadow: 0 2px 10px #08192d18;
+  border-radius: 5px;
+}
+.driving-hud-left {
+  width: 166px;
+  flex-shrink: 0;
+  display: grid;
+  gap: 5px;
+}
+.hud-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: #b5c9df;
+}
+.driving-map {
+  padding: 8px 9px 4px;
+}
+.driving-map svg {
+  width: 100%;
+  height: 98px;
+  display: block;
+}
+.driving-map-edge,
+.driving-map-line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.driving-map-edge {
+  stroke: #071726;
+  stroke-width: 6;
+}
+.driving-map-line {
+  stroke: #c3d4e2;
+  stroke-width: 2.8;
+}
+.driving-map-start {
+  fill: #fff;
+  stroke: #071726;
+  stroke-width: 1;
+}
+.driving-map-car {
+  fill: #38a2ff;
+  stroke: white;
+  stroke-width: 2;
+}
+.driving-instruments {
+  padding: 8px 9px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 12px;
+}
+.driving-speed {
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+}
+.driving-speed strong {
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -1px;
+}
+.driving-speed span,
+.driving-gear > span,
+.driving-rpm > span {
+  font-size: 8px;
+  color: #b5c9df;
+}
+.driving-gear {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.driving-gear strong {
+  font-size: 22px;
+  line-height: 1;
+}
+.driving-rpm {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 10px;
+}
+.driving-inputs {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 3px;
+  margin-top: 3px;
+}
+.driving-input {
+  display: grid;
+  grid-template-columns: 38px 1fr 29px;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+}
+.driving-input > b {
+  font-weight: 500;
+  text-align: right;
+}
+.driving-input meter {
+  width: 100%;
+  height: 5px;
+  border: 0;
+  background: #62788a50;
+  border-radius: 2px;
+}
+.driving-input meter::-webkit-meter-bar {
+  background: #62788a50;
+  border: 0;
+  height: 5px;
+}
+.driving-input meter::-webkit-meter-optimum-value {
+  background: #4cdfb4;
+}
+.driving-input.brake meter::-webkit-meter-optimum-value {
+  background: #ff7b86;
+}
+.driving-input meter::-moz-meter-bar {
+  background: #4cdfb4;
+}
+.driving-input.brake meter::-moz-meter-bar {
+  background: #ff7b86;
+}
+.driving-timing {
+  width: 180px;
+  flex-shrink: 0;
+  padding: 9px 10px;
+}
+.driving-timing .hud-heading {
+  padding-bottom: 7px;
+  border-bottom: 1px solid #c6deff26;
+}
+.driving-timing .hud-heading strong {
+  font-size: 11px;
+  color: #fff;
+  letter-spacing: 0;
+}
+.driving-timing ol {
+  margin: 4px 0;
+  padding: 0;
+  list-style: none;
+}
+.driving-timing li {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 4px;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 10px;
+}
+.driving-timing li small {
+  font-size: 7px;
+  color: #b5c9df;
+}
+.driving-timing li[data-state="active"] {
+  color: #69bbff;
+}
+.driving-timing li[data-state="complete"] {
+  color: #65dfbb;
+}
+.driving-timing li[data-state="upcoming"] {
+  color: #a0b3c6;
+}
+.driving-delta {
+  border-top: 1px solid #c6deff26;
+  padding-top: 7px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 9px;
+}
+.driving-delta[data-tone="positive"] strong {
+  color: #65dfbb;
+}
+.driving-delta[data-tone="negative"] strong {
+  color: #ff969e;
+}
+.scene {
+  container-type: inline-size;
+  container-name: driving-view;
+}
+@container driving-view (max-width: 480px) {
+  .driving-hud {
+    inset: 53px 10px auto;
+    gap: 8px;
+  }
+  .driving-hud-left {
+    width: 128px;
+  }
+  .driving-map {
+    padding: 6px 7px 3px;
+  }
+  .driving-map svg {
+    height: 56px;
+  }
+  .hud-heading {
+    font-size: 7px;
+    gap: 4px;
+  }
+  .driving-instruments {
+    padding: 6px 7px;
+    gap: 2px 5px;
+  }
+  .driving-speed strong {
+    font-size: 23px;
+  }
+  .driving-gear {
+    gap: 3px;
+  }
+  .driving-gear > span {
+    font-size: 6px;
+  }
+  .driving-gear strong {
+    font-size: 18px;
+  }
+  .driving-input {
+    grid-template-columns: auto 1fr;
+    flex: 1;
+    min-width: 0;
+    font-size: 7px;
+    gap: 3px;
+  }
+  .driving-inputs {
+    display: flex;
+    gap: 7px;
+    margin-top: 1px;
+  }
+  .driving-input > b {
+    display: none;
+  }
+  .driving-timing {
+    width: 136px;
+    padding: 7px;
+  }
+  .driving-timing .hud-heading strong {
+    font-size: 10px;
+  }
+}
+@media (max-height: 600px) and (min-width: 600px) {
+  .track-panel:fullscreen .driving-hud {
+    inset: 55px 12px auto;
+  }
+  .track-panel:fullscreen .driving-hud-left {
+    width: auto;
+    display: flex;
+  }
+  .track-panel:fullscreen .driving-map {
+    width: 116px;
+  }
+  .track-panel:fullscreen .driving-map svg {
+    height: 56px;
+  }
+  .track-panel:fullscreen .driving-instruments {
+    width: 146px;
+    padding: 6px 8px;
+  }
+  .track-panel:fullscreen .driving-speed strong {
+    font-size: 23px;
+  }
+  .track-panel:fullscreen .driving-rpm {
+    display: none;
+  }
+  .track-panel:fullscreen .driving-timing {
+    width: 176px;
+    padding: 6px 8px;
+  }
+  .track-panel:fullscreen .driving-timing .hud-heading {
+    padding-bottom: 2px;
+  }
+  .track-panel:fullscreen .hud-heading {
+    font-size: 7px;
+    letter-spacing: 0.02em;
+  }
+  .track-panel:fullscreen .driving-timing ol {
+    margin: 2px 0;
+  }
+  .track-panel:fullscreen .driving-timing li {
+    padding: 1px 0;
+  }
+  .track-panel:fullscreen .driving-delta {
+    padding-top: 2px;
+  }
+}

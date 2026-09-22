@@ -1,5 +1,11 @@
 # Architecture
 
+`DrivingHud` is a separate subscriber to the canonical PlaybackClock. Its SVG map
+fits the shared racing path once per source/lap; the position marker uses the same
+interpolator as the car. Sector states derive from native split times, and the delta
+uses the existing aligned reference comparison. It adds no timer or simulation
+request and does not update scene geometry at clock cadence. See DRIVING_HUD.md.
+
 Native XYZ positions are interpolated by one bounded, distance-parameterized
 cubic in `packages/telemetry/spatial-path.ts`. The racing line samples this curve
 adaptively; ghosts, cameras, cursor positions and comparison rows use it too.

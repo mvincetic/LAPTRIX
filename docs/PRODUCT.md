@@ -1,5 +1,11 @@
 # Product
 
+Driving cameras include a full-circuit position map and live speed, gear, RPM,
+throttle/brake, sector times and aligned reference delta. Completed and upcoming
+sectors remain distinct during playback and seeking. See DRIVING_HUD.md. Recorded
+Formula audio is a separate acquisition/integration step; AUDIO_SOURCING.md
+documents the researched options and the current procedural engine's limits.
+
 The premium product phase builds on the stable technical MVP. First playback
 must reveal a useful vehicle view, the road must read as part of its landscape,
 and all camera, vehicle and UI polish retains source identity and the canonical

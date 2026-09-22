@@ -1,5 +1,15 @@
 # Decision log
 
+## 2026-09-22 — Give driving cameras a shared-clock map and timing overlay
+
+Use a fixed north-up SVG overview beside live telemetry rather than changing the
+driving camera to reveal the whole circuit. Subscribe in an isolated overlay,
+reuse the spatial interpolator/reference alignment and derive sectors directly
+from native split times. Hide future results and recompute states when seeking.
+Responsive panels and viewer settings must leave the car and controls usable.
+Audio-source research remains separate from this implementation: no recordings
+were acquired and the existing procedural sound is not labelled realistic.
+
 ## 2026-09-22 — Share a continuous positional path, not just a smooth frame
 
 The user's remaining turn-in complaint comes from the coarse positional chords.

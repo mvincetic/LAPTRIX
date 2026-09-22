@@ -81,6 +81,7 @@ the last completed result remains visible if a solve fails.
 - A lower distance-follow camera and original metre-scale Formula/GT bodywork with telemetry-driven wheels.
 - Original grounded guardrails, source-distance supports and reflectors, with a validated asset manifest.
 - Current speed, gear, elapsed time and playback state beside the track, including fullscreen.
+- Chase/Onboard circuit minimap, live sector times, reference delta and telemetry instruments.
 - Play, pause, loop and scrub directly inside the viewer; graph and fullscreen controls share one clock.
 - First Play follows the current car; explicit camera choices persist, with vehicle identity, follow, restart and rate inside the viewer.
 - Source-scaled camera framing and clipping, including large imports at phone widths.

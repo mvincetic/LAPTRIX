@@ -42,6 +42,7 @@ import { TabList } from "./TabList";
 import { ViewerToolsPanels } from "./ViewerToolsPanels";
 import { FullscreenControl } from "./FullscreenControl";
 import { ScenePlayback } from "./ScenePlayback";
+import { DrivingHud } from "./DrivingHud";
 import { TrackAttribution } from "./TrackAttribution";
 import { CAMERA_FOV, fitTrackCamera } from "../camera-framing";
 import { CHASE_FOV, ROAD_SURFACE_LIFT, chaseCameraPose } from "../chase-camera";
@@ -681,6 +682,14 @@ export function TrackView({
             )}
           </Canvas>
         </SceneBoundary>
+        {driving && lap && tab === "Track View" && (
+          <DrivingHud
+            track={track}
+            lap={lap}
+            reference={reference}
+            clock={clock}
+          />
+        )}
         <div className="scene-top-left">
           <span className="pill" title={track.provenance}>
             {track.synthetic

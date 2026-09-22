@@ -1,5 +1,11 @@
 # Design system
 
+Chase/Onboard show a compact dark driving HUD: a north-up complete circuit and
+current-car dot, speed/gear/RPM and throttle/brake meters, plus live sector times
+and reference delta. Future sectors have no displayed result. Responsive panels
+leave the driving view and camera controls clear; they yield to viewer settings.
+All values come from the shared telemetry clock. See DRIVING_HUD.md.
+
 The original user reference is preserved at `docs/reference/ui-reference.png`.
 It guides hierarchy and proportions, not pixel-perfect reproduction. LAPTRIX uses
 its own wordmark and synthetic circuit rather than APEX branding or Monza content.
