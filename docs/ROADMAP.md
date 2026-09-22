@@ -1,5 +1,17 @@
 # Roadmap
 
+## Continuous racing-line path — 2026-09-22
+
+The user identified the remaining polygonal path after the orientation repair.
+Replace linear XYZ playback and the coarse visible polyline with a single bounded
+continuous interpolant through native samples, and adaptively tessellate its bends.
+Both vehicles/cameras, cursor positions and comparison exports share the curve;
+retain native solver results, source tracks and the single clock. The local core
+gate, fourteen affected browser cases and 24 matched before/after Play sequences
+pass. The correction is ready for a focused working-branch commit and push;
+verify exact-revision CI through the link in CI.md. See SPATIAL_PATH.md. Broader solver/scenery work remains
+outside this focused correction; never merge main or rewrite history.
+
 ## Turn-in and camera presentation — 2026-09-21
 
 The user resumed work after reporting jerky, unnatural turn-in. First remove the
@@ -14,6 +26,9 @@ prepared camera/speed study, with implementation, visual QA, tests, documentatio
 clean commits and working-branch pushes. This resumes the earlier usage-saving
 pause. Preserve both circuits; do not merge main or expand the solver.
 
+The camera/CI follow-up is accepted at `b2a4089`: all nine jobs in run
+`35621594775` pass, covering 360 TypeScript / 178 Python tests,
+197 development and 42 production browser cases, plus Blender reproduction.
 The turning repair is pushed as `f8ab1ab`, with 42 local production cases green.
 Its remote run passes six of eight jobs, including both new motion cases and
 the daylight repair; CI.md records the two subsequent deadline failures and

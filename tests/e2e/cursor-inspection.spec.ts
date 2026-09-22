@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { interpolate } from "../../packages/telemetry";
 import type { Lap } from "../../packages/shared/schema";
 
 for (const width of [1600, 390]) {
@@ -63,7 +64,10 @@ for (const width of [1600, 390]) {
       ["y", 1, 2, "m"],
       ["offset", 1, 3, "m"],
     ] as const) {
-      const expected = (a[key] + fraction * (b[key] - a[key])) * scale;
+      const expected =
+        (key === "y"
+          ? interpolate(lap.samples, distance, "distance").y
+          : a[key] + fraction * (b[key] - a[key])) * scale;
       await expect(page.getByTestId(`cursor-${key}`)).toHaveText(
         `${Number(expected.toFixed(digits)).toFixed(digits)}${unit}`,
       );

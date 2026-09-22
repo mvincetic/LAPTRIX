@@ -89,11 +89,12 @@ records the GT-brake/fullscreen deadline failures and their bounded follow-ups.
 
 ## Remaining limits and next step
 
-The vehicle still follows the authoritative piecewise-linear position samples.
-This change smooths its visual frame; it does not invent suspension, tyre slip,
-driver reactions or a smoother numerical racing line. Sharp or unrealistic
-source geometry remains visible. The previously documented software-renderer
-performance limit is still open.
+At this milestone the vehicle still followed piecewise-linear position samples.
+The 2026-09-22 follow-up in SPATIAL_PATH.md addresses that remaining limitation
+with shared continuous positions and adaptively drawn bends.
+The original repair smoothed its visual frame; it did not add suspension, tyre
+slip, driver reactions or a smoother numerical racing line. Those model limits
+and the previously documented software-renderer performance limit remain open.
 
 After this fix is accepted, compare Chase height/distance and fixed FOV with
 actual high-speed and braking playback in the existing finish–T1 slice. Keep

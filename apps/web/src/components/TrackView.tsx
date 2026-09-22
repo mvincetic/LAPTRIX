@@ -63,6 +63,7 @@ import {
   alignedNativeReference,
   type PlaybackClock,
 } from "../../../../packages/telemetry";
+import { racingPath } from "../../../../packages/telemetry/spatial-path";
 
 export type ViewLayers = {
   racingLine: boolean;
@@ -424,20 +425,24 @@ export function TrackView({
   const northIndicator = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null),
     frame = useMemo(() => normalizeTrack(track), [track]);
+  const lineSamples = useMemo(
+    () => (lap ? racingPath(lap.samples) : []),
+    [lap],
+  );
   const racing = useMemo(
     () =>
-      lap?.samples.map(
+      lineSamples.map(
         (s) => [s.x, s.y + ROAD_SURFACE_LIFT + 0.08, s.z] as Vec3,
-      ) || [],
-    [lap],
+      ),
+    [lineSamples],
   );
   const colors = useMemo(
     () =>
-      lap?.samples.map(
+      lineSamples.map(
         (s) =>
           new Color(layers.braking && s.brake > 0.08 ? "#fa454b" : "#0866ec"),
-      ) || [],
-    [lap, layers.braking],
+      ),
+    [lineSamples, layers.braking],
   );
   const centerline = useMemo(
     () =>
@@ -567,7 +572,12 @@ export function TrackView({
               </>
             )}
             {layers.racingLine && lap && (
-              <Line points={racing} vertexColors={colors} lineWidth={3} />
+              <Line
+                name="racing-line"
+                points={racing}
+                vertexColors={colors}
+                lineWidth={3}
+              />
             )}
             {lap &&
               lap.corners.length > 0 &&

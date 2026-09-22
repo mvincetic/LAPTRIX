@@ -50,10 +50,14 @@ describe("continuous telemetry-derived visual frames", () => {
     let prior = ghostPose(lap, 0);
     for (let time = dt; time < lap.lapTime; time += dt) {
       const pose = ghostPose(lap, time);
-      expect(angleDifference(pose.yaw, prior.yaw) / dt).toBeCloseTo(12 / 50, 9);
+      // A cubic approximates this circle; heading now follows its actual tangent
+      // rather than imposing a perfect circle on a polygonal vehicle position.
+      expect(
+        Math.abs(angleDifference(pose.yaw, prior.yaw) / dt - 12 / 50),
+      ).toBeLessThan(0.001);
       expect(
         angleDifference(pose.yaw, Math.PI / 2 + pose.sample.distance / 50),
-      ).toBeCloseTo(0, 10);
+      ).toBeCloseTo(0, 3);
       prior = pose;
     }
   });

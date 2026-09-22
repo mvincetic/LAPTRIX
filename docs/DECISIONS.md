@@ -1,5 +1,17 @@
 # Decision log
 
+## 2026-09-22 — Share a continuous positional path, not just a smooth frame
+
+The user's remaining turn-in complaint comes from the coarse positional chords.
+Use one bounded periodic/natural cubic through native positions for all spatial
+interpolation; derive body orientation from its tangent and adaptively subdivide
+the displayed line to a 5 mm error bound. Keep native numerical channels, timing
+and source identity. Reject excessive departure or reversed curve derivatives
+with a consistent whole-path linear fallback. This corrects presentation without
+changing the solver grid or quietly moving only the visible racing line.
+Comparison rows declare their changed XYZ interpolation. SPATIAL_PATH.md records
+the analytical guards, native-distance approximation and validation.
+
 ## 2026-09-21 — Select a lower, closer camera with modest fixed FOV expansion
 
 A matched three-variant browser study keeps native laps and the shared clock

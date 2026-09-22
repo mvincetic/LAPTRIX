@@ -31,7 +31,10 @@ objects retain the original supported data shapes for separate inspection/reuse.
 `prepareTimeComparison` now exposes the source progress and independently matched
 reference time it already computes for the plot. The report consumes those exact
 points. Each side's channels use the existing telemetry interpolator at that side's
-time. Continuous fields are linear; gear, corner ID and sector ID use the preceding
+time. Numerical channels are linear; XYZ uses the bounded native-distance cubic
+documented in SPATIAL_PATH.md, with a consistent linear fallback for unsafe sparse
+paths. The JSON interpolation metadata declares each side's effective position
+mode. Gear, corner ID and sector ID use the preceding
 sample until the next knot. Exact endpoints retain the original closing samples.
 Each side keeps its own racing-line distance and elapsed time. A reference-only
 speed peak survives even when it lies between current-lap samples.

@@ -5,6 +5,7 @@ import {
   type Sample,
 } from "../shared/schema";
 import { interpolate, prepareTimeComparison } from "./index";
+import { spatialPathKind } from "./spatial-path";
 
 export const comparisonSampleUnits = {
   time: "s",
@@ -72,7 +73,15 @@ export function buildComparisonReport(
     sourceTrackFingerprint: current.alignment!.trackFingerprint,
     referenceKind: timingOnly ? ("timing-only" as const) : ("native" as const),
     deltaConvention: "current-minus-reference" as const,
-    interpolation: { continuous: "linear", gearAndIds: "left-step" },
+    interpolation: {
+      continuous: "linear-except-position",
+      gearAndIds: "left-step",
+      position: {
+        parameter: "native-distance",
+        current: spatialPathKind(current.samples),
+        reference: timingOnly ? null : spatialPathKind(reference.samples),
+      },
+    },
     units: {
       progress: "fraction",
       deltaTime: "s",

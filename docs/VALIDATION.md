@@ -1,10 +1,16 @@
-# MVP validation — through 2026-09-21
+# MVP validation — through 2026-09-22
 
 The scoped local MVP and selected extensions are implemented on
 `codex/autonomous-mvp`. The repository began empty; no user changes were overwritten
 and no main merge, force-push or repository-settings change was made.
 
 ## Quality gates
+
+The continuous spatial path passes the full core gate: 365 TypeScript and
+178 Python cases, lint/types, eleven asset packages, source-context reproduction
+and production build. Rendered Formula/GT regressions confirm continuous actual
+position derivatives, native knots and car/line agreement. See SPATIAL_PATH.md
+for the integrated visual and browser checks on this follow-up.
 
 The lower/closer camera candidate passes the full core gate: 360 TypeScript /
 178 Python tests (46.56 seconds), asset/context validation, lint/types and build

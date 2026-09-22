@@ -133,8 +133,13 @@ describe("source-aligned comparison reports", () => {
       normalLoadG: "vehicle-weight-ratio",
     });
     expect(report.interpolation).toEqual({
-      continuous: "linear",
+      continuous: "linear-except-position",
       gearAndIds: "left-step",
+      position: {
+        parameter: "native-distance",
+        current: "natural-cubic",
+        reference: "natural-cubic",
+      },
     });
     expect(report.samples[2].reference.time).toBeCloseTo(8 / 3, 14);
     expect(report.samples[2].deltaTime).toBeCloseTo(-2 / 3, 14);

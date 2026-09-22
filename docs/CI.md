@@ -1,5 +1,13 @@
 # Continuous integration
 
+The [camera/CI follow-up](https://github.com/mvincetic/LAPTRIX/actions/runs/35621594775)
+at `b2a4089` passes all nine jobs: 360 TypeScript / 178 Python tests,
+197 development and 42 production browser cases, plus all Blender reproduction
+checks. It resolves the deadline failures described below. The subsequent
+spatial-path correction is documented in SPATIAL_PATH.md; use the exact revision
+in the [working-branch runs](https://github.com/mvincetic/LAPTRIX/actions?query=branch%3Acodex%2Fautonomous-mvp)
+for its remote acceptance.
+
 The [continuous-turning run](https://github.com/mvincetic/LAPTRIX/actions/runs/35616609107)
 at `f8ab1ab` passes six of eight jobs. Core checks, all five Blender exports,
 the new rendered-motion cases and the separated daylight journeys pass. The

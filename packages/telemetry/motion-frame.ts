@@ -1,4 +1,5 @@
 import type { Sample } from "../shared/schema";
+import { spatialPose } from "./spatial-path";
 
 type Curve = { values: number[]; slopes: number[] };
 type Frame = { distance: number[]; yaw: Curve; pitch: Curve; steering: Curve };
@@ -116,9 +117,11 @@ export function motionFrame(samples: Sample[], distance: number) {
       (cube - square) * h * slopes[hi]
     );
   };
+  const path = spatialPose(samples, distance),
+    [dx, dy, dz] = path?.tangent ?? [0, 0, 0];
   return {
-    yaw: turn(value(frame.yaw)),
-    pitch: value(frame.pitch),
+    yaw: path ? Math.atan2(dx, dz) : turn(value(frame.yaw)),
+    pitch: path ? -Math.atan2(dy, Math.hypot(dx, dz)) : value(frame.pitch),
     steering: value(frame.steering),
   };
 }

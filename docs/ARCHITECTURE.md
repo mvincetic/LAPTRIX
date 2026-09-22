@@ -1,11 +1,13 @@
 # Architecture
 
-Vehicle orientation and visual steering use distance-derived, shape-preserving
-cubic frame curves in `packages/telemetry/motion-frame.ts`. Native numerical
-interpolation, positions and clock time remain unchanged. `ghostPose` supplies
-the same continuous frame to current/reference bodies and Onboard mounting;
-front-wheel groups use its separate visual steering channel. Weakly cached
-curves have no per-frame history. See MOTION_CONTINUITY.md.
+Native XYZ positions are interpolated by one bounded, distance-parameterized
+cubic in `packages/telemetry/spatial-path.ts`. The racing line samples this curve
+adaptively; ghosts, cameras, cursor positions and comparison rows use it too.
+Body yaw/pitch follow its actual tangent. Numerical channels and native samples
+remain unchanged; front-wheel groups retain separate shape-preserving steering.
+Unsafe sparse curves fall back consistently to linear position interpolation.
+Weakly cached curves have no per-frame history. See SPATIAL_PATH.md and the
+preceding orientation-only repair in MOTION_CONTINUITY.md.
 
 The optional shared spruce template loads for the exact Dev Track and Red Bull
 Ring source identities. `spruce-asset.ts` validates the bounded embedded PNG and

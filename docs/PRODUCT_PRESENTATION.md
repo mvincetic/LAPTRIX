@@ -1,5 +1,14 @@
 # Product presentation milestones
 
+## Continuous racing-line path — 2026-09-22
+
+The user correctly identified that smoother body orientation still left a
+polygonal driving path. A shared bounded cubic now supplies actual positions,
+its tangent supplies body orientation, and an adaptive drawing grid resolves
+the same bends within 5 mm. Both vehicles/cameras and the position inspector
+share that interpolation. Native telemetry, stored laps and solver timings stay
+intact. SPATIAL_PATH.md records guards and integrated acceptance evidence.
+
 ## Camera scale and road context — 2026-09-21
 
 The selected camera refinement pairs wider fixed fields of view with a lower,

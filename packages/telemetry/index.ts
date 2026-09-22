@@ -6,6 +6,7 @@ import {
   type Sample,
 } from "../shared/schema";
 import { motionFrame } from "./motion-frame";
+import { spatialPose } from "./spatial-path";
 
 function interpolateValues(axis: number[], values: number[], at: number) {
   if (!Number.isFinite(at)) throw new Error("Alignment cursor must be finite");
@@ -84,6 +85,8 @@ export function interpolate(
     if (!["gear", "cornerId", "sectorId"].includes(key))
       result[key] = a[key] + (b[key] - a[key]) * f;
   }
+  const pose = spatialPose(samples, result.distance);
+  if (pose) [result.x, result.y, result.z] = pose.position;
   return result;
 }
 export function lapDeltaAt(
